@@ -7,7 +7,6 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
 import fr.supercomete.enums.Gstate;
 import fr.supercomete.head.GameUtils.GameConfigurable.Configurable;
-import fr.supercomete.head.GameUtils.GameConfigurable.Configurables;
 import fr.supercomete.head.GameUtils.Time.Timer;
 import fr.supercomete.head.core.Main;
 import fr.supercomete.tasks.Cycle;

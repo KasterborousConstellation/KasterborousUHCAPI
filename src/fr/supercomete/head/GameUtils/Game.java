@@ -17,7 +17,6 @@ import fr.supercomete.enums.GenerationMode;
 import fr.supercomete.enums.Gstate;
 import fr.supercomete.head.GameUtils.Scenarios.Scenarios;
 import fr.supercomete.head.GameUtils.GameConfigurable.Configurable;
-import fr.supercomete.head.GameUtils.GameConfigurable.Configurables;
 import fr.supercomete.head.GameUtils.GameMode.ModeHandler.ModeAPI;
 import fr.supercomete.head.GameUtils.GameMode.Modes.Mode;
 import fr.supercomete.head.GameUtils.Time.BoundedWatchTime;
@@ -43,14 +42,14 @@ public class Game {
 	private int Groupe = 6;
 	private ArrayList<WatchTime> timelist = new ArrayList<>();
 	private boolean IsTeamActivated = false;
-	private ArrayList<Team> TeamList = new ArrayList<Team>();
-	private ArrayList<Scenarios> scenarios = new ArrayList<Scenarios>();
-	private HashMap<String, Integer> roleCompoMap = new HashMap<String, Integer>();
-	private ArrayList<Configurable> configList = new ArrayList<Configurable>();
-	private HashMap<UUID, Integer> KillList = new HashMap<UUID, Integer>();
-	private ArrayList<UUID> nodamagePlayerList = new ArrayList<UUID>();
-	private ArrayList<Offline_Player> offlinelist = new ArrayList<Offline_Player>();
-	private HashMap<Material, Boolean> armorhash = new HashMap<Material, Boolean>();
+	private ArrayList<Team> TeamList = new ArrayList<>();
+	private ArrayList<Scenarios> scenarios = new ArrayList<>();
+	private HashMap<String, Integer> roleCompoMap = new HashMap<>();
+	private ArrayList<Configurable> configList = new ArrayList<>();
+	private HashMap<UUID, Integer> KillList = new HashMap<>();
+	private ArrayList<UUID> nodamagePlayerList = new ArrayList<>();
+	private ArrayList<Offline_Player> offlinelist = new ArrayList<>();
+	private HashMap<Material, Boolean> armorhash = new HashMap<>();
 	private ColorScheme colorScheme =new ColorScheme(ChatColor.GREEN, ChatColor.AQUA, ChatColor.GRAY);
 	private HashMap<UUID, ArrayList<ItemStack>> fullinv= new HashMap<>();
 	private GenerationMode genmode = GenerationMode.None;
@@ -107,9 +106,9 @@ public class Game {
 		this.setEmode(indexmode);
 		this.init(main);
 		
-		for (int ps = 0; ps < Configurables.values().length; ps++) {
+		for (int ps = 0; ps < Configurable.LIST.values().length; ps++) {
 			if (ps >= getConfigList().size()) {
-				getConfigList().add(new Configurable(Configurable.LIST.values()[ps],Configurables.values()[ps].getBaseData(),Configurables.values()[ps].getType()));
+				getConfigList().add(new Configurable(Configurable.LIST.values()[ps],Configurable.LIST.values()[ps].getBaseData(),Configurable.LIST.values()[ps].getType()));
 			}
 		}
 	}
@@ -154,16 +153,15 @@ public class Game {
 		TeamList = teamList;
 	}
 	public HashMap<Class<?>, Integer> getRoleCompoMap() {
-		HashMap<Class<?>, Integer> hash = new HashMap<Class<?>, Integer>();
+		HashMap<Class<?>, Integer> hash = new HashMap<>();
 		for (Entry<String, Integer> entry : roleCompoMap.entrySet()) {
 			hash.put(ModeAPI.getRoleClassByString(entry.getKey()), entry.getValue());
 		}
 		return hash;
 	}
 	public void setRoleCompoMap(HashMap<Class<?>, Integer> roleCompoMap) {
-		HashMap<Class<?>, Integer> source = roleCompoMap;
-		HashMap<String, Integer> ret = new HashMap<String, Integer>();
-		for (Entry<Class<?>, Integer> src : source.entrySet()) {
+        HashMap<String, Integer> ret = new HashMap<String, Integer>();
+		for (Entry<Class<?>, Integer> src : roleCompoMap.entrySet()) {
 			ret.put(ModeAPI.getRoleByClass(src.getKey()).getName(), src.getValue());
 		}
 		this.roleCompoMap = ret;
@@ -172,7 +170,7 @@ public class Game {
 	public boolean hasClassInRoleCompoMap(Class<?> claz) {
 		for (String c : roleCompoMap.keySet()) {
 			Class<?> cl = ModeAPI.getRoleClassByString(c);
-			if (cl.equals(claz))
+            if (cl!=null&&cl.equals(claz))
 				return true;
 		}
 		return false;
@@ -280,20 +278,12 @@ public class Game {
 		return 0;
 	}
 	public String getStatus() {
-		switch (this.gamestate) {
-		case Waiting:
-			return "§aEn attente";
-		case Day:
-		case Night:
-		case Playing:
-			return "§cPartie en cours";
-		case Finish:
-			return "§ePartie terminée";
-		case Starting:
-			return "§3Lancement en cours";
-		default:
-			return "Error";
-		}
+        return switch (this.gamestate) {
+            case Waiting -> "§aEn attente";
+            case Day, Night, Playing -> "§cPartie en cours";
+            case Finish -> "§ePartie terminée";
+            case Starting -> "§3Lancement en cours";
+        };
 	}
 	public Mode getMode() {
 		return ModeAPI.getModeByIntRepresentation(this.emode);

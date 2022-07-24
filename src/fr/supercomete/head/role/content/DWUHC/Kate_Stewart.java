@@ -14,7 +14,6 @@ import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
 import fr.supercomete.enums.Camps;
-import fr.supercomete.head.GameUtils.GameConfigurable.Configurables;
 import fr.supercomete.head.PlayerUtils.PlayerUtility;
 import fr.supercomete.head.core.Main;
 import fr.supercomete.head.role.DWRole;
@@ -24,13 +23,13 @@ import fr.supercomete.head.role.Triggers.Trigger_WhileAnyTime;
 import fr.supercomete.head.role.Triggers.Trigger_WhileDay;
 import fr.supercomete.head.role.Triggers.Trigger_WhileNight;
 public final class Kate_Stewart extends DWRole implements Trigger_WhileAnyTime,Trigger_WhileDay,Trigger_WhileNight {
-	private HashMap<UUID, ArrayList<Indice>> Indices = new HashMap<UUID, ArrayList<Indice>>();
-	private HashMap<UUID, Integer> progression = new HashMap<UUID, Integer>();
+	private HashMap<UUID, ArrayList<Indice>> Indices = new HashMap<>();
+	private HashMap<UUID, Integer> progression = new HashMap<>();
 	private int stewartspeed=1;
  	public Kate_Stewart(UUID owner) {
 		super(owner);
 		for(UUID pl:Main.getPlayerlist()) {
-			if(pl!=owner)Indices.put(pl, new ArrayList<Kate_Stewart.Indice>());
+			if(pl!=owner)Indices.put(pl, new ArrayList<>());
 		}
 		for(UUID pl: Main.getPlayerlist())if(pl!=owner)progression.put(pl, 0);
 		

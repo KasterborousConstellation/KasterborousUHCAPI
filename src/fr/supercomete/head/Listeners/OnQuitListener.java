@@ -8,7 +8,6 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerQuitEvent;
 
 import fr.supercomete.enums.Gstate;
-import fr.supercomete.head.GameUtils.GameConfigurable.Configurables;
 import fr.supercomete.head.PlayerUtils.Offline_Player;
 import fr.supercomete.head.core.Main;
 final class OnQuitListener implements Listener{

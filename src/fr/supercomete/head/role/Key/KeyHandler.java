@@ -8,7 +8,6 @@ import fr.supercomete.head.GameUtils.GameConfigurable.Configurable;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
-import fr.supercomete.head.GameUtils.GameConfigurable.Configurables;
 import fr.supercomete.head.core.Main;
 import fr.supercomete.head.role.DWRole;
 import fr.supercomete.head.role.KeyType;
@@ -43,7 +42,7 @@ public class KeyHandler {
 	public static TardisKey generateKey(DWRole role) {
 		KeyType type = KeyType.values()[currentKey];
 		TardisKey key = new TardisKey(type,generateBonus());
-		if(role !=null && (role instanceof Davros || role instanceof Bill_Potts)) {
+		if((role instanceof Davros || role instanceof Bill_Potts)) {
 			if(key.getBonus().getType().equals(BonusType.NoFall))generateKey(role);
 		}
 		currentKey++;
@@ -61,7 +60,7 @@ public class KeyHandler {
 		return false;
 	}
 	private static ArrayList<UUID> getAllCandidate(){
-		ArrayList<UUID>list = new ArrayList<UUID>();
+		ArrayList<UUID>list = new ArrayList<>();
 		for(Entry<UUID,Role> entry:RoleHandler.getRoleList().entrySet()) {
 			if(entry.getValue()instanceof Companion && ((DWRole)entry.getValue()).getTardiskeys().size()<1) {
 				list.add(entry.getKey());

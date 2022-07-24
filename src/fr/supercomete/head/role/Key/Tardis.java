@@ -1,11 +1,9 @@
 package fr.supercomete.head.role.Key;
-import java.io.ObjectInputFilter;
 import java.util.*;
 
 import fr.supercomete.head.GameUtils.Events.PlayerEvents.PlayerEventHandler;
 import fr.supercomete.head.GameUtils.Events.PlayerEvents.PlayerEvents;
 import fr.supercomete.head.GameUtils.GameConfigurable.Configurable;
-import fr.supercomete.head.GameUtils.GameConfigurable.Configurables;
 import fr.supercomete.head.GameUtils.Time.TimeUtility;
 import fr.supercomete.head.PlayerUtils.PlayerUtility;
 import fr.supercomete.head.world.worldgenerator;
@@ -13,7 +11,6 @@ import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
 import fr.supercomete.enums.Camps;
-import fr.supercomete.head.Inventory.InventoryUtils;
 import fr.supercomete.head.core.Main;
 import fr.supercomete.head.role.RoleHandler;
 import fr.supercomete.head.role.content.DWUHC.Rusty;
@@ -25,7 +22,7 @@ public class Tardis {
 	private int percentDestruction;
 	private static long tick;
 	public Tardis() {
-		setKeys(new ArrayList<TardisKey>());
+		setKeys(new ArrayList<>());
 		setPercentDestruction(0);
 	}
 	public ArrayList<TardisKey> getKeys() {
