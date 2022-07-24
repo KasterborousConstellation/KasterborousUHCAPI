@@ -1,6 +1,7 @@
 package fr.supercomete.head.Inventory;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 import fr.supercomete.head.GameUtils.Enchants.EnchantHandler;
@@ -121,7 +122,7 @@ public class InventoryHandler {
 			inv.setItem(51, InventoryUtils.createColorItem(Material.STAINED_GLASS_PANE, " ", 1, (short)2));
 			inv.setItem(22, InventoryUtils.getItem(Material.BOOKSHELF, "§bScénarios", null));
 			inv.setItem(20, InventoryUtils.getItem(Material.PAPER, "§bRegles avancées", null));
-			inv.setItem(24, InventoryUtils.getItem(Material.DIAMOND_CHESTPLATE, "§bEnchants", List.of(
+			inv.setItem(24, InventoryUtils.getItem(Material.DIAMOND_CHESTPLATE, "§bEnchants", Arrays.asList(
                     EnchantHandler.generateLine(Enchantment.DAMAGE_ALL, EnchantType.Iron),
                     EnchantHandler.generateLine(Enchantment.DAMAGE_ALL, EnchantType.Diamond),
 			        EnchantHandler.generateLine(Enchantment.PROTECTION_ENVIRONMENTAL, EnchantType.Iron),
@@ -186,7 +187,7 @@ public class InventoryHandler {
 			inv.setItem(16, InventoryUtils.getItem(Material.STONE_BUTTON, "§r+10m", null));
 			inv.setItem(17, InventoryUtils.getItem(Material.STONE_BUTTON, "§r+60m", null));
 			inv.getItem(18+main.Selected).setType(Material.COMPASS);
-			inv.setItem(49, InventoryUtils.getItem(Material.ARROW, "§7Retour", List.of("§rRetour au menu de configuration")));
+			inv.setItem(49, InventoryUtils.getItem(Material.ARROW, "§7Retour", Collections.singletonList("§rRetour au menu de configuration")));
 			break;
 		case 8://Border GUI;
 			inv=Bukkit.createInventory(null, 27,"§dBordure");

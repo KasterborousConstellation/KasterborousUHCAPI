@@ -57,8 +57,9 @@ final class BlockPlaceListener implements Listener {
 					}
 				}
 			}
-			if (RoleHandler.getRoleOf(player) instanceof Captain_Jack_Harkness captain && NbtTagHandler.hasUUIDTAG(currentItem) && NbtTagHandler.getUUIDTAG(currentItem) == 7 && currentItem.getType() == Material.STRING) {
-                if (!Main.searchintoarrayLocationDistance(captain.getLoclist(), 30, currentblock.getLocation())) {
+			if (RoleHandler.getRoleOf(player) instanceof Captain_Jack_Harkness && NbtTagHandler.hasUUIDTAG(currentItem) && NbtTagHandler.getUUIDTAG(currentItem) == 7 && currentItem.getType() == Material.STRING) {
+                Captain_Jack_Harkness captain = (Captain_Jack_Harkness)RoleHandler.getRoleOf(player);
+			    if (!Main.searchintoarrayLocationDistance(captain.getLoclist(), 30, currentblock.getLocation())) {
 					e.setCancelled(true);
 					player.sendMessage(Main.UHCTypo + "Ce piège est trop près d'un autre piège");
 					return;

@@ -1,4 +1,4 @@
-package fr.supercomete.datamanager;
+package fr.supercomete.datamanager.FileManager;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import fr.supercomete.head.GameUtils.Game;

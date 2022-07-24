@@ -11,8 +11,11 @@ import org.bukkit.event.inventory.FurnaceBurnEvent;
 import fr.supercomete.head.GameUtils.Scenarios.Scenarios;
 import fr.supercomete.head.core.Main;
 
-record FurnaceBurnListener(Main main) implements Listener {
-
+class FurnaceBurnListener implements Listener {
+    private Main main;
+    FurnaceBurnListener(Main main){
+        this.main=main;
+    }
     @EventHandler
     public void onFurnaceBurn(FurnaceBurnEvent e) {
         Block block = e.getBlock();

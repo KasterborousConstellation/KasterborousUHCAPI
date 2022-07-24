@@ -10,7 +10,7 @@ public abstract class Event {
     private final int executionTime;
     public Event(final Mode[]compatibility,final int min,final int max){
         this.compatibility=compatibility;
-        this.executionTime = new Random().nextInt(min,max);
+        this.executionTime = new Random().nextInt(max-min)+min;
     }
     public boolean isCompatible(){
         return Main.containmod(compatibility,Main.currentGame.getMode());

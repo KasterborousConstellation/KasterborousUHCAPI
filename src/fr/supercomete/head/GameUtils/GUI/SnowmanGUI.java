@@ -1,6 +1,7 @@
 package fr.supercomete.head.GameUtils.GUI;
 
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map.Entry;
 import java.util.concurrent.CopyOnWriteArrayList;
@@ -42,7 +43,7 @@ public class SnowmanGUI extends GUI {
 		Inventory tmp = Bukkit.createInventory(null, 9,"§bTempete");
 		int i =1;
 		for(Entry<Location, Integer> entry  :role.getSnowman().entrySet()) {
-			tmp.setItem(i-1, InventoryUtils.getItem(Material.SNOW_BALL, "§bBonhomme de neige n°"+i, List.of(((Main.currentGame.getTime() - entry.getValue() > 15 * 60)) ? "§aUtilisable" : "§bCooldown: " + TimeUtility.transform(((entry.getValue() + 15 * 60) - Main.currentGame.getTime()), "§c", "§c", "§c"))));
+			tmp.setItem(i-1, InventoryUtils.getItem(Material.SNOW_BALL, "§bBonhomme de neige n°"+i, Collections.singletonList(((Main.currentGame.getTime() - entry.getValue() > 15 * 60)) ? "§aUtilisable" : "§bCooldown: " + TimeUtility.transform(((entry.getValue() + 15 * 60) - Main.currentGame.getTime()), "§c", "§c", "§c"))));
 			i++;
 		}
 		return tmp;

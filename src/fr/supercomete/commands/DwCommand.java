@@ -59,7 +59,8 @@ public class DwCommand implements CommandExecutor {
 
 	@Override
 	public boolean onCommand(CommandSender sender, Command cmd, String arg2, String[] args) {
-		if (sender instanceof Player player) {
+		if (sender instanceof Player) {
+		    Player player = (Player)sender;
             if (cmd.getName().equalsIgnoreCase("dw")) {
 				if (args.length == 0) {
 					player.sendMessage(Main.UHCTypo + "Commande inconnue /dw help pour plus d'information");
@@ -69,7 +70,8 @@ public class DwCommand implements CommandExecutor {
 				switch (args[0].toLowerCase()) {
 				case "gap":
 					if(role != null) {
-						if(role instanceof Vastra vastra) {
+						if(role instanceof Vastra) {
+						    Vastra vastra =(Vastra)role;
                             final CoolDown cap = vastra.gap;
 							if(args.length!=2) {
 								player.sendMessage(Main.UHCTypo+"§cUsage: /dw gap <Joueur>");
@@ -117,7 +119,8 @@ public class DwCommand implements CommandExecutor {
 				case "status":
 					if (ModeAPI.getModeByIntRepresentation(Main.currentGame.getEmode()) instanceof CampMode) {
 						if (RoleHandler.isIsRoleGenerated()) {
-							if(role instanceof final ClaraOswald oswald) {
+							if(role instanceof ClaraOswald) {
+							    final ClaraOswald oswald =(ClaraOswald)role;
                                 final CoolDown cap = oswald.statusCoolDown;
 								if(args.length!=2) {
 									player.sendMessage(Main.UHCTypo+"§cUsage: /dw status <Joueur>");
@@ -171,7 +174,8 @@ public class DwCommand implements CommandExecutor {
 					break;
 				case "cell":
 					if (role != null) {
-						if (role instanceof final Davros davros) {
+						if (role instanceof Davros) {
+						    final Davros davros =(Davros) role;
                             if (args.length < 2) {
 								player.sendMessage(Main.UHCTypo
 										+ "§cErreur vous n'avez pas spécifié de joueur à désigner comme cible");
@@ -359,7 +363,8 @@ public class DwCommand implements CommandExecutor {
 					break;
 				case "spectate":
 					if (role != null) {
-						if (role instanceof DannyPink dannypink) {
+						if (role instanceof DannyPink ) {
+                            DannyPink dannypink= (DannyPink)role;
                             CoolDown danny = dannypink.cooldown;
 							if (args.length < 2) {
 								player.sendMessage(Main.UHCTypo
@@ -397,7 +402,8 @@ public class DwCommand implements CommandExecutor {
 					break;
 				case "target":
 					if (role != null) {
-						if (role instanceof Zygon castedrole) {
+						if (role instanceof Zygon) {
+                            Zygon castedrole=(Zygon) role;
                             if (args.length < 2) {
 								player.sendMessage(Main.UHCTypo
 										+ "§cErreur vous n'avez pas spécifié de joueur à désigner comme cible");
@@ -441,7 +447,8 @@ public class DwCommand implements CommandExecutor {
 					break;
 				case "source":
 					if (role != null) {
-						if (role instanceof Harriet_Jones castedrole) {
+						if (role instanceof Harriet_Jones) {
+                            Harriet_Jones castedrole =(Harriet_Jones) role;
                             if (args.length < 2) {
 								player.sendMessage(Main.UHCTypo
 										+ "§cErreur vous n'avez pas spécifié de joueur à désigner comme source");

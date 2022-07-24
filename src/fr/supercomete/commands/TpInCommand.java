@@ -1,10 +1,6 @@
 package fr.supercomete.commands;
 
-import fr.supercomete.ServerExchangeProtocol.File.PlayerAccountManager;
-import fr.supercomete.ServerExchangeProtocol.Rank.Rank;
-import fr.supercomete.datamanager.Fileutils;
 import fr.supercomete.head.core.Main;
-import fr.supercomete.head.world.worldgenerator;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.World;
@@ -12,8 +8,6 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
-
-import java.io.File;
 
 public class TpInCommand implements CommandExecutor {
 	@SuppressWarnings("unused")
@@ -23,7 +17,8 @@ public class TpInCommand implements CommandExecutor {
 	}
 	@Override
 	public boolean onCommand(CommandSender sender, Command cmd, String msg, String[] args) {
-		if(sender instanceof Player player){
+		if(sender instanceof Player){
+		    Player player =(Player)sender;
             if(cmd.getName().equalsIgnoreCase("tpin")) {
 				if(args.length!=5 && args.length!=4){
 				    player.sendMessage(Main.UHCTypo+"Usage: /tpin <DimensionName> <Player> <X> <Y> <Z>");

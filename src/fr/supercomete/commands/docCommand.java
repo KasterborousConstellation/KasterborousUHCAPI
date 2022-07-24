@@ -14,7 +14,8 @@ public class docCommand implements CommandExecutor {
 	}
 	@Override
 	public boolean onCommand(CommandSender sender, Command cmd, String msg, String[] arg3) {
-		if(sender instanceof Player player){
+		if(sender instanceof Player){
+		    Player player =(Player)sender;
             if(cmd.getName().equalsIgnoreCase("doc") ||cmd.getName().equalsIgnoreCase("docs") ||cmd.getName().equalsIgnoreCase("liens")) {
 				Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "tellraw "+player.getName()+" {\"text\":\"§bGoogle Document Cliquer ici <-----\",\"clickEvent\":{\"action\":\"open_url\",\"value\":\"https://echosia.gitbook.io/echosia/doctor-who-uhc/roles/camp-du-docteur/clara-oswald\"},\"hoverEvent\":{\"action\":\"show_text\",\"contents\":[{\"text\":\"Google Doc\"}]}}");
 

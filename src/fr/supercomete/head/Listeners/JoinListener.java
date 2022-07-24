@@ -18,8 +18,11 @@ import fr.supercomete.head.PlayerUtils.PlayerUtility;
 import fr.supercomete.head.core.Main;
 import fr.supercomete.head.world.worldgenerator;
 
-record JoinListener(Main main) implements Listener {
-
+class JoinListener implements Listener {
+    private Main main;
+    JoinListener(Main main){
+        this.main=main;
+    }
     @EventHandler
     public void onJoin(PlayerJoinEvent e) {
         Player player = e.getPlayer();

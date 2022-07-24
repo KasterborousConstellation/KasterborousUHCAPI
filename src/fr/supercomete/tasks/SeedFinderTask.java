@@ -10,7 +10,7 @@ import org.bukkit.WorldCreator;
 import org.bukkit.WorldType;
 import org.bukkit.scheduler.BukkitRunnable;
 
-import fr.supercomete.datamanager.Fileutils;
+import fr.supercomete.datamanager.FileManager.Fileutils;
 import fr.supercomete.enums.BiomeGeneration;
 import fr.supercomete.head.core.Main;
 import fr.supercomete.head.world.BiomeGenerator;

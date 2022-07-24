@@ -68,7 +68,7 @@ public final class Tecteun extends DWRole implements BonusHeart, Trigger_OnOwner
 
     @Override
     public ItemStack[] askItemStackgiven() {
-        ItemStack stack = InventoryUtils.getItem(Material.NETHER_STAR,"§6Flux",List.of("§6Cliquez ici pour activer la zone du Flux"));
+        ItemStack stack = InventoryUtils.getItem(Material.NETHER_STAR,"§6Flux",Collections.singletonList("§6Cliquez ici pour activer la zone du Flux"));
         stack = NbtTagHandler.createItemStackWithUUIDTag(stack,14);
         return new ItemStack[]{stack};
     }

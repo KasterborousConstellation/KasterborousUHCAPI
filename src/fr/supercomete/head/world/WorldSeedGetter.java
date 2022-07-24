@@ -4,7 +4,7 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.Random;
 
-import fr.supercomete.datamanager.Fileutils;
+import fr.supercomete.datamanager.FileManager.Fileutils;
 import fr.supercomete.enums.BiomeGeneration;
 
 public class WorldSeedGetter {

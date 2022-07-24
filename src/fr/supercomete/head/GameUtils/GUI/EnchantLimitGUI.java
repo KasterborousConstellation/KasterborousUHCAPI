@@ -54,9 +54,9 @@ public class EnchantLimitGUI extends GUI{
             tmp.setItem(e,stack);
 		    e++;
         }
-		tmp.setItem(48,InventoryUtils.getItem(Material.ANVIL,"§bEmpêcher la fusion: "+Main.getCheckMark(Main.currentGame.IsDisabledAnvil), List.of(InventoryHandler.ClickBool)));
-        tmp.setItem(49,InventoryUtils.getItem(Material.ARROW,"§7Retour", List.of("§7Cliquer ici pour revenir en arrière")));
-        tmp.setItem(50,InventoryUtils.getItem(Material.ENCHANTMENT_TABLE,"§bEmpêcher l'enchant: "+Main.getCheckMark(Main.currentGame.IsDisabledEnchant), List.of(InventoryHandler.ClickBool)));
+		tmp.setItem(48,InventoryUtils.getItem(Material.ANVIL,"§bEmpêcher la fusion: "+Main.getCheckMark(Main.currentGame.IsDisabledAnvil), Collections.singletonList(InventoryHandler.ClickBool)));
+        tmp.setItem(49,InventoryUtils.getItem(Material.ARROW,"§7Retour",Collections.singletonList("§7Cliquer ici pour revenir en arrière")));
+        tmp.setItem(50,InventoryUtils.getItem(Material.ENCHANTMENT_TABLE,"§bEmpêcher l'enchant: "+Main.getCheckMark(Main.currentGame.IsDisabledEnchant), Collections.singletonList(InventoryHandler.ClickBool)));
 		return tmp;
 	}
 	public void open() {
@@ -72,18 +72,18 @@ public class EnchantLimitGUI extends GUI{
 				final ClickType action = e.getClick();
 				if(gui.modifiable){
                     switch (currentSlot){
-                        case 49 ->{
+                        case 49 :
                             new ModeGUI(Main.currentGame.getMode(),gui.player).open();
-                        }
-                        case 48 ->{
+                            break;
+                        case 48 :
                             Main.currentGame.IsDisabledAnvil=!Main.currentGame.IsDisabledAnvil;
                             gui.open();
-                        }
-                        case 50 -> {
+                            break;
+                        case 50 :
                             Main.currentGame.IsDisabledEnchant=!Main.currentGame.IsDisabledEnchant;
                             gui.open();
-                        }
-                        default -> {
+                            break;
+                        default :
                             if(currentSlot>8 && currentSlot<9+EnchantHandler.getLimite(gui.type).size()){
                                 final EnchantLimit enchantLimit = EnchantHandler.getLimite(gui.type).get(currentSlot-9);
                                 int i = EnchantHandler.getIndexOf(enchantLimit);
@@ -95,8 +95,9 @@ public class EnchantLimitGUI extends GUI{
                                 Main.currentGame.getLimites().set(i,enchantLimit);
                                 gui.open();
                             }
+                            break;
                         }
-                    }
+
                 }else{
 				    if(currentSlot==49){
 				        InventoryHandler.openinventory(gui.player,5);

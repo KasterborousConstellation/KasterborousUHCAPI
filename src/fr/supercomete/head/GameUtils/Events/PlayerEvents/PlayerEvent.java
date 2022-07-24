@@ -12,6 +12,7 @@ import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
@@ -41,7 +42,7 @@ public class PlayerEvent {
     public ItemStack getItem(){
         final ItemStack stack = InventoryUtils.createColorItem(Material.WOOL,"§r"+name,1,(short)3);
         ItemMeta meta = stack.getItemMeta();
-        meta.setLore(List.of("§r"+player.getUsername()+" "+"("+ TimeUtility.transform(time,"§6")+"§r)"));
+        meta.setLore(Collections.singletonList("§r"+player.getUsername()+" "+"("+ TimeUtility.transform(time,"§6")+"§r)"));
         stack.setItemMeta(meta);
         return stack;
     }

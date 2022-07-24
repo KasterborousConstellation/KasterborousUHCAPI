@@ -137,7 +137,8 @@ final class InteractEventListener implements Listener {
             switch (NbtTagHandler.getUUIDTAG(currentItem)) {
                 case 1:
                     if (RoleHandler.isIsRoleGenerated()) {
-                        if (RoleHandler.getRoleOf(player) instanceof Vastra vastra) {
+                        if (RoleHandler.getRoleOf(player) instanceof Vastra) {
+                            Vastra vastra =(Vastra)RoleHandler.getRoleOf(player);
                             vastra.instant=true;
                             player.setItemInHand(new ItemStack(Material.AIR));
                             player.removePotionEffect(PotionEffectType.SPEED);
@@ -192,7 +193,8 @@ final class InteractEventListener implements Listener {
                     break;
                 case 5:
                     if (RoleHandler.isIsRoleGenerated()) {
-                        if (RoleHandler.getRoleOf(player) instanceof CyberBrouilleur brouilleur) {
+                        if (RoleHandler.getRoleOf(player) instanceof CyberBrouilleur ) {
+                            CyberBrouilleur brouilleur =(CyberBrouilleur)RoleHandler.getRoleOf(player);
                             if (action.equals(Action.RIGHT_CLICK_AIR)) {
                                 Bukkit.broadcastMessage(
                                         Main.UHCTypo + "§4Les rôles des morts ont été brouillés jusqu'à l'épisode suivant");
@@ -227,8 +229,8 @@ final class InteractEventListener implements Listener {
                 case 9:
                     e.setCancelled(true);
                     if (RoleHandler.isIsRoleGenerated()) {
-                        if (RoleHandler.getRoleOf(player) instanceof GreatIntelligence role) {
-
+                        if (RoleHandler.getRoleOf(player) instanceof GreatIntelligence ) {
+                            GreatIntelligence role = (GreatIntelligence) RoleHandler.getRoleOf(player);
                             final CoolDown freeze = role.freeze;
                             if (freeze.isAbleToUse()) {
                                 if (freeze.getUtilisation() > 0) {
@@ -275,7 +277,8 @@ final class InteractEventListener implements Listener {
                     e.setCancelled(true);
                     if (RoleHandler.isIsRoleGenerated()) {
                         if (e.getAction() == Action.RIGHT_CLICK_AIR || e.getAction() == Action.RIGHT_CLICK_BLOCK) {
-                            if (RoleHandler.getRoleOf(player) instanceof final Karvanista karvanista) {
+                            if (RoleHandler.getRoleOf(player) instanceof Karvanista ) {
+                                Karvanista karvanista = (Karvanista) RoleHandler.getRoleOf(player);
                                 final Player target = PlayerUtility.getTarget(player, 20);
                                 if (target == null) {
                                     player.sendMessage(Main.UHCTypo + "§cLe joueur n'est pas correctement indiqué.");
@@ -335,7 +338,8 @@ final class InteractEventListener implements Listener {
                 case 13:
                     if (RoleHandler.isIsRoleGenerated()) {
                         if (e.getAction() == Action.RIGHT_CLICK_AIR || e.getAction() == Action.RIGHT_CLICK_BLOCK) {
-                            if (RoleHandler.getRoleOf(player) != null && RoleHandler.getRoleOf(player) instanceof final Karvanista karvanista) {
+                            if (RoleHandler.getRoleOf(player) != null && RoleHandler.getRoleOf(player) instanceof Karvanista ) {
+                                Karvanista karvanista = (Karvanista) RoleHandler.getRoleOf(player);
                                 if (karvanista.getProposal(ShieldProposal.class).IsActivated) {
                                     ShieldProposal proposal = (ShieldProposal) karvanista.getProposal(ShieldProposal.class);
                                     if (proposal.CanUse) {
@@ -370,7 +374,8 @@ final class InteractEventListener implements Listener {
                 case 14:
                     if (RoleHandler.isIsRoleGenerated()) {
                         if (e.getAction() == Action.RIGHT_CLICK_BLOCK || e.getAction() == Action.RIGHT_CLICK_AIR) {
-                            if (RoleHandler.getRoleOf(player) != null && RoleHandler.getRoleOf(player) instanceof final Tecteun tecteun) {
+                            if (RoleHandler.getRoleOf(player) != null && RoleHandler.getRoleOf(player) instanceof Tecteun) {
+                                final Tecteun tecteun = (Tecteun) RoleHandler.getRoleOf(player);
                                 if (player.getWorld() == worldgenerator.currentPlayWorld) {
                                     player.setItemInHand(null);
                                     tecteun.createFluxZone(player, main);
@@ -383,7 +388,8 @@ final class InteractEventListener implements Listener {
                     if(RoleHandler.isIsRoleGenerated()){
                         if(e.getAction()==Action.RIGHT_CLICK_AIR||e.getAction()==Action.RIGHT_CLICK_BLOCK){
                             final Role role = RoleHandler.getRoleOf(player);
-                            if(role instanceof WeapingAngel angel){
+                            if(role instanceof WeapingAngel){
+                                WeapingAngel angel =(WeapingAngel)role;
                                 Player target =PlayerUtility.getTarget(player,20);
                                 if(target==null){
                                     player.sendMessage(Main.UHCTypo + "§cLe joueur n'est pas correctement indiqué.");

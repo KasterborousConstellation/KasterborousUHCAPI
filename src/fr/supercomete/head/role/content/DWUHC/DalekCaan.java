@@ -98,7 +98,8 @@ public final class DalekCaan extends DWRole implements HasAdditionalInfo,PreAnno
 	}
 	@Override
 	public void onKill(Player player, Player killed) {
-		if(RoleHandler.getRoleOf(player) instanceof DalekCaan r) {
+		if(RoleHandler.getRoleOf(player) instanceof DalekCaan) {
+            DalekCaan r =(DalekCaan) RoleHandler.getRoleOf(player);
             if(r.getTarget().equals(killed.getUniqueId())) {
                 hasKilled=true;
 				ItemStack item_caan = InventoryUtils.getItem(Material.BLAZE_POWDER,"§6Fracture temporelle" ,Main.SplitCorrectlyString("Cet objet est utilisable une seule fois, et vous donnes un effet de résistance et de vitesse pendant 1m30s. Cet objet révèle votre position.", 40, "§7"));

@@ -61,7 +61,8 @@ public final class Karvanista extends DWRole implements HasAdditionalInfo,PreAnn
 
 		final ArrayList<UUID> pool = new ArrayList<>();
 		for(final Entry<UUID, Role> entry : RoleHandler.getRoleList().entrySet()) {
-			if(entry.getValue() instanceof final DWRole role) {
+			if(entry.getValue() instanceof DWRole ) {
+                DWRole role =(DWRole) entry.getValue();
                 if(role.hasStatus(Status.Humain)) {
 					pool.add(role.getOwner());
 				}

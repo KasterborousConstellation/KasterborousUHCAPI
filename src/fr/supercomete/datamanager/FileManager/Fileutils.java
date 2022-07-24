@@ -1,4 +1,4 @@
-package fr.supercomete.datamanager;
+package fr.supercomete.datamanager.FileManager;
 
 import java.io.BufferedReader;
 import java.io.File;

@@ -127,7 +127,8 @@ public class RoleHandler {
 		player.sendMessage("§lVotre rôle est "+role.getCamp().getColor()+role.getName()+" "+addDisplay);
 		player.sendMessage("  §lCamp: "+role.getCamp().getColor()+role.getCamp().getName());
 		
-		if(role instanceof DWRole dwrole) {
+		if(role instanceof DWRole) {
+            DWRole dwrole=(DWRole)role;
 			String status="";
             if(dwrole.getStatus().length==0) {
 				status ="§bAucun";
@@ -146,7 +147,8 @@ public class RoleHandler {
 			}
 		}
 		
-		if(role instanceof HasAdditionalInfo rrole) {
+		if(role instanceof HasAdditionalInfo) {
+		    HasAdditionalInfo rrole=(HasAdditionalInfo) role;
             for(String str :rrole.getAdditionnalInfo()) {
 				player.sendMessage(str);
 			}
@@ -165,7 +167,8 @@ public class RoleHandler {
 			}
 		}
 		player.sendMessage("---------------------------------------------");
-		if(role instanceof DWRole dwrole) {
+		if(role instanceof DWRole) {
+            DWRole dwrole =(DWRole) role;
             for(TardisKey key:dwrole.getTardiskeys()) {
 				String content =getTardisKeyToString(key);
 				
@@ -176,12 +179,17 @@ public class RoleHandler {
 	}
 	
 	public static String getTardisKeyToString(TardisKey key) {
-        return switch (key.getBonus().getType()) {
-            case Force -> "§4Force §c+" + key.getBonus().getLevel() + "%";
-            case Speed -> "§bVitesse §1+" + key.getBonus().getLevel() + "%";
-            case Heart -> "§dCoeurs Bonus §5+" + key.getBonus().getLevel() + "§d½♥";
-            case NoFall -> "§aNoFall";
-        };
+	    switch (key.getBonus().getType()) {
+            case Force:
+                return "§4Force §c+" + key.getBonus().getLevel() + "%";
+            case Speed:
+                return "§bVitesse §1+" + key.getBonus().getLevel() + "%";
+            case Heart:
+                return "§dCoeurs Bonus §5+" + key.getBonus().getLevel() + "§d½♥";
+            case NoFall :
+                return "§aNoFall";
+        }
+        return null;
 	}
 	public static void DisplayDeath(Player player) {
 		DisplayDeath(new Offline_Player(player));

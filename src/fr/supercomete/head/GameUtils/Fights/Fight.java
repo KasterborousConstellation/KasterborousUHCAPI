@@ -53,11 +53,13 @@ public class Fight {
                     Bukkit.getPlayer(uu).sendMessage((bool) ? "§cVous êtes en combat." : "§cVous n'êtes plus en combat.");
                 }
                 if(bool){
-                    if(RoleHandler.getRoleOf(Bukkit.getPlayer(uu))!=null&&RoleHandler.getRoleOf(Bukkit.getPlayer(uu))instanceof Trigger_onFightBegin begin){
+                    if(RoleHandler.getRoleOf(Bukkit.getPlayer(uu))!=null&&RoleHandler.getRoleOf(Bukkit.getPlayer(uu))instanceof Trigger_onFightBegin){
+                        Trigger_onFightBegin begin = (Trigger_onFightBegin) RoleHandler.getRoleOf(Bukkit.getPlayer(uu));
                         begin.onFightBegin(this);
                     }
                 }else{
-                    if(RoleHandler.getRoleOf(Bukkit.getPlayer(uu))!=null&&RoleHandler.getRoleOf(Bukkit.getPlayer(uu))instanceof Trigger_OnFightEnd end){
+                    if(RoleHandler.getRoleOf(Bukkit.getPlayer(uu))!=null&&RoleHandler.getRoleOf(Bukkit.getPlayer(uu))instanceof Trigger_OnFightEnd){
+                        Trigger_OnFightEnd end = (Trigger_OnFightEnd) RoleHandler.getRoleOf(Bukkit.getPlayer(uu));
                         end.onFightEnd(this);
                     }
                 }
@@ -67,11 +69,13 @@ public class Fight {
                     Bukkit.getPlayer(uu2).sendMessage((bool) ? "§cVous êtes en combat." : "§cVous n'êtes plus en combat.");
                 }
                 if(bool){
-                    if(RoleHandler.getRoleOf(Bukkit.getPlayer(uu2))!=null&&RoleHandler.getRoleOf(Bukkit.getPlayer(uu2))instanceof Trigger_onFightBegin begin){
+                    if(RoleHandler.getRoleOf(Bukkit.getPlayer(uu2))!=null&&RoleHandler.getRoleOf(Bukkit.getPlayer(uu2))instanceof Trigger_onFightBegin){
+                        Trigger_onFightBegin begin = (Trigger_onFightBegin)RoleHandler.getRoleOf(Bukkit.getPlayer(uu2));
                         begin.onFightBegin(this);
                     }
                 }else{
-                    if(RoleHandler.getRoleOf(Bukkit.getPlayer(uu2))!=null&&RoleHandler.getRoleOf(Bukkit.getPlayer(uu2))instanceof Trigger_OnFightEnd end){
+                    if(RoleHandler.getRoleOf(Bukkit.getPlayer(uu2))!=null&&RoleHandler.getRoleOf(Bukkit.getPlayer(uu2))instanceof Trigger_OnFightEnd){
+                        Trigger_OnFightEnd end = (Trigger_OnFightEnd) RoleHandler.getRoleOf(Bukkit.getPlayer(uu2));
                         end.onFightEnd(this);
                     }
                 }

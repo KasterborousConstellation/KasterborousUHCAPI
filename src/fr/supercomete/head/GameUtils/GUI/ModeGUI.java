@@ -1,6 +1,7 @@
 package fr.supercomete.head.GameUtils.GUI;
 
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 
@@ -76,7 +77,7 @@ public class ModeGUI extends GUI {
 			SkullMeta im2=(SkullMeta)it2.getItemMeta();
 			it2.setDurability((short)3);
 			im2.setOwner(this.player.getName());
-			if(Main.currentGame.IsTeamActivated())im2.setLore(List.of("§cImcompatible si les équipes sont activées"));
+			if(Main.currentGame.IsTeamActivated())im2.setLore(Collections.singletonList("§cImcompatible si les équipes sont activées"));
 			im2.setDisplayName("§rSlots");
 			it2.setItemMeta(im2);
 			tmp.setItem(26, it2);
@@ -90,7 +91,7 @@ public class ModeGUI extends GUI {
 			tmp.setItem(27, InventoryUtils.getItem(Material.BARRIER, "§rBordure", null));
 			ItemStack i = InventoryUtils.createColorItem(Material.GRASS,"§rGénération", 1, (short)3);
 			ItemMeta im = i.getItemMeta();
-			im.setLore(List.of("§cLa génération n'est pas sauvegardée dans les configurations"));
+			im.setLore(Collections.singletonList("§cLa génération n'est pas sauvegardée dans les configurations"));
 			tmp.setItem(3,  i);
 			tmp.setItem(50, InventoryUtils.createColorItem(Material.STAINED_CLAY, "§rStop", 1, (short)14));
 			if(m instanceof CampMode) {
@@ -99,11 +100,11 @@ public class ModeGUI extends GUI {
 				ItemStack titem =InventoryUtils.createColorItem(Material.BANNER, "§rTeams", 1, (short)0);
 				if(!Main.currentGame.isGameState(Gstate.Waiting)) {
 					ItemMeta itmTeam=titem.getItemMeta();
-					itmTeam.setLore(Arrays.asList("§cImpossible quand la partie a déjà commencer"));
+					itmTeam.setLore(Collections.singletonList("§cImpossible quand la partie a déjà commencer"));
 				}
 				tmp.setItem(35, titem);
 			}
-			tmp.setItem(49, InventoryUtils.getItem(Material.ARROW, "§7Retour", Arrays.asList("§rRetour au choix du mode de jeu")));
+			tmp.setItem(49, InventoryUtils.getItem(Material.ARROW, "§7Retour", Collections.singletonList("§rRetour au choix du mode de jeu")));
 		}
 		
 		return tmp;

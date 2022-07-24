@@ -33,7 +33,7 @@ import fr.supercomete.ServerExchangeProtocol.File.PlayerAccountManager;
 import fr.supercomete.ServerExchangeProtocol.Rank.Rank;
 import fr.supercomete.ServerExchangeProtocol.Server.Server;
 import fr.supercomete.ServerExchangeProtocol.Server.ServerManager;
-import fr.supercomete.datamanager.ProfileSerializationManager;
+import fr.supercomete.datamanager.FileManager.ProfileSerializationManager;
 import fr.supercomete.enums.GenerationMode;
 import fr.supercomete.enums.Gstate;
 import fr.supercomete.head.GameUtils.Scenarios.Scenarios;
@@ -245,7 +245,7 @@ public class Main extends JavaPlugin {
 		final ItemStack goldenHead = new ItemStack(Material.GOLDEN_APPLE);
 		final ItemMeta gMeta = goldenHead.getItemMeta();
 		gMeta.setDisplayName(ChatColor.AQUA + "Golden Head");
-		gMeta.setLore(List.of("§7La Golden Head restore 4 coeurs et donne 2 coueurs d'absorptions!"));
+		gMeta.setLore(Collections.singletonList("§7La Golden Head restore 4 coeurs et donne 2 coueurs d'absorptions!"));
 		goldenHead.setItemMeta(gMeta);
 		final ShapedRecipe goldenHeadRecipe = new ShapedRecipe(goldenHead);
 		goldenHeadRecipe.shape("@@@", "@#@", "@@@");
@@ -635,7 +635,7 @@ public class Main extends JavaPlugin {
 		player.getOpenInventory().setItem(19, InventoryUtils.getItem(Material.LAVA_BUCKET, "§4Lac de lave en surface: "+Main.TranslateBoolean(Main.generator.getLavaLake()), Arrays.asList("§7Defini si les lacs de lave se générent en surface",InventoryHandler.ClickBool)));
 		player.getOpenInventory().setItem(29, InventoryUtils.createColorItem(Material.STAINED_GLASS, "§bCréer le monde", 1, (short)14));
 		player.getOpenInventory().setItem(31, InventoryUtils.createColorItem(Material.STAINED_GLASS, "§bPrégénerer le monde", 1, (short)5));
-		player.getOpenInventory().setItem(13, InventoryUtils.getItem(Material.IRON_DOOR, "§dMondes", List.of("§bCliquer ici pour pouvoir changer de monde")));
+		player.getOpenInventory().setItem(13, InventoryUtils.getItem(Material.IRON_DOOR, "§dMondes", Collections.singletonList("§bCliquer ici pour pouvoir changer de monde")));
 	}
 	public static void updateConfigFile(Player player) {
 		for (int i = 9; i < 43; i++) {
@@ -664,7 +664,7 @@ public class Main extends JavaPlugin {
 			player.getOpenInventory().setItem(i + 9, configs.get(i));
 		}
 		player.getOpenInventory().setItem(49,
-				InventoryUtils.getItem(Material.ARROW, "§7Retour", List.of("§rRetour au menu de configuration")));
+				InventoryUtils.getItem(Material.ARROW, "§7Retour", Collections.singletonList("§rRetour au menu de configuration")));
 	}
 	public static int CountIntegerValue(HashMap<?, Integer> map) {
 		int add = 0;

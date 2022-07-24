@@ -1,20 +1,14 @@
 package fr.supercomete.commands;
 
-import fr.supercomete.ServerExchangeProtocol.File.PlayerAccountManager;
-import fr.supercomete.ServerExchangeProtocol.Rank.Rank;
-import fr.supercomete.datamanager.Fileutils;
 import fr.supercomete.head.GameUtils.GameMode.Modes.Null_Mode;
 import fr.supercomete.head.GameUtils.Time.TimeUtility;
 import fr.supercomete.head.GameUtils.Time.Timer;
 import fr.supercomete.head.GameUtils.Time.TimerType;
 import fr.supercomete.head.core.Main;
-import fr.supercomete.head.world.worldgenerator;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
-
-import java.io.File;
 
 public class TimeLeftCommand implements CommandExecutor {
 	@SuppressWarnings("unused")
@@ -24,7 +18,8 @@ public class TimeLeftCommand implements CommandExecutor {
 	}
 	@Override
 	public boolean onCommand(CommandSender sender, Command cmd, String msg, String[] arg3) {
-		if(sender instanceof Player player){
+		if(sender instanceof Player){
+		    Player player =(Player)sender;
 		    if(Main.currentGame.getMode() instanceof Null_Mode){
 		        return false;
             }

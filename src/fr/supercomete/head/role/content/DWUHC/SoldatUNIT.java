@@ -1,11 +1,6 @@
 package fr.supercomete.head.role.content.DWUHC;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
+import java.util.*;
 import java.util.Map.Entry;
-import java.util.Random;
-import java.util.UUID;
 
 import fr.supercomete.head.GameUtils.GameConfigurable.Configurable;
 import fr.supercomete.head.GameUtils.Time.TimeUtility;
@@ -37,15 +32,17 @@ public final class SoldatUNIT extends DWRole implements Trigger_WhileAnyTime, Ha
 		this.soldiertype = SoldierType.values()[pseudorandom % SoldierType.values().length];
 		this.addRoleState(new Displayed_RoleState(RoleStateTypes.UNITSoldier, "§e" + soldiertype.getName()));
         switch (soldiertype) {
-            case Garde -> {
+            case Garde:
                 setActivated(false);
                 generalCoolDown = new CoolDown(10, 0);
-            }
-            case Enqueteur -> {
+                break;
+            case Enqueteur :
                 enquetes = new HashMap<>();
                 generalCoolDown = new CoolDown(3, 0);
-            }
-            case Medic -> generalCoolDown = new CoolDown(2, 0);
+                break;
+            case Medic:
+                generalCoolDown = new CoolDown(2, 0);
+                break;
         }
 		pseudorandom++;
 	}
@@ -61,7 +58,7 @@ public final class SoldatUNIT extends DWRole implements Trigger_WhileAnyTime, Ha
 	public List<String> askRoleInfo() {
 		List<String> additionnal;
 		if (soldiertype == SoldierType.Enqueteur) {
-			additionnal = List.of("§7Vous pouvez avec la commande '/dw enquete <Joueur>', lancer une enquete sur un joueur. L'enquête dure §a"
+			additionnal = Collections.singletonList("§7Vous pouvez avec la commande '/dw enquete <Joueur>', lancer une enquete sur un joueur. L'enquête dure §a"
                     + TimeUtility.transform(Main.currentGame.getDataFrom(Configurable.LIST.SoldierSpyTime), "", "", "")
                     + "§7 et a la fin de celle-ci vous obtiendrez soit les effets de cette personne, soit la première lettre de son rôle ou bien la dernière. Vous pouvez lancer plusieurs enquête en même temps.");
 		} else if (soldiertype == SoldierType.Garde) {

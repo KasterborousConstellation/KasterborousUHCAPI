@@ -1,8 +1,12 @@
 package fr.supercomete.head.GameUtils.GUI;
+import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
+
+import fr.supercomete.head.GameUtils.GameMode.Modes.Mode;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.enchantments.Enchantment;
@@ -39,7 +43,7 @@ public class ConfigurableGUI extends GUI{
 	}
 	protected Inventory generateinv() {
 		Inventory tmp = Bukkit.createInventory(null, 54,"Configurable "+openType);
-		List<String> arr = List.of("§aCliquez ici pour configurer");
+		List<String> arr = Collections.singletonList("§aCliquez ici pour configurer");
 		if(openType.equals("Principale")) {
 			for(int i = 0;i<9;i++) {
 				tmp.setItem(i, InventoryUtils.createColorItem(Material.STAINED_GLASS_PANE, " ", 1, (short)10));
@@ -69,7 +73,8 @@ public class ConfigurableGUI extends GUI{
 			}
 			if(openType==Main.currentGame.getMode().getName()) {
 				for(Configurable config : Main.currentGame.getConfigList()) {
-					if(config.getId().getBind() instanceof ModeBinding bind) {
+					if(config.getId().getBind() instanceof ModeBinding) {
+					    ModeBinding bind = (ModeBinding) config.getId().getBind();
                         if(bind.getBinding()==Main.currentGame.getMode().getName()) {
 							configurables.add(config);
 						}
@@ -79,7 +84,8 @@ public class ConfigurableGUI extends GUI{
 			}else {
 				tmp.setItem(49, InventoryUtils.getItem(Material.ARROW, "Retour", null));
 				for(Configurable config : Main.currentGame.getConfigList()) {
-					if(config.getId().getBind() instanceof TypeBinding bind) {
+					if(config.getId().getBind() instanceof TypeBinding) {
+                        TypeBinding bind = (TypeBinding) config.getId().getBind();
                         if(bind.getBinding()==openType) {
 							configurables.add(config);
 						}
@@ -129,11 +135,13 @@ public class ConfigurableGUI extends GUI{
 						ClickType currentClick = e.getClick();
 						ArrayList<Configurable> configurables = new ArrayList<>();
 						for(Configurable config : Main.currentGame.getConfigList()) {
-							if(config.getId().getBind() instanceof TypeBinding bind) {
+							if(config.getId().getBind() instanceof TypeBinding) {
+                                TypeBinding bind =(TypeBinding) config.getId().getBind();
                                 if(bind.getBinding()==gui.openType) {
 									configurables.add(config);
 								}
-							}else if(config.getId().getBind() instanceof ModeBinding mode) {
+							}else if(config.getId().getBind() instanceof ModeBinding) {
+                                ModeBinding mode=(ModeBinding)config.getId().getBind();
                                 if(mode.getBinding()==gui.openType) {
 									configurables.add(config);
 								}

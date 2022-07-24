@@ -17,7 +17,8 @@ public class DisperseCommand implements CommandExecutor {
 	}
 	@Override
 	public boolean onCommand(CommandSender sender, Command cmd, String msg, String[] args) {
-		if(sender instanceof Player player){
+		if(sender instanceof Player){
+		    Player player = (Player)sender;
             if(cmd.getName().equalsIgnoreCase("disperse") ) {
 				if(!(Main.IsCohost(player) || Main.IsHost(player))) {
 					player.sendMessage(Main.UHCTypo+"§cVous n'avez pas le droit d'utiliser cette commande");

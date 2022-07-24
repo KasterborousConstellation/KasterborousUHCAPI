@@ -7,7 +7,7 @@ import org.bukkit.entity.Player;
 
 import fr.supercomete.ServerExchangeProtocol.File.PlayerAccountManager;
 import fr.supercomete.ServerExchangeProtocol.Rank.Rank;
-import fr.supercomete.datamanager.Fileutils;
+import fr.supercomete.datamanager.FileManager.Fileutils;
 import fr.supercomete.head.core.Main;
 import fr.supercomete.head.world.worldgenerator;
 
@@ -21,7 +21,8 @@ public class BlackSeedCommand implements CommandExecutor {
 	}
 	@Override
 	public boolean onCommand(CommandSender sender, Command cmd, String msg, String[] arg3) {
-		if(sender instanceof Player player){
+		if(sender instanceof Player){
+            Player player=(Player)sender;
             if(cmd.getName().equalsIgnoreCase("blacklistseed") ||cmd.getName().equalsIgnoreCase("blseed")) {
 				if(PlayerAccountManager.getPlayerAccount(player).hasRank(Rank.Admin)) {						
 					if(player.getWorld().equals(worldgenerator.currentPlayWorld)) {

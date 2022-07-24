@@ -54,8 +54,11 @@ import fr.supercomete.nbthandler.NbtTagHandler;
 import fr.supercomete.tasks.Cycle;
 import fr.supercomete.tasks.DelayedModeDeath;
 
-record EntityDamageListeners(Main main) implements Listener {
-
+class EntityDamageListeners implements Listener {
+    private Main main;
+    EntityDamageListeners(Main main){
+        this.main=main;
+    }
     @EventHandler(priority = EventPriority.HIGHEST)
     public void PlayerDeathEvent(EntityDamageEvent e) {
         if (RoleHandler.isIsRoleGenerated()) {
@@ -81,7 +84,8 @@ record EntityDamageListeners(Main main) implements Listener {
             }
             if (RoleHandler.isIsRoleGenerated()) {
                 if (RoleHandler.getRoleOf(player) != null) {
-                    if(RoleHandler.getRoleOf(player)instanceof Trigger_OnTakingHit hit){
+                    if(RoleHandler.getRoleOf(player)instanceof Trigger_OnTakingHit){
+                        Trigger_OnTakingHit hit=(Trigger_OnTakingHit)RoleHandler.getRoleOf(player);
                         hit.TakingDamage(player,e);
                     }
                     if (RoleHandler.getRoleOf(player) instanceof Jenny_Flint) {
@@ -94,10 +98,12 @@ record EntityDamageListeners(Main main) implements Listener {
                         }
                         flint.getFirstBonus(BonusType.Force).setLevel(total_peopleat100);
                     }
-                    if (RoleHandler.getRoleOf(player) instanceof Karvanista karvanista) {
+                    if (RoleHandler.getRoleOf(player) instanceof Karvanista) {
+                        Karvanista karvanista= (Karvanista) RoleHandler.getRoleOf(player);
                         if (karvanista.finished) {
                             for (final Proposal proposal : karvanista.allpacte) {
-                                if (proposal instanceof Trigger_OnTakingHit hit) {
+                                if (proposal instanceof Trigger_OnTakingHit ) {
+                                    Trigger_OnTakingHit hit = (Trigger_OnTakingHit)proposal;
                                     hit.TakingDamage(player, e);
                                 }
                             }
@@ -105,7 +111,8 @@ record EntityDamageListeners(Main main) implements Listener {
                     } else if (RoleHandler.getRoleOf(player).hasRoleState(RoleStateTypes.Karvanista)) {
                         KarvanistaRoleState component = (KarvanistaRoleState) RoleHandler.getRoleOf(player).getRoleState(RoleStateTypes.Karvanista);
                         for (Proposal proposal : component.proposal) {
-                            if (proposal instanceof Trigger_OnTakingHit hit) {
+                            if (proposal instanceof Trigger_OnTakingHit) {
+                                Trigger_OnTakingHit hit=(Trigger_OnTakingHit)proposal;
                                 hit.TakingDamage(player, e);
                             }
                         }
@@ -141,7 +148,8 @@ record EntityDamageListeners(Main main) implements Listener {
         float resistancerate = Main.currentGame.getDataFrom(Configurable.LIST.ResistancePercent);
         if (e.getCause().equals(DamageCause.ENTITY_ATTACK)) {
             final EntityDamageByEntityEvent f = (EntityDamageByEntityEvent) e;
-            if (f.getDamager() instanceof final Player damager) {
+            if (f.getDamager() instanceof Player ) {
+                Player damager = (Player) f.getDamager();
                 // Thanks to package com.yahoo.brettbutcher98.PotionFix;
                 // For the strengthfix
                 if (damager.hasPotionEffect(PotionEffectType.INCREASE_DAMAGE)) {
@@ -229,7 +237,8 @@ record EntityDamageListeners(Main main) implements Listener {
                 if (NbtTagHandler.hasUUIDTAG(currentItem)) {
                     if (NbtTagHandler.getUUIDTAG(currentItem) == 3) {
                         player.setItemInHand(new ItemStack(Material.AIR));
-                        if(RoleHandler.getRoleOf(player)instanceof CyberPlanner planner &&RoleHandler.getRoleOf(dmg).getDefaultCamp()==Camps.DoctorCamp && !RoleHandler.getRoleOf(dmg).hasRoleState(RoleStateTypes.Purified)){
+                        if(RoleHandler.getRoleOf(player)instanceof CyberPlanner &&RoleHandler.getRoleOf(dmg).getDefaultCamp()==Camps.DoctorCamp && !RoleHandler.getRoleOf(dmg).hasRoleState(RoleStateTypes.Purified)){
+                            CyberPlanner planner =(CyberPlanner)RoleHandler.getRoleOf(player);
                             RoleHandler.getRoleOf(dmg).addRoleState(new InfectedRoleState(RoleStateTypes.Infected));
                             RoleHandler.getRoleOf(dmg).setCamp(Camps.EnnemiDoctorCamp);
                             player.sendMessage(Main.UHCTypo + "Vous avez infecté " + dmg.getName());
@@ -301,7 +310,8 @@ record EntityDamageListeners(Main main) implements Listener {
                     }
                 } else if (e.getCause().equals(DamageCause.PROJECTILE)) {
                     EntityDamageByEntityEvent event = (EntityDamageByEntityEvent) e;
-                    if (event.getDamager() instanceof Projectile proj) {
+                    if (event.getDamager() instanceof Projectile) {
+                        Projectile proj =(Projectile) event.getDamager();
                         if (proj.getShooter() instanceof Player) {
                             damager = (Player) proj.getShooter();
                             advancedCause = DeathCause.EnvironnementalCause.Bow;

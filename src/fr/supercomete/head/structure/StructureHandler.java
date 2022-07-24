@@ -1,7 +1,7 @@
 package fr.supercomete.head.structure;
 import java.io.File;
 import java.io.IOException;
-import fr.supercomete.datamanager.Fileutils;
+import fr.supercomete.datamanager.FileManager.Fileutils;
 import fr.supercomete.head.core.Main;
 public class StructureHandler {
 	public static File structurefile;

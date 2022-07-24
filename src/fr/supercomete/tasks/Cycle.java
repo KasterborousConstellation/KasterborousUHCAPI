@@ -92,7 +92,8 @@ public class Cycle extends BukkitRunnable{
                     KeyHandler.GenerateAllKey();
                     for (Player player : Bukkit.getOnlinePlayers()) {
                         player.sendMessage(Main.UHCTypo + "§bLe Tardis vient d'apparaitre");
-                        if (RoleHandler.getRoleOf(player) != null && RoleHandler.getRoleOf(player) instanceof ClaraOswald clara) {
+                        if (RoleHandler.getRoleOf(player) != null && RoleHandler.getRoleOf(player) instanceof ClaraOswald) {
+                            ClaraOswald clara = (ClaraOswald)RoleHandler.getRoleOf(player);
                             clara.NotifyTardis(true);
                         }
                     }
@@ -100,7 +101,8 @@ public class Cycle extends BukkitRunnable{
                 if (time - Main.currentGame.getTimer(Timer.TardisFirstSpawn).getData() > 0 && (time - Main.currentGame.getTimer(Timer.TardisFirstSpawn).getData())%(Main.currentGame.getTimer(Timer.TardisDelay).getData()) == 0) {
                     TardisHandler.placeTardis();
                     for (Player player : Bukkit.getOnlinePlayers()) {
-                        if (RoleHandler.getRoleOf(player) != null && RoleHandler.getRoleOf(player) instanceof final ClaraOswald clara) {
+                        if (RoleHandler.getRoleOf(player) != null && RoleHandler.getRoleOf(player) instanceof ClaraOswald) {
+                            final ClaraOswald clara =(ClaraOswald)RoleHandler.getRoleOf(player);
                             clara.NotifyTardis(false);
                         }
                     }
@@ -139,7 +141,8 @@ public class Cycle extends BukkitRunnable{
                     ModeAPI.getModeByIntRepresentation(Main.currentGame.getEmode()).onEpisodeTime(player);
                 }
                 for(Role role : RoleHandler.getRoleList().values()){
-                    if(role instanceof Trigger_onEpisodeTime episodeTime){
+                    if(role instanceof Trigger_onEpisodeTime){
+                        Trigger_onEpisodeTime episodeTime = (Trigger_onEpisodeTime)role;
                         episodeTime.onEpisodeTime(Bukkit.getPlayer(role.getOwner()));
                     }
                 }

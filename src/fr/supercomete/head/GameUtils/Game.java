@@ -278,12 +278,17 @@ public class Game {
 		return 0;
 	}
 	public String getStatus() {
-        return switch (this.gamestate) {
-            case Waiting -> "§aEn attente";
-            case Day, Night, Playing -> "§cPartie en cours";
-            case Finish -> "§ePartie terminée";
-            case Starting -> "§3Lancement en cours";
-        };
+	    switch (this.gamestate) {
+            case Waiting :
+                return "§aEn attente";
+            case Day: case Night: case Playing:
+                return "§cPartie en cours";
+            case Finish :
+                return "§ePartie terminée";
+            case Starting :
+                return "§3Lancement en cours";
+        }
+        return "";
 	}
 	public Mode getMode() {
 		return ModeAPI.getModeByIntRepresentation(this.emode);

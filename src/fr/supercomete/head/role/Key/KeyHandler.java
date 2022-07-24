@@ -29,15 +29,17 @@ public class KeyHandler {
 	}
 	private static Bonus generateBonus() {
 		int sh = new Random().nextInt(6);
-        return switch (sh) {
-            case 0 -> new Bonus(BonusType.Force, 7);
-            case 1 -> new Bonus(BonusType.Speed, 5);
-            case 2 -> new Bonus(BonusType.NoFall, 1);
-            case 3 -> new Bonus(BonusType.Heart, 4);
-            case 4 -> new Bonus(BonusType.Heart, 2);
-            case 5 -> new Bonus(BonusType.Speed, 9);
-            default -> null;
-        };
+		switch (sh) {
+            case 0 : return new Bonus(BonusType.Force, 7);
+            case 1 : return new Bonus(BonusType.Speed, 5);
+            case 2 : return new Bonus(BonusType.NoFall, 1);
+            case 3 : return new Bonus(BonusType.Heart, 4);
+            case 4 : return new Bonus(BonusType.Heart, 2);
+            case 5 :
+                return new Bonus(BonusType.Speed, 9);
+            default:
+                return null;
+        }
     }
 	public static TardisKey generateKey(DWRole role) {
 		KeyType type = KeyType.values()[currentKey];

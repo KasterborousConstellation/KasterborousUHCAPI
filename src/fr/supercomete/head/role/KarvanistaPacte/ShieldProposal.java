@@ -1,5 +1,6 @@
 package fr.supercomete.head.role.KarvanistaPacte;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
 
@@ -41,7 +42,7 @@ public final class ShieldProposal extends Proposal implements Trigger_onEpisodeT
 
 	@Override
 	public void start(Player karvanista, Player ally) {
-		ItemStack stack = InventoryUtils.getItem(Material.NETHER_STAR, "§bCage", List.of("§bCliquez ici pour créer votre Cage."));
+		ItemStack stack = InventoryUtils.getItem(Material.NETHER_STAR, "§bCage", Collections.singletonList("§bCliquez ici pour créer votre Cage."));
 		stack =NbtTagHandler.createItemStackWithUUIDTag(stack, 13);
 		InventoryUtils.addsafelyitem(karvanista, stack);
 	}	

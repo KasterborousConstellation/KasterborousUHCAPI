@@ -19,7 +19,8 @@ public class createStructureCommand implements CommandExecutor {
 	@SuppressWarnings("deprecation")
 	@Override
 	public boolean onCommand(CommandSender sender, Command cmd, String msg, String[] args) {
-		if(sender instanceof Player player){
+		if(sender instanceof Player){
+            Player player=(Player)sender;
             if(cmd.getName().equalsIgnoreCase("createStructure")) {
 				if(args.length == 10) {
 					double x1,x2,y1,y2,z1,z2,xo,yo,zo=0;

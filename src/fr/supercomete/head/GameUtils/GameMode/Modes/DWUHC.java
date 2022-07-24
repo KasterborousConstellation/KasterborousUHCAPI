@@ -31,7 +31,7 @@ import fr.supercomete.head.world.scoreboardmanager;
 public class DWUHC extends Mode implements CampMode,Groupable{
 	private final Camps[] campslist;
 	public DWUHC() {
-		super("Doctor Who UHC",Material.LAPIS_BLOCK, List.of("§6Doctor Who §4UHC"));
+		super("Doctor Who UHC",Material.LAPIS_BLOCK, Collections.singletonList("§6Doctor Who §4UHC"));
 		this.campslist= new Camps[]{Camps.DoctorCamp,Camps.EnnemiDoctorCamp,Camps.Division,Camps.Neutral};
 	}
 	@Override
@@ -209,10 +209,12 @@ public class DWUHC extends Mode implements CampMode,Groupable{
 	public void onEpisodeTime(Player player) {
 		if(RoleHandler.isIsRoleGenerated()){
 		    Role role =RoleHandler.getRoleOf(player);
-		    if(role instanceof Karvanista karvanista){
+		    if(role instanceof Karvanista ){
+		        Karvanista karvanista = (Karvanista) role;
 		        for(final Proposal proposal:karvanista.allpacte){
 		            if(proposal.IsActivated){
-		                if(proposal instanceof Trigger_onEpisodeTime trigger){
+		                if(proposal instanceof Trigger_onEpisodeTime ){
+                            Trigger_onEpisodeTime trigger =(Trigger_onEpisodeTime)proposal;
 		                    trigger.onEpisodeTime(player);
 		                }
 		            }

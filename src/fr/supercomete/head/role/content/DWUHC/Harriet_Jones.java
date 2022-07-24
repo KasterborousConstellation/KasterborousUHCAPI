@@ -129,7 +129,7 @@ public final class Harriet_Jones extends DWRole implements HasAdditionalInfo,Tri
 			Player harriet = Bukkit.getPlayer(getOwner());
 			if(harriet!=null)
 			    harriet.sendMessage(Main.UHCTypo + "§e" + player.getName() + "§7 est mort. Son tueur est §c"+ killer.getName() + "§7 son rôle est " + RoleHandler.getRoleOf(killer).getDefaultCamp().getColor()+ RoleHandler.getRoleOf(killer).getName());
-            this.info.add(new Info(player.getUniqueId(),killer.getName(),RoleHandler.getRoleOf(killer)));
+            this.info.add(new Info(player.getUniqueId(), killer.getName(), RoleHandler.getRoleOf(killer)));
 		}
 	}
 
@@ -141,7 +141,15 @@ public final class Harriet_Jones extends DWRole implements HasAdditionalInfo,Tri
         }
 	    return null;
     }
-    private record Info(UUID source,String name, Role role) {
+    private static class Info {
+	    private UUID source;
+	    private String name;
+	    private Role role;
+        Info (UUID source,String name, Role role){
+	        this.source=source;
+	        this.name=name;
+	        this.role =role;
+        }
         public String generateinfo() {
             return "Le tueur est " + name + " et est " + role.getDefaultCamp().getColor() + role.getName();
         }
