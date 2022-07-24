@@ -1,0 +1,709 @@
+package fr.supercomete.head.core;
+
+import java.io.File;
+import java.io.IOException;
+import java.lang.reflect.Array;
+import java.net.URISyntaxException;
+import java.net.URL;
+import java.util.*;
+import java.util.jar.JarFile;
+import java.util.zip.ZipEntry;
+
+import fr.supercomete.commands.*;
+import fr.supercomete.head.GameUtils.Events.PlayerEvents.PlayerEventHandler;
+import fr.supercomete.head.GameUtils.Fights.FightHandler;
+import fr.supercomete.head.GameUtils.Time.TimeUtility;
+import fr.supercomete.head.GameUtils.Time.TimerType;
+import fr.supercomete.head.role.content.DWUHC.*;
+import fr.supercomete.tasks.Cycle;
+import org.bukkit.*;
+import org.bukkit.enchantments.Enchantment;
+import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemFlag;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.ShapedRecipe;
+import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.plugin.PluginManager;
+import org.bukkit.plugin.java.JavaPlugin;
+import org.bukkit.potion.PotionEffect;
+import org.bukkit.potion.PotionEffectType;
+import org.bukkit.scheduler.BukkitRunnable;
+
+import fr.supercomete.ServerExchangeProtocol.File.PlayerAccountManager;
+import fr.supercomete.ServerExchangeProtocol.Rank.Rank;
+import fr.supercomete.ServerExchangeProtocol.Server.Server;
+import fr.supercomete.ServerExchangeProtocol.Server.ServerManager;
+import fr.supercomete.datamanager.ProfileSerializationManager;
+import fr.supercomete.enums.GenerationMode;
+import fr.supercomete.enums.Gstate;
+import fr.supercomete.head.GameUtils.Scenarios.Scenarios;
+import fr.supercomete.head.GameUtils.ConfigurationFileManager;
+import fr.supercomete.head.GameUtils.Game;
+import fr.supercomete.head.GameUtils.Lag;
+import fr.supercomete.head.GameUtils.TeamManager;
+import fr.supercomete.head.GameUtils.WinCondition;
+import fr.supercomete.head.GameUtils.GameMode.ModeHandler.ModeAPI;
+import fr.supercomete.head.GameUtils.GameMode.ModeModifier.CampMode;
+import fr.supercomete.head.GameUtils.GameMode.Modes.DWUHC;
+import fr.supercomete.head.GameUtils.GameMode.Modes.Mode;
+import fr.supercomete.head.GameUtils.GameMode.Modes.Null_Mode;
+import fr.supercomete.head.GameUtils.GameMode.Modes.UHCClassic;
+import fr.supercomete.head.GameUtils.Time.Timer;
+import fr.supercomete.head.Inventory.InventoryHandler;
+import fr.supercomete.head.Inventory.InventoryUtils;
+import fr.supercomete.head.Listeners.ListenersRegisterer;
+import fr.supercomete.head.PlayerUtils.PlayerUtility;
+import fr.supercomete.head.role.CyberiumHandler;
+import fr.supercomete.head.role.Role;
+import fr.supercomete.head.role.RoleBuilder;
+import fr.supercomete.head.role.RoleHandler;
+import fr.supercomete.head.role.Key.TardisHandler;
+import fr.supercomete.head.serverupdater.UpdateServerInfo;
+import fr.supercomete.head.structure.StructureHandler;
+import fr.supercomete.head.world.BiomeGenerator;
+import fr.supercomete.head.world.WorldGarbageCollector;
+import fr.supercomete.head.world.scoreboardmanager;
+import fr.supercomete.head.world.worldgenerator;
+import fr.supercomete.head.world.ScoreBoard.ScoreBoardManager;
+import fr.supercomete.tasks.GAutostart;
+import fr.supercomete.tasks.HelixTask;
+import fr.supercomete.tasks.particles.DalekCaanParticle;
+import org.jetbrains.annotations.NotNull;
+public class Main extends JavaPlugin {
+	public final static String UHCTypo = "§aEchosia"+"§7 » ";
+	public final static String ScoreBoardUHCTypo = ChatColor.GREEN+"Echosia ";
+	public Location spawn = new Location(Bukkit.getWorld("world"), getConfig().getInt("serverapi.spawn.x"),getConfig().getInt("serverapi.spawn.y"),getConfig().getInt("serverapi.spawn.z"));
+	private final String ServerId = getConfig().getString("serverapi.serverconfig.ServerId");
+	private final String DiscordLink = getConfig().getString("serverapi.serverconfig.DiscordLink");
+	private boolean nodamage = true;
+	private boolean forcedpvp = false;
+	private boolean forcebordure = false;
+	private boolean forcerole = false;
+	public static ArrayList<UUID> playerlist = new ArrayList<>();
+	public int Selected = 0;
+	public static Game currentGame;
+	public static boolean devmode;
+	public static Map<UUID, Integer> diamondmap = new HashMap<>();
+	public static ProfileSerializationManager manager = new ProfileSerializationManager();
+	public static UpdateServerInfo serverinfo;
+	public static BiomeGenerator generator;
+	public static StructureHandler structurehandler;
+	public static UUID host;
+	public static ArrayList<UUID>cohost = new ArrayList<>(4);
+	public static ArrayList<UUID>bypass = new ArrayList<>();
+	public static Cycle currentCycle=null;
+	private static Date getClassBuildTime() {
+	    Date d = null;
+	    Class<?> currentClass = new Object() {}.getClass().getEnclosingClass();
+	    URL resource = currentClass.getResource(currentClass.getSimpleName() + ".class");
+	    if (resource != null) {
+            switch (resource.getProtocol()) {
+                case "file":
+                    try {
+                        d = new Date(new File(resource.toURI()).lastModified());
+                    } catch (URISyntaxException ignored) {
+                    }
+                    break;
+                case "jar": {
+                    String path = resource.getPath();
+                    d = new Date(new File(path.substring(5, path.indexOf("!"))).lastModified());
+                    break;
+                }
+                case "zip": {
+                    String path = resource.getPath();
+                    File jarFileOnDisk = new File(path.substring(0, path.indexOf("!")));
+
+                    try (JarFile jf = new JarFile(jarFileOnDisk)) {
+                        ZipEntry ze = jf.getEntry(path.substring(path.indexOf("!") + 2));
+                        long zeTimeLong = ze.getTime();
+                        d = new Date(zeTimeLong);
+                    } catch (IOException | RuntimeException ignored) {
+                    }
+                    break;
+                }
+            }
+	    }
+	    return d;
+	}
+	public static void updateBypass(){
+        bypass.removeIf(uu -> !(Main.IsHost(uu) || Main.IsCohost(uu)));
+    }
+	@SuppressWarnings("deprecation")
+	@Override
+	public void onEnable() {
+		generator = new BiomeGenerator();
+		structurehandler= new StructureHandler(this);
+		new ScoreBoardManager(this);
+		new PlayerUtility(this);
+		host = null;
+		Date Compiledate = null;
+		Compiledate = getClassBuildTime();
+		if(loadServerProtocol()) {
+			Bukkit.broadcastMessage("§dServerProtocol: §aOnline");
+		}else {
+			Bukkit.broadcastMessage("§dServerProtocol: §4Offline");
+		}
+		ModeAPI.registerMode(new Null_Mode());
+		UHCClassic uhcclassic = new UHCClassic();	
+		ModeAPI.registerMode(uhcclassic);
+		final DWUHC doctorwho = new DWUHC();
+		doctorwho.RegisterRole(Dalek.class);
+		doctorwho.RegisterRole(DalekCaan.class);
+		doctorwho.RegisterRole(DalekStrategic.class);
+		doctorwho.RegisterRole(DalekSec.class);
+		doctorwho.RegisterRole(Supreme_Dalek.class);
+		
+		doctorwho.RegisterRole(Cyberman.class);
+		doctorwho.RegisterRole(CyberPlanner.class);
+		doctorwho.RegisterRole(CyberBrouilleur.class);
+		doctorwho.RegisterRole(Cybermite.class);
+		
+		doctorwho.RegisterRole(GreatIntelligence.class);
+		doctorwho.RegisterRole(Davros.class);
+		
+		doctorwho.RegisterRole(SoldatUNIT.class);
+		doctorwho.RegisterRole(RoryWilliams.class);
+		doctorwho.RegisterRole(AmyPond.class);
+		doctorwho.RegisterRole(Captain_Jack_Harkness.class);
+		doctorwho.RegisterRole(TheDoctor.class);
+		doctorwho.RegisterRole(Bill_Potts.class);
+		doctorwho.RegisterRole(Harriet_Jones.class);
+		//doctorwho.RegisterRole(Jenny_Flint.class); //Removed because need rework
+		doctorwho.RegisterRole(RiverSong.class);
+		doctorwho.RegisterRole(RoseTyler.class);
+		doctorwho.RegisterRole(Strax.class);
+		doctorwho.RegisterRole(Vastra.class);
+		doctorwho.RegisterRole(TheMaster.class);
+		doctorwho.RegisterRole(Kate_Stewart.class);
+		doctorwho.RegisterRole(DannyPink.class);
+		doctorwho.RegisterRole(ClaraOswald.class);									
+		
+		doctorwho.RegisterRole(Rusty.class);
+		doctorwho.RegisterRole(Zygon.class);
+		doctorwho.RegisterRole(Pting.class);
+		doctorwho.RegisterRole(Karvanista.class);
+
+		doctorwho.RegisterRole(Tecteun.class);
+		doctorwho.RegisterRole(WeapingAngel.class);
+		
+		doctorwho.getStructure().add(Main.structurehandler.extractStructure("Tardis"));
+		ModeAPI.registerMode(doctorwho);
+		
+		Bukkit.broadcastMessage("§dVersion: 0.8.9 Build("+Compiledate.getDate()+"/"+(Compiledate.getMonth()+1)+") §6Alpha");
+		currentGame=new Game(ModeAPI.getIntRepresentation(new Null_Mode()),this);
+		if((this.getConfig().getString("serverapi.serverconfig.echosiakey").equalsIgnoreCase("EchosiaBest"))){
+			Bukkit.broadcastMessage("HubUpdate Status: §aConnected");
+			serverinfo= new UpdateServerInfo(this);
+		}else {
+			Bukkit.broadcastMessage("HubUpdate Status: §cNot linked");
+		}
+		Bukkit.getServer().getScheduler().scheduleSyncRepeatingTask(this, new Lag(), 100L, 1L);// LagO'meter
+		spawn = new Location(Bukkit.getWorld("world"), getConfig().getInt("serverapi.spawn.x"),
+				getConfig().getInt("serverapi.spawn.y"), getConfig().getInt("serverapi.spawn.z"));
+		loadconfig();
+		RoleHandler.setIsRoleGenerated(false);
+		Bukkit.getServer().getWorld("world").setDifficulty(Difficulty.PEACEFUL);
+		getCommand("menu").setExecutor(new MenuCommand(this));
+		getCommand("cversion").setExecutor(new versionCommand(this));
+		getCommand("rules").setExecutor(new RulesCommand(this));
+		getCommand("team").setExecutor(new TeamCommand(this));
+		getCommand("inv").setExecutor(new InvCommand());
+		getCommand("h").setExecutor(new HostCommand(this));
+		getCommand("role").setExecutor(new RoleCommand(this));
+		getCommand("dw").setExecutor(new DwCommand(this));
+		getCommand("roles").setExecutor(new RolesCommand(this));
+		getCommand("compo").setExecutor(new RolesCommand(this));
+		getCommand("doc").setExecutor(new docCommand(this));
+		getCommand("docs").setExecutor(new docCommand(this));
+		getCommand("liens").setExecutor(new docCommand(this));
+		getCommand("admingenerate").setExecutor(new GenerateCommand(this));
+		getCommand("blseed").setExecutor(new BlackSeedCommand(this));
+		getCommand("blacklistseed").setExecutor(new BlackSeedCommand(this));
+		getCommand("Rolelist").setExecutor(new RolelistCommand(this));
+		getCommand("createstructure").setExecutor(new createStructureCommand(this));
+		getCommand("fullinv").setExecutor(new FullInvCommand(this));
+		getCommand("helpop").setExecutor(new HelpopCommand(this));
+		getCommand("disperse").setExecutor(new DisperseCommand(this));
+        getCommand("bypass").setExecutor(new BypassCommand(this));
+        getCommand("tpin").setExecutor(new TpInCommand(this));
+        getCommand("timeleft").setExecutor(new TimeLeftCommand(this));
+		scoreboardmanager score = new scoreboardmanager(this);
+		score.ChangeScoreboard();
+		new InventoryHandler(this);
+		new ConfigurationFileManager(this);
+		new RoleBuilder(this);
+		RoleHandler.IsHiddenRoleNCompo = false;
+		new worldgenerator(this);
+		new TeamManager(this);
+		new WinCondition(this);
+		new TardisHandler(this);
+		WorldGarbageCollector.init(this);
+		final PluginManager pm = getServer().getPluginManager();
+		if(!ListenersRegisterer.Register(pm,this))Bukkit.broadcastMessage("§4Une erreur fatale est apparue pendant la phase d'initialisation d'écoute de Spigot");
+		System.out.println("Activation du plugin");
+		// SetupGoldenHeadCraft
+		final ItemStack goldenHead = new ItemStack(Material.GOLDEN_APPLE);
+		final ItemMeta gMeta = goldenHead.getItemMeta();
+		gMeta.setDisplayName(ChatColor.AQUA + "Golden Head");
+		gMeta.setLore(List.of("§7La Golden Head restore 4 coeurs et donne 2 coueurs d'absorptions!"));
+		goldenHead.setItemMeta(gMeta);
+		final ShapedRecipe goldenHeadRecipe = new ShapedRecipe(goldenHead);
+		goldenHeadRecipe.shape("@@@", "@#@", "@@@");
+		goldenHeadRecipe.setIngredient('@', Material.GOLD_INGOT);
+		goldenHeadRecipe.setIngredient('#', Material.SKULL_ITEM, 3);
+		Bukkit.getServer().addRecipe(goldenHeadRecipe);
+		Main.devmode=getConfig().getBoolean("serverapi.serverconfig.devmode");
+		if(devmode) {
+			Bukkit.broadcastMessage("§eDevMode: §aOn");
+		}
+		new BukkitRunnable() {
+			
+			@Override
+			public void run() {
+				serverinfo.write();
+			}
+		}.runTaskTimer(this, 0, 20L);
+		
+	}
+    public static boolean IsHost(UUID player) {
+        return (host!=null && host.equals(player))||PlayerAccountManager.getPlayerAccount(player).hasRank(Rank.Admin);
+    }
+	public static boolean IsHost(Player player) {
+		return (host!=null && host.equals(player.getUniqueId()))||PlayerAccountManager.getPlayerAccount(player).hasRank(Rank.Admin); 
+	}
+	public static boolean IsCohost(Player player) {
+		return cohost.contains(player.getUniqueId());
+	}
+    public static boolean IsCohost(UUID player) {
+        return cohost.contains(player);
+    }
+	public void loadconfig() {
+		getConfig().options().copyDefaults(true);
+		saveConfig();
+	}
+	public static String getCheckMark(boolean bool) {
+		return bool?"§a✔":"§c✖";
+	}
+	public boolean loadServerProtocol() {
+		try {
+			@SuppressWarnings("unused")
+			Server server = ServerManager.getCurrentPluginServer();
+			return true;
+		}catch (Exception e) {
+			return false;
+		}
+	}
+	public void createDalekCaan(Player player) {
+		DalekCaanParticle particle = new DalekCaanParticle(player.getUniqueId(), 10*90);
+		particle.runTaskTimer(this, 0, 2L);
+		Location loc = player.getLocation();
+		loc.setY(loc.getY()+55);
+		loc.getWorld().strikeLightning(loc);
+		HelixTask helix = new HelixTask(loc, 14,false);
+		helix.runTaskTimer(this, 0, 1L);
+		
+		HelixTask h = new HelixTask(loc, 14,true);
+		h.runTaskTimer(this, 350L, 15L);
+	}
+	public void StartGame(Player player) {
+		if (this.getGenmode().equals(GenerationMode.Generating)) {
+			player.sendMessage(UHCTypo + "§cLa génération de la carte est déjà en cours");
+			return;
+		}
+        FightHandler.reset();
+        PlayerEventHandler.resetEvents();
+		Main.currentGame.getFullinv().clear();
+		if (this.forcebordure) {
+			this.forcebordure = false;
+		}
+		if(this.forcerole) {
+			this.forcerole = false;
+		}
+		if (this.forcedpvp) {
+			this.forcedpvp = false;
+		}
+		CyberiumHandler.reset();
+		
+		if (CountIntegerValue(currentGame.getRoleCompoMap()) < countnumberofplayer()
+				&& ModeAPI.getModeByIntRepresentation(Main.currentGame.getEmode()) instanceof CampMode) {
+			player.sendMessage(UHCTypo + "§cIl n'y a pas assez de rôles pour commencer la partie  "
+					+ currentGame.getRoleCompoMap().size() + "/" + countnumberofplayer() + "(Minimum)");
+			return;
+		}
+		if (this.getGenmode().equals(GenerationMode.None)||this.getGenmode().equals(GenerationMode.WorldCreatedOnly)) {
+			player.sendMessage(
+					UHCTypo + "§cLa génération de la carte doit être faite avant de pouvoir lancer une partie");
+			return;
+		}
+		diamondmap.replaceAll((k, v) -> 0);
+		if (Main.currentGame.getGamestate() == Gstate.Waiting) {
+			for (Scenarios sc : Main.currentGame.getScenarios()) {
+				if (!sc.getCompatiblity().IsCompatible(Main.currentGame.getMode())) {
+					Main.currentGame.getScenarios().remove(sc);
+					player.sendMessage(UHCTypo + "§cErreur, le scénario +" + sc.getName() + "est incompatible");
+				}
+			}
+			TardisHandler.IsTardisGenerated=false;
+			allplayereffectclear();
+			Main.currentGame.setGamestate(Gstate.Starting);
+			Main.currentGame.setFirstBorder(Main.currentGame.getCurrentBorder());
+			worldgenerator.currentPlayWorld.setGameRuleValue("naturalRegeneration", "false");
+			worldgenerator.currentPlayWorld.setGameRuleValue("doFireTick", "false");
+			worldgenerator.currentPlayWorld.setGameRuleValue("doMobSpawning", "true");
+			worldgenerator.currentPlayWorld.setGameRuleValue("doDaylightCycle", "false");
+			worldgenerator.currentPlayWorld.setGameRuleValue("keepinventory", "true");
+			worldgenerator.currentPlayWorld.setDifficulty(Difficulty.HARD);
+			GAutostart start = new GAutostart(this);
+			worldgenerator.currentPlayWorld.setPVP(false);
+			start.runTaskTimer(this, 0, 20);
+			
+			if (Main.currentGame.getTimer(Timer.PvPTime).getData() < Timer.PvPTime.getMinimal())
+				Main.currentGame.getTimer(Timer.PvPTime).setData(Timer.PvPTime.getBaseTime());
+			if (Main.currentGame.getTimer(Timer.BorderTime).getData() < Timer.BorderTime.getMinimal())
+				Main.currentGame.getTimer(Timer.BorderTime).setData(Timer.BorderTime.getBaseTime());
+			if (Main.currentGame.getTimer(Timer.RoleTime).getData() < Timer.RoleTime.getMinimal())
+				Main.currentGame.getTimer(Timer.RoleTime).setData(Timer.RoleTime.getBaseTime());
+		} else {
+			player.sendMessage(UHCTypo + "§cIl y a déjà une partie en cours");
+		}
+	}
+	public void StopGame(Player player) {
+		CyberiumHandler.reset();
+		if (player != null) {
+			if (Main.currentGame.getGamestate() == Gstate.Waiting) {
+				player.sendMessage(UHCTypo + "§cIl n'y a aucune partie en cours");
+				return;
+			}
+			if (Main.currentGame.getGamestate() == Gstate.Starting) {
+				player.sendMessage(UHCTypo + "§cLa partie ne peut être stoppée pendant le démarrage");
+				return;
+			}
+		}
+		Main.currentGame.getFullinv().clear();
+		RoleHandler.setHistoric(null);
+		this.nodamage = true;
+		Main.currentGame.setGamestate(Gstate.Waiting);
+		Main.currentGame.setGenmode(GenerationMode.None);
+		RoleHandler.setIsRoleGenerated(false);
+		RoleHandler.setRoleList(new HashMap<UUID, Role>());
+        if (this.forcebordure) {
+            this.forcebordure = false;
+        }
+        if (this.forcedpvp) {
+            this.forcedpvp = false;
+        }
+        if(this.forcerole) {
+            this.forcerole = false;
+        }
+        allplayereffectclear();
+
+        Main.currentGame.setTime(0);
+        Bukkit.getWorld("world").setDifficulty(Difficulty.PEACEFUL);
+		new BukkitRunnable(){
+            @Override
+            public void run() {
+                for (Player pl : Bukkit.getServer().getOnlinePlayers()) {
+                    pl.teleport(spawn);
+                    pl.setGameMode(GameMode.ADVENTURE);
+                    pl.getInventory().clear();
+                    pl.getInventory().setHelmet(null);
+                    pl.getInventory().setChestplate(null);
+                    pl.getInventory().setLeggings(null);
+                    pl.getInventory().setBoots(null);
+                    pl.setMaxHealth(20);
+                    if(Main.currentGame.isGameState(Gstate.Waiting))
+                        pl.addPotionEffect(new PotionEffect(PotionEffectType.SATURATION, 999999, 0));
+                }
+            }
+        }.runTaskLater(this,21);
+        new BukkitRunnable(){
+            @Override
+            public void run() {
+                for (Player pl : Bukkit.getServer().getOnlinePlayers()) {
+                    pl.setGameMode(GameMode.ADVENTURE);
+                    if (Main.IsHost(pl)) {
+                        PlayerUtility.GiveHotBarStuff(pl);
+                    }
+                }
+            }
+        }.runTaskLater(this,22);
+	}
+	public Location getLoc() {
+		return spawn;
+	}
+	public void setLoc(Location loc) {
+		this.spawn = loc;
+	}
+	public static boolean containmod(Mode[] list, Mode testedMode) {
+		for (Mode m : list) {
+			if(m.getClass().equals(testedMode.getClass()))return true;
+		}
+		return false;
+	}
+	public void addScenarios(Scenarios sc) {
+		Main.currentGame.getScenarios().add(sc);
+	}
+	public void removeScenarios(Scenarios sc) {
+		Main.currentGame.getScenarios().remove(sc);
+	}
+	public void updateScenariosInventory(Player player) {
+		for (int i = 0; Scenarios.values().length > i; i++) {
+			Scenarios sc = Scenarios.values()[i];
+			String bool = (Main.currentGame.getScenarios().contains(sc)) ? "§aOn" : "§cOff";
+			ArrayList<String> Lines = new ArrayList<String>();
+			if (sc == Scenarios.DiamondLimit)
+				Lines.add("§3Limite de diamant: §b" + currentGame.getDiamondlimit());
+			String compatibility = (sc.getCompatiblity().IsCompatible(Main.currentGame.getMode())) ? "§a✔" : "§c✖";
+			Lines.add(compatibility + "§r§7Compatibilité:");
+			ItemStack item = InventoryUtils.getItem(sc.getMat(), "§b" + sc.getName() + " " + bool, Lines);
+			if (Main.currentGame.getScenarios().contains(sc)) {
+				item.addUnsafeEnchantment(Enchantment.SILK_TOUCH, 1);
+				ItemMeta im = item.getItemMeta();
+				im.addItemFlags(ItemFlag.HIDE_ENCHANTS);
+				item.setItemMeta(im);
+			}
+			player.getOpenInventory().setItem(i + 9, item);
+		}
+	}
+	public void updateSlotsInventory(Player player) {
+		String name = (Main.currentGame.getMaxNumberOfplayer() == 0) ? "§rSlots:§a Illimité" 
+				: "§rSlots:§a " + Main.currentGame.getMaxNumberOfplayer();
+		player.getOpenInventory().setItem(13, InventoryUtils.getItem(Material.PAPER, name, null));
+	}
+	public static void allplayereffectclear() {
+		for (Player pl : Bukkit.getOnlinePlayers()) {
+			if (pl != null)
+				for (PotionEffect effect : pl.getActivePotionEffects()) {
+					pl.removePotionEffect(effect.getType());
+				}
+		}
+	}
+	public boolean isNodamage(boolean bol) {
+		return nodamage == bol;
+	}
+	public boolean getNodamage() {
+		return nodamage;
+	}
+	public void setNodamage(boolean nodamage) {
+		this.nodamage = nodamage;
+	}
+	public static ArrayList<UUID>  getPlayerlist() {
+		return playerlist;
+	}
+	public void setPlayerlist(ArrayList<UUID> playerlist) {
+		Main.playerlist = playerlist;
+	}
+	public void addPlayerList(UUID uu) {
+		Main.playerlist.add(uu);
+	}
+
+	public static String transformScoreBoardType(int v, String MiddleColor, String NumberColor) {
+		String m = (v / 60) +"";
+		String s = (v % 60) +"";
+		s = (s.length() == 1) ? "0" + s : s;
+		m = (m.length() == 1) ? "0" + m : m;
+		return NumberColor + m + MiddleColor + ":" + NumberColor + s;
+	}
+	public GenerationMode getGenmode() {
+		return Main.currentGame.getGenmode();
+	}
+	public void setGenmode(GenerationMode genmode) {
+		Main.currentGame.setGenmode(genmode);
+	}
+	public ArrayList<Timer> getCompatibleTimer() {
+		ArrayList<Timer> compatible = new ArrayList<Timer>();
+		for (Timer t : Timer.values()) {
+			if (Main.containmod(t.getCompatibility(), (Main.currentGame.getMode())))
+				compatible.add(t);
+		}
+		return compatible;
+	}
+	public void updateTimerInventory(Player player) {
+		int i = 18;
+        for(int e = 18;e<45;e++){
+            player.getOpenInventory().setItem(e,null);
+        }
+		for(Timer t:getCompatibleTimer()){
+            if(t.getType()== TimerType.TimeDependent &&(Main.currentGame.getTimer(t).getData() - Main.currentGame.getTime()) >0){
+                player.getOpenInventory().setItem(i, InventoryUtils.getItem(Material.PAPER,generateNameTimer(t),null));
+                i++;
+            }
+            if(t.getType()== TimerType.Literal){
+                player.getOpenInventory().setItem(i, InventoryUtils.getItem(Material.PAPER,generateNameTimer(t),null));
+                i++;
+            }
+        }
+		player.getOpenInventory().setItem(13, InventoryUtils.getItem(Material.PAPER,
+				"§r" + this.generateNameTimer(this.getCompatibleTimer().get(this.Selected)), null));
+		player.getOpenInventory().getItem(18 + this.Selected).setType(Material.COMPASS);
+	}
+	public void updateTeamsInventory(@NotNull Player player) {
+		short col = (short) ((Main.currentGame.IsTeamActivated()) ? 5 : 14);
+		String bool = (Main.currentGame.IsTeamActivated()) ? "§aOn" : "§cOff";
+		player.getOpenInventory().setItem(11, InventoryUtils.getItem(Material.WOOL, "§bNombre de joueur par équipe: §4"+Main.currentGame.getNumberOfPlayerPerTeam(),Arrays.asList(InventoryHandler.ClickTypoAdd+"1",InventoryHandler.ClickTypoRemove+"1")));
+		player.getOpenInventory().setItem(13, InventoryUtils.createColorItem(Material.WOOL, "§bTeam: " + bool, 1, col));
+		player.getOpenInventory()
+				.setItem(15, InventoryUtils.getItem(Material.PAPER,
+						"§bNombre d'équipes: §a" + Main.currentGame.getTeamNumber(),
+						Arrays.asList(InventoryHandler.ClickTypoAdd + "1", InventoryHandler.ClickTypoRemove + "1")));
+	}
+	public String generateNameTimer(@NotNull Timer t) {
+		return "§r" + t.getName() + " §c" + TimeUtility.transform((t.getType()==TimerType.TimeDependent)?Main.currentGame.getTimer(t).getData()-Main.currentGame.getTime():Main.currentGame.getTimer(t).getData(), "§5", "§5", "§d");
+	}
+
+	public static int getNumberOfCompatibleScenarios(Mode m) {
+		int count = 0;
+		for (Scenarios sc : Scenarios.values()) {
+			if (sc.getCompatiblity().IsCompatible(m)) {
+				count++;
+			}
+		}
+		return count;
+	}
+
+	public static ArrayList<String> SplitCorrectlyString(String input, int nCharperline, String LineColor) {
+		ArrayList<String> lineoutput = new ArrayList<String>();
+		String[] splitedwordinput = input.split(" ");
+		String constructor = "";
+		for (int i = 0; i < splitedwordinput.length; i++) {
+			constructor = constructor + " " + splitedwordinput[i];
+			if (i< splitedwordinput.length-1 &&constructor.length()+splitedwordinput[i+1].length() >= nCharperline) {
+				lineoutput.add(((LineColor != null) ? LineColor : "") + constructor);
+				constructor = "";
+			}
+		}
+		if (!constructor.isEmpty())
+			lineoutput.add(((LineColor != null) ? LineColor : "") + constructor);
+		return lineoutput;
+	}
+	public static int countnumberofplayer() {
+		int i = 0;
+		for (Player pl : Bukkit.getOnlinePlayers()) {
+			if (pl.getGameMode() != GameMode.SPECTATOR)
+				i++;
+		}
+		return i;
+	}
+	public static void finalheal() {
+		for (Player player : Bukkit.getOnlinePlayers()) {
+			player.setHealth(player.getMaxHealth());
+		}
+		Bukkit.broadcastMessage(UHCTypo + "§6Final§cHeal");
+	}
+	public void updateWhiteListInventory(Player player) {
+		short color = (short) ((Bukkit.hasWhitelist()) ? 5 : 14);
+		String booleans = (Bukkit.hasWhitelist()) ? "§aOn" : "§cOff";
+		player.getOpenInventory().setItem(13,
+				InventoryUtils.createColorItem(Material.WOOL, "§bWhiteList: " + booleans, 1, color));
+	}
+	public static String TranslateBoolean(boolean b) {
+		return (b) ? "§aOn" : "§cOff";
+	}
+	public String getServerId() {
+		return ServerId;
+	}
+	public String getDiscordLink() {
+		return DiscordLink;
+	}
+	public boolean isForcedpvp() {
+		return forcedpvp;
+	}
+
+	public void setForcedpvp(boolean forcedpvp) {
+		this.forcedpvp = forcedpvp;
+	}
+
+	public boolean isForcebordure() {
+		return forcebordure;
+	}
+
+	public void setForcebordure(boolean forcebordure) {
+		this.forcebordure = forcebordure;
+	}
+	public static void DisplayToPlayerInChat(Player player, String todiplay, int charperline, ChatColor chat) {
+		ArrayList<String> strl = SplitCorrectlyString(todiplay, charperline, chat.toString());
+		for (String str : strl)
+			player.sendMessage(str);
+	}
+	public static void updateGeneration(Player player) {
+		player.getOpenInventory().setItem(33, InventoryUtils.createColorItem(Material.STAINED_GLASS, "§bCréer le monde et prégénerer", 1, (short)3));
+		player.getOpenInventory().setItem(9, InventoryUtils.getItem(Material.COAL_ORE, "§fMultiplicateur de Charbon §a"+Main.generator.getCoalboost(), Arrays.asList(InventoryHandler.ClickTypoAdd+"1",InventoryHandler.ClickTypoRemove+"1")));
+		player.getOpenInventory().setItem(18, InventoryUtils.getItem(Material.IRON_ORE, "§fMultiplicateur de Fer §a"+Main.generator.getIronboost(), Arrays.asList(InventoryHandler.ClickTypoAdd+"1",InventoryHandler.ClickTypoRemove+"1")));
+		player.getOpenInventory().setItem(27, InventoryUtils.getItem(Material.LAPIS_ORE, "§fMultiplicateur de Lapis §a"+Main.generator.getLapisboost(), Arrays.asList(InventoryHandler.ClickTypoAdd+"1",InventoryHandler.ClickTypoRemove+"1")));
+		player.getOpenInventory().setItem(36, InventoryUtils.getItem(Material.GOLD_ORE, "§fMultiplicateur d'or §a"+Main.generator.getGoldboost(), Arrays.asList(InventoryHandler.ClickTypoAdd+"1",InventoryHandler.ClickTypoRemove+"1")));
+		player.getOpenInventory().setItem(10, InventoryUtils.getItem(Material.DIAMOND_ORE, "§fMultiplicateur de diamant §a"+Main.generator.getDiamondboost(), Arrays.asList(InventoryHandler.ClickTypoAdd+"1",InventoryHandler.ClickTypoRemove+"1")));
+		player.getOpenInventory().setItem(19, InventoryUtils.getItem(Material.LAVA_BUCKET, "§4Lac de lave en surface: "+Main.TranslateBoolean(Main.generator.getLavaLake()), Arrays.asList("§7Defini si les lacs de lave se générent en surface",InventoryHandler.ClickBool)));
+		player.getOpenInventory().setItem(29, InventoryUtils.createColorItem(Material.STAINED_GLASS, "§bCréer le monde", 1, (short)14));
+		player.getOpenInventory().setItem(31, InventoryUtils.createColorItem(Material.STAINED_GLASS, "§bPrégénerer le monde", 1, (short)5));
+		player.getOpenInventory().setItem(13, InventoryUtils.getItem(Material.IRON_DOOR, "§dMondes", List.of("§bCliquer ici pour pouvoir changer de monde")));
+	}
+	public static void updateConfigFile(Player player) {
+		for (int i = 9; i < 43; i++) {
+			player.getOpenInventory().setItem(i, new ItemStack(Material.AIR));
+		}
+		for (int i = 0; i < 9; i++) {
+			player.getOpenInventory().setItem(i,
+					InventoryUtils.createColorItem(Material.STAINED_GLASS_PANE, " ", 1, (short) 11));
+		}
+		for (int i = 0; i < 9; i++) {
+			player.getOpenInventory().setItem(45 + i,
+					InventoryUtils.createColorItem(Material.STAINED_GLASS_PANE, " ", 1, (short) 11));
+		}
+		ItemStack it = InventoryUtils.createColorItem(Material.WOOL, "§aCréer une configuration", 1, (short) 5);
+		ItemMeta im = it.getItemMeta();
+		im.setLore(SplitCorrectlyString(
+				"Sauvegarde la partie actuelle comme une configuration. Cette configuration est sauvegardée jusqu'a ce qu'elle soit détruite. Les configurations ci dessous sont les configurations sauvegardées de ce mode de jeux. Attention les configurations sont personnelles.",
+				35, "§7"));
+		it.setItemMeta(im);
+
+		player.getOpenInventory().setItem(4, it);
+		ArrayList<ItemStack> configs = ConfigurationFileManager.convertFileIntoItemStack(
+				ConfigurationFileManager.getallJsonInsideFolder(ConfigurationFileManager.getPlayerPath(player)));
+		for (int i = 0; i < ConfigurationFileManager
+				.getallJsonInsideFolder(ConfigurationFileManager.getPlayerPath(player)).size(); i++) {
+			player.getOpenInventory().setItem(i + 9, configs.get(i));
+		}
+		player.getOpenInventory().setItem(49,
+				InventoryUtils.getItem(Material.ARROW, "§7Retour", List.of("§rRetour au menu de configuration")));
+	}
+	public static int CountIntegerValue(HashMap<?, Integer> map) {
+		int add = 0;
+		for (int i : map.values())
+			add += i;
+		return add;
+	}
+	public boolean isForceRole() {
+		return forcerole;
+	}
+	public void setForcerole(boolean forcerole) {
+		this.forcerole = forcerole;
+	}
+	public static int getAmountOfSupremeEffect(Player player) {
+		int count=0;
+		for(PotionEffect effect : player.getActivePotionEffects()) {
+			if(!(effect.getType().equals(PotionEffectType.ABSORPTION )|| effect.getType().equals(PotionEffectType.REGENERATION)|| effect.getType().equals(PotionEffectType.NIGHT_VISION))) {
+				count++;
+			}
+		}
+		return count;
+	}
+	@SuppressWarnings("unchecked")
+	public static <T>  T[] convertArrayToTable(Class<?> Tclass,ArrayList<T> array) {
+		T[] str ;
+		str = (T[]) Array.newInstance(Tclass, array.size());
+		for(int i=0;i<array.size();i++) {
+			str[i]=array.get(i);
+		}
+		return str;
+	}
+	public static boolean searchintoarrayLocationDistance(ArrayList<Location> list,double distance,Location testedLocation) {
+		if(list.size()==0)return true;
+		double mindistance=distance;
+		for(Location loc : list) {
+			if((loc.distance(testedLocation))<mindistance) {
+				mindistance=loc.distance(testedLocation);
+			}
+		}
+        return mindistance >= distance;
+	}//Return true if the shortest distance in a list<location> is greater or equal than the tested distance
+}

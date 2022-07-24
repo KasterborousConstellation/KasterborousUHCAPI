@@ -1,0 +1,32 @@
+package fr.supercomete.head.Exception;
+
+public class UnregisteredModeException extends Exception {
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -4309533394739281614L;
+
+	public UnregisteredModeException() {
+		// TODO Auto-generated constructor stub
+	}
+
+	public UnregisteredModeException(String arg0) {
+		super(arg0);
+		// TODO Auto-generated constructor stub
+	}
+
+	public UnregisteredModeException(Throwable arg0) {
+		super(arg0);
+
+	}
+
+	public UnregisteredModeException(String arg0, Throwable arg1) {
+		super(arg0, arg1);
+	}
+
+	public UnregisteredModeException(String arg0, Throwable arg1, boolean arg2, boolean arg3) {
+		super(arg0, arg1, arg2, arg3);
+	}
+
+}

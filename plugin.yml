@@ -1,0 +1,53 @@
+name: KasterborousUHC
+version: 0.8.9
+author: Supercomete
+main: fr.supercomete.head.core.Main
+commands:
+  menu:
+    description: "Permet de configurer la partie. Utilisable uniquement par le Host et par les Admins."
+  rules:
+    description: "Permet de prendre connaissance des différentes règles de la partie."
+  team:
+    description: "Permet d’ouvrir le menu “team” lorsque les teams sont activés."
+  inv:
+    description: "Permet de voir l’inventaire de départ."
+  h:
+    description: "Commande permettant à l’host de configurer sa partie."
+  role:
+    description: "Permet d’afficher son rôle."
+  dw:
+    description: "Commande permettant aux joueurs de faire les différentes commandes liées au mode de jeu Doctor Who UHC."
+  roles:
+    description: "Permet de prendre connaissance de la composition de la partie."
+  compo:
+    description: "Permet de prendre connaissance de la composition de la partie."
+  doc:
+    description: "Permet d’obtenir le lien du document d’un mode de jeu"
+  docs:
+    description: "Permet d’obtenir le lien du document d’un mode de jeu"
+  liens:
+    description: "Permet d’obtenir le lien du document d’un mode de jeu"
+  admingenerate:
+    description: "Commande utilisable que par les administrateurs"
+  blacklistseed:
+    description: "Commande utilisable que par les administrateurs"
+  blseed:
+    description: "Commande utilisable que par les administrateurs"
+  rolelist:
+    description: "Permet de prendre connaissances de la composition de la partie."
+  cversion:
+    description: "Permet de choisir un choix sur son rôle."
+  createstructure:
+    description: "Commande utilisable que par les administrateurs"
+  fullinv:
+    description: "Permet de récupérer un item unique à son rôle, si jamais l’inventaire au moment du give était rempli."
+  helpop:
+    description: "Permet de poser une question anonymement à l’host, cohost ou à l’administrateur."
+  disperse:
+    description: "Permet de disperser les joueurs à des endroits différents sur la carte."
+  bypass:
+    description: "Permet d'activer/désactiver le mode bypass"
+  tpin:
+    description: "Un commande de téléportation de meilleure qualité."
+  timeleft:
+    description: "Permet de savoir les timers de la game"

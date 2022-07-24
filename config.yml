@@ -1,0 +1,20 @@
+serverapi:
+  serverconfig:
+    devmode: false
+    echosiakey: "PlaceHolder"
+    DiscordLink: "xxxxx"
+    ServerId: "xxxx.xxxx"
+  spawn:
+    x: 0
+    y: 41
+    z: 0
+  ruleroom:
+    x: 0
+    y: 41
+    z: 0
+  hostbox:
+    x: 0
+    y: 41
+    z: 0
+  stuff:
+    actualconfig: ""
