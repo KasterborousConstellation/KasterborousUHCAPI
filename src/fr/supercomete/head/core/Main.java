@@ -10,6 +10,7 @@ import java.util.jar.JarFile;
 import java.util.zip.ZipEntry;
 
 import fr.supercomete.commands.*;
+import fr.supercomete.datamanager.ModuleLoader.ModuleManager;
 import fr.supercomete.head.GameUtils.Events.PlayerEvents.PlayerEventHandler;
 import fr.supercomete.head.GameUtils.Fights.FightHandler;
 import fr.supercomete.head.GameUtils.Time.TimeUtility;
@@ -263,7 +264,7 @@ public class Main extends JavaPlugin {
 				serverinfo.write();
 			}
 		}.runTaskTimer(this, 0, 20L);
-		
+        ModuleManager.init(this);
 	}
     public static boolean IsHost(UUID player) {
         return (host!=null && host.equals(player))||PlayerAccountManager.getPlayerAccount(player).hasRank(Rank.Admin);

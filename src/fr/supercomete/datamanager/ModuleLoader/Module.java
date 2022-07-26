@@ -5,7 +5,7 @@ import org.bukkit.event.Listener;
 import java.util.ArrayList;
 import java.util.UUID;
 
-class Module {
+public class Module {
     private String author;
     private String version;
     private ArrayList<Listener> listeners;
