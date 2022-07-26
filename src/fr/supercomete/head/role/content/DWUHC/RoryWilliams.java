@@ -73,6 +73,6 @@ public final class RoryWilliams extends DWRole implements Companion ,Trigger_Whi
 
 	@Override
 	public String[] getAdditionnalInfo() {
-		return new String[] {"§7Rory Williams est "+RoleHandler.FormalizedGetWhoHaveRole(RoryWilliams.class)};
+		return new String[] {"§7Amy Pond est: "+RoleHandler.FormalizedGetWhoHaveRole(AmyPond.class)};
 	}
 }

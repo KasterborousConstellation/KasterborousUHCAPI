@@ -28,11 +28,9 @@ public final class Supreme_Dalek extends DWRole implements HasAdditionalInfo,Tri
 	public List<String> askRoleInfo() {
 		return Arrays.asList(
 				"Chaque personne que vous heurtez avec une épée vous fait gagnez 1 PT par coup.",
-				"Ils peuvent être échanger, avec un objet qui vous ai donné, contre des effets. Soit force pendant 1m20, soit vitesse pendant 1m40s, soit résistance pendant 40s. Un effet coute 20PE. Chaque effet coute 2 fois plus cher pour chaque effet que le joueur possède (sans compter les effets: Regeneration, Absorption, Vision Nocturne)."
+				"Ils peuvent être échanger, avec un objet qui vous ai donné, contre des effets. Soit force pendant 1m20, soit vitesse pendant 1m40s, soit résistance pendant 40s. Un effet coute 14PE. Chaque effet coute 2 fois plus cher pour chaque effet que le joueur possède (sans compter les effets: Regeneration, Absorption, Vision Nocturne)."
 				,"Vous avez la liste des autres Daleks."
 				,"Vous avez la possibilité comme tout les membres du Camp des Ennemis du Docteur, de détruire les clefs contenues dans le TARDIS en restant proche de celui-ci."
-				
-				
 				,"§aPE: §r"+PE
 				);
 	}

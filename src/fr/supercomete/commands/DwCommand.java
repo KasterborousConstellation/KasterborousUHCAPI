@@ -288,15 +288,16 @@ public class DwCommand implements CommandExecutor {
 								if (soldat.soldiertype==SoldierType.Medic) {
 									final CoolDown cap = soldat.generalCoolDown;
 									final String pselec = args[1];
-									if (Bukkit.getPlayer(pselec)!=null&&Bukkit.getPlayer(pselec).isOnline() && RoleHandler.getRoleList()
-											.containsKey(Bukkit.getPlayer(pselec).getUniqueId())) {
+									if (Bukkit.getPlayer(pselec)!=null&&Bukkit.getPlayer(pselec).isOnline() && RoleHandler.getRoleList().containsKey(Bukkit.getPlayer(pselec).getUniqueId())) {
 										if (cap.getUtilisation() > 0) {
-											Player target = Bukkit.getPlayer(pselec);
-											target.setHealth(target.getMaxHealth());
-											target.sendMessage(
-													Main.UHCTypo + "§a Votre vie a été régénerée par un autre joueur.");
-											player.sendMessage(Main.UHCTypo + "§aVous avez soigné " + target.getName());
-											cap.addUtilisation(-1);
+                                            if (!Objects.equals(Bukkit.getPlayer(pselec).getName(), player.getName())) {
+											    final Player target = Bukkit.getPlayer(pselec);
+											    target.setHealth(target.getMaxHealth());
+											    target.sendMessage(Main.UHCTypo + "§a Votre vie a été régénerée par un autre joueur.");
+											    player.sendMessage(Main.UHCTypo + "§aVous avez soigné " + target.getName());
+											    cap.addUtilisation(-1);
+                                            } else
+                                                player.sendMessage(Main.UHCTypo + "§cVous ne pouvez pas vous choisir comme cible");
 										} else
 											player.sendMessage(
 													Main.UHCTypo + "Vous ne pouvez plus utiliser cette capacité.");
@@ -458,21 +459,23 @@ public class DwCommand implements CommandExecutor {
 									player.sendMessage(Main.UHCTypo+"§cLe joueur n'est pas correctement indiqué");
 									return false;
 								}
-								if (castedrole.getTargettedplayers().size() < 3 &&castedrole.sources.getUtilisation()  > 0) {
-									if (RoleHandler.getRoleList().containsKey(target.getUniqueId())) {
-										if (!castedrole.getTargettedplayers().contains(target.getUniqueId())) {
-											castedrole.addTargetPlayer(target);
-											castedrole.sources.removeUtilisation(1);
-											RoleHandler.DisplayRole(player);
+                                if (target.getUniqueId() != castedrole.getOwner()) {
+                                    if (castedrole.getTargettedplayers().size() < 3 && castedrole.sources.getUtilisation() > 0) {
+                                        if (RoleHandler.getRoleList().containsKey(target.getUniqueId())) {
+                                            if (!castedrole.getTargettedplayers().contains(target.getUniqueId())) {
+                                                castedrole.addTargetPlayer(target);
+                                                castedrole.sources.removeUtilisation(1);
+                                                RoleHandler.DisplayRole(player);
 
-										} else
-											player.sendMessage(
-													Main.UHCTypo + "§cCe joueur est déjà est sur votre de sources");
-									} else
-										player.sendMessage(
-												Main.UHCTypo + "§cCe joueur ne peut pas être désigner comme source");
+                                            } else
+                                                player.sendMessage(
+                                                        Main.UHCTypo + "§cCe joueur est déjà est sur votre de sources");
+                                        } else
+                                            player.sendMessage(
+                                                    Main.UHCTypo + "§cCe joueur ne peut pas être désigner comme source");
 
-								}
+                                    }
+                                }else player.sendMessage(Main.UHCTypo + "§cVous ne pouvez pas vous choisir comme source");
 							}
 						}
 					}

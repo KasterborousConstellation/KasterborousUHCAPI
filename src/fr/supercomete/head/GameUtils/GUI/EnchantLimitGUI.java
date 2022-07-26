@@ -20,7 +20,7 @@ import java.util.*;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 public class EnchantLimitGUI extends GUI{
-	private static final CopyOnWriteArrayList<EnchantLimitGUI> allGui = new CopyOnWriteArrayList<EnchantLimitGUI>();
+	private static final CopyOnWriteArrayList<EnchantLimitGUI> allGui = new CopyOnWriteArrayList<>();
 	private Inventory inv;
 	private final Player player;
 	private boolean modifiable=false;
@@ -48,8 +48,10 @@ public class EnchantLimitGUI extends GUI{
 		    e++;
         }
 		e=9;
+
 		for(EnchantLimit enchantLimit: EnchantHandler.getLimite(type)){
-		    ItemStack stack = InventoryUtils.getItem(Material.ENCHANTED_BOOK,"§f"+enchantLimit.getEnchantname()+" "+enchantLimit.getMax(), Arrays.asList("§fMax: "+enchantLimit.getEnchant().getMaxLevel(),InventoryHandler.ClickTypoAdd+"1",InventoryHandler.ClickTypoRemove+"1"));
+            List<String> stringlist =(!modifiable)?null:Arrays.asList("§fMax: "+enchantLimit.getEnchant().getMaxLevel(),InventoryHandler.ClickTypoAdd+"1",InventoryHandler.ClickTypoRemove+"1");
+            ItemStack stack = InventoryUtils.getItem(Material.ENCHANTED_BOOK,"§f"+enchantLimit.getEnchantname()+" "+enchantLimit.getMax(), stringlist);
             stack.setAmount(enchantLimit.getMax());
             tmp.setItem(e,stack);
 		    e++;

@@ -3,10 +3,10 @@ package fr.supercomete.datamanager.ModuleLoader;
 import fr.supercomete.datamanager.FileManager.Fileutils;
 import fr.supercomete.datamanager.ModuleLoader.ModuleException.NoModuleSectionException;
 import fr.supercomete.datamanager.ModuleLoader.ModuleException.NoModuleYmlException;
+import fr.supercomete.datamanager.ModuleLoader.ModuleException.NotAModuleException;
 import fr.supercomete.datamanager.ModuleLoader.ModuleException.OutOfSpaceforModuleFolder;
 import fr.supercomete.head.core.Main;
 import org.bukkit.Bukkit;
-import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.YamlConfiguration;
 
 import java.io.File;
@@ -56,7 +56,22 @@ public class ModuleManager {
                         continue;
                     }
                 }
-
+                final Class<?> moduleclass = ClassLoader.getSystemClassLoader().loadClass(classPath);
+                if(moduleclass.getSuperclass().equals(Module.class)){
+                    try{
+                        final Module importedmodule = (Module) moduleclass.getConstructor().newInstance();
+                        Bukkit.broadcastMessage(importedmodule.getAuthor());
+                    }catch (Exception e){
+                        e.printStackTrace();
+                    }
+                }else{
+                    try{
+                        throw new NotAModuleException(classPath);
+                    }catch(NotAModuleException e){
+                        e.printStackTrace();
+                        continue;
+                    }
+                }
             }catch (Exception e){
                 e.printStackTrace();
             }

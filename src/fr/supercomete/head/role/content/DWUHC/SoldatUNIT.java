@@ -64,7 +64,7 @@ public final class SoldatUNIT extends DWRole implements Trigger_WhileAnyTime, Ha
 		} else if (soldiertype == SoldierType.Garde) {
 			additionnal =Arrays.asList("§7Vous avez 10 flêches empoisonnées qui empoisonnent le joueur touché.","§7Vous avec la commande '/dw poison' activer ou désactiver le poison sur vos tir de fleches. Attention vous n'avez que 10 fleches empoisonnées, et une fleche est utilisée quand elle touche sa cible.");
 		} else {
-			additionnal = Arrays.asList("§7Vous régénerer automatiquement votre vie, 1/2♥ toute les 10s."," Vous pouvez avec la commande '/dw heal <Joueur>' faire remonter 2 fois dans la partie la vie d'un joueur a son maximum."+generalCoolDown.formalizedUtilisation());
+			additionnal = Arrays.asList("§7Vous régénerer automatiquement votre vie, 1/2♥ toute les 10s."," Vous pouvez avec la commande '/dw heal <Joueur>' faire remonter 2 fois dans la partie la vie d'un joueur a son maximum. (Non utilisable sur vous-même)"+generalCoolDown.formalizedUtilisation());
 		}
 		ArrayList<String> list =new ArrayList<>();
 		list.add("Vous avez 4 pommes en or supplémentaires à l'annonce des rôles. ");

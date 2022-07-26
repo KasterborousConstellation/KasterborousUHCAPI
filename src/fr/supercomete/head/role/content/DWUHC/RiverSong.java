@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.UUID;
 
 import fr.supercomete.head.core.Main;
+import fr.supercomete.head.role.Triggers.Trigger_onEpisodeTime;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
@@ -21,7 +22,7 @@ import fr.supercomete.head.role.RoleModifier.Companion;
 import fr.supercomete.head.role.RoleModifier.HasAdditionalInfo;
 import fr.supercomete.nbthandler.NbtTagHandler;
 
-public final class RiverSong extends DWRole implements BonusHeart,Companion,Trigger_OnDayTime,HasAdditionalInfo,Trigger_OnRoletime{
+public final class RiverSong extends DWRole implements BonusHeart,Companion, Trigger_onEpisodeTime,HasAdditionalInfo,Trigger_OnRoletime{
 	private boolean exchange=false;
 	
 	public RiverSong(UUID owner) {
@@ -69,7 +70,7 @@ public final class RiverSong extends DWRole implements BonusHeart,Companion,Trig
     }
 
     @Override
-	public void onDayTime(Player player) {
+	public void onEpisodeTime(Player player) {
 		int id = 0;
 		for(ItemStack it:player.getInventory()) {
 			if(it!=null) {

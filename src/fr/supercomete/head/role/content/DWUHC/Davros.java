@@ -23,7 +23,7 @@ import fr.supercomete.head.role.Triggers.Trigger_WhileAnyTime;
 import fr.supercomete.head.role.Triggers.Trigger_onEpisodeTime;
 import fr.supercomete.head.role.RoleModifier.PreAnnouncementExecute;
 public final class Davros extends DWRole implements Trigger_WhileAnyTime,Trigger_OnRoletime,Trigger_onEpisodeTime,PreAnnouncementExecute, HasAdditionalInfo {
-	private final ArrayList<UUID> list = new ArrayList<UUID>();
+	private final ArrayList<UUID> list = new ArrayList<>();
 	private int advancement = 0;
 	private ArrayList<String>ally= new ArrayList<>();
 	public CoolDown cooldown = new CoolDown(1, 0);
@@ -59,7 +59,7 @@ public final class Davros extends DWRole implements Trigger_WhileAnyTime,Trigger
 		return Arrays.asList("Vous avez §bvitesse§7 pendant toute la partie."
 				," §7Vous pouvez avec la commande '/dw cell <Joueur>' donner 1♥ supplémentaire a un joueur. (Impossible de le faire sur vous-même). Le joueur ciblé doit être à moins de 30blocs de vous."
 				,"Chaque épisode vous obtenez une charge supplémentaire pour donner 1♥ supplémentaire a un joueur."+cooldown.formalizedUtilisation(),
-				"§7Vous obtenez chaque épisode un allié de votre Camp. Cet allié n'est pas forcement Dalek mais doit forcement gagner avec vous (qui doit gagner avec vous au moment de l'annonce des rôles, un joueur ayant changé de Camp peut donc se trouver dans votre liste), et donc du Camp des Ennemis du Docteur. Il ne peut donc pas être role solo.",
+				"§7Vous obtenez chaque épisode un allié de votre Camp. Cet allié n'est pas forcement Dalek mais doit forcement gagner avec vous (qui doit gagner avec vous au moment de l'annonce des rôles, un joueur ayant changé de Camp peut donc se trouver dans votre liste).",
                 "Vous n'apparaissez pas dans la liste des Daleks, cependant vous obtenez tout les épisodes un joueur dans votre camp, qu'il soit Dalek ou Cyberman, ou bien autre mais du camp des ennemis du Docteur."
 				);
 	}
@@ -94,7 +94,7 @@ public final class Davros extends DWRole implements Trigger_WhileAnyTime,Trigger
 				uuid = list.get(advancement);
 				advancement++;
 			}
-			String username ="";
+			String username;
 			if(Bukkit.getPlayer(uuid)==null) {
 				username = Main.currentGame.getOffline_Player(uuid).getUsername();
 				

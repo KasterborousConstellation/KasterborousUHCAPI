@@ -45,7 +45,9 @@ public class KeyHandler {
 		KeyType type = KeyType.values()[currentKey];
 		TardisKey key = new TardisKey(type,generateBonus());
 		if((role instanceof Davros || role instanceof Bill_Potts)) {
-			if(key.getBonus().getType().equals(BonusType.NoFall))generateKey(role);
+			if(key.getBonus().getType().equals(BonusType.NoFall)){
+			    return generateKey(role);
+            }
 		}
 		currentKey++;
 		return key;
