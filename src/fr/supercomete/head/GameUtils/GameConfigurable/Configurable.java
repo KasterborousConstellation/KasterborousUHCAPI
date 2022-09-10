@@ -14,15 +14,12 @@ public  class Configurable {
     public static boolean ExtractBool(int i) {
         return i % 2 == 0;
     }
-
     public static boolean ExtractBool(LIST config) {
         return Main.currentGame.getDataFrom(config) % 2 == 0;
     }
-
     private int data;
     private LIST id;
     private ConfigurableType type;
-
     public Configurable(LIST id, int data, ConfigurableType type) {
         this.setId(id);
         this.setData(data);
@@ -414,7 +411,18 @@ public  class Configurable {
                 new Bound(60, 3600),
                 new AddingRule(1, 10),
                 new ModeBinding(new DWUHC())
-        );
+        ),
+        KarvanistaTime(
+                Material.HOPPER,
+                "Durée de la persuasion de Karvanista",
+                "Défini le temps durant lequel Karvanista doit persuader son allié.",
+                60*7,
+                ConfigurableType.Timer,
+                new Bound(60,20*60),
+                new AddingRule(1,10),
+                new ModeBinding(new DWUHC())
+        )
+        ;
         private final String name;
         private final String description;
         private final int data;

@@ -1,6 +1,6 @@
 package fr.supercomete.head.GameUtils.Scenarios;
 
-public enum ScenarioCompatibilityType {
+public enum CompatibilityType {
     WhiteList,
     BlackList
 }

@@ -15,7 +15,7 @@ public final class TeamManager {
 	public TeamManager(Main main) {
 		TeamManager.main=main;
 	}
-	static char[] ListOfChar= {' ','C','B','A'};
+	static char[] ListOfChar= {' ','♦','♥','♣'};
 	public static void createTeams(int numberofteam) {
 		ArrayList<Team> teamlist=Main.currentGame.getTeamList();
 		teamlist.clear();
@@ -36,7 +36,7 @@ public final class TeamManager {
 			Team t= new Team(ListOfChar[r]+getNameOfShortColor((short)i), new ArrayList<UUID>(), "", "", (short)i, ListOfChar[r], Main.currentGame.getNumberOfPlayerPerTeam(),bol);
 			teamlist.add(t);
 		}
-		total-=(n>=9)?9:n;
+		total-= Math.min(n, 9);
 		}
 	}
 	public static void setupTeams(){

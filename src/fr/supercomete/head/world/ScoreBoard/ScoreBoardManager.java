@@ -52,7 +52,7 @@ public class ScoreBoardManager {
 		list.add("§r");
 		list.add("§c» " + p + "Host " + t + "» " + s + ((Main.host!=null&& Bukkit.getPlayer(Main.host)!=null)?Bukkit.getPlayer(Main.host).getName():"§cUnknown"));
 
-		list.add("§c» " + p + "Mode " + t + "» " + s+ ModeAPI.getModeByIntRepresentation(Main.currentGame.getEmode()).getName());
+		list.add("§c» " + p + "Mode " + t + "» " + s+ Main.currentGame.getMode().getName());
 		
 			
 		list.add("§c» " + p + "Kills " + t + "» " + s + ((Main.currentGame.getKillList().get(player.getUniqueId())==null)?"Aucun":Main.currentGame.getKillList().get(player.getUniqueId())));

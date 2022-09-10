@@ -1,28 +1,26 @@
 package fr.supercomete.head.role.content.DWUHC;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Map.Entry;
-import java.util.Random;
-import java.util.UUID;
-
+import fr.supercomete.enums.Camps;
+import fr.supercomete.head.GameUtils.GameConfigurable.Configurable;
 import fr.supercomete.head.PlayerUtils.PlayerUtility;
+import fr.supercomete.head.core.Main;
+import fr.supercomete.head.role.DWRole;
 import fr.supercomete.head.role.KarvanistaPacte.*;
+import fr.supercomete.head.role.Role;
+import fr.supercomete.head.role.RoleHandler;
+import fr.supercomete.head.role.RoleModifier.HasAdditionalInfo;
+import fr.supercomete.head.role.RoleModifier.PreAnnouncementExecute;
+import fr.supercomete.head.role.Status;
 import fr.supercomete.head.role.Triggers.Trigger_OnAnyKill;
+import fr.supercomete.head.role.Triggers.Trigger_WhileAnyTime;
+import fr.supercomete.head.world.worldgenerator;
+import fr.supercomete.tasks.generatorcycle;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
-import fr.supercomete.enums.Camps;
-import fr.supercomete.head.core.Main;
-import fr.supercomete.head.role.DWRole;
-import fr.supercomete.head.role.Role;
-import fr.supercomete.head.role.RoleHandler;
-import fr.supercomete.head.role.Status;
-import fr.supercomete.head.role.Triggers.Trigger_WhileAnyTime;
-import fr.supercomete.head.role.RoleModifier.HasAdditionalInfo;
-import fr.supercomete.head.role.RoleModifier.PreAnnouncementExecute;
+import java.util.*;
+import java.util.Map.Entry;
 
 public final class Karvanista extends DWRole implements HasAdditionalInfo,PreAnnouncementExecute,Trigger_WhileAnyTime, Trigger_OnAnyKill {
 	public ArrayList<Proposal> allpacte = new ArrayList<>();
@@ -107,7 +105,7 @@ public final class Karvanista extends DWRole implements HasAdditionalInfo,PreAnn
 		if(me.getWorld()==ally.getWorld() && me.getLocation().distance(ally.getLocation())<20 && concluded) {
 			if(!finished) {
 				progress++;
-				if(progress >= 60) {
+				if(progress >= Main.currentGame.getDataFrom(Configurable.LIST.KarvanistaTime)) {
 					finished=true;
 					for(final Proposal prop : allpacte) {
 						if(prop.IsActivated)prop.start(me, ally);
@@ -195,6 +193,8 @@ public final class Karvanista extends DWRole implements HasAdditionalInfo,PreAnn
         if(kill && Bukkit.getPlayer(getOwner())!=null){
             Bukkit.getServer().dispatchCommand(Bukkit.getServer().getConsoleSender(),"kill "+Bukkit.getPlayer(getOwner()).getName());
         }
+        double percent = (((double)this.getProgress())*100.0 )/((double)Main.currentGame.getDataFrom(Configurable.LIST.KarvanistaTime));
+        PlayerUtility.sendActionbar(player, "§f["+generatorcycle.generateProgressBar(percent,20)+"§f]§f  "+Math.round(percent)+"§a%");
 	}
 	public Proposal getProposal(Class<?>claz) {
 		for(Proposal prop : allpacte) {

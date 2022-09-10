@@ -29,6 +29,7 @@ public class ListenersRegisterer {
 			pm.registerEvents(new RoleGUI(main), main);
 			pm.registerEvents(new FullGUI(main), main);
 			pm.registerEvents(new EnchantLimitGUI(main),main);
+			pm.registerEvents(new EventGUI(main),main);
 			//Listeners
 			pm.registerEvents(new FurnaceBurnListener(main), main);
 			pm.registerEvents(new EntityDeathListener(), main);

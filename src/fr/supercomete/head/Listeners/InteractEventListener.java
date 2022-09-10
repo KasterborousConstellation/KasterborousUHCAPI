@@ -6,6 +6,7 @@ import fr.supercomete.head.GameUtils.Events.PlayerEvents.PlayerEventHandler;
 import fr.supercomete.head.GameUtils.Events.PlayerEvents.PlayerEvents;
 import fr.supercomete.head.GameUtils.Time.TimeUtility;
 import fr.supercomete.head.role.Role;
+import fr.supercomete.head.role.Triggers.Trigger_OnInteractWithUUIDItem;
 import fr.supercomete.head.role.content.DWUHC.*;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
@@ -413,6 +414,12 @@ final class InteractEventListener implements Listener {
                     }
                     break;
                 default:
+                    if(RoleHandler.isIsRoleGenerated()){
+                        final Role role = RoleHandler.getRoleOf(player);
+                        if(role instanceof Trigger_OnInteractWithUUIDItem){
+                            ((Trigger_OnInteractWithUUIDItem)role).OnInteractWithUUIDItem(player,NbtTagHandler.getUUIDTAG(currentItem),e.getAction());
+                        }
+                    }
                     break;
             }
         }

@@ -5,5 +5,5 @@ import java.util.UUID;
 
 public interface DelayedDeath extends GameModeModifier{
 	int getDeathDelay();
-	void onSecondtick();
+	void onSecondtick(int second);
 }

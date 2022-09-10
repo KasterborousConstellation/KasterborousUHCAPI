@@ -26,7 +26,12 @@ public class BlackCloverUHC extends Mode implements CampMode,Groupable {
 
 	}
 
-	@Override
+    @Override
+    public void onGlobalAnytime() {
+
+    }
+
+    @Override
 	public void onDayTime(Player player) {
 
 	}
@@ -63,7 +68,7 @@ public class BlackCloverUHC extends Mode implements CampMode,Groupable {
 
 	@Override
 	public Camps[] getPrimitiveCamps() {
-		return new Camps[] {Camps.CloverHeart,Camps.Spade,Camps.SoloBlackCloverUHC};
+		return new Camps[] {Camps.CloverHeart,Camps.Spade,Camps.Solo};
 	}
 
 }

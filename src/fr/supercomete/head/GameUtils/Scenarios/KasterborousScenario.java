@@ -4,6 +4,6 @@ import org.bukkit.Material;
 
 public interface KasterborousScenario {
     String getName();
-    ScenarioCompatibility getCompatiblity();
+    Compatibility getCompatiblity();
     Material getMat();
 }

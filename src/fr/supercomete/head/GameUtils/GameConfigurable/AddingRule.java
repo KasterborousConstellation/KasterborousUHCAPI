@@ -31,6 +31,4 @@ public class AddingRule {
 	public void setMassadd(int massadd) {
 		this.massadd = massadd;
 	}
-	
-
 }

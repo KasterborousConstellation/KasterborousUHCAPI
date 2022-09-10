@@ -138,7 +138,9 @@ public class RoleHandler {
 				}
 			}
 			player.sendMessage("  §lStatus: "+status);
-		}
+		}else if( role instanceof  EchoRole){
+            player.sendMessage("  §bNiveau de pucelage: §f" + ((EchoRole)role).getBranlusqueLevel().getName());
+        }
 		
 		if(!role.getRoleinfo().isEmpty()) { 
 			player.sendMessage("Description:");
@@ -282,7 +284,7 @@ public class RoleHandler {
 		RoleHandler.historic = historic;
 	}
 	private static String transform(Camps camp) {
-		if(camp!=Camps.Neutral && camp!=Camps.SoloBlackCloverUHC) {
+		if(camp!=Camps.Neutral && camp!=Camps.Solo) {
 			return "§6Victoire: "+camp.getColor()+camp.getName();
 		}else {
 			return "§6Victoire"+camp.getColor()+" §6Solo";

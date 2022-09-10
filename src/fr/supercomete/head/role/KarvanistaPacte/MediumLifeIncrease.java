@@ -15,7 +15,7 @@ public class MediumLifeIncrease extends  Proposal{
 
     @Override
     protected int AskCost() {
-        return 2;
+        return 4;
     }
 
     @Override

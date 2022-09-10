@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.Map.Entry;
 import java.util.UUID;
 
+import fr.supercomete.head.core.Main;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
@@ -28,7 +29,7 @@ public class Historic {
 	public void draw() {
 		for(Player player : Bukkit.getOnlinePlayers()) {
 			for(Entry<UUID,HistoricData> entry : rolelist.entrySet()){
-				String head = (entry.getValue().getCause()!=null&&entry.getValue().getCause().getDeathCause()!=null)?"§a":ChatColor.STRIKETHROUGH+"§a";
+			    String head = (Main.getPlayerlist().contains(entry.getKey()))?"":"§m";
 				player.sendMessage(head+entry.getValue().getPlayer().getUsername()+" §d"+entry.getValue().getRole().getCamp().getColor()+" "+entry.getValue().getRole().getName());
 			}
 		}

@@ -6,10 +6,6 @@ public enum Status {
 	Clone("§6Clone"),
 	Humain("§4Humain")
 	;
-	
-	
-	
-	
 	private final String name;
 	Status(String name){
 		this.name=name;

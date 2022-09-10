@@ -52,7 +52,6 @@ public class UHCClassic extends Mode implements TeamMode{
 	}
 	@Override
 	public void DecoKillMethod(Offline_Player player) {
-        InventoryUtils.dropInventory(player.getInventory(), player.getLocation(), player.getLocation().getWorld());
 		String Team = "";
 		if (Main.currentGame.IsTeamActivated() && TeamManager.getTeamOfUUID(player.getPlayer()) != null) {
 			if (!TeamManager.getTeamOfUUID(player.getPlayer()).isAnonymousteam()) {
@@ -61,12 +60,9 @@ public class UHCClassic extends Mode implements TeamMode{
 			}
 		}
 		Bukkit.broadcastMessage(Main.UHCTypo + Team + player.getUsername() + "§r est mort.");
-		Main.playerlist.remove(player.getPlayer());
 	}
 	@Override
 	public void OnKillMethod(Location deathLocation, Player player, Player damager) {
-//		GoldenHeadImplement(player, damager);
-//		KillSwitchImplement(player, damager);
         InventoryUtils.dropInventory(player.getInventory(), deathLocation, player.getWorld());
 		String Team = "";
 		if (Main.currentGame.IsTeamActivated() && TeamManager.getTeamOfUUID(player.getUniqueId()) != null) {
@@ -90,19 +86,19 @@ public class UHCClassic extends Mode implements TeamMode{
 			Bukkit.broadcastMessage(Main.UHCTypo + Team + player.getName() + "§r a été tué par§r "
 					+ DamagerTeam + damager.getName() + ".");
 		}
-		Mode.GoldenHeadImplement(player, damager);
-		Mode.KillSwitchImplement(player, damager);
-		player.setGameMode(GameMode.SPECTATOR);
-		player.getInventory().clear();
-		Main.playerlist.remove(player.getUniqueId());
-		
 	}
 	@Override
 	public void onAnyTime(Player player) {
 		// TODO Auto-generated method stub
 		
 	}
-	@Override
+
+    @Override
+    public void onGlobalAnytime() {
+
+    }
+
+    @Override
 	public void onDayTime(Player player) {
 		// TODO Auto-generated method stub
 		

@@ -1,21 +1,35 @@
 package fr.supercomete.head.GameUtils.GameMode.ModeHandler;
 
+import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.UUID;
 import java.util.concurrent.CopyOnWriteArrayList;
+import java.util.logging.Level;
 
 import fr.supercomete.enums.Camps;
 import fr.supercomete.head.Exception.InvalidRoleClassException;
 import fr.supercomete.head.Exception.UnregisteredModeException;
+import fr.supercomete.head.GameUtils.GameMode.ModeModifier.Command;
 import fr.supercomete.head.GameUtils.GameMode.Modes.Mode;
+import fr.supercomete.head.GameUtils.Command.GenericCommandTabCompleter;
+import fr.supercomete.head.GameUtils.Scenarios.KasterborousScenario;
 import fr.supercomete.head.core.Main;
 import fr.supercomete.head.role.DWRole;
 import fr.supercomete.head.role.NakimeCastleRole;
 import fr.supercomete.head.role.Role;
+import org.bukkit.Bukkit;
+import org.bukkit.command.PluginCommand;
+import org.bukkit.command.SimpleCommandMap;
+import org.bukkit.command.defaults.BukkitCommand;
+import org.bukkit.craftbukkit.v1_8_R3.CraftServer;
+import org.bukkit.plugin.SimplePluginManager;
+import org.bukkit.scheduler.BukkitRunnable;
 
 public class ModeAPI {
-	private static final ArrayList<Mode> registeredModes = new ArrayList<Mode>();
+	private static final ArrayList<Mode> registeredModes = new ArrayList<>();
+    private static final ArrayList<KasterborousScenario> registered_scenarios = new ArrayList<>();
 	public static Mode getPrimitiveModeByClass(Class<?> claz) {
 		for(Mode mode : registeredModes) {
 			if(mode.getClass().equals(claz))return mode;
@@ -38,14 +52,14 @@ public class ModeAPI {
 	}
 	
 	public static Role getRoleByClass(Class<?> claz) {
-		if(!(claz.getSuperclass().equals(Role.class)||claz.getSuperclass().equals(NakimeCastleRole.class)||claz.getSuperclass().equals(DWRole.class))) {
+		/*if(!(claz.getSuperclass().equals(Role.class)||claz.getSuperclass().equals(NakimeCastleRole.class)||claz.getSuperclass().equals(DWRole.class))) {
 			try {
 				throw new InvalidRoleClassException();
 			} catch (InvalidRoleClassException e) {
 				e.printStackTrace();
 				return null;
 			}
-		}
+		}*/
 		try {
 			return (Role) claz.getConstructors()[0].newInstance(UUID.randomUUID());
 		} catch (InstantiationException | IllegalAccessException | IllegalArgumentException | InvocationTargetException
@@ -64,7 +78,7 @@ public class ModeAPI {
 		}
 		return formated;
 	}
-	public static Role getRoleByClass(Class<?> claz,UUID uuid) {
+	private static Role getRoleByClass(Class<?> claz,UUID uuid) {
 		try {
 			return (Role) claz.getConstructors()[0].newInstance(uuid);
 		} catch (InstantiationException | IllegalAccessException | IllegalArgumentException | InvocationTargetException
@@ -73,8 +87,13 @@ public class ModeAPI {
 			return null;
 		}
 	}
-	public static void registerMode(Mode mode) {
+	public static void registerMode(Mode mode,Main main) {
 		registeredModes.add(mode);
+        if(mode instanceof Command){
+            final Command command =(Command) mode;
+
+            ((CraftServer) main.getServer()).getCommandMap().register(command.getCommand().getName(), command.getCommand());
+        }
 	}
 
 	public static boolean isModeRegistered(Class<?> cls) {
@@ -102,6 +121,19 @@ public class ModeAPI {
 		return registeredModes.get(rep);
 	}
 	//We have to represent a mode by an int because Mode class is abstract and can't be saved as a Gson
+    public static Mode getMode(Class<?> mode){
+	    for(Mode mode_ : registeredModes){
+	        if(mode_.getClass().equals(mode)){
+	            return mode_;
+            }
+        }
+        try {
+            throw new UnregisteredModeException("The mode: "+mode.getClass()+" isn't registered.");
+        }catch (UnregisteredModeException e) {
+            e.printStackTrace();
+        }
+	    return null;
+    }
 	public static int getIntRepresentation(Mode mode) {
 		int i =0;
 		for(Mode m : ModeAPI.getRegisteredModes()) {
@@ -117,6 +149,4 @@ public class ModeAPI {
 			return 0;
 		}
 	}
-	
-	
 }

@@ -8,7 +8,9 @@ public enum Camps {
     Division("La Division", ChatColor.DARK_PURPLE),
 	CloverHeart("Alliance Clover & Heart",ChatColor.BLUE),
 	Spade("Spade",ChatColor.RED),
-	SoloBlackCloverUHC("Solo",ChatColor.WHITE)
+    EchoEcho("EchoEcho",ChatColor.BLUE),
+    Revolutionnaires("Revolutionnaires",ChatColor.RED),
+	Solo("Solo",ChatColor.WHITE),
 	;
 	private final String Name;
 	private final ChatColor color;

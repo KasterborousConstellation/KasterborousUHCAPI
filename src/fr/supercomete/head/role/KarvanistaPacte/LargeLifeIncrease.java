@@ -25,7 +25,7 @@ public class LargeLifeIncrease extends  Proposal{
 
     @Override
     protected String AskDescription() {
-        return "Ce composant donne 5♥ permanent supplémentaire à Karvanista et à son allié";
+        return "Ce composant donne 3♥ permanent supplémentaire à Karvanista et à son allié";
     }
 
     @Override
@@ -35,8 +35,8 @@ public class LargeLifeIncrease extends  Proposal{
 
     @Override
     public void start(Player karvanista, Player ally) {
-        RoleHandler.getRoleOf(karvanista).addBonus(new Bonus(BonusType.Heart,10));
-        RoleHandler.getRoleOf(ally).addBonus(new Bonus(BonusType.Heart,10));
+        RoleHandler.getRoleOf(karvanista).addBonus(new Bonus(BonusType.Heart,6));
+        RoleHandler.getRoleOf(ally).addBonus(new Bonus(BonusType.Heart,6));
     }
 
     @Override

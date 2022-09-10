@@ -24,7 +24,7 @@ public class MenuCommand implements CommandExecutor {
 					player.sendMessage(Main.UHCTypo+"§7» §cVous n'avez pas la permission d'utiliser cette commande.");
 					return false;
 				}else{
-					new ModeGUI(ModeAPI.getModeByIntRepresentation(Main.currentGame.getEmode()), player).open();
+					new ModeGUI(Main.currentGame.getMode(), player).open();
 				}
 			}
 		}

@@ -18,7 +18,7 @@ import fr.supercomete.head.PlayerUtils.PlayerUtility;
 import fr.supercomete.head.core.Main;
 import fr.supercomete.head.world.worldgenerator;
 
-class JoinListener implements Listener {
+final class JoinListener implements Listener {
     private Main main;
     JoinListener(Main main){
         this.main=main;

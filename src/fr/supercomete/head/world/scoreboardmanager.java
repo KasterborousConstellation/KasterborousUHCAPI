@@ -256,21 +256,6 @@ public class scoreboardmanager {
                                 PlayerUtility.sendActionbar(player, str);
 							}
 						}
-					}else if(RoleHandler.getRoleOf(player)instanceof Karvanista) {
-						final Karvanista karva = (Karvanista) RoleHandler.getRoleOf(player);
-						if(!karva.isFinished()){
-							Objective ob = sc.registerNewObjective("§d§d%", "score4");
-							ob.setDisplaySlot(DisplaySlot.BELOW_NAME);
-							Score score;
-							final Player p = Bukkit.getPlayer(karva.getTarget());
-							if (!(p == null)) {
-								score = ob.getScore(p.getName());
-								score.setScore((int)((((double)karva.getProgress() )/(60.0))*100.0));	
-							}
-							ss.send(player);
-						}
-						
-						
 					}
 					if(Main.currentGame.getMode()instanceof DWUHC) {
 						if(player.getWorld()==worldgenerator.structureworld) {

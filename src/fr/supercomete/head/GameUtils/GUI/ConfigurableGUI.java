@@ -80,9 +80,9 @@ public class ConfigurableGUI extends GUI{
 						}
 					}
 				}
-				tmp.setItem(49, InventoryUtils.getItem(Material.ARROW, "Retour", null));
+				tmp.setItem(49, InventoryUtils.getItem(Material.ARROW, "§rRetour", null));
 			}else {
-				tmp.setItem(49, InventoryUtils.getItem(Material.ARROW, "Retour", null));
+				tmp.setItem(49, InventoryUtils.getItem(Material.ARROW, "§rRetour", null));
 				for(Configurable config : Main.currentGame.getConfigList()) {
 					if(config.getId().getBind() instanceof TypeBinding) {
                         TypeBinding bind = (TypeBinding) config.getId().getBind();

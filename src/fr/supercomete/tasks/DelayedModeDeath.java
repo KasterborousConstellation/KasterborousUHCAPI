@@ -43,6 +43,7 @@ public class DelayedModeDeath extends BukkitRunnable{
 		}
 		if(!player.isOnline()){
 			mode.DecoKillMethod(new Offline_Player(player));
+            mode.ModeDefaultOnDeath(new Offline_Player(player),player.getLocation());
 			player.getWorld().playSound(player.getLocation(), Sound.WITHER_SPAWN,20,0);
 			stop(delayed);
 		}
@@ -50,10 +51,11 @@ public class DelayedModeDeath extends BukkitRunnable{
 			if(player.getGameMode()==GameMode.SPECTATOR){
 				player.getWorld().playSound(player.getLocation(), Sound.WITHER_SPAWN,20,0);
 				mode.OnKillMethod(deathlocation,player,damager);
+                mode.ModeDefaultOnDeath(player,damager,player.getLocation());
 			}
 			stop(delayed);
 		}else{
-		    delayed.onSecondtick();
+		    delayed.onSecondtick(timer);
         }
 		timer--;
 	}

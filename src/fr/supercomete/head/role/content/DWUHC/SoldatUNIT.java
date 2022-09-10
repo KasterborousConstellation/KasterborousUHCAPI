@@ -5,6 +5,7 @@ import java.util.Map.Entry;
 import fr.supercomete.head.GameUtils.GameConfigurable.Configurable;
 import fr.supercomete.head.GameUtils.Time.TimeUtility;
 import fr.supercomete.head.PlayerUtils.PlayerUtility;
+import fr.supercomete.head.role.*;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -12,10 +13,6 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.potion.PotionEffect;
 import fr.supercomete.enums.Camps;
 import fr.supercomete.head.core.Main;
-import fr.supercomete.head.role.CoolDown;
-import fr.supercomete.head.role.DWRole;
-import fr.supercomete.head.role.RoleHandler;
-import fr.supercomete.head.role.Status;
 import fr.supercomete.head.role.Triggers.Trigger_WhileAnyTime;
 import fr.supercomete.head.role.RoleModifier.HasAdditionalInfo;
 import fr.supercomete.head.role.RoleState.Displayed_RoleState;
@@ -60,7 +57,7 @@ public final class SoldatUNIT extends DWRole implements Trigger_WhileAnyTime, Ha
 		if (soldiertype == SoldierType.Enqueteur) {
 			additionnal = Collections.singletonList("§7Vous pouvez avec la commande '/dw enquete <Joueur>', lancer une enquete sur un joueur. L'enquête dure §a"
                     + TimeUtility.transform(Main.currentGame.getDataFrom(Configurable.LIST.SoldierSpyTime), "", "", "")
-                    + "§7 et a la fin de celle-ci vous obtiendrez soit les effets de cette personne, soit la première lettre de son rôle ou bien la dernière. Vous pouvez lancer plusieurs enquête en même temps.");
+                    + "§7 et a la fin de celle-ci vous obtiendrez soit les effets de cette personne, soit une liste de 3 rôles dans lesquels se trouve le role du joueur ciblé.");
 		} else if (soldiertype == SoldierType.Garde) {
 			additionnal =Arrays.asList("§7Vous avez 10 flêches empoisonnées qui empoisonnent le joueur touché.","§7Vous avec la commande '/dw poison' activer ou désactiver le poison sur vos tir de fleches. Attention vous n'avez que 10 fleches empoisonnées, et une fleche est utilisée quand elle touche sa cible.");
 		} else {
@@ -136,7 +133,7 @@ public final class SoldatUNIT extends DWRole implements Trigger_WhileAnyTime, Ha
 							generalCoolDown.addUtilisation(1);
 							return;
 						}
-						int r = new Random().nextInt(3);
+						int r = new Random().nextInt(2);
 						switch (r) {
 						case 0:
 							player.sendMessage(Main.UHCTypo
@@ -148,22 +145,21 @@ public final class SoldatUNIT extends DWRole implements Trigger_WhileAnyTime, Ha
 							}
 							break;
 						case 1:
-							player.sendMessage(Main.UHCTypo
-									+ "§eVotre enquête vient de terminer. Elle vous a permit de découvrir la dernière lettre du rôle de §a"
-									+ Bukkit.getPlayer(entry.getKey()).getName());
-							player.sendMessage("Rôle: §kkkkkkkkk§r§a"
-									+ RoleHandler.getRoleOf(Bukkit.getPlayer(entry.getKey())).getName().charAt(
-											RoleHandler.getRoleOf(Bukkit.getPlayer(entry.getKey())).getName().length()
-													- 1));
-							break;
-						case 2:
-							player.sendMessage(Main.UHCTypo
-									+ "§eVotre enquête vient de terminer. Elle vous a permit de découvrir la première lettre du rôle de §a"
-									+ Bukkit.getPlayer(entry.getKey()).getName());
-							player.sendMessage("Rôle: §a"
-									+ RoleHandler.getRoleOf(Bukkit.getPlayer(entry.getKey())).getName().charAt(0)
-									+ "§kkkkkkkkk");
-							break;
+							final ArrayList<Role> rolelist = new ArrayList<>();
+                            final ArrayList<Role> rolecontent = new ArrayList<>(RoleHandler.getRoleList().values());
+
+							for(int i=0;i<Math.min(3,rolecontent.size());i++){
+							    int e = (rolecontent.size()==1)?0:new Random().nextInt(rolecontent.size());
+                                Role role = rolecontent.get(e);
+                                rolelist.add(role);
+                            }
+							String message ="§7Le role de §6"+Bukkit.getPlayer(entry.getKey()).getName()+"§7 se trouve dans cette liste: ";
+
+							for(Role role : rolelist){
+							    message+=role.getDefaultCamp().getColor()+role.getName()+"  ";
+                            }
+
+						    break;
 						default:
 							break;
 						}

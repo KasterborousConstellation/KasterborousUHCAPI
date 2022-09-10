@@ -5,19 +5,20 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.UUID;
 
+import fr.supercomete.enums.Camps;
+import fr.supercomete.head.core.Main;
+import fr.supercomete.head.role.Bonus.Bonus;
+import fr.supercomete.head.role.Bonus.BonusType;
+import fr.supercomete.head.role.DWRole;
+import fr.supercomete.head.role.RoleModifier.PreAnnouncementExecute;
+import fr.supercomete.head.role.Status;
 import org.bukkit.Material;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
-import fr.supercomete.enums.Camps;
-import fr.supercomete.head.core.Main;
-import fr.supercomete.head.role.DWRole;
-import fr.supercomete.head.role.Status;
-import fr.supercomete.head.role.Bonus.Bonus;
-import fr.supercomete.head.role.Bonus.BonusType;
-import fr.supercomete.head.role.RoleModifier.PreAnnouncementExecute;
+
 
 public final class Jenny_Flint extends DWRole implements PreAnnouncementExecute {
 	private HashMap<UUID, Integer> percentmap;

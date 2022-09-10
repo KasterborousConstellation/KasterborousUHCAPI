@@ -152,6 +152,7 @@ public class HostCommand implements CommandExecutor {
 					for(Offline_Player selected : Main.currentGame.getOfflinelist()) {
 						if(selected.getUsername().equalsIgnoreCase(pselec)) {
 							Main.currentGame.getMode().DecoKillMethod(selected);
+                            Main.currentGame.getMode().ModeDefaultOnDeath(selected,player.getLocation());
 							return true;
 						}
 					}

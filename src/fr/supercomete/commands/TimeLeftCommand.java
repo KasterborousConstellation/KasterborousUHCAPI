@@ -26,7 +26,7 @@ public class TimeLeftCommand implements CommandExecutor {
             if(cmd.getName().equalsIgnoreCase("timeleft") ) {
 				player.sendMessage("§1------------------------");
 				for(final Timer timer: Timer.values()){
-				    if(timer.getType().equals(TimerType.TimeDependent)&&timer.isCompatible(Main.currentGame.getMode())){
+				    if(timer.getType().equals(TimerType.TimeDependent)&&timer.getCompatibility().IsCompatible(Main.currentGame.getMode())){
 				        int amount = Main.currentGame.getTimer(timer).getData()-Main.currentGame.getTime();
 				        if(amount>0){
 				            player.sendMessage("  §b"+timer.getName()+": §r"+ TimeUtility.transform(amount,"§b"));

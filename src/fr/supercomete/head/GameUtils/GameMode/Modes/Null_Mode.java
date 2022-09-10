@@ -24,7 +24,13 @@ public class Null_Mode extends Mode {
 	@Override
 	public void onAnyTime(Player player) {	
 	}
-	@Override
+
+    @Override
+    public void onGlobalAnytime() {
+
+    }
+
+    @Override
 	public void onDayTime(Player player) {
 		// TODO Auto-generated method stub		
 	}

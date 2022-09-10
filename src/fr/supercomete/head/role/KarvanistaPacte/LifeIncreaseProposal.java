@@ -16,7 +16,7 @@ public class LifeIncreaseProposal extends Proposal{
 
     @Override
     protected int AskCost() {
-        return 1;
+        return 2;
     }
 
     @Override

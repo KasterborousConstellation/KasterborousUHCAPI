@@ -42,7 +42,7 @@ public class generatorcycle extends BukkitRunnable{
 				long end = System.nanoTime()-start;
 				Bukkit.broadcastMessage("§3Génération terminée §0[§rTemps: "+end/1000000+"ms"+"§0]");
 				for(Player player:Bukkit.getOnlinePlayers()) {
-					PlayerUtility.sendActionbar(player, "§wProgresssion: §a"+100 +"% §r["+generateProgressBar(100,40)+"§r]");
+					PlayerUtility.sendActionbar(player, "§wProgression: §a"+100 +"% §r["+generateProgressBar(100,40)+"§r]");
 				}
 				main.setGenmode(GenerationMode.Done);
 				cancel();
@@ -56,7 +56,7 @@ public class generatorcycle extends BukkitRunnable{
 		if(iteration%10==0){ 
 			double percent=Math.round(100*iteration/totaliteration);
 			if(percent<100)for(Player player:Bukkit.getOnlinePlayers()) {
-                PlayerUtility.sendActionbar(player, "§wProgresssion: §a"+percent +"% §r["+generateProgressBar(percent,40)+"§r]");
+                PlayerUtility.sendActionbar(player, "§wProgression: §a"+percent +"% §r["+generateProgressBar(percent,40)+"§r]");
 			}
 		}
 	}

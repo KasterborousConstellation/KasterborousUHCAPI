@@ -19,7 +19,7 @@ public class DayBothSlownessProposal extends Proposal {
 
 	@Override
 	public int AskCost() {
-		return -3;
+		return -2;
 	}
 
 	@Override

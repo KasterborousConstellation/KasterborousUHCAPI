@@ -16,7 +16,7 @@ public class IncreaseFireDamage extends Proposal implements Trigger_OnTakingHit 
 
     @Override
     protected int AskCost() {
-        return -2;
+        return -1;
     }
 
     @Override

@@ -5,7 +5,10 @@ import java.util.concurrent.CopyOnWriteArrayList;
 
 import javax.annotation.Nullable;
 
+import fr.supercomete.head.GameUtils.GameMode.ModeModifier.CampMode;
+import fr.supercomete.head.role.RoleHandler;
 import org.bukkit.Bukkit;
+import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -22,6 +25,23 @@ import fr.supercomete.head.role.NakimeCastleRole;
 import fr.supercomete.head.role.Role;
 import fr.supercomete.head.structure.Structure;
 public abstract class Mode {
+    public final void ModeDefaultOnDeath(final Offline_Player player,Location deathLocation){
+
+        InventoryUtils.dropInventory(player.getInventory(),deathLocation,deathLocation.getWorld());
+        player.getInventory().clear();
+        Main.playerlist.remove(player.getPlayer());
+        if(Main.currentGame.getMode()instanceof CampMode){
+            RoleHandler.DisplayDeath(player);
+            RoleHandler.removePlayer(player.getPlayer());
+        }
+    }
+    public final void ModeDefaultOnDeath(final Player player,final Player damager,Location deathLocation){
+        Mode.GoldenHeadImplement(player, damager);
+        Mode.KillSwitchImplement(player, damager);
+        player.setGameMode(GameMode.SPECTATOR);
+        player.getInventory().clear();
+        ModeDefaultOnDeath(new Offline_Player(player),deathLocation);
+    }
 	private String name;
 	private Material material;
 	private List<String>description;
@@ -34,6 +54,7 @@ public abstract class Mode {
 	}
 	public abstract void OnKillMethod(Location deathLocation,Player player ,@Nullable Player damager);
 	public abstract void onAnyTime(Player player);
+    public abstract void onGlobalAnytime();
 	public abstract void onDayTime(Player player);
 	public abstract void onNightTime(Player player);
 	public abstract void onEndingTime(Player player);
@@ -69,13 +90,6 @@ public abstract class Mode {
 		this.registeredrole = registeredrole;
 	}
 	public void RegisterRole(Class<?> role) {
-		if(!(role.getSuperclass().equals(Role.class)||role.getSuperclass().equals(NakimeCastleRole.class)||role.getSuperclass().equals(DWRole.class))) {
-			try {
-				throw(new InvalidRoleClassException());
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
-		}else
 		registeredrole.add(role);
 	}
 	/**

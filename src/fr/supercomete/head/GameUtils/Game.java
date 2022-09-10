@@ -7,6 +7,7 @@ import java.util.UUID;
 
 import fr.supercomete.head.GameUtils.Enchants.EnchantHandler;
 import fr.supercomete.head.GameUtils.Enchants.EnchantLimit;
+import fr.supercomete.head.GameUtils.Events.GameEvents.Event;
 import fr.supercomete.head.GameUtils.Events.PlayerEvents.PlayerEvent;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -55,6 +56,7 @@ public class Game {
 	private GenerationMode genmode = GenerationMode.None;
 	private ArrayList<PlayerEvent> events = new ArrayList<>();
     private ArrayList<EnchantLimit>limites= new ArrayList<>();
+    private ArrayList<Event> GameEvents = new ArrayList<>();
     public boolean IsDisabledEnchant=true;
     public boolean IsDisabledAnvil=true;
 	public void init(Main main) {
@@ -69,11 +71,11 @@ public class Game {
 		getArmorhash().put(Material.IRON_BOOTS, true);
 
 		for(Timer timer :Timer.values()) {
-			if(Main.containmod(timer.getCompatibility(), getMode())&&timer.getBound()==null)
+			if(timer.getCompatibility().IsCompatible(ModeAPI.getModeByIntRepresentation(emode))&&timer.getBound()==null)
 			timelist.add(new WatchTime(timer));
 		}
 		for(Timer timer : Timer.values()) {
-			if(Main.containmod(timer.getCompatibility(), getMode())&&timer.getBound()!=null) {
+			if(timer.getCompatibility().IsCompatible(ModeAPI.getModeByIntRepresentation(emode))&&timer.getBound()!=null) {
 				timelist.add(new BoundedWatchTime(timer,timer.getBound()));
 			}
 		}
@@ -105,7 +107,6 @@ public class Game {
 	public Game(int indexmode,Main main) {
 		this.setEmode(indexmode);
 		this.init(main);
-		
 		for (int ps = 0; ps < Configurable.LIST.values().length; ps++) {
 			if (ps >= getConfigList().size()) {
 				getConfigList().add(new Configurable(Configurable.LIST.values()[ps],Configurable.LIST.values()[ps].getBaseData(),Configurable.LIST.values()[ps].getType()));
@@ -393,5 +394,13 @@ public class Game {
 
     public void setLimites(ArrayList<EnchantLimit> limites) {
         this.limites = limites;
+    }
+
+    public ArrayList<Event> getGameEvents() {
+        return GameEvents;
+    }
+
+    public void setGameEvents(ArrayList<Event> gameEvents) {
+        GameEvents = gameEvents;
     }
 }

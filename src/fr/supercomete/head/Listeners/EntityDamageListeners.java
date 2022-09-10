@@ -188,7 +188,7 @@ class EntityDamageListeners implements Listener {
                         Role role = RoleHandler.getRoleOf(damager);
                         boolean cancel = false;
                         if (role instanceof Trigger_OnHitPlayer) {
-                            boolean tmp = ((Trigger_OnHitPlayer) role).OnHitPlayer((Player) f.getEntity(), f.getDamage(), f.getCause());
+                            boolean tmp = ((Trigger_OnHitPlayer) role).OnHitPlayer(damager,(Player) f.getEntity(), f.getDamage(), f.getCause());
                             if (tmp) {
                                 cancel = true;
                             }
@@ -264,7 +264,7 @@ class EntityDamageListeners implements Listener {
                             boolean cancel = false;
 
                             if (role instanceof Trigger_OnHitPlayer) {
-                                boolean tmp = ((Trigger_OnHitPlayer) role).OnHitPlayer(player, e.getDamage(), e.getCause());
+                                boolean tmp = ((Trigger_OnHitPlayer) role).OnHitPlayer(shooter,player, e.getDamage(), e.getCause());
                                 if (cancel == false && tmp == true) {
                                     cancel = true;
                                 }
@@ -411,6 +411,7 @@ class EntityDamageListeners implements Listener {
                 } else {
                     player.getWorld().playSound(player.getLocation(), Sound.WITHER_SPAWN, 20, 0);
                     mode.OnKillMethod(deathLocation, player, damager);
+                    mode.ModeDefaultOnDeath(player,damager,player.getLocation());
                     if(damager==null){
                         PlayerEventHandler.Event("Suicide",player,player.getLocation());
                     }else{

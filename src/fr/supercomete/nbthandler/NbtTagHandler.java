@@ -31,6 +31,7 @@ public final class NbtTagHandler {
 	}
 /*	
 	Table of UUID value
+
 	1| Vastra speed boost
 	2| River Vortex
 	3| Infection Tool 
@@ -46,5 +47,11 @@ public final class NbtTagHandler {
    13| Cage Karvanista
    14| Flux item Tecteun
    15| Temporal FlashBack WeapingAngel
+
+
+
+   101 Joke Flavio
+   102 Mango Flavio
+   103 Mein kampf Lucien
 */	
 }

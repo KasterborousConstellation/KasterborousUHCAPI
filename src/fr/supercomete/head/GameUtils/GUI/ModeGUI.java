@@ -5,6 +5,9 @@ import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 
+import fr.supercomete.ServerExchangeProtocol.File.PlayerAccountManager;
+import fr.supercomete.ServerExchangeProtocol.Rank.Rank;
+import fr.supercomete.head.GameUtils.GameMode.ModeModifier.Permission;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -81,6 +84,7 @@ public class ModeGUI extends GUI {
 			im2.setDisplayName("§rSlots");
 			it2.setItemMeta(im2);
 			tmp.setItem(26, it2);
+			tmp.setItem(4,InventoryUtils.getItem(Material.PAPER,"§rEvents",null));
 			tmp.setItem(22, InventoryUtils.getItem(Material.FEATHER, "§aConfigs", null));
 			tmp.setItem(5, InventoryUtils.getItem(Material.ANVIL, "§rConfigurable",null));
 			tmp.setItem(10, InventoryUtils.getItem(Material.BOOK, "§rWhitelist/Ouverture",null));
@@ -133,7 +137,15 @@ public class ModeGUI extends GUI {
 					switch (currentSlot) {
 					default:
 						if(currentSlot<ModeAPI.getRegisteredModes().size()-1) {
-							Main.currentGame= new Game(ModeAPI.getIntRepresentation(ModeAPI.getRegisteredModes().get(currentSlot+1)),main);
+                            Mode chosenMode = ModeAPI.getRegisteredModes().get(currentSlot+1);
+                            if(chosenMode instanceof Permission){
+                                final Permission perm = (Permission) chosenMode;
+                                Rank rank = perm.getPermission();
+                                if(!PlayerAccountManager.getPlayerAccount(mode.player).hasRank(rank)){
+                                    return;
+                                }
+                            }
+							Main.currentGame= new Game(ModeAPI.getIntRepresentation(chosenMode),main);
 							new ModeGUI(ModeAPI.getRegisteredModes().get(currentSlot+1), mode.player).open();
 //							InventoryHandler.openinventory(player, ModeAPI.getModeByIntRepresentation(Main.currentGame.getEmode()).getGUInumber());
 						}
@@ -143,6 +155,9 @@ public class ModeGUI extends GUI {
 				}else{
 					e.setCancelled(true);
 					switch (currentSlot) {
+                        case 4:
+                            new EventGUI(player).open();
+                            break;
 					case 3:
 						if(Main.currentGame.getGamestate().equals(Gstate.Waiting)) {
 							InventoryHandler.openinventory(player,2);							

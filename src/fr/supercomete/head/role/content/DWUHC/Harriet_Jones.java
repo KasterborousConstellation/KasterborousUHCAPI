@@ -104,8 +104,8 @@ public final class Harriet_Jones extends DWRole implements HasAdditionalInfo,Tri
     }
 
     @Override
-	public boolean OnHitPlayer(Player hitted, double amount, DamageCause cause) {
-		Player player = Bukkit.getPlayer(getOwner());
+	public boolean OnHitPlayer(Player player,Player hitted, double amount, DamageCause cause) {
+
 		if (player.getItemInHand().getType() == Material.DIAMOND_SWORD) {
 			if (1 == new Random().nextInt(50)) {
 				player.sendMessage(Main.UHCTypo + "Grace à la capacité "

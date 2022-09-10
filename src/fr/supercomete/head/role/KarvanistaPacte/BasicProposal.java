@@ -2,6 +2,9 @@ package fr.supercomete.head.role.KarvanistaPacte;
 
 import java.util.UUID;
 
+import fr.supercomete.head.GameUtils.GameConfigurable.Configurable;
+import fr.supercomete.head.GameUtils.Time.TimeUtility;
+import fr.supercomete.head.core.Main;
 import fr.supercomete.head.role.RoleState.KarvanistaRoleState;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -9,6 +12,7 @@ import org.bukkit.entity.Player;
 import fr.supercomete.enums.Camps;
 import fr.supercomete.head.role.RoleHandler;
 import fr.supercomete.head.role.content.DWUHC.Karvanista;
+import org.checkerframework.checker.units.qual.min;
 
 public class BasicProposal extends Proposal {
 	
@@ -29,12 +33,13 @@ public class BasicProposal extends Proposal {
 
 	@Override
 	public String AskDescription() {
-		return "§7Ce composant de pacte est activé par defaut et ne peut pas être supprimé. Il vous fait gagner avec votre allié. Si il meurt ou que vous mourrez, l'autre restera en vie. Il faudra persuader votre allié en restant §65min§7 proche de lui à moins de 20blocs. Une barre de progression sera visible au dessus de sa tête. Si vous venez a mourir sans l'avoir persuader alors votre allié ne changement pas de camp. §c(Ce composant est §cmodifiable avec les autres composants)";
+		return "§7Ce composant de pacte est activé par defaut et ne peut pas être supprimé. Il vous fait gagner avec votre allié. Si il meurt ou que vous mourrez, l'autre restera en vie. Il faudra persuader votre allié en restant §6"+ TimeUtility.transform(Main.currentGame.getDataFrom(Configurable.LIST.KarvanistaTime),"§6") +
+        "§7 proche de lui à moins de 20blocs. Une barre de progression sera visible au dessus de sa tête. Si vous venez a mourir sans l'avoir persuader alors votre allié ne changement pas de camp. §c(Ce composant est §cmodifiable avec les autres composants)";
 	}
 
 	@Override
 	public void tick(Player karvanista, Player ally) {
-		//Nothing
+
 	}
 
 	@Override

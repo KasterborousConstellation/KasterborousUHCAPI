@@ -10,12 +10,16 @@ import java.util.jar.JarFile;
 import java.util.zip.ZipEntry;
 
 import fr.supercomete.commands.*;
-import fr.supercomete.datamanager.ModuleLoader.ModuleManager;
+import fr.supercomete.head.GameUtils.Events.GameEvents.EventsHandler;
 import fr.supercomete.head.GameUtils.Events.PlayerEvents.PlayerEventHandler;
 import fr.supercomete.head.GameUtils.Fights.FightHandler;
+import fr.supercomete.head.GameUtils.GameMode.Modes.*;
 import fr.supercomete.head.GameUtils.Time.TimeUtility;
 import fr.supercomete.head.GameUtils.Time.TimerType;
 import fr.supercomete.head.role.content.DWUHC.*;
+import fr.supercomete.head.role.content.EchoEchoUHC.Flavio;
+import fr.supercomete.head.role.content.EchoEchoUHC.Lois;
+import fr.supercomete.head.role.content.EchoEchoUHC.Lucien;
 import fr.supercomete.tasks.Cycle;
 import org.bukkit.*;
 import org.bukkit.enchantments.Enchantment;
@@ -45,10 +49,6 @@ import fr.supercomete.head.GameUtils.TeamManager;
 import fr.supercomete.head.GameUtils.WinCondition;
 import fr.supercomete.head.GameUtils.GameMode.ModeHandler.ModeAPI;
 import fr.supercomete.head.GameUtils.GameMode.ModeModifier.CampMode;
-import fr.supercomete.head.GameUtils.GameMode.Modes.DWUHC;
-import fr.supercomete.head.GameUtils.GameMode.Modes.Mode;
-import fr.supercomete.head.GameUtils.GameMode.Modes.Null_Mode;
-import fr.supercomete.head.GameUtils.GameMode.Modes.UHCClassic;
 import fr.supercomete.head.GameUtils.Time.Timer;
 import fr.supercomete.head.Inventory.InventoryHandler;
 import fr.supercomete.head.Inventory.InventoryUtils;
@@ -93,45 +93,12 @@ public class Main extends JavaPlugin {
 	public static ArrayList<UUID>cohost = new ArrayList<>(4);
 	public static ArrayList<UUID>bypass = new ArrayList<>();
 	public static Cycle currentCycle=null;
-	private static Date getClassBuildTime() {
-	    Date d = null;
-	    Class<?> currentClass = new Object() {}.getClass().getEnclosingClass();
-	    URL resource = currentClass.getResource(currentClass.getSimpleName() + ".class");
-	    if (resource != null) {
-            switch (resource.getProtocol()) {
-                case "file":
-                    try {
-                        d = new Date(new File(resource.toURI()).lastModified());
-                    } catch (URISyntaxException ignored) {
-                    }
-                    break;
-                case "jar": {
-                    String path = resource.getPath();
-                    d = new Date(new File(path.substring(5, path.indexOf("!"))).lastModified());
-                    break;
-                }
-                case "zip": {
-                    String path = resource.getPath();
-                    File jarFileOnDisk = new File(path.substring(0, path.indexOf("!")));
+    public static Main INSTANCE;
 
-                    try (JarFile jf = new JarFile(jarFileOnDisk)) {
-                        ZipEntry ze = jf.getEntry(path.substring(path.indexOf("!") + 2));
-                        long zeTimeLong = ze.getTime();
-                        d = new Date(zeTimeLong);
-                    } catch (IOException | RuntimeException ignored) {
-                    }
-                    break;
-                }
-            }
-	    }
-	    return d;
-	}
-	public static void updateBypass(){
-        bypass.removeIf(uu -> !(Main.IsHost(uu) || Main.IsCohost(uu)));
-    }
 	@SuppressWarnings("deprecation")
 	@Override
 	public void onEnable() {
+        INSTANCE=this;
 		generator = new BiomeGenerator();
 		structurehandler= new StructureHandler(this);
 		new ScoreBoardManager(this);
@@ -144,9 +111,9 @@ public class Main extends JavaPlugin {
 		}else {
 			Bukkit.broadcastMessage("§dServerProtocol: §4Offline");
 		}
-		ModeAPI.registerMode(new Null_Mode());
+		ModeAPI.registerMode(new Null_Mode(),this);
 		UHCClassic uhcclassic = new UHCClassic();	
-		ModeAPI.registerMode(uhcclassic);
+		ModeAPI.registerMode(uhcclassic,this);
 		final DWUHC doctorwho = new DWUHC();
 		doctorwho.RegisterRole(Dalek.class);
 		doctorwho.RegisterRole(DalekCaan.class);
@@ -188,8 +155,12 @@ public class Main extends JavaPlugin {
 		doctorwho.RegisterRole(WeapingAngel.class);
 		
 		doctorwho.getStructure().add(Main.structurehandler.extractStructure("Tardis"));
-		ModeAPI.registerMode(doctorwho);
-		
+		ModeAPI.registerMode(doctorwho,this);
+        EchoEchoUHC uhc = new EchoEchoUHC();
+        uhc.RegisterRole(Lucien.class);
+        uhc.RegisterRole(Flavio.class);
+        uhc.RegisterRole(Lois.class);
+        ModeAPI.registerMode(uhc,this);
 		Bukkit.broadcastMessage("§dVersion: 0.8.9 Build("+Compiledate.getDate()+"/"+(Compiledate.getMonth()+1)+") §6Alpha");
 		currentGame=new Game(ModeAPI.getIntRepresentation(new Null_Mode()),this);
 		if((this.getConfig().getString("serverapi.serverconfig.echosiakey").equalsIgnoreCase("EchosiaBest"))){
@@ -257,6 +228,7 @@ public class Main extends JavaPlugin {
 		if(devmode) {
 			Bukkit.broadcastMessage("§eDevMode: §aOn");
 		}
+        EventsHandler.init();
 		new BukkitRunnable() {
 			
 			@Override
@@ -264,8 +236,43 @@ public class Main extends JavaPlugin {
 				serverinfo.write();
 			}
 		}.runTaskTimer(this, 0, 20L);
-        ModuleManager.init(this);
 	}
+    private static Date getClassBuildTime() {
+        Date d = null;
+        Class<?> currentClass = new Object() {}.getClass().getEnclosingClass();
+        URL resource = currentClass.getResource(currentClass.getSimpleName() + ".class");
+        if (resource != null) {
+            switch (resource.getProtocol()) {
+                case "file":
+                    try {
+                        d = new Date(new File(resource.toURI()).lastModified());
+                    } catch (URISyntaxException ignored) {
+                    }
+                    break;
+                case "jar": {
+                    String path = resource.getPath();
+                    d = new Date(new File(path.substring(5, path.indexOf("!"))).lastModified());
+                    break;
+                }
+                case "zip": {
+                    String path = resource.getPath();
+                    File jarFileOnDisk = new File(path.substring(0, path.indexOf("!")));
+
+                    try (JarFile jf = new JarFile(jarFileOnDisk)) {
+                        ZipEntry ze = jf.getEntry(path.substring(path.indexOf("!") + 2));
+                        long zeTimeLong = ze.getTime();
+                        d = new Date(zeTimeLong);
+                    } catch (IOException | RuntimeException ignored) {
+                    }
+                    break;
+                }
+            }
+        }
+        return d;
+    }
+    public static void updateBypass(){
+        bypass.removeIf(uu -> !(Main.IsHost(uu) || Main.IsCohost(uu)));
+    }
     public static boolean IsHost(UUID player) {
         return (host!=null && host.equals(player))||PlayerAccountManager.getPlayerAccount(player).hasRank(Rank.Admin);
     }
@@ -325,8 +332,7 @@ public class Main extends JavaPlugin {
 		}
 		CyberiumHandler.reset();
 		
-		if (CountIntegerValue(currentGame.getRoleCompoMap()) < countnumberofplayer()
-				&& ModeAPI.getModeByIntRepresentation(Main.currentGame.getEmode()) instanceof CampMode) {
+		if (CountIntegerValue(currentGame.getRoleCompoMap()) < countnumberofplayer() && Main.currentGame.getMode() instanceof CampMode) {
 			player.sendMessage(UHCTypo + "§cIl n'y a pas assez de rôles pour commencer la partie  "
 					+ currentGame.getRoleCompoMap().size() + "/" + countnumberofplayer() + "(Minimum)");
 			return;
@@ -336,6 +342,7 @@ public class Main extends JavaPlugin {
 					UHCTypo + "§cLa génération de la carte doit être faite avant de pouvoir lancer une partie");
 			return;
 		}
+        EventsHandler.onLauch();
 		diamondmap.replaceAll((k, v) -> 0);
 		if (Main.currentGame.getGamestate() == Gstate.Waiting) {
 			for (Scenarios sc : Main.currentGame.getScenarios()) {
@@ -514,7 +521,7 @@ public class Main extends JavaPlugin {
 	public ArrayList<Timer> getCompatibleTimer() {
 		ArrayList<Timer> compatible = new ArrayList<Timer>();
 		for (Timer t : Timer.values()) {
-			if (Main.containmod(t.getCompatibility(), (Main.currentGame.getMode())))
+			if (t.getCompatibility().IsCompatible(Main.currentGame.getMode()))
 				compatible.add(t);
 		}
 		return compatible;

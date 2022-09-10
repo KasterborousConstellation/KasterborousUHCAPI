@@ -28,7 +28,7 @@ public class UpdateServerInfo {
 		final int nbrscenarios = Main.currentGame.getScenarios().size();
 		ArrayList<String> strl = new ArrayList<String>();
 		strl.add(" "+ ChatColor.GOLD+Main.currentGame.getGameName());
-		strl.add("§7 │"+ChatColor.DARK_AQUA+"Mode: " +ChatColor.AQUA+ModeAPI.getModeByIntRepresentation(Main.currentGame.getEmode()).getName());
+		strl.add("§7 │"+ChatColor.DARK_AQUA+"Mode: " +ChatColor.AQUA+Main.currentGame.getMode().getName());
 		strl.add("§7 │" + ChatColor.WHITE + "Scénarios:");
 		for (int i = 0; i < ((nbrscenarios > 5) ? 5 : nbrscenarios); i++) {
 			strl.add("      §7" + Main.currentGame.getScenarios().get(i).getName());
