@@ -40,7 +40,7 @@ public class DisperseCommand implements CommandExecutor {
 						if(target.getWorld()==player.getWorld()) {
 							if(target.getGameMode()!=GameMode.SPECTATOR) {
 								if(target.getLocation().distance(player.getLocation())<=v) {
-									PlayerUtility.PlayerRandomTPMap(player);
+									PlayerUtility.PlayerRandomTPMap(target);
 								}
 							}
 						}

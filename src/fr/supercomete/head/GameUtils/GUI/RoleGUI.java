@@ -51,7 +51,7 @@ public class RoleGUI extends GUI{
 			final Historic historic = RoleHandler.getHistoric();
 			final HistoricData data = historic.getEntry(target.getUniqueId());
 			
-			if(data.getCause()==null&&RoleHandler.isIsRoleGenerated()) {
+			if(data.getCause()==null&&RoleHandler.IsRoleGenerated()) {
 				tmp.setItem(22, InventoryUtils.getItem(Material.BEACON, "§r"+data.getPlayer().getUsername(),RoleHandler.getRoleDescription(data)));
 			}else {
 				tmp.setItem(22, InventoryUtils.getItem(Material.BEACON, "§cAucun", null));

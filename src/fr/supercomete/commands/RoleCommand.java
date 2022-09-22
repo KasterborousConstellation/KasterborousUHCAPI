@@ -29,7 +29,7 @@ public class RoleCommand implements CommandExecutor {
 				}
 				if(args.length==1) {
 					if(Main.IsHost(player)||Main.IsCohost(player)) {
-						if(!RoleHandler.isIsRoleGenerated()) {
+						if(!RoleHandler.IsRoleGenerated()) {
 							player.sendMessage(Main.UHCTypo+"§cLes rôles ne sont pas encore générés");
 							return false;
 						}
@@ -45,7 +45,7 @@ public class RoleCommand implements CommandExecutor {
 						
 					return true;
 				}
-				if (!RoleHandler.isIsRoleGenerated()) {
+				if (!RoleHandler.IsRoleGenerated()) {
 					player.sendMessage(Main.UHCTypo + "§cVous n'avez pas encore de rôle");
 					return false;
 				} else

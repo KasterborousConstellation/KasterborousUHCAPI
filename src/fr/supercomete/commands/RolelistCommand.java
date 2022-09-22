@@ -20,7 +20,7 @@ public class RolelistCommand implements CommandExecutor {
 			Player player=(Player)sender;
 			if(cmd.getName().equalsIgnoreCase("rolelist")) {
 				if(Main.currentGame.getMode()instanceof CampMode) {
-					if(RoleHandler.isIsRoleGenerated()&& (Main.IsHost(player)||RoleHandler.getRoleList().containsKey(player.getUniqueId()))) {
+					if(RoleHandler.IsRoleGenerated()&& (Main.IsHost(player)||RoleHandler.getRoleList().containsKey(player.getUniqueId()))) {
 						new RoleListGUI(player,((CampMode)Main.currentGame.getMode()).getPrimitiveCamps()[0].getName()).open();
 					}
 					

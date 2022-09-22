@@ -17,9 +17,7 @@ import fr.supercomete.head.GameUtils.GameMode.Modes.*;
 import fr.supercomete.head.GameUtils.Time.TimeUtility;
 import fr.supercomete.head.GameUtils.Time.TimerType;
 import fr.supercomete.head.role.content.DWUHC.*;
-import fr.supercomete.head.role.content.EchoEchoUHC.Flavio;
-import fr.supercomete.head.role.content.EchoEchoUHC.Lois;
-import fr.supercomete.head.role.content.EchoEchoUHC.Lucien;
+import fr.supercomete.head.role.content.EchoEchoUHC.*;
 import fr.supercomete.tasks.Cycle;
 import org.bukkit.*;
 import org.bukkit.enchantments.Enchantment;
@@ -98,6 +96,7 @@ public class Main extends JavaPlugin {
 	@SuppressWarnings("deprecation")
 	@Override
 	public void onEnable() {
+
         INSTANCE=this;
 		generator = new BiomeGenerator();
 		structurehandler= new StructureHandler(this);
@@ -160,6 +159,8 @@ public class Main extends JavaPlugin {
         uhc.RegisterRole(Lucien.class);
         uhc.RegisterRole(Flavio.class);
         uhc.RegisterRole(Lois.class);
+        uhc.RegisterRole(Nicolas.class);
+        uhc.RegisterRole(Neo.class);
         ModeAPI.registerMode(uhc,this);
 		Bukkit.broadcastMessage("§dVersion: 0.8.9 Build("+Compiledate.getDate()+"/"+(Compiledate.getMonth()+1)+") §6Alpha");
 		currentGame=new Game(ModeAPI.getIntRepresentation(new Null_Mode()),this);

@@ -51,7 +51,7 @@ final class BlockBreakListener implements Listener {
 				}
 			}.runTaskLater(main, 0L);
 		}
-		if (RoleHandler.isIsRoleGenerated()) {
+		if (RoleHandler.IsRoleGenerated()) {
 			for(final Role role : RoleHandler.getRoleList().values()) {
 				if(role instanceof GreatIntelligence){
 					final GreatIntelligence great = (GreatIntelligence)role;

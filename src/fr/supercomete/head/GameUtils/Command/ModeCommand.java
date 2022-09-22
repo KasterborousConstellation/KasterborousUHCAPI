@@ -1,51 +1,44 @@
 package fr.supercomete.head.GameUtils.Command;
 
+import fr.supercomete.head.GameUtils.Scenarios.Compatibility;
 import fr.supercomete.head.core.Main;
 import org.bukkit.command.CommandSender;
-import org.bukkit.command.PluginIdentifiableCommand;
-import org.bukkit.command.defaults.BukkitCommand;
 import org.bukkit.entity.Player;
-import org.bukkit.plugin.Plugin;
-import org.checkerframework.common.value.qual.ArrayLenRange;
 
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Objects;
 
-public class KasterborousCommand extends BukkitCommand implements PluginIdentifiableCommand {
-    final ArrayList<SubCommand> subCommands= new ArrayList<>();
-    public KasterborousCommand(String name) {
+public class ModeCommand extends KasterborousCommand{
+    private final Compatibility compatibility;
+    public ModeCommand(String name,Compatibility compatibility) {
         super(name);
+        this.compatibility = compatibility;
         this.addSubCommand(new SubCommand() {
             @Override
             public String subCommand() {
-                return "help";
+                return "liste";
             }
 
             @Override
             public boolean execute(Player sender, String[] args) {
-                for (SubCommand subCommand : subCommands) {
-                    sender.sendMessage(  "§b/" + getName() + " " + subCommand.subCommand() + " §f" + subCommand.subCommandDescription());
-                }
-                return true;
+                sender.performCommand("rolelist");
+                return false;
             }
 
             @Override
             public String subCommandDescription() {
-                return "Fait apparaitre le menu d'aide.";
+                return "Menu d'administrateur qui permet de voir les roles de tout les joueurs";
             }
         });
     }
-
-    public void addSubCommand(SubCommand...subCommands){
-        this.subCommands.addAll(Arrays.asList(subCommands));
-    }
-
     @Override
     public boolean execute(CommandSender commandSender, String s, String[] strings) {
         if(commandSender instanceof Player){
             final Player player =(Player)commandSender;
             if(strings.length==0){
+                return false;
+            }
+            if(!compatibility.IsCompatible(Main.currentGame.getMode())){
+                player.sendMessage("§cCette commande n'est pas faite pour ce mode de jeu");
                 return false;
             }
             for(SubCommand command:subCommands){
@@ -64,10 +57,5 @@ public class KasterborousCommand extends BukkitCommand implements PluginIdentifi
             return true;
         }
         return false;
-    }
-
-    @Override
-    public Plugin getPlugin() {
-        return Main.INSTANCE;
     }
 }

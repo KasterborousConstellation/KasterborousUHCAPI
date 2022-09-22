@@ -9,10 +9,7 @@ import fr.supercomete.head.PlayerUtils.PlayerUtility;
 import fr.supercomete.head.role.Role;
 import fr.supercomete.head.role.RoleHandler;
 import org.bukkit.Bukkit;
-import org.bukkit.entity.Player;
-
 import java.util.*;
-import java.util.stream.Stream;
 
 public class Exposed extends Event {
     HashMap<Camps,ArrayList<Role>>map = new HashMap<>();
@@ -27,12 +24,12 @@ public class Exposed extends Event {
 
     @Override
     public String getDescription() {
-        return "Choisi un joueur qui verra son role exposé au milieu de deux autres rôles qui ne lui appartiennent pas.";
+        return "Choisi un joueur qui verra son role exposé au milieu de trois autres rôles qui ne lui appartiennent pas.";
     }
 
     @Override
     public void onExecutionTime() {
-        if(RoleHandler.isIsRoleGenerated()){
+        if(RoleHandler.IsRoleGenerated()){
             Random random = new Random();
             int ind = random.nextInt(RoleHandler.getRoleList().size());
             UUID uuid = (UUID) RoleHandler.getRoleList().keySet().toArray()[ind];
@@ -48,10 +45,12 @@ public class Exposed extends Event {
                     final Role chosen =list.get(index);
                     if(!map.containsKey(chosen.getDefaultCamp())){
                         map.put(chosen.getCamp(),new ArrayList<>(Collections.singletonList(chosen)));
-                    }else{
+                    }else {
                         ArrayList<Role> roles = map.get(chosen.getCamp());
-                        roles.add(chosen);
-                        map.put(chosen.getCamp(),roles);
+                        if (!roles.contains(chosen)){
+                            roles.add(chosen);
+                            map.put(chosen.getCamp(), roles);
+                        }
                     }
                 }
                 iteration++;
@@ -65,7 +64,7 @@ public class Exposed extends Event {
                 fin.add(display.get((display.size()==1)?0:random.nextInt(display.size())));
             }
             Bukkit.broadcastMessage("§6Exposed");
-            Bukkit.broadcastMessage("Le role du joueur "+ PlayerUtility.getNameByUUID(uuid)+"est parmi ces roles: ");
+            Bukkit.broadcastMessage("Le role du joueur "+ PlayerUtility.getNameByUUID(uuid)+"§f est parmi ces roles: ");
             for(Role r : fin){
                 Bukkit.broadcastMessage("  -"+r.getName());
             }

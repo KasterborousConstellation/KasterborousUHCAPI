@@ -33,8 +33,6 @@ public final class CyberBrouilleur extends DWRole implements Trigger_OnRoletime,
 		isactive=true;
 	}
 
-
-
 	@Override
 	public List<String> askRoleInfo() {
 		return Arrays.asList("§7Vous avez force 1 pendant la nuit. Cependant, si vous faite un kill, vous perdrez l'effet de force. Celui ci reprendra au début de la nuit suivante.",

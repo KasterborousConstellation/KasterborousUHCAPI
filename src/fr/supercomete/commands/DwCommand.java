@@ -118,7 +118,7 @@ public class DwCommand implements CommandExecutor {
 					break;
 				case "status":
 					if (ModeAPI.getModeByIntRepresentation(Main.currentGame.getEmode()) instanceof CampMode) {
-						if (RoleHandler.isIsRoleGenerated()) {
+						if (RoleHandler.IsRoleGenerated()) {
 							if(role instanceof ClaraOswald) {
 							    final ClaraOswald oswald =(ClaraOswald)role;
                                 final CoolDown cap = oswald.statusCoolDown;
@@ -154,7 +154,7 @@ public class DwCommand implements CommandExecutor {
 				case "roles": 
 				case "role":
 					if (ModeAPI.getModeByIntRepresentation(Main.currentGame.getEmode()) instanceof CampMode) {
-						if (RoleHandler.isIsRoleGenerated()) {
+						if (RoleHandler.IsRoleGenerated()) {
 							HashMap<Class<?>, Integer> map = new HashMap<>();
 							for (Role r : RoleHandler.getRoleList().values()) {
 								int amount = (map.containsKey(r.getClass())) ? map.get(r.getClass()) + 1 : 1;

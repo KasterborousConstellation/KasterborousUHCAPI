@@ -26,7 +26,7 @@ public class Null_Mode extends Mode {
 	}
 
     @Override
-    public void onGlobalAnytime() {
+    public void onGlobalAnytime(int time) {
 
     }
 

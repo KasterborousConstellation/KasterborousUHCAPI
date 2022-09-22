@@ -23,6 +23,7 @@ public class EventsHandler {
     }
     public static void onLauch(){
         final Game game = Main.currentGame;
+        game.setGameEvents(new ArrayList<>());
         float proba = new Random().nextFloat();
         proba *=100;
         for(Event event : registered){

@@ -27,7 +27,7 @@ public class BlackCloverUHC extends Mode implements CampMode,Groupable {
 	}
 
     @Override
-    public void onGlobalAnytime() {
+    public void onGlobalAnytime(int time) {
 
     }
 

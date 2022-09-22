@@ -94,7 +94,7 @@ public class UHCClassic extends Mode implements TeamMode{
 	}
 
     @Override
-    public void onGlobalAnytime() {
+    public void onGlobalAnytime(int time) {
 
     }
 

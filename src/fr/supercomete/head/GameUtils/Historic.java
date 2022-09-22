@@ -1,16 +1,11 @@
 package fr.supercomete.head.GameUtils;
-
 import java.util.HashMap;
 import java.util.Map.Entry;
 import java.util.UUID;
-
 import fr.supercomete.head.core.Main;
 import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
-
 import fr.supercomete.head.role.RoleHandler;
-
 public class Historic {
 	private final HashMap<UUID, HistoricData> rolelist = new HashMap<>();
 	
@@ -34,5 +29,4 @@ public class Historic {
 			}
 		}
 	}
-	
 }

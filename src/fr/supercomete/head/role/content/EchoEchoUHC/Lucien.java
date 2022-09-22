@@ -36,6 +36,11 @@ public class Lucien extends EchoRole implements Trigger_OnHitPlayer {
     }
 
     @Override
+    public float getMangaProbability() {
+        return 0.8F;
+    }
+
+    @Override
     public String[] AskMoreInfo() {
         return new String[0];
     }
@@ -71,7 +76,7 @@ public class Lucien extends EchoRole implements Trigger_OnHitPlayer {
 
     @Override
     public boolean AskIfUnique() {
-        return true;
+        return false;
     }
 
     @Override

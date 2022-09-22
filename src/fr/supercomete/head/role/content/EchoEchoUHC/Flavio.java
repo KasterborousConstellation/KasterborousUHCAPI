@@ -7,7 +7,6 @@ import fr.supercomete.head.PlayerUtils.PlayerUtility;
 import fr.supercomete.head.core.Main;
 import fr.supercomete.head.role.CoolDown;
 import fr.supercomete.head.role.EchoRole;
-import fr.supercomete.head.role.Role;
 import fr.supercomete.head.role.Triggers.Trigger_OnInteractWithUUIDItem;
 import fr.supercomete.head.role.Triggers.Trigger_WhileNight;
 import fr.supercomete.nbthandler.NbtTagHandler;
@@ -36,6 +35,11 @@ public class Flavio extends EchoRole implements Trigger_WhileNight, Trigger_OnIn
     }
 
     @Override
+    public float getMangaProbability() {
+        return 0.8F;
+    }
+
+    @Override
     public String[] AskMoreInfo() {
         return new String[0];
     }
@@ -52,7 +56,7 @@ public class Flavio extends EchoRole implements Trigger_WhileNight, Trigger_OnIn
 
     @Override
     public List<String> askRoleInfo() {
-        return Arrays.asList("Votre but est de gagner §6seul§7.","Votre humour sans failles vous octroye un objet nommé 'Blague de la mangue' qui lors de son activation provoque un rire unanime qui a pour effet de changer la direction dans laquelle ils regardent de tout les joueurs dans un rayon de 25 blocs du point d'activation de cet objet, ceci toute les 5s et pendant 2min. Utilisable une seul fois.",
+        return Arrays.asList("Votre but est de gagner §6seul§7.","Votre humour sans failles vous octroye un objet nommé 'Blague de la mangue' qui lors de son activation provoque un rire unanime qui a pour effet de changer la direction dans laquelle ils regardent de tout les joueurs dans un rayon de 25 blocs du point d'activation de cet objet, ceci toute les 5s et pendant 2min. Utilisable une seule fois.",
                 "Votre fanatisme pour les yuris vous donnes deux objets nommé 'Yuri' qui peuvent être consommés. Lorsque de sa consommation le 'Yuri' vous régénères votre vie totalement.",
                 "A cause de votre cicle de sommeil atypique, vous avez l'effet §cforce§7 pendant la nuit"
                 );
@@ -70,7 +74,7 @@ public class Flavio extends EchoRole implements Trigger_WhileNight, Trigger_OnIn
 
     @Override
     public boolean AskIfUnique() {
-        return true;
+        return false;
     }
 
     @Override
@@ -80,7 +84,7 @@ public class Flavio extends EchoRole implements Trigger_WhileNight, Trigger_OnIn
 
     @Override
     public void WhileNight(Player player) {
-        PlayerUtility.addProperlyEffect(player,new PotionEffect(PotionEffectType.INCREASE_DAMAGE,0,3*20,false,false));
+        PlayerUtility.addProperlyEffect(player,new PotionEffect(PotionEffectType.INCREASE_DAMAGE,3*20,0,false,false));
     }
     @Override
     public void OnInteractWithUUIDItem(Player player, int uuidtag, Action action) {

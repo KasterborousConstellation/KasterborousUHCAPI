@@ -53,5 +53,6 @@ public final class NbtTagHandler {
    101 Joke Flavio
    102 Mango Flavio
    103 Mein kampf Lucien
+   104 Nicloas Compas
 */	
 }

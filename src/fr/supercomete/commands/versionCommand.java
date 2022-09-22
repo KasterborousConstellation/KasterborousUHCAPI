@@ -23,7 +23,7 @@ public class versionCommand implements CommandExecutor {
 				if(!(Main.currentGame.getMode()instanceof CampMode)){
 					return false;
 				}
-				if(!RoleHandler.isIsRoleGenerated()) {
+				if(!RoleHandler.IsRoleGenerated()) {
 					return false;
 				}
 				final Role role = RoleHandler.getRoleOf(player);

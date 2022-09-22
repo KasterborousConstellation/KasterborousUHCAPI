@@ -28,7 +28,7 @@ public class RolesCommand implements CommandExecutor {
 			Player player = (Player) sender;
 			if (cmd.getName().equalsIgnoreCase("roles") || cmd.getName().equalsIgnoreCase("compo")) {
 				if (ModeAPI.getModeByIntRepresentation(Main.currentGame.getEmode())instanceof CampMode) {
-					if (RoleHandler.isIsRoleGenerated()) {
+					if (RoleHandler.IsRoleGenerated()) {
 						HashMap<Class<?>, Integer> map = new HashMap<Class<?>, Integer>();
 						for (Role r : RoleHandler.getRoleList().values()) {
 							int amount = (map.containsKey(r.getClass())) ? map.get(r.getClass()) + 1 : 1;

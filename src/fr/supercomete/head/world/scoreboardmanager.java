@@ -91,7 +91,7 @@ public class scoreboardmanager {
 					ScoreBoardManager.update(player);
 					SetallScoreboard(player);
 					if(Main.currentGame.getMode()instanceof CampMode) {
-						if(RoleHandler.isIsRoleGenerated()) {
+						if(RoleHandler.IsRoleGenerated()) {
 							Role role = RoleHandler.getRoleOf(player);
 							if(role!=null) {
 								int count =20;
@@ -161,7 +161,7 @@ public class scoreboardmanager {
 			try {
 				sc.getObjective("§d§d%").unregister();
 			}catch (Exception e) {}
-			if (RoleHandler.isIsRoleGenerated()) {
+			if (RoleHandler.IsRoleGenerated()) {
 				if(RoleHandler.getRoleOf(player)!=null) {
 					Role role = RoleHandler.getRoleOf(player);
 					float addpercent = role.getPowerOfBonus(BonusType.Speed);
@@ -206,7 +206,7 @@ public class scoreboardmanager {
 							if (p == null || player.getUniqueId()==uu)
 								continue;
 							score3 = ob.getScore(p.getName());
-							if(player.getLocation().distance(p.getLocation())<20) {
+							if(player.getLocation().getWorld()==p.getLocation().getWorld()&&player.getLocation().distance(p.getLocation())<20) {
 								if(Main.currentGame.getTime()%Main.currentGame.getDataFrom(Configurable.LIST.StewartUpdate)==0 && Main.getPlayerlist().contains(uu))role.updateProgression(uu);
 							}
 							score3.setScore(role.getProgression().get(uu));
@@ -229,21 +229,20 @@ public class scoreboardmanager {
 						ss.send(player);
 					}else if(RoleHandler.getRoleOf(player)instanceof GreatIntelligence) {
 						final GreatIntelligence intell =(GreatIntelligence) RoleHandler.getRoleOf(player);
-						final InvisibleRoleWithArmor armorinvisible=intell;
-						if(intell.isShowing()==false) {
+                        if(!intell.isShowing()) {
 							if(intell.getTeleportedsnowman()!=null) {
 								if(player.getWorld()==intell.getTeleportedsnowman().getWorld()) {
 									if(player.getLocation().distance(intell.getTeleportedsnowman())>5) {
 										player.addPotionEffect(new PotionEffect(PotionEffectType.SLOW, 120, 0),false);
 										intell.setTeleportedsnowman(null);
 										intell.setShowing(true);
-										armorinvisible.show(player);
+										intell.show(player);
 									}else {
 										if(player.hasPotionEffect(PotionEffectType.INVISIBILITY)) {
 											player.removePotionEffect(PotionEffectType.INVISIBILITY);
 										}
-										armorinvisible.hide(player);
-										player.addPotionEffect(new PotionEffect(PotionEffectType.INVISIBILITY,1200,1,false,false),false);
+										intell.hide(player);
+										player.addPotionEffect(new PotionEffect(PotionEffectType.INVISIBILITY,20*3,1,false,false),false);
 									}
 								}
 							}

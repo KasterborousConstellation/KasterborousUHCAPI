@@ -59,8 +59,7 @@ public final class Tecteun extends DWRole implements BonusHeart, Trigger_OnOwner
         return Arrays.asList(
                 "Vous avez 12♥ permanent",
                 "Vous avez l'effet "+ ChatColor.DARK_GRAY +"résistance§7 permanent.",
-                "Vous avez l'effet "+ ChatColor.AQUA +"speed§7 permanent.",
-                "Vous avez un item appelée 'Flux', qui vous permet de créer une zone de 30 blocs dans laquelle tout les joueurs sauf vous et les anges pleureurs prennent 1♥ de dégat toute les 5s. Cette item est utilisable uniquement une fois et la zone est permanente.",
+                "Vous avez un item appelée 'Flux', qui vous permet de créer une zone de 30 blocs dans laquelle tout les joueurs sauf vous et les anges pleureurs prennent 1♥ de dégat toute les 5s. Cette item est utilisable uniquement une fois et la zone est permanente, cependant l'activation vous fait perdre 2♥.",
                 "Quand vous avez une vie supplémentaire. Lors de votre première mort, vous perdrez 3♥ permanent.",
                 "Vous avez la liste des autres membres de La Division."
         );
@@ -68,7 +67,7 @@ public final class Tecteun extends DWRole implements BonusHeart, Trigger_OnOwner
 
     @Override
     public ItemStack[] askItemStackgiven() {
-        ItemStack stack = InventoryUtils.getItem(Material.NETHER_STAR,"§6Flux",Collections.singletonList("§6Cliquez ici pour activer la zone du Flux"));
+        ItemStack stack = InventoryUtils.getItem(Material.NETHER_STAR,"§6Flux", Collections.singletonList("§6Cliquez ici pour activer la zone du Flux"));
         stack = NbtTagHandler.createItemStackWithUUIDTag(stack,14);
         return new ItemStack[]{stack};
     }
@@ -98,7 +97,6 @@ public final class Tecteun extends DWRole implements BonusHeart, Trigger_OnOwner
     @Override
     public void WhileAnyTime(Player player) {
         PlayerUtility.addProperlyEffect(player,new PotionEffect(PotionEffectType.DAMAGE_RESISTANCE,20*3,0,false,false));
-        PlayerUtility.addProperlyEffect(player,new PotionEffect(PotionEffectType.SPEED,20*3,0,false,false));
     }
     private byte pick(){
         byte[] shorts = new byte[]{1,1,1,1,4,4,4,4,4,4,4,4,4,14,14,14,15};
@@ -107,6 +105,7 @@ public final class Tecteun extends DWRole implements BonusHeart, Trigger_OnOwner
     }
     public void createFluxZone(final Player player,final Main main){
         flux=true;
+        this.addBonus(new Bonus(BonusType.Heart,-4));
         final int range = 30;
         final World world = player.getWorld();
         final Location location =player.getLocation();
@@ -139,7 +138,7 @@ public final class Tecteun extends DWRole implements BonusHeart, Trigger_OnOwner
     @Override
     public String[] getAdditionnalInfo() {
         final ArrayList<String> array = new ArrayList<>();
-        array.add("§7Liste des membres de "+ChatColor.DARK_PURPLE+"La Division");
+        array.add("§7Liste des membres de "+ ChatColor.DARK_PURPLE+"La Division");
         for(final UUID uu: ally){
             if(Bukkit.getPlayer(uu)!=null){
                 array.add("    §7"+Bukkit.getPlayer(uu).getName());

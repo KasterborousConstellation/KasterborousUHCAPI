@@ -1,6 +1,6 @@
 package fr.supercomete.head.Listeners;
 
-import java.util.UUID;
+import java.util.*;
 
 import fr.supercomete.head.GameUtils.Events.PlayerEvents.PlayerEventHandler;
 import fr.supercomete.head.GameUtils.Events.PlayerEvents.PlayerEvents;
@@ -54,7 +54,7 @@ final class InteractEventListener implements Listener {
     @EventHandler
     public void PlayerInteractEvent(PlayerInteractEvent e) {
         final Player player = e.getPlayer();
-        final ItemStack currentItem = e.getItem();
+        ItemStack currentItem = e.getItem();
         final Action action = e.getAction();
         if (TardisHandler.IsTardisGenerated && Main.currentGame.getMode() instanceof DWUHC) {
             if (player.getLocation().getWorld() == TardisHandler.TardisLocation.getWorld()) {
@@ -66,7 +66,7 @@ final class InteractEventListener implements Listener {
                 }
             } else if (player.getLocation().getWorld() == worldgenerator.structureworld && action == Action.RIGHT_CLICK_BLOCK) {
                 Location heart = Main.currentGame.getMode().getStructure().get(0).getPositionRelativeToLocation(new int[]{18, 21, 21});
-                if (RoleHandler.isIsRoleGenerated() && e.getClickedBlock().getLocation().distance(heart) < 2.5) {
+                if (RoleHandler.IsRoleGenerated() && e.getClickedBlock().getLocation().distance(heart) < 2.5) {
                     new TardisGUI((DWRole) RoleHandler.getRoleOf(player), player).open();
                 }
             }
@@ -137,7 +137,7 @@ final class InteractEventListener implements Listener {
         if (NbtTagHandler.hasUUIDTAG(currentItem)) {
             switch (NbtTagHandler.getUUIDTAG(currentItem)) {
                 case 1:
-                    if (RoleHandler.isIsRoleGenerated()) {
+                    if (RoleHandler.IsRoleGenerated()) {
                         if (RoleHandler.getRoleOf(player) instanceof Vastra) {
                             Vastra vastra =(Vastra)RoleHandler.getRoleOf(player);
                             vastra.instant=true;
@@ -152,7 +152,7 @@ final class InteractEventListener implements Listener {
                         player.sendMessage(Main.UHCTypo + "§cLes rôles n'ont pas été généré");
                     break;
                 case 2:
-                    if (RoleHandler.isIsRoleGenerated()) {
+                    if (RoleHandler.IsRoleGenerated()) {
                         if (RoleHandler.getRoleOf(player) instanceof RiverSong) {
                             if ((int) NbtTagHandler.getAnyTag(player.getItemInHand(), "VortexState") == 1) {
                                 final ItemStack it = NbtTagHandler.addAnyTag(
@@ -184,7 +184,7 @@ final class InteractEventListener implements Listener {
                     }
                     break;
                 case 4:
-                    if (RoleHandler.isIsRoleGenerated()) {
+                    if (RoleHandler.IsRoleGenerated()) {
                         if (RoleHandler.getRoleOf(player) instanceof Supreme_Dalek) {
                             if (action.equals(Action.RIGHT_CLICK_AIR)) {
                                 InventoryHandler.openinventory(player, 21);
@@ -193,7 +193,7 @@ final class InteractEventListener implements Listener {
                     }
                     break;
                 case 5:
-                    if (RoleHandler.isIsRoleGenerated()) {
+                    if (RoleHandler.IsRoleGenerated()) {
                         if (RoleHandler.getRoleOf(player) instanceof CyberBrouilleur ) {
                             CyberBrouilleur brouilleur =(CyberBrouilleur)RoleHandler.getRoleOf(player);
                             if (action.equals(Action.RIGHT_CLICK_AIR)) {
@@ -207,7 +207,7 @@ final class InteractEventListener implements Listener {
                     }
                     break;
                 case 6:
-                    if (RoleHandler.isIsRoleGenerated()) {
+                    if (RoleHandler.IsRoleGenerated()) {
                         if (RoleHandler.getRoleOf(player) instanceof DalekCaan) {
                             final DalekCaan role = (DalekCaan) RoleHandler.getRoleOf(player);
                             role.setTarget(player.getUniqueId());
@@ -229,7 +229,7 @@ final class InteractEventListener implements Listener {
                     }
                 case 9:
                     e.setCancelled(true);
-                    if (RoleHandler.isIsRoleGenerated()) {
+                    if (RoleHandler.IsRoleGenerated()) {
                         if (RoleHandler.getRoleOf(player) instanceof GreatIntelligence ) {
                             GreatIntelligence role = (GreatIntelligence) RoleHandler.getRoleOf(player);
                             final CoolDown freeze = role.freeze;
@@ -251,7 +251,7 @@ final class InteractEventListener implements Listener {
                     break;
                 case 10:
                     e.setCancelled(true);
-                    if (RoleHandler.isIsRoleGenerated()) {
+                    if (RoleHandler.IsRoleGenerated()) {
                         if (e.getAction() == Action.RIGHT_CLICK_AIR || e.getAction() == Action.RIGHT_CLICK_BLOCK) {
                             if (RoleHandler.getRoleOf(player) instanceof Bill_Potts) {
                                 final Bill_Potts role = (Bill_Potts) RoleHandler.getRoleOf(player);
@@ -276,7 +276,7 @@ final class InteractEventListener implements Listener {
                     break;
                 case 12:
                     e.setCancelled(true);
-                    if (RoleHandler.isIsRoleGenerated()) {
+                    if (RoleHandler.IsRoleGenerated()) {
                         if (e.getAction() == Action.RIGHT_CLICK_AIR || e.getAction() == Action.RIGHT_CLICK_BLOCK) {
                             if (RoleHandler.getRoleOf(player) instanceof Karvanista ) {
                                 Karvanista karvanista = (Karvanista) RoleHandler.getRoleOf(player);
@@ -337,12 +337,13 @@ final class InteractEventListener implements Listener {
                     }
                     break;
                 case 13:
-                    if (RoleHandler.isIsRoleGenerated()) {
+                    if (RoleHandler.IsRoleGenerated()) {
                         if (e.getAction() == Action.RIGHT_CLICK_AIR || e.getAction() == Action.RIGHT_CLICK_BLOCK) {
                             if (RoleHandler.getRoleOf(player) != null && RoleHandler.getRoleOf(player) instanceof Karvanista ) {
                                 Karvanista karvanista = (Karvanista) RoleHandler.getRoleOf(player);
-                                if (karvanista.getProposal(ShieldProposal.class).IsActivated) {
+                                if (Objects.requireNonNull(karvanista.getProposal(ShieldProposal.class)).IsActivated) {
                                     ShieldProposal proposal = (ShieldProposal) karvanista.getProposal(ShieldProposal.class);
+                                    assert proposal != null;
                                     if (proposal.CanUse) {
                                         if (Bukkit.getPlayer(karvanista.getTarget()) != null && RoleHandler.getRoleList().containsKey(karvanista.getTarget()) && Bukkit.getPlayer(karvanista.getTarget()).isOnline()) {
                                             if (player.getWorld() != worldgenerator.structureworld && Bukkit.getPlayer(karvanista.getTarget()).getWorld() != worldgenerator.structureworld) {
@@ -373,7 +374,7 @@ final class InteractEventListener implements Listener {
 
                     break;
                 case 14:
-                    if (RoleHandler.isIsRoleGenerated()) {
+                    if (RoleHandler.IsRoleGenerated()) {
                         if (e.getAction() == Action.RIGHT_CLICK_BLOCK || e.getAction() == Action.RIGHT_CLICK_AIR) {
                             if (RoleHandler.getRoleOf(player) != null && RoleHandler.getRoleOf(player) instanceof Tecteun) {
                                 final Tecteun tecteun = (Tecteun) RoleHandler.getRoleOf(player);
@@ -385,42 +386,60 @@ final class InteractEventListener implements Listener {
                         }
                     }
                     break;
-                case 15:
-                    if(RoleHandler.isIsRoleGenerated()){
-                        if(e.getAction()==Action.RIGHT_CLICK_AIR||e.getAction()==Action.RIGHT_CLICK_BLOCK){
-                            final Role role = RoleHandler.getRoleOf(player);
-                            if(role instanceof WeapingAngel){
-                                WeapingAngel angel =(WeapingAngel)role;
-                                Player target =PlayerUtility.getTarget(player,20);
-                                if(target==null){
-                                    player.sendMessage(Main.UHCTypo + "§cLe joueur n'est pas correctement indiqué.");
-                                }else{
-                                    if(angel.HasTemporalMark(target)){
-                                        Location location = angel.getLocationOfTemporalMark(target);
-                                        if(angel.coolDown.isAbleToUse()){
-                                            angel.coolDown.setUseNow();
-                                            player.teleport(location);
-                                            target.teleport(location);
-                                            player.sendMessage(Main.UHCTypo+"Vous êtes arrivé a la marque temporelle de "+target.getName()+" vous avez désormais pour 2min l'effet §cforce§7 et §bvitesse 2");
-                                            PlayerUtility.addProperlyEffect(player,new PotionEffect(PotionEffectType.SPEED,20*60*2,1,false,false));
-                                            PlayerUtility.addProperlyEffect(player,new PotionEffect(PotionEffectType.INCREASE_DAMAGE,20*60*2,0,false,false));
-                                        }else player.sendMessage(Main.UHCTypo+"Vous devez attendre encore "+TimeUtility.transform(angel.coolDown.getRemainingTime(),"§4"));
-                                    }else{
-                                        player.sendMessage(Main.UHCTypo + "§cLe joueur n'a pas de marque temporelle.");
-                                    }
-                                }
-                            }
-                        }
-                    }
-                    break;
+
                 default:
-                    if(RoleHandler.isIsRoleGenerated()){
+                    if(RoleHandler.IsRoleGenerated()){
                         final Role role = RoleHandler.getRoleOf(player);
                         if(role instanceof Trigger_OnInteractWithUUIDItem){
                             ((Trigger_OnInteractWithUUIDItem)role).OnInteractWithUUIDItem(player,NbtTagHandler.getUUIDTAG(currentItem),e.getAction());
                         }
                     }
                     break;
+            }
+        }
+        if(NbtTagHandler.hasAnyTAG(currentItem,"FLAG")){
+            e.setCancelled(true);
+            int id = (int) NbtTagHandler.getAnyTag(currentItem,"FLAG");
+            if(id==104) {
+                if (RoleHandler.IsRoleGenerated()) {
+                    if (RoleHandler.getRoleList().size() > 1) {
+                        final ArrayList<Player> players = new ArrayList<>();
+                        for (Player p : Bukkit.getOnlinePlayers()) {
+                            if (RoleHandler.getRoleList().containsKey(p.getUniqueId())) {
+                                players.add(p);
+                            }
+                        }
+                        int random = (players.size() == 0) ? 0 : new Random().nextInt(players.size());
+                        final Player r1 = players.get(random);
+                        players.remove(r1);
+                        random = (players.size() == 0) ? 0 : new Random().nextInt(players.size());
+                        final Player r2 = players.get(random);
+                        final Role role1 = RoleHandler.getRoleOf(r1);
+                        final Role role2 = RoleHandler.getRoleOf(r2);
+                        final String str = (role1.getCamp().equals(role2.getCamp())) ? "§asont dans le même camp" : "§cne sont pas dans le même camp";
+                        player.sendMessage(Main.UHCTypo + r1.getName() + " et " + r2.getName() + " " + str);
+                        if (player.getItemInHand().getAmount() > 1) {
+                            player.getItemInHand().setAmount(player.getItemInHand().getAmount() - 1);
+                        } else {
+                            player.setItemInHand(null);
+                        }
+
+                    } else {
+                        player.sendMessage(Main.UHCTypo + "§cVous ne pouvez pas utiliser cet objet.");
+                    }
+                }
+            }else if(id ==105) {
+                if (RoleHandler.IsRoleGenerated()) {
+                    if (player.getItemInHand().getAmount() > 1) {
+                        player.getItemInHand().setAmount(player.getItemInHand().getAmount() - 1);
+                    } else {
+                        player.setItemInHand(null);
+                    }
+                    final PotionEffect speed = new PotionEffect(PotionEffectType.SPEED, 20 * 60, 0, false, false);
+                    final PotionEffect resistance = new PotionEffect(PotionEffectType.DAMAGE_RESISTANCE, 20 * 60, 0, false, false);
+                    final PotionEffect force = new PotionEffect(PotionEffectType.INCREASE_DAMAGE, 20 * 60, 0, false, false);
+                    PlayerUtility.addProperlyEffect(player, Arrays.asList(speed, resistance, force).get(new Random().nextInt(3)));
+                }
             }
         }
     }

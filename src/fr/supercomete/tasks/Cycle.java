@@ -121,6 +121,7 @@ public class Cycle extends BukkitRunnable{
                 }
             }
             //Any While Night While Day
+            mode.onGlobalAnytime(time);
             for (Player player : Bukkit.getOnlinePlayers()) {
                 if (!Main.getPlayerlist().contains(player.getUniqueId())) {
                     player.setGameMode(GameMode.SPECTATOR);
@@ -177,7 +178,7 @@ public class Cycle extends BukkitRunnable{
 
                 }
             }
-            if ((time == game.getTimer(Timer.PvPTime).getData() || main.isForcedpvp()) && hasPvpForced == false) {
+            if ((time == game.getTimer(Timer.PvPTime).getData() || main.isForcedpvp()) && !hasPvpForced) {
                 hasPvpForced = true;
                 worldgenerator.currentPlayWorld.setPVP(true);
                 Bukkit.broadcastMessage(Main.UHCTypo + "§6Le PVP est activé");
@@ -210,7 +211,7 @@ public class Cycle extends BukkitRunnable{
                         cancel();
                     }
                 }
-                if (RoleHandler.isIsRoleGenerated()) {
+                if (RoleHandler.IsRoleGenerated()) {
                     for (Role role : RoleHandler.getRoleList().values()) {
                         role.updateRoleState();
                     }

@@ -57,7 +57,7 @@ public class Tardis {
 		player.teleport(struc.getPositionRelativeToLocation(this.locations[new Random().nextInt(locations.length-1)]));
 	}
 	private boolean IsBad(ArrayList<Player>near) {
-		if(RoleHandler.isIsRoleGenerated()) {
+		if(RoleHandler.IsRoleGenerated()) {
 			for(Player player:near) {
 				if(RoleHandler.getRoleOf(player).getCamp()==Camps.EnnemiDoctorCamp) {
 					return true;
@@ -74,7 +74,7 @@ public class Tardis {
 			}
 			Bukkit.broadcastMessage(Main.UHCTypo+"§cUne clef du Tardis a été détruite !");
 		}
-		if(RoleHandler.isIsRoleGenerated()) {
+		if(RoleHandler.IsRoleGenerated()) {
 			for(Player player:near) {
 				if(RoleHandler.getRoleOf(player).getCamp()==Camps.EnnemiDoctorCamp || RoleHandler.getRoleOf(player)instanceof Rusty) {
                     PlayerUtility.sendActionbar(player, "§4Destruction d'une clef: §c"+percentDestruction+"%");

@@ -13,7 +13,6 @@ import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
-
 import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
@@ -27,6 +26,11 @@ public class Lois extends EchoRole implements Trigger_WhileAnyTime, Trigger_OnTa
     @Override
     public BranlusqueLevel getBranlusqueLevel() {
         return BranlusqueLevel.MageTeacher;
+    }
+
+    @Override
+    public float getMangaProbability() {
+        return 0.25F;
     }
 
     @Override
@@ -48,9 +52,9 @@ public class Lois extends EchoRole implements Trigger_WhileAnyTime, Trigger_OnTa
     public List<String> askRoleInfo() {
         return Arrays.asList(
                 "Votre but est de gagner avec les autres membres de "+Camps.EchoEcho.getColoredName(),
-                "A cause de vos connaisances monstrueuses en vexillologie, les 5min vous obtenez les coordonnés d'un drapeau. Quand celui-ci est obtenu vous obtenez soit : L'information de si deux joueurs sont dans le même camp, soit un activable qui vous donne un effet aléatoire entre §cforce§7 "+ ChatColor.DARK_GRAY+"résistance§7 et §bvitesse§7 pendant une minute."
-                ,"Votre nature discrete vous permet de glisser une voie supplémentaire pour vous lors du vote pour le chef d'Echo Echo."
-                ,"Votre timidité extême fait que si il y a plus de 3 joueurs dans un rayon de 15blocs vous obtenez l'effet "+ChatColor.DARK_GRAY+"lenteur"
+                "A cause de vos connaissances monstrueuses en vexillologie, toutes les 5 min vous obtenez les coordonnés d'un drapeau. Quand celui-ci est obtenu vous obtenez soit : L'information de si deux joueurs sont dans le même camp, soit un activable qui vous donne un effet aléatoire entre §cforce§7 "+ ChatColor.DARK_GRAY+"résistance§7 et §bvitesse§7 pendant une minute."
+                ,"Votre nature discrète vous permet de glisser une voie supplémentaire pour vous lors du vote pour le chef d'Echo Echo."
+                ,"Votre timidité extrême fait que s'il y a plus de 3 joueurs dans un rayon de 15 blocs vous obtenez l'effet "+ChatColor.DARK_GRAY+"lenteur"
                 ,"Votre petite taille vous permet activer/désactiver avec la commande '/echo nofall' vos dégats de chute."
         );
     }
@@ -62,7 +66,7 @@ public class Lois extends EchoRole implements Trigger_WhileAnyTime, Trigger_OnTa
 
     @Override
     public boolean AskIfUnique() {
-        return true;
+        return false;
     }
 
     @Override

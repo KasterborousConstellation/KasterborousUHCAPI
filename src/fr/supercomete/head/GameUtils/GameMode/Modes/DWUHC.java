@@ -58,7 +58,7 @@ public class DWUHC extends Mode implements CampMode,Groupable{
 	public void onAnyTime(Player player) {
 		if(RoleHandler.getRoleOf(player)==null)return;
 		//Switch Capacity
-		if(!RoleHandler.isIsRoleGenerated())return;
+		if(!RoleHandler.IsRoleGenerated())return;
 		if(CyberiumHandler.HostPlayer == player.getUniqueId()) {
 			player.addPotionEffect(new PotionEffect(PotionEffectType.INCREASE_DAMAGE, 99999999, 0,false,false));
 		}
@@ -85,7 +85,7 @@ public class DWUHC extends Mode implements CampMode,Groupable{
 	}
 
     @Override
-    public void onGlobalAnytime() {
+    public void onGlobalAnytime(int time) {
 
     }
 
@@ -122,7 +122,7 @@ public class DWUHC extends Mode implements CampMode,Groupable{
 	}
 	@Override
 	public boolean WinCondition() {
-		if(RoleHandler.isIsRoleGenerated()) {
+		if(RoleHandler.IsRoleGenerated()) {
 			if(RoleHandler.getRoleList().size()== 0 ) {
 				scoreboardmanager.titlemessage("Victoire de la §4Mort");
 				RoleHandler.setRoleList(new HashMap<UUID, Role>());
@@ -198,7 +198,7 @@ public class DWUHC extends Mode implements CampMode,Groupable{
 	}
 	@Override
 	public void onEpisodeTime(Player player) {
-		if(RoleHandler.isIsRoleGenerated()){
+		if(RoleHandler.IsRoleGenerated()){
 		    Role role =RoleHandler.getRoleOf(player);
 		    if(role instanceof Karvanista ){
 		        Karvanista karvanista = (Karvanista) role;

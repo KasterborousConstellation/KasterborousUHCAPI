@@ -61,7 +61,7 @@ class EntityDamageListeners implements Listener {
     }
     @EventHandler(priority = EventPriority.HIGHEST)
     public void PlayerDeathEvent(EntityDamageEvent e) {
-        if (RoleHandler.isIsRoleGenerated()) {
+        if (RoleHandler.IsRoleGenerated()) {
             for (final Role role : RoleHandler.getRoleList().values()) {
                 if (role instanceof GreatIntelligence) {
                     final GreatIntelligence great = (GreatIntelligence) role;
@@ -82,7 +82,7 @@ class EntityDamageListeners implements Listener {
                 e.setCancelled(true);
                 return;
             }
-            if (RoleHandler.isIsRoleGenerated()) {
+            if (RoleHandler.IsRoleGenerated()) {
                 if (RoleHandler.getRoleOf(player) != null) {
                     if(RoleHandler.getRoleOf(player)instanceof Trigger_OnTakingHit){
                         Trigger_OnTakingHit hit=(Trigger_OnTakingHit)RoleHandler.getRoleOf(player);
@@ -136,7 +136,7 @@ class EntityDamageListeners implements Listener {
                         return;
                     }
                 }
-            } else if (RoleHandler.isIsRoleGenerated()) {
+            } else if (RoleHandler.IsRoleGenerated()) {
                 final Role role = RoleHandler.getRoleOf(player);
                 if (role.hasBonus(BonusType.NoFall) && EntityDamageEvent.DamageCause.FALL == e.getCause()) {
                     e.setCancelled(true);
@@ -177,15 +177,12 @@ class EntityDamageListeners implements Listener {
                         e.setDamage(e.getDamage() * (100 - (resistancerate * amplifier)) / 80.0);
                     }
                 }
-                if (RoleHandler.isIsRoleGenerated()) {
-                    if (damager instanceof Player) {
-                        Role role = RoleHandler.getRoleOf(damager);
-                        double forcepercent = 100.0;
-                        forcepercent += role.getPowerOfBonus(BonusType.Force);
-                        e.setDamage(e.getDamage() * (forcepercent / 100.0));
-                    }
+                if (RoleHandler.IsRoleGenerated()) {
+                    Role role = RoleHandler.getRoleOf(damager);
+                    double forcepercent = 100.0;
+                    forcepercent += role.getPowerOfBonus(BonusType.Force);
+                    e.setDamage(e.getDamage() * (forcepercent / 100.0));
                     if (f.getEntity() instanceof Player) {
-                        Role role = RoleHandler.getRoleOf(damager);
                         boolean cancel = false;
                         if (role instanceof Trigger_OnHitPlayer) {
                             boolean tmp = ((Trigger_OnHitPlayer) role).OnHitPlayer(damager,(Player) f.getEntity(), f.getDamage(), f.getCause());
@@ -224,7 +221,7 @@ class EntityDamageListeners implements Listener {
                     return;
                 }
                 if (ModeAPI.getModeByIntRepresentation(Main.currentGame.getEmode()) instanceof DWUHC
-                        && RoleHandler.isIsRoleGenerated()) {
+                        && RoleHandler.IsRoleGenerated()) {
                     if ((currentItem.getType() == Material.IRON_SWORD || currentItem.getType() == Material.WOOD_SWORD
                             || currentItem.getType() == Material.GOLD_SWORD
                             || currentItem.getType() == Material.DIAMOND_SWORD
@@ -259,18 +256,18 @@ class EntityDamageListeners implements Listener {
                     Projectile proj = (Projectile) event.getDamager();
                     if (proj.getShooter() instanceof Player) {
                         Player shooter = (Player) proj.getShooter();
-                        if (RoleHandler.isIsRoleGenerated()) {
+                        if (RoleHandler.IsRoleGenerated()) {
                             Role role = RoleHandler.getRoleOf(shooter);
                             boolean cancel = false;
 
                             if (role instanceof Trigger_OnHitPlayer) {
                                 boolean tmp = ((Trigger_OnHitPlayer) role).OnHitPlayer(shooter,player, e.getDamage(), e.getCause());
-                                if (cancel == false && tmp == true) {
+                                if (tmp) {
                                     cancel = true;
                                 }
                             }
 
-                            if (cancel == true) {
+                            if (cancel) {
                                 e.setCancelled(true);
                                 return;
                             }
@@ -341,7 +338,7 @@ class EntityDamageListeners implements Listener {
                 e.setCancelled(true);
                 if (Configurable.ExtractBool(Configurable.LIST.ReviveBeforePvp)) {
                     if (Main.currentGame.getMode() instanceof CampMode) {
-                        if (!RoleHandler.isIsRoleGenerated()) {
+                        if (!RoleHandler.IsRoleGenerated()) {
                             Bukkit.broadcastMessage(Main.UHCTypo+"Le joueur +§4" + player.getName()+ "§7 a été revive.");
                             player.setHealth(player.getMaxHealth());
                             PlayerUtility.PlayerRandomTPMap(player);
@@ -355,12 +352,12 @@ class EntityDamageListeners implements Listener {
                         }
                     }
                 }
-                if (RoleHandler.isIsRoleGenerated()) {
+                if (RoleHandler.IsRoleGenerated()) {
                     boolean revive = false;
                     Role role = RoleHandler.getRoleOf(player);
                     if (role instanceof Trigger_OnOwnerDeath) {
                         boolean bool = ((Trigger_OnOwnerDeath) role).onOwnerDeath(player, damager);
-                        if (revive == false && bool == true) revive = true;
+                        if (bool) revive = true;
                     }
 
 
@@ -404,22 +401,20 @@ class EntityDamageListeners implements Listener {
                 if (deathLocation == null)
                     return;
                 Mode mode = ModeAPI.getModeByIntRepresentation(Main.currentGame.getEmode());
-                if (mode instanceof DelayedDeath && RoleHandler.isIsRoleGenerated()) {
-                    DelayedModeDeath delayed = new DelayedModeDeath(mode, deathLocation, damager, player, 10);
+                if (mode instanceof DelayedDeath && RoleHandler.IsRoleGenerated()) {
+                    DelayedModeDeath delayed = new DelayedModeDeath(mode, deathLocation, damager, player, ((DelayedDeath)mode).getDeathDelay());
                     player.setGameMode(GameMode.SPECTATOR);
                     delayed.runTaskTimer(main, 0, 20L);
                 } else {
                     player.getWorld().playSound(player.getLocation(), Sound.WITHER_SPAWN, 20, 0);
                     mode.OnKillMethod(deathLocation, player, damager);
                     mode.ModeDefaultOnDeath(player,damager,player.getLocation());
-                    if(damager==null){
-                        PlayerEventHandler.Event("Suicide",player,player.getLocation());
-                    }else{
-                        PlayerEventHandler.Event(PlayerEvents.Kill,damager,player.getLocation());
-                    }
                 }
-                if (Main.getPlayerlist().contains(player.getUniqueId()))
-                    return;
+                if(damager==null){
+                    PlayerEventHandler.Event("Suicide",player,player.getLocation());
+                }else {
+                    PlayerEventHandler.Event(PlayerEvents.Kill, damager, player.getLocation());
+                }
                 if (damager != null) {
                     if (Main.currentGame.getKillList().containsKey(damager.getUniqueId())) {
                         Main.currentGame.getKillList().put(damager.getUniqueId(), Main.currentGame.getKillList().get(damager.getUniqueId()) + 1);
@@ -427,7 +422,6 @@ class EntityDamageListeners implements Listener {
                         Main.currentGame.getKillList().put(damager.getUniqueId(), 1);
                     }
                 }
-
                 if (Main.currentGame.getMode() instanceof CampMode) {
                     if (damager != null) {
                         HistoricData data = RoleHandler.getHistoric().getEntry(player.getUniqueId());

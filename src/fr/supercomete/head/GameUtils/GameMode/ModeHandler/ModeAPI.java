@@ -13,7 +13,6 @@ import fr.supercomete.head.Exception.InvalidRoleClassException;
 import fr.supercomete.head.Exception.UnregisteredModeException;
 import fr.supercomete.head.GameUtils.GameMode.ModeModifier.Command;
 import fr.supercomete.head.GameUtils.GameMode.Modes.Mode;
-import fr.supercomete.head.GameUtils.Command.GenericCommandTabCompleter;
 import fr.supercomete.head.GameUtils.Scenarios.KasterborousScenario;
 import fr.supercomete.head.core.Main;
 import fr.supercomete.head.role.DWRole;

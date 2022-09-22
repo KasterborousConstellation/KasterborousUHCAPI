@@ -1,9 +1,6 @@
 package fr.supercomete.head.GameUtils;
-import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.*;
 import java.util.Map.Entry;
-import java.util.Random;
-import java.util.UUID;
 
 import fr.supercomete.head.GameUtils.Enchants.EnchantHandler;
 import fr.supercomete.head.GameUtils.Enchants.EnchantLimit;
@@ -163,7 +160,7 @@ public class Game {
 	public void setRoleCompoMap(HashMap<Class<?>, Integer> roleCompoMap) {
         HashMap<String, Integer> ret = new HashMap<String, Integer>();
 		for (Entry<Class<?>, Integer> src : roleCompoMap.entrySet()) {
-			ret.put(ModeAPI.getRoleByClass(src.getKey()).getName(), src.getValue());
+			ret.put(Objects.requireNonNull(ModeAPI.getRoleByClass(src.getKey())).getName(), src.getValue());
 		}
 		this.roleCompoMap = ret;
 	}

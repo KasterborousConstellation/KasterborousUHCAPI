@@ -2,6 +2,7 @@ package fr.supercomete.head.GameUtils.GameConfigurable;
 import java.util.ArrayList;
 
 import fr.supercomete.head.GameUtils.GameMode.Modes.DWUHC;
+import fr.supercomete.head.GameUtils.GameMode.Modes.EchoEchoUHC;
 import fr.supercomete.head.GameUtils.Time.TimeUtility;
 import org.bukkit.Material;
 import org.bukkit.event.inventory.ClickType;
@@ -421,6 +422,16 @@ public  class Configurable {
                 new Bound(60,20*60),
                 new AddingRule(1,10),
                 new ModeBinding(new DWUHC())
+        ),
+        LoisFlagTime(
+                Material.HOPPER,
+                "Temps drapeaux",
+                "Défini le temps entre chaque apparation de drapeaux de Loïs",
+                60*7,
+                ConfigurableType.Timer,
+                new Bound(60,10*60),
+                new AddingRule(1,10),
+                new ModeBinding(new EchoEchoUHC())
         )
         ;
         private final String name;

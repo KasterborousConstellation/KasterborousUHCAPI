@@ -7,6 +7,7 @@ public abstract class EchoRole extends Role{
         super(owner);
     }
     public abstract BranlusqueLevel getBranlusqueLevel();
+    public abstract float getMangaProbability();
     public static enum BranlusqueLevel{
         Archimage("Archimage"),
         MasterMage("Maitre Mage"),

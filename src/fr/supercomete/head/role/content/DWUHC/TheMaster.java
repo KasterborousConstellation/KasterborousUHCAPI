@@ -6,6 +6,8 @@ import java.util.List;
 import java.util.Random;
 import java.util.UUID;
 
+import fr.supercomete.head.role.*;
+import fr.supercomete.head.role.Triggers.Trigger_WhileDay;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
@@ -16,16 +18,12 @@ import fr.supercomete.enums.Camps;
 import fr.supercomete.head.GameUtils.GameMode.Modes.DWUHC;
 import fr.supercomete.head.PlayerUtils.PlayerUtility;
 import fr.supercomete.head.core.Main;
-import fr.supercomete.head.role.DWRole;
-import fr.supercomete.head.role.Role;
-import fr.supercomete.head.role.RoleHandler;
-import fr.supercomete.head.role.Status;
 import fr.supercomete.head.role.Triggers.Trigger_WhileNight;
 import fr.supercomete.head.role.RoleModifier.HasAdditionalInfo;
 import fr.supercomete.head.role.RoleModifier.PreAnnouncementExecute;
 import fr.supercomete.head.role.RoleState.RoleStateTypes;
 
-public final class TheMaster extends DWRole implements HasAdditionalInfo,PreAnnouncementExecute,Trigger_WhileNight {
+public final class TheMaster extends DWRole implements HasAdditionalInfo,PreAnnouncementExecute,Trigger_WhileNight, Trigger_WhileDay {
 	private ArrayList<UUID> daleks;
 	private ArrayList<UUID> Cybermans;
 
@@ -67,7 +65,8 @@ public final class TheMaster extends DWRole implements HasAdditionalInfo,PreAnno
 
 	@Override
 	public List<String> askRoleInfo() {
-		return Arrays.asList("Vous avez l'effet §bvitesse§7 pendant la nuit.","Vous connaissez 2 Daleks ainsi que 2 Cybermans.","Si vous arrivez a obtenir le Cyberium vous passerez dans le Camp Neutre et devrez gagner seul, et obtiendrez §bvitesse§7 et §cforce§7 pendant le jour ainsi que §frésistance§7 pendant la nuit.","Vous avez la possibilité comme tout les membres du Camp des Ennemis du Docteur, de détruire les clefs contenues dans le TARDIS en restant proche de celui-ci.");
+		return Arrays.asList("Vous avez l'effet §bvitesse§7 pendant la nuit.","Vous connaissez 2 Daleks ainsi que 2 Cybermans.",
+                "Si vous arrivez a obtenir le Cyberium vous passerez dans le Camp Neutre et devrez gagner seul, et obtiendrez §bvitesse§7 et §cforce§7 pendant le jour ainsi que §frésistance§7 pendant la nuit.","Vous avez la possibilité comme tout les membres du Camp des Ennemis du Docteur, de détruire les clefs contenues dans le TARDIS en restant proche de celui-ci.");
 	}
 
 	@Override
@@ -147,11 +146,21 @@ public final class TheMaster extends DWRole implements HasAdditionalInfo,PreAnno
 	public void PreAnnouncement() {
 		this.setCybermans(getTwoCyberman());
 		this.setDaleks(getTwoDalek());
-		
 	}
 
 	@Override
 	public void WhileNight(Player player) {
 		PlayerUtility.addProperlyEffect(player, new PotionEffect(PotionEffectType.SPEED, 20*3, 0, false, false));
+        if(hasRoleState(RoleStateTypes.MasterCyberium)){
+            PlayerUtility.addProperlyEffect(player, new PotionEffect(PotionEffectType.DAMAGE_RESISTANCE, 20*3, 0, false, false));
+        }
 	}
+
+    @Override
+    public void WhileDay(Player player) {
+        if(hasRoleState(RoleStateTypes.MasterCyberium)){
+            PlayerUtility.addProperlyEffect(player, new PotionEffect(PotionEffectType.SPEED, 20*3, 0, false, false));
+            PlayerUtility.addProperlyEffect(player, new PotionEffect(PotionEffectType.INCREASE_DAMAGE, 20*3, 0, false, false));
+        }
+    }
 }

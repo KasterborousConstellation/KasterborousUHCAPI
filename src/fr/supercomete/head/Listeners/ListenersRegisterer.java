@@ -3,6 +3,7 @@ package fr.supercomete.head.Listeners;
 import java.util.UUID;
 
 import fr.supercomete.head.GameUtils.GUI.*;
+import fr.supercomete.head.role.content.EchoEchoUHC.Neo;
 import org.bukkit.plugin.PluginManager;
 
 import fr.supercomete.head.GameUtils.GameMode.Modes.DWUHC;
@@ -30,6 +31,7 @@ public class ListenersRegisterer {
 			pm.registerEvents(new FullGUI(main), main);
 			pm.registerEvents(new EnchantLimitGUI(main),main);
 			pm.registerEvents(new EventGUI(main),main);
+            pm.registerEvents(new MangaGui(main),main);
 			//Listeners
 			pm.registerEvents(new FurnaceBurnListener(main), main);
 			pm.registerEvents(new EntityDeathListener(), main);
@@ -46,6 +48,7 @@ public class ListenersRegisterer {
 			pm.registerEvents(new OnQuitListener(), main);
 			pm.registerEvents(new PlayerInteractEntityListener(), main);
 			pm.registerEvents(new EnchantItemListener(), main);
+            pm.registerEvents(new AdvancementListener(),main);
 			return true;
 		} catch (Exception e) {
 			e.printStackTrace();

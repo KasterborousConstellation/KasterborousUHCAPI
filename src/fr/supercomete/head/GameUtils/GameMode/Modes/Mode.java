@@ -16,13 +16,9 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.SkullMeta;
 
 import fr.supercomete.head.GameUtils.Scenarios.Scenarios;
-import fr.supercomete.head.Exception.InvalidRoleClassException;
 import fr.supercomete.head.Inventory.InventoryUtils;
 import fr.supercomete.head.PlayerUtils.Offline_Player;
 import fr.supercomete.head.core.Main;
-import fr.supercomete.head.role.DWRole;
-import fr.supercomete.head.role.NakimeCastleRole;
-import fr.supercomete.head.role.Role;
 import fr.supercomete.head.structure.Structure;
 public abstract class Mode {
     public final void ModeDefaultOnDeath(final Offline_Player player,Location deathLocation){
@@ -39,8 +35,8 @@ public abstract class Mode {
         Mode.GoldenHeadImplement(player, damager);
         Mode.KillSwitchImplement(player, damager);
         player.setGameMode(GameMode.SPECTATOR);
-        player.getInventory().clear();
         ModeDefaultOnDeath(new Offline_Player(player),deathLocation);
+        player.getInventory().clear();
     }
 	private String name;
 	private Material material;
@@ -54,7 +50,7 @@ public abstract class Mode {
 	}
 	public abstract void OnKillMethod(Location deathLocation,Player player ,@Nullable Player damager);
 	public abstract void onAnyTime(Player player);
-    public abstract void onGlobalAnytime();
+    public abstract void onGlobalAnytime(int time);
 	public abstract void onDayTime(Player player);
 	public abstract void onNightTime(Player player);
 	public abstract void onEndingTime(Player player);

@@ -2,14 +2,13 @@ package fr.supercomete.head.role.content.DWUHC;
 
 import fr.supercomete.enums.Camps;
 import fr.supercomete.head.GameUtils.Fights.Fight;
+import fr.supercomete.head.GameUtils.Time.TimeUtility;
 import fr.supercomete.head.Inventory.InventoryUtils;
 import fr.supercomete.head.PlayerUtils.PlayerUtility;
 import fr.supercomete.head.core.Main;
-import fr.supercomete.head.role.CoolDown;
-import fr.supercomete.head.role.DWRole;
-import fr.supercomete.head.role.RoleHandler;
-import fr.supercomete.head.role.Status;
+import fr.supercomete.head.role.*;
 import fr.supercomete.head.role.Triggers.Trigger_OnFightEnd;
+import fr.supercomete.head.role.Triggers.Trigger_OnInteractWithUUIDItem;
 import fr.supercomete.head.role.Triggers.Trigger_WhileAnyTime;
 import fr.supercomete.head.role.Triggers.Trigger_onFightBegin;
 import fr.supercomete.nbthandler.NbtTagHandler;
@@ -17,13 +16,14 @@ import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
+import org.bukkit.event.block.Action;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
 import java.util.*;
 
-public final class WeapingAngel extends DWRole implements Trigger_WhileAnyTime, Trigger_onFightBegin,Trigger_OnFightEnd {
+public final class WeapingAngel extends DWRole implements Trigger_WhileAnyTime, Trigger_onFightBegin,Trigger_OnFightEnd, Trigger_OnInteractWithUUIDItem {
     private final HashMap<UUID, Location> map = new HashMap<>();
     public CoolDown coolDown = new CoolDown(0,8*60);
     public WeapingAngel(UUID owner) {
@@ -58,7 +58,7 @@ public final class WeapingAngel extends DWRole implements Trigger_WhileAnyTime, 
                 "Lorsque vous débutez un combat avec un joueur vous recevez un message: 'Marque temporelle Activé sur <Joueur>'.",
                 "A la fin d'un combat (20s après le dernier coup infligé a un joueur), votre marque temporelle sur le joueur combattu disparait.",
                 "Quand un joueur a une marque temporelle active, alors vous pouvez utilisé votre item 'Retour Temporel' pour vous renvoyez vous et le joueur visé à l'endroit ou vous aviez activer la marque temporelle.",
-                "Lors d'un retour temporel vous obtenez temporairement §cforce§7 et §bvitesse 2§7 pendant 2min et vous pouvez utiliser de nouveau votre 'Retour Temporel' 8 min après sa dernière utilisation."
+                "Lors d'un retour temporel vous obtenez temporairement §cforce§7 et §bvitesse 2§7 pendant 45s et vous pouvez utiliser de nouveau votre 'Retour Temporel' 8 min après sa dernière utilisation."
         );
     }
 
@@ -133,6 +133,36 @@ public final class WeapingAngel extends DWRole implements Trigger_WhileAnyTime, 
         if(RoleHandler.isOnlineAndHaveRole(getOwner())){
             Bukkit.getPlayer(getOwner()).sendMessage(Main.UHCTypo+"La marque de "+getOther(fight)+" vient de disparaître.");
             map.remove(getOtherUUID(fight));
+        }
+    }
+
+    @Override
+    public void OnInteractWithUUIDItem(Player player, int uuidtag, Action action) {
+        if(uuidtag==15&&RoleHandler.IsRoleGenerated()){
+            if(action==Action.RIGHT_CLICK_AIR||action==Action.RIGHT_CLICK_BLOCK){
+                final Role role = RoleHandler.getRoleOf(player);
+                if(role instanceof WeapingAngel){
+                    WeapingAngel angel =(WeapingAngel)role;
+                    Player target =PlayerUtility.getTarget(player,20);
+                    if(target==null){
+                        player.sendMessage(Main.UHCTypo + "§cLe joueur n'est pas correctement indiqué.");
+                    }else{
+                        if(angel.HasTemporalMark(target)){
+                            Location location = angel.getLocationOfTemporalMark(target);
+                            if(angel.coolDown.isAbleToUse()){
+                                angel.coolDown.setUseNow();
+                                player.teleport(location);
+                                target.teleport(location);
+                                player.sendMessage(Main.UHCTypo+"Vous êtes arrivé a la marque temporelle de "+target.getName()+" vous avez désormais pour 2min l'effet §cforce§7 et §bvitesse 2");
+                                PlayerUtility.addProperlyEffect(player,new PotionEffect(PotionEffectType.SPEED,20*60*2,1,false,false));
+                                PlayerUtility.addProperlyEffect(player,new PotionEffect(PotionEffectType.INCREASE_DAMAGE,20*60*2,0,false,false));
+                            }else player.sendMessage(Main.UHCTypo+"Vous devez attendre encore "+ TimeUtility.transform(angel.coolDown.getRemainingTime(),"§4"));
+                        }else{
+                            player.sendMessage(Main.UHCTypo + "§cLe joueur n'a pas de marque temporelle.");
+                        }
+                    }
+                }
+            }
         }
     }
 }

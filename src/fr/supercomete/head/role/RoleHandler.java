@@ -172,26 +172,12 @@ public class RoleHandler {
 		if(role instanceof DWRole) {
             DWRole dwrole =(DWRole) role;
             for(TardisKey key:dwrole.getTardiskeys()) {
-				String content =getTardisKeyToString(key);
+				String content =key.getBonus().getBonusToString();
 				
 				player.sendMessage("§b"+key.getKeytype().getName()+": "+content);
 			}
 			
 		}
-	}
-	
-	public static String getTardisKeyToString(TardisKey key) {
-	    switch (key.getBonus().getType()) {
-            case Force:
-                return "§4Force §c+" + key.getBonus().getLevel() + "%";
-            case Speed:
-                return "§bVitesse §1+" + key.getBonus().getLevel() + "%";
-            case Heart:
-                return "§dCoeurs Bonus §5+" + key.getBonus().getLevel() + "§d½♥";
-            case NoFall :
-                return "§aNoFall";
-        }
-        return null;
 	}
 	public static void DisplayDeath(Player player) {
 		DisplayDeath(new Offline_Player(player));
@@ -205,7 +191,7 @@ public class RoleHandler {
         return Main.playerlist.contains(player);
     }
 	public static void DisplayDeath(Offline_Player player) {
-		if (RoleHandler.isIsRoleGenerated()) {
+		if (RoleHandler.IsRoleGenerated()) {
 			if (RoleHandler.IsHiddenRoleNCompo) {
 				Bukkit.broadcastMessage("§7-----------------------------");
 				Bukkit.broadcastMessage(Main.UHCTypo + "§6" + player.getUsername() + "§7 est mort. Il était §7"
@@ -230,7 +216,7 @@ public class RoleHandler {
 			Bukkit.broadcastMessage("§7-----------------------------");
 		}
 	}
-	public static boolean isIsRoleGenerated() {
+	public static boolean IsRoleGenerated() {
 		return IsRoleGenerated;
 	}
 	public static void setIsRoleGenerated(boolean isRoleGenerated) {
@@ -308,7 +294,7 @@ public class RoleHandler {
 		if(role instanceof DWRole && ((DWRole) role).getTardiskeys().size()>0) {
 			String clef = "";
 			for(TardisKey key : ((DWRole)data.getRole()).getTardiskeys()) {
-				clef += "§b"+key.getKeytype().getName()+": "+RoleHandler.getTardisKeyToString(key)+" ";
+				clef += "§b"+key.getKeytype().getName()+": "+key.getBonus().getBonusToString()+" ";
 			}
 			arr.add("§dClef: "+ clef);
 		}
