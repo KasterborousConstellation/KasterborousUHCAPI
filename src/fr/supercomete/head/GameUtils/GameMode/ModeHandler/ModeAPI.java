@@ -1,34 +1,75 @@
 package fr.supercomete.head.GameUtils.GameMode.ModeHandler;
 
-import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.LinkedList;
 import java.util.UUID;
 import java.util.concurrent.CopyOnWriteArrayList;
-import java.util.logging.Level;
 
 import fr.supercomete.enums.Camps;
-import fr.supercomete.head.Exception.InvalidRoleClassException;
+import fr.supercomete.head.Exception.AlreadyRegisterdScenario;
+import fr.supercomete.head.Exception.AlreadyRegisteredConfigurable;
 import fr.supercomete.head.Exception.UnregisteredModeException;
+import fr.supercomete.head.GameUtils.Game;
+import fr.supercomete.head.GameUtils.GameConfigurable.KasterBorousConfigurable;
 import fr.supercomete.head.GameUtils.GameMode.ModeModifier.Command;
 import fr.supercomete.head.GameUtils.GameMode.Modes.Mode;
 import fr.supercomete.head.GameUtils.Scenarios.KasterborousScenario;
+import fr.supercomete.head.GameUtils.Scenarios.Scenarios;
 import fr.supercomete.head.core.Main;
-import fr.supercomete.head.role.DWRole;
-import fr.supercomete.head.role.NakimeCastleRole;
 import fr.supercomete.head.role.Role;
-import org.bukkit.Bukkit;
-import org.bukkit.command.PluginCommand;
-import org.bukkit.command.SimpleCommandMap;
-import org.bukkit.command.defaults.BukkitCommand;
 import org.bukkit.craftbukkit.v1_8_R3.CraftServer;
-import org.bukkit.plugin.SimplePluginManager;
-import org.bukkit.scheduler.BukkitRunnable;
-
 public class ModeAPI {
 	private static final ArrayList<Mode> registeredModes = new ArrayList<>();
     private static final ArrayList<KasterborousScenario> registered_scenarios = new ArrayList<>();
+    private static final LinkedList<KasterBorousConfigurable> configurables = new LinkedList<>();
+    public static Game getCurrentGame(){
+        return Main.currentGame;
+    }
+    public static LinkedList<KasterBorousConfigurable>getConfigurables(){
+        return configurables;
+    }
+    public static ArrayList<KasterborousScenario> getScenarios(){
+        return registered_scenarios;
+    }
+    public static void RegisterScenarios(KasterborousScenario... scenarios){
+        RegisterScenarios(new ArrayList<>(Arrays.asList(scenarios)));
+    }
+
+    public static void RegisterScenarios(ArrayList<KasterborousScenario>scenarios){
+        for(final KasterborousScenario scenario: registered_scenarios){
+            for(final KasterborousScenario compared : scenarios){
+                if(scenario.equals(compared)){
+                    try{
+                        throw new AlreadyRegisterdScenario("Duplicate scenario registration");
+                    }catch (AlreadyRegisterdScenario e){
+                        e.printStackTrace();
+                        return;
+                    }
+                }
+            }
+        }
+        registered_scenarios.addAll(scenarios);
+    }
+    public static void RegisterConfigurable(KasterBorousConfigurable... scenarios){
+        RegisterConfigurable(new ArrayList<>(Arrays.asList(scenarios)));
+    }
+    public static void RegisterConfigurable(ArrayList<KasterBorousConfigurable>scenarios){
+        for(final KasterBorousConfigurable scenario: configurables){
+            for(final KasterBorousConfigurable compared : scenarios){
+                if(scenario.equals(compared)){
+                    try{
+                        throw new AlreadyRegisteredConfigurable("Duplicate configurable registration");
+                    }catch (AlreadyRegisteredConfigurable e){
+                        e.printStackTrace();
+                        return;
+                    }
+                }
+            }
+        }
+        configurables.addAll(scenarios);
+    }
 	public static Mode getPrimitiveModeByClass(Class<?> claz) {
 		for(Mode mode : registeredModes) {
 			if(mode.getClass().equals(claz))return mode;
@@ -86,12 +127,12 @@ public class ModeAPI {
 			return null;
 		}
 	}
-	public static void registerMode(Mode mode,Main main) {
+	public static void registerMode(Mode mode) {
 		registeredModes.add(mode);
         if(mode instanceof Command){
             final Command command =(Command) mode;
 
-            ((CraftServer) main.getServer()).getCommandMap().register(command.getCommand().getName(), command.getCommand());
+            ((CraftServer) Main.INSTANCE.getServer()).getCommandMap().register(command.getCommand().getName(), command.getCommand());
         }
 	}
 

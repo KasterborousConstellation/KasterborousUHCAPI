@@ -10,21 +10,13 @@ import org.bukkit.block.Block;
 import org.bukkit.craftbukkit.v1_8_R3.CraftWorld;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
-import org.bukkit.entity.Snowman;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.scheduler.BukkitRunnable;
-
 import fr.supercomete.head.GameUtils.Scenarios.Scenarios;
-import fr.supercomete.head.GameUtils.GameMode.Modes.DWUHC;
 import fr.supercomete.head.Inventory.InventoryUtils;
 import fr.supercomete.head.core.Main;
-import fr.supercomete.head.role.Role;
-import fr.supercomete.head.role.RoleHandler;
-import fr.supercomete.head.role.Key.TardisHandler;
-import fr.supercomete.head.role.content.DWUHC.GreatIntelligence;
 import fr.supercomete.head.world.worldgenerator;
 import net.minecraft.server.v1_8_R3.EntityExperienceOrb;
 import net.minecraft.server.v1_8_R3.World;
@@ -38,39 +30,6 @@ final class BlockBreakListener implements Listener {
 	public void onBlockBreak(BlockBreakEvent e) {
 		final Player player = e.getPlayer();
 		final Block currentblock = e.getBlock();
-		if(TardisHandler.IsTardisGenerated && 
-				Main.currentGame.getMode()instanceof DWUHC && 
-				player.getLocation().getWorld()==worldgenerator.structureworld&&
-				player.getLocation().distance(Main.currentGame.getMode().getStructure().get(0).getLocation())<150
-				) {
-			e.setCancelled(true);
-			new BukkitRunnable(){
-				@Override
-				public void run() {
-					player.updateInventory();
-				}
-			}.runTaskLater(main, 0L);
-		}
-		if (RoleHandler.IsRoleGenerated()) {
-			for(final Role role : RoleHandler.getRoleList().values()) {
-				if(role instanceof GreatIntelligence){
-					final GreatIntelligence great = (GreatIntelligence)role;
-					for(Snowman snowman :great.getEntities()){
-						if(snowman.getLocation().distance(currentblock.getLocation())<5.0) {
-							e.setCancelled(true);
-							return;
-						}
-					}
-				}
-			}
-		}
-		if(TardisHandler.IsTardisGenerated) {
-			if(TardisHandler.TardisLocation.getWorld().equals(currentblock.getWorld())) {
-				if(currentblock.getLocation().distance(TardisHandler.TardisLocation)<6) {
-					e.setCancelled(true);
-				}				
-			}
-		}
 		if(currentblock.getType()==Material.STONE && Configurable.ExtractBool(Configurable.LIST.BlockTransform)&& !e.getPlayer().getItemInHand().getItemMeta().hasEnchant(Enchantment.SILK_TOUCH)){
 		    for(ItemStack stack : e.getBlock().getDrops()){
 		        stack.setType(Material.COBBLESTONE);
@@ -90,7 +49,6 @@ final class BlockBreakListener implements Listener {
 						+ " est activé. Ce scénario vous a infligé 1/2coeurs de dégat");
 			}
 			if (Main.currentGame.getScenarios().contains(Scenarios.DiamondLimit)) {
-
 				int current = 0;
 				if (Main.diamondmap.containsKey(player.getUniqueId()))
 					current = Main.diamondmap.get(player.getUniqueId());
@@ -165,8 +123,8 @@ final class BlockBreakListener implements Listener {
 					|| e.getPlayer().getItemInHand().getType() == Material.GOLD_AXE) {
 				if (e.getBlock().getType() == Material.LOG) {
 					for (int y = e.getBlock().getY() - 1; y < e.getBlock().getY() + 10; y++) {
-						for (int x = e.getBlock().getX() - 0; x <= e.getBlock().getX() + 0; x++) {
-							for (int z = e.getBlock().getZ() - 0; z <= e.getBlock().getZ() + 0; z++) {
+						for (int x = e.getBlock().getX(); x <= e.getBlock().getX(); x++) {
+							for (int z = e.getBlock().getZ(); z <= e.getBlock().getZ(); z++) {
 								Block b = main.getServer().getWorld(e.getBlock().getWorld().getName()).getBlockAt(x, y,
 										z);
 								if (b.getType() == Material.LOG)

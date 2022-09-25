@@ -6,6 +6,7 @@ import java.util.List;
 
 import fr.supercomete.head.GameUtils.Enchants.EnchantHandler;
 import fr.supercomete.head.GameUtils.Enchants.EnchantType;
+import fr.supercomete.head.GameUtils.Scenarios.KasterborousScenario;
 import fr.supercomete.head.GameUtils.Time.TimerType;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
@@ -57,7 +58,7 @@ public class InventoryHandler {
 			for(int i=0;i<9;i++) {
 				inv.setItem(53-i, InventoryUtils.createColorItem(Material.STAINED_GLASS_PANE, " ", 1, (short) 11));
 			}
-			inv.setItem(49, InventoryUtils.getItem(Material.ARROW, "§7Retour", Arrays.asList("§rRetour au menu de configuration")));
+			inv.setItem(49, InventoryUtils.getItem(Material.ARROW, "§7Retour", Collections.singletonList("§rRetour au menu de configuration")));
 			player.openInventory(inv);
 			Main.updateGeneration(player);
 			return;
@@ -74,7 +75,7 @@ public class InventoryHandler {
 			inv.setItem(13, InventoryUtils.getItem(Material.PAPER,name, null));
 			inv.setItem(14, InventoryUtils.getItem(Material.STONE_BUTTON, "§r+1 Slots", null));
 			inv.setItem(15, InventoryUtils.getItem(Material.STONE_BUTTON, "§r+10 Slots", null));
-			inv.setItem(22, InventoryUtils.getItem(Material.ARROW, "§7Retour", Arrays.asList("§rRetour au menu de configuration")));
+			inv.setItem(22, InventoryUtils.getItem(Material.ARROW, "§7Retour", Collections.singletonList("§rRetour au menu de configuration")));
 			break;
 		case 4://Scenarios GUI
 			inv=Bukkit.createInventory(null, 54,"§dScenarios");
@@ -84,13 +85,15 @@ public class InventoryHandler {
 			for(int i=0;i<9;i++) {
 				inv.setItem(53-i, InventoryUtils.createColorItem(Material.STAINED_GLASS_PANE, " ", 1, (short) 2));
 			}
-			for(int i=0;Scenarios.values().length>i;i++) {
-				Scenarios sc = Scenarios.values()[i];
+			for(int i=0;ModeAPI.getScenarios().size()>i;i++) {
+				KasterborousScenario sc = ModeAPI.getScenarios().get(i);
 				String bool=(Main.currentGame.getScenarios().contains(sc))?"§aOn":"§cOff";
 				ArrayList<String>Lines=new ArrayList<String>();
-				if(sc==Scenarios.DiamondLimit)Lines.add("§3Limite de diamant: §b"+Main.currentGame.getDiamondlimit());
+				if(sc==Scenarios.DiamondLimit){
+                    Lines.add("§3Limite de diamant: §b"+Main.currentGame.getDiamondlimit());
+                }
 				String compatibility=(sc.getCompatiblity().IsCompatible(Main.currentGame.getMode()))?"§a✔":"§c✖";
-				Lines.add(compatibility+"§r§7Compatibilité:");
+				Lines.add(compatibility+"§r§7Compatibilité");
 				ItemStack item = InventoryUtils.getItem(sc.getMat(),"§b"+sc.getName()+" "+bool,Lines);
 				if(Main.currentGame.getScenarios().contains(sc)) {
 					item.addUnsafeEnchantment(Enchantment.SILK_TOUCH, 1);
@@ -100,7 +103,7 @@ public class InventoryHandler {
 				}
 				inv.setItem(i+9, item);
 			}
-			inv.setItem(49,InventoryUtils.getItem(Material.ARROW, "§7Retour", Arrays.asList("§rRetour au menu de configuration")));
+			inv.setItem(49,InventoryUtils.getItem(Material.ARROW, "§7Retour", Collections.singletonList("§rRetour au menu de configuration")));
 			break;
 		case 5://Rules GUI
 			inv=Bukkit.createInventory(null, 54,"§dRules");
@@ -140,7 +143,7 @@ public class InventoryHandler {
 				inv.setItem(53-i,InventoryUtils.createColorItem(Material.STAINED_GLASS_PANE, " ", 1, (short) 2));
 			}
 			for(int i=0 ;i<Main.currentGame.getScenarios().size();i++){
-				Scenarios sc=Main.currentGame.getScenarios().get(i);
+				KasterborousScenario sc=Main.currentGame.getScenarios().get(i);
 				ArrayList<String>Lines=new ArrayList<String>();
 				String compatibility=(sc.getCompatiblity().IsCompatible(Main.currentGame.getMode()))?"§a✔":"§c✖";
 				if(sc==Scenarios.DiamondLimit)Lines.add("§3Limite de diamant: §b"+Main.currentGame.getDiamondlimit());
@@ -154,7 +157,7 @@ public class InventoryHandler {
 				}
 				inv.setItem(i+9, item);
 			}
-			inv.setItem(49, InventoryUtils.getItem(Material.ARROW, "§7Retour", Arrays.asList("§rRetour au règles")));
+			inv.setItem(49, InventoryUtils.getItem(Material.ARROW, "§7Retour", Collections.singletonList("§rRetour au règles")));
 			break;
 		case 7://Timers
 			inv=Bukkit.createInventory(null, 54,"§dTimers");
@@ -198,7 +201,7 @@ public class InventoryHandler {
 			inv.setItem(12, InventoryUtils.getItem(Material.BARRIER, ChatColor.BOLD+"§bBordure Initale§r: §a"+Main.currentGame.getFirstBorder(), Arrays.asList("",ClickTypoAdd+"10",ClickTypoMassAdd+"100",ClickTypoRemove+"10",ClickTypoMassRemove+"100")));
 			inv.setItem(13, InventoryUtils.getItem(Material.FEATHER, ChatColor.BOLD+"§bVitesse de la bordure§r: §a"+Math.round(Main.currentGame.getBorderSpeed())+"bps", Arrays.asList("",ClickTypoAdd+"0.1",ClickTypoMassAdd+"0.5",ClickTypoRemove+"0.1",ClickTypoMassRemove+"0.5")));
 			inv.setItem(14, InventoryUtils.getItem(Material.IRON_FENCE, ChatColor.BOLD+"§bBordure Finale§r: §a"+Main.currentGame.getFinalBorder(), Arrays.asList("",ClickTypoAdd+"10",ClickTypoMassAdd+"100",ClickTypoRemove+"10",ClickTypoMassRemove+"100")));
-			inv.setItem(22, InventoryUtils.getItem(Material.ARROW, "§7Retour", Arrays.asList("§rRetour au menu de configuration")));
+			inv.setItem(22, InventoryUtils.getItem(Material.ARROW, "§7Retour", Collections.singletonList("§rRetour au menu de configuration")));
 			break;
 		case 9://Team
 			inv=Bukkit.createInventory(null, 54,"§dTeam");
@@ -222,14 +225,14 @@ public class InventoryHandler {
 			inv.setItem(11, InventoryUtils.getItem(Material.WOOL, "§bNombre de joueur par équipe: §4"+Main.currentGame.getNumberOfPlayerPerTeam(),Arrays.asList(InventoryHandler.ClickTypoAdd+"1",InventoryHandler.ClickTypoRemove+"1")));
 			inv.setItem(13, InventoryUtils.createColorItem(Material.WOOL, "§bTeam: "+bool, 1, col));
 			inv.setItem(15, InventoryUtils.getItem(Material.PAPER, "§bNombre d'équipes: §a"+Main.currentGame.getTeamNumber(), Arrays.asList(InventoryHandler.ClickTypoAdd+"1",InventoryHandler.ClickTypoRemove+"1")));
-			inv.setItem(22, InventoryUtils.getItem(Material.ARROW, "§7Retour", Arrays.asList("§rRetour au menu de configuration")));
+			inv.setItem(22, InventoryUtils.getItem(Material.ARROW, "§7Retour", Collections.singletonList("§rRetour au menu de configuration")));
 			break;
 		case 11://StuffConfig
 			inv=Bukkit.createInventory(null, 27, "§dStuff");
 			inv.setItem(12, InventoryUtils.getItem(Material.CHEST, "§bSauvegarder le stuff", Main.SplitCorrectlyString("§rSauvegarde votre stuff actuel comme stuff de départ pour tout les joueurs", 25, "§r")));
 			inv.setItem(13, InventoryUtils.getItem(Material.PAPER, "§bNote",  Main.SplitCorrectlyString("Les têtes sont des objets interdits. Les enchantements illégaux ne peuvent pas être sauvegardés. Les pièces d'armures finiront dans l'inventaire des joueurs quelque soit les slots dans lesquels les pièces d'armures ont été mise.", 32, "§7•")));
 			inv.setItem(14, InventoryUtils.getItem(Material.CHEST, "§bCharger le stuff actuel", Main.SplitCorrectlyString("§rCliquer vous mettra en créatif pour pouvoir configurer le stuff", 25, "§r")));
-			inv.setItem(22, InventoryUtils.getItem(Material.ARROW, "§7Retour", Arrays.asList("§rRetour au menu de configuration")));
+			inv.setItem(22, InventoryUtils.getItem(Material.ARROW, "§7Retour", Collections.singletonList("§rRetour au menu de configuration")));
 			break;
 		case 12://whiteList
 			inv=Bukkit.createInventory(null, 27,"§dWhitelist");
@@ -240,7 +243,7 @@ public class InventoryHandler {
 			inv.setItem(12, InventoryUtils.getItem(Material.BARRIER, "§cNettoyer la whitelist", Main.SplitCorrectlyString("Tout les joueurs sauf les joueurs connectés seront enlevés de la whitelist", 35, "§7")));
 			inv.setItem(13, InventoryUtils.createColorItem(Material.WOOL, "§bWhiteList: "+booleans, 1, color));
 			inv.setItem(14, InventoryUtils.getItem(Material.PAINTING, "§bRemplir la whitelist",Main.SplitCorrectlyString("Ajoute tous les joueurs connectés à la whitelist", 35, "§7")));
-			inv.setItem(22, InventoryUtils.getItem(Material.ARROW, "§7Retour", Arrays.asList("§rRetour au menu de configuration")));
+			inv.setItem(22, InventoryUtils.getItem(Material.ARROW, "§7Retour", Collections.singletonList("§rRetour au menu de configuration")));
 			inv.setItem(11, InventoryUtils.getItem(Material.SIGN,"§rAfficher les joueurs whitelist", Main.SplitCorrectlyString("Affiche tout les joueurs whitelist, ainsi que si il sont connecté.", 40, "§7")));
 			break;
 		case 15://Configuration Avancée
@@ -258,18 +261,10 @@ public class InventoryHandler {
 			inv.setItem(0,InventoryUtils.getItem(Material.NETHER_STAR, "§dTéléportation au spawn", null));
 			inv.setItem(2,InventoryUtils.getItem(Material.BRICK, "§dTéléportation dans la boite à host", null));
 			break;
-		case 21: //Dalek Supreme échange d'énergie
-			inv= Bukkit.createInventory(null, 9, "§dEchange d'énergie");
-			inv.setItem(0, InventoryUtils.getItem(Material.STAINED_GLASS_PANE, " ", null));
-			inv.setItem(2, InventoryUtils.getItem(Material.IRON_SWORD, "§4Force §a"+14*Math.pow(2, Main.getAmountOfSupremeEffect(player))+"PE", Main.SplitCorrectlyString("Vous donne force pendant 1m30s", 40, "§7")));
-			inv.setItem(4, InventoryUtils.getItem(Material.IRON_BARDING, ChatColor.GRAY+"Résistance §a"+14*Math.pow(2, Main.getAmountOfSupremeEffect(player))+"PE", Main.SplitCorrectlyString("Vous donne résistance pendant 40s", 40, "§7")));
-			inv.setItem(6, InventoryUtils.getItem(Material.FEATHER, ChatColor.WHITE+"Vitesse §a"+14*Math.pow(2, Main.getAmountOfSupremeEffect(player))+"PE", Main.SplitCorrectlyString("Vous donne vitesse pendant 2m", 40, "§7")));
-			inv.setItem(8, InventoryUtils.getItem(Material.STAINED_GLASS_PANE, " ", null));
-			break;
 		case 22://world generation menu teleportation
 			inv= Bukkit.createInventory(null, 9, "§dMondes");
-			inv.setItem(0, InventoryUtils.getItem(Material.REDSTONE_BLOCK, "§aLobby", Arrays.asList("§7Cliquez ici pour vous téléporter au Lobby")));
-			inv.setItem(1, InventoryUtils.getItem(Material.GRASS, "§bArena", Arrays.asList("§7Cliquez ici pour vous téléporter au monde Arena")));
+			inv.setItem(0, InventoryUtils.getItem(Material.REDSTONE_BLOCK, "§aLobby", Collections.singletonList("§7Cliquez ici pour vous téléporter au Lobby")));
+			inv.setItem(1, InventoryUtils.getItem(Material.GRASS, "§bArena", Collections.singletonList("§7Cliquez ici pour vous téléporter au monde Arena")));
 			int h =0;
 			for(Structure structure:Main.currentGame.getMode().getStructure()) {
 				inv.setItem(2+h, InventoryUtils.getItem(Main.currentGame.getMode().getMaterial(), "§b"+structure.getStructurename(), null));

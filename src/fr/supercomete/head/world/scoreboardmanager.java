@@ -1,14 +1,12 @@
 package fr.supercomete.head.world;
 
 import java.lang.reflect.Field;
+import java.util.Objects;
 import java.util.UUID;
-
-import fr.supercomete.head.GameUtils.Events.PlayerEvents.PlayerEventHandler;
-import fr.supercomete.head.GameUtils.Events.PlayerEvents.PlayerEvents;
 import fr.supercomete.head.GameUtils.Fights.Fight;
 import fr.supercomete.head.GameUtils.Fights.FightHandler;
-import fr.supercomete.head.GameUtils.GameConfigurable.Configurable;
-import fr.supercomete.head.role.Key.TardisHandler;
+
+import fr.supercomete.head.role.Triggers.Trigger_OnScoreBoardUpdate;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
@@ -19,10 +17,10 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
-import org.bukkit.scoreboard.DisplaySlot;
+
 import org.bukkit.scoreboard.NameTagVisibility;
-import org.bukkit.scoreboard.Objective;
-import org.bukkit.scoreboard.Score;
+
+
 import org.bukkit.scoreboard.Scoreboard;
 import org.bukkit.scoreboard.Team;
 
@@ -34,26 +32,16 @@ import fr.supercomete.head.GameUtils.TeamManager;
 import fr.supercomete.head.GameUtils.GameMode.ModeHandler.ModeAPI;
 import fr.supercomete.head.GameUtils.GameMode.ModeModifier.CampMode;
 import fr.supercomete.head.GameUtils.GameMode.ModeModifier.TeamMode;
-import fr.supercomete.head.GameUtils.GameMode.Modes.DWUHC;
-import fr.supercomete.head.PlayerUtils.PlayerUtility;
+
+
 import fr.supercomete.head.core.Main;
-import fr.supercomete.head.role.CoolDown;
+
 import fr.supercomete.head.role.Role;
 import fr.supercomete.head.role.RoleHandler;
 import fr.supercomete.head.role.Bonus.BonusType;
 import fr.supercomete.head.role.RoleModifier.BonusHeart;
-import fr.supercomete.head.role.RoleModifier.InvisibleRoleWithArmor;
-import fr.supercomete.head.role.content.DWUHC.Bill_Potts;
-import fr.supercomete.head.role.content.DWUHC.GreatIntelligence;
-import fr.supercomete.head.role.content.DWUHC.Jenny_Flint;
-import fr.supercomete.head.role.content.DWUHC.Karvanista;
-import fr.supercomete.head.role.content.DWUHC.Kate_Stewart;
-import fr.supercomete.head.role.content.DWUHC.Strax;
-import fr.supercomete.head.role.content.DWUHC.Vastra;
 import fr.supercomete.head.world.ScoreBoard.ScoreBoardManager;
 import fr.supercomete.head.world.ScoreBoard.SimpleScoreboard;
-import fr.supercomete.nbthandler.NbtTagHandler;
-import fr.supercomete.tasks.generatorcycle;
 import net.minecraft.server.v1_8_R3.IChatBaseComponent;
 import net.minecraft.server.v1_8_R3.IChatBaseComponent.ChatSerializer;
 import net.minecraft.server.v1_8_R3.PacketPlayOutPlayerListHeaderFooter;
@@ -126,8 +114,8 @@ public class scoreboardmanager {
 					if (Main.currentGame.isGameState(Gstate.Waiting)) {
 						Main.currentGame.setFirstBorder(Main.currentGame.getCurrentBorder());
 					}
-					if((main.getConfig().getString("serverapi.serverconfig.echosiakey")=="EchosiaBest"))
-					Main.serverinfo.write();
+					if((Objects.equals(main.getConfig().getString("serverapi.serverconfig.echosiakey"), "EchosiaBest")))
+                        Main.serverinfo.write();
 					if (Main.currentGame.getScenarios().contains(Scenarios.FireEnchantLess)) {
 						Inventory inv = player.getInventory();
 						for (ItemStack it : inv) {
@@ -149,6 +137,7 @@ public class scoreboardmanager {
 		if(timer==0) {
 			SimpleScoreboard ss = ScoreBoardManager.boards.get(player.getUniqueId());
 			Scoreboard sc = ScoreBoardManager.boards.get(player.getUniqueId()).getScoreboard();
+			/*
 			try {
 				sc.getObjective("§a%").unregister();
 			}catch (Exception e) {}
@@ -160,7 +149,7 @@ public class scoreboardmanager {
 			}catch (Exception e) {}
 			try {
 				sc.getObjective("§d§d%").unregister();
-			}catch (Exception e) {}
+			}catch (Exception e) {}*/
 			if (RoleHandler.IsRoleGenerated()) {
 				if(RoleHandler.getRoleOf(player)!=null) {
 					Role role = RoleHandler.getRoleOf(player);
@@ -168,7 +157,8 @@ public class scoreboardmanager {
 					player.setWalkSpeed(0.2F * ((100.0F+addpercent)/100.0F));
 				}
 				if (RoleHandler.getRoleList().containsKey(player.getUniqueId())) {
-					if (RoleHandler.getRoleOf(player) instanceof Jenny_Flint) {
+                    ((Trigger_OnScoreBoardUpdate)RoleHandler.getRoleOf(player)).onScoreBoardUpdate(player,ss);
+					/*if (RoleHandler.getRoleOf(player) instanceof Jenny_Flint) {
 						Jenny_Flint role = (Jenny_Flint) RoleHandler.getRoleOf(player);			
 						Objective ob = sc.registerNewObjective("%", "score2");
 						ob.setDisplaySlot(DisplaySlot.BELOW_NAME);
@@ -247,24 +237,7 @@ public class scoreboardmanager {
 								}
 							}
 						}
-					}else if(RoleHandler.getRoleOf(player)instanceof Bill_Potts) {
-						if(NbtTagHandler.hasUUIDTAG(player.getItemInHand())) {
-							if(NbtTagHandler.getUUIDTAG(player.getItemInHand())==10) {
-								CoolDown cap = ((Bill_Potts)RoleHandler.getRoleOf(player)).infinitePotionCoolDown;
-								final String str= (cap.isAbleToUse())?"§aUtilisable":("§r["+generatorcycle.generateProgressBar(100-((double)cap.getRemainingTime() /((double)cap.getCooldown())*100.0), 40)+"§r]");
-                                PlayerUtility.sendActionbar(player, str);
-							}
-						}
-					}
-					if(Main.currentGame.getMode()instanceof DWUHC) {
-						if(player.getWorld()==worldgenerator.structureworld) {
-							if(player.getLocation().distance(Main.currentGame.getMode().getStructure().get(0).getPositionRelativeToLocation(new int[] {18,20,12}))<1) {
-								PlayerUtility.PlayerRandomTPMap(player);
-                                TardisHandler.currentTardis.timespanlist.put(player.getUniqueId(),0);
-                                PlayerEventHandler.Event(PlayerEvents.LeaveTardis,player,player.getLocation());
-							}
-						}
-					}
+					}*/
 				}
 			}else {
 				player.setWalkSpeed(0.2F);

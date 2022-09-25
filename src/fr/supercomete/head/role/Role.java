@@ -1,14 +1,13 @@
 package fr.supercomete.head.role;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
 
-import org.bukkit.Bukkit;
 import org.bukkit.inventory.ItemStack;
 
 import fr.supercomete.enums.Camps;
-import fr.supercomete.enums.Choice;
 import fr.supercomete.head.core.Main;
 import fr.supercomete.head.role.Bonus.Bonus;
 import fr.supercomete.head.role.Bonus.BonusType;
@@ -20,13 +19,15 @@ import org.checkerframework.checker.nullness.qual.NonNull;
 public abstract class Role{
 	private UUID owner;
 	private Camps camp;
-	private Choice c= Choice.None;
 	private ArrayList<Bonus> bonus = new ArrayList<>();
 	private ArrayList<RoleState> rolestatelist = new ArrayList<RoleState>();
 	public Role(UUID owner){
 		this.setCamp(getDefaultCamp());
 		this.setOwner(owner);
 	}
+    public RoleDisplayAddon getAddon(){
+        return null;
+    }
     public abstract String[] AskMoreInfo();
 	public abstract String askName();
 	public abstract Camps getDefaultCamp();
@@ -39,7 +40,7 @@ public abstract class Role{
 	}
 	@NonNull
 	public String getName() {
-		return askName()+((this.c==Choice.None)?"":" ("+c.getName()+")");
+		return askName();
 	}
 	public void setCamp(Camps camp) {
 		this.camp=camp;
@@ -66,29 +67,7 @@ public abstract class Role{
 	public String[] getMoreInfo(){
 	    return AskMoreInfo();
     }
-	public ArrayList<Choice> getChoices() {
-		ArrayList<Choice> arr= new ArrayList<Choice>();
-		for(Choice c:Choice.values()) {
-			if(c.getConcernedClass().equals(this.getClass()))arr.add(c);
-		}
-		return arr;
-	}
-	public Choice getChoice() {
-		return this.c;
-	}
-	public void ExecuteChoice(Choice c) {
-		switch(c) {
-		case Humaine:
-			this.addBonus(new Bonus(BonusType.Heart, 10));
-			break;
-		case BadWolf:
-            case None:
-                break;
-            default:
-		}
-		this.c=c;
-		RoleHandler.DisplayRole(Bukkit.getPlayer(this.owner));
-	}
+
 	public ArrayList<RoleState> getRolestatelist() {
 		return rolestatelist;
 	}

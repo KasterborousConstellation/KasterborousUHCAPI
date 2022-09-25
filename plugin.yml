@@ -15,8 +15,6 @@ commands:
     description: "Commande permettant à l’host de configurer sa partie."
   role:
     description: "Permet d’afficher son rôle."
-  dw:
-    description: "Commande permettant aux joueurs de faire les différentes commandes liées au mode de jeu Doctor Who UHC."
   roles:
     description: "Permet de prendre connaissance de la composition de la partie."
   compo:
@@ -35,8 +33,6 @@ commands:
     description: "Commande utilisable que par les administrateurs"
   rolelist:
     description: "Permet de prendre connaissances de la composition de la partie."
-  cversion:
-    description: "Permet de choisir un choix sur son rôle."
   createstructure:
     description: "Commande utilisable que par les administrateurs"
   fullinv:

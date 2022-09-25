@@ -1,4 +1,5 @@
 package fr.supercomete.tasks;
+import java.awt.*;
 import java.util.ArrayList;
 import java.util.Random;
 import java.util.UUID;
@@ -14,26 +15,17 @@ import org.bukkit.GameMode;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
 
-import fr.supercomete.enums.Choice;
 import fr.supercomete.enums.GenerationMode;
 import fr.supercomete.enums.Gstate;
 import fr.supercomete.head.GameUtils.Scenarios.Scenarios;
-import fr.supercomete.head.GameUtils.GameMode.ModeHandler.ModeAPI;
 import fr.supercomete.head.GameUtils.GameMode.ModeModifier.CampMode;
-import fr.supercomete.head.GameUtils.GameMode.Modes.DWUHC;
 import fr.supercomete.head.GameUtils.Time.Timer;
 import fr.supercomete.head.GameUtils.Time.TimerType;
 import fr.supercomete.head.PlayerUtils.Offline_Player;
 import fr.supercomete.head.core.Main;
-import fr.supercomete.head.role.CyberiumHandler;
 import fr.supercomete.head.role.Role;
 import fr.supercomete.head.role.RoleHandler;
-import fr.supercomete.head.role.Key.KeyHandler;
-import fr.supercomete.head.role.Key.Tardis;
-import fr.supercomete.head.role.Key.TardisHandler;
-import fr.supercomete.head.role.content.DWUHC.ClaraOswald;
 import fr.supercomete.head.world.worldgenerator;
-import fr.supercomete.tasks.particles.TardisParticle;
 public class Cycle extends BukkitRunnable{
 	private final Main main;
 	public Cycle(Main main) {
@@ -55,9 +47,6 @@ public class Cycle extends BukkitRunnable{
 	public void run() {
         if(Main.getPlayerlist().size()>0){
             if (time == 0) {
-                TardisHandler.currentTardis = null;
-                TardisParticle.PrinInstance = null;
-                TardisHandler.TardisLocation = null;
                 timer = ((game.getTimer(Timer.EpisodeTime)).getData() / 2) - 1;
                 ArrayList<Player> pllist = new ArrayList<>();
                 for (Player player : Bukkit.getOnlinePlayers())
@@ -74,44 +63,6 @@ public class Cycle extends BukkitRunnable{
                 game.setEpisode(days);
                 game.setTime(time);
             }
-            if (TardisHandler.currentTardis != null && mode instanceof DWUHC) {
-                ArrayList<Player> near = new ArrayList<Player>();
-                for (UUID uu : Main.getPlayerlist()) {
-                    if (Bukkit.getPlayer(uu) != null) {
-                        if (Bukkit.getPlayer(uu).getWorld() == TardisHandler.TardisLocation.getWorld()) {
-                            if (Bukkit.getPlayer(uu).getLocation().distance(TardisHandler.TardisLocation) < 10) {
-                                near.add(Bukkit.getPlayer(uu));
-                            }
-                        }
-                    }
-                }
-                TardisHandler.currentTardis.update(near);
-                TardisHandler.currentTardis.updateinside();
-            }
-            if (mode instanceof DWUHC) {
-                if (time == game.getTimer(Timer.TardisFirstSpawn).getData()) {
-                    TardisHandler.IsTardisGenerated = true;
-                    TardisHandler.currentTardis = new Tardis();
-                    TardisHandler.placeTardis();
-                    KeyHandler.GenerateAllKey();
-                    for (Player player : Bukkit.getOnlinePlayers()) {
-                        player.sendMessage(Main.UHCTypo + "§bLe Tardis vient d'apparaitre");
-                        if (RoleHandler.getRoleOf(player) != null && RoleHandler.getRoleOf(player) instanceof ClaraOswald) {
-                            ClaraOswald clara = (ClaraOswald)RoleHandler.getRoleOf(player);
-                            clara.NotifyTardis(true);
-                        }
-                    }
-                }
-                if (time - game.getTimer(Timer.TardisFirstSpawn).getData() > 0 && (time - game.getTimer(Timer.TardisFirstSpawn).getData())%(game.getTimer(Timer.TardisDelay).getData()) == 0) {
-                    TardisHandler.placeTardis();
-                    for (Player player : Bukkit.getOnlinePlayers()) {
-                        if (RoleHandler.getRoleOf(player) != null && RoleHandler.getRoleOf(player) instanceof ClaraOswald) {
-                            final ClaraOswald clara =(ClaraOswald)RoleHandler.getRoleOf(player);
-                            clara.NotifyTardis(false);
-                        }
-                    }
-                }
-            }
             /*
             Game event implementation
              */
@@ -120,7 +71,10 @@ public class Cycle extends BukkitRunnable{
                     event.onExecutionTime();
                 }
             }
-            //Any While Night While Day
+            /*
+            While Any, While Night, While Day
+                implementation
+            */
             mode.onGlobalAnytime(time);
             for (Player player : Bukkit.getOnlinePlayers()) {
                 if (!Main.getPlayerlist().contains(player.getUniqueId())) {
@@ -147,6 +101,9 @@ public class Cycle extends BukkitRunnable{
                     }
                 }
             }
+            /*
+            Episode implementation
+             */
             if (time % game.getTimer(Timer.RealEpisodeTime).getData() == 0) {
                 days++;
                 for (UUID uu : Main.getPlayerlist()) {
@@ -161,8 +118,10 @@ public class Cycle extends BukkitRunnable{
                 }
                 Bukkit.broadcastMessage("§eEpisode §r" + days + "");
             }
+            /*
+            Night switch
+             */
             if (timer == (game.getTimer(Timer.EpisodeTime)).getData() / 2) {
-
                 game.setGamestate(Gstate.Day);
                 worldgenerator.currentPlayWorld.setTime(1000);
                 Bukkit.broadcastMessage(Main.UHCTypo + "§6Le jour se §elève§6.");
@@ -178,12 +137,18 @@ public class Cycle extends BukkitRunnable{
 
                 }
             }
+            /*
+            PvP time implementation
+             */
             if ((time == game.getTimer(Timer.PvPTime).getData() || main.isForcedpvp()) && !hasPvpForced) {
                 hasPvpForced = true;
                 worldgenerator.currentPlayWorld.setPVP(true);
                 Bukkit.broadcastMessage(Main.UHCTypo + "§6Le PVP est activé");
                 if (game.getScenarios().contains(Scenarios.FinalHeal)) Main.finalheal();
             }
+            /*
+            Day switch
+             */
             if (timer == (game.getTimer(Timer.EpisodeTime)).getData()) {
                 game.setGamestate(Gstate.Night);
                 worldgenerator.currentPlayWorld.setTime(18000);
@@ -200,7 +165,9 @@ public class Cycle extends BukkitRunnable{
                     }
                 }
             }
-
+            /*
+            Test win condition && update RoleState (used for temporary RoleState)
+             */
             if (time % 5 == 0 && time > 20) {
                 if (!(Main.devmode)) {
                     if (mode.WinCondition()) {
@@ -217,17 +184,10 @@ public class Cycle extends BukkitRunnable{
                     }
                 }
             }
-            if (mode instanceof CampMode) {
-                if (time == (game.getTimer(Timer.RoleTime).getData() + game.getTimer(Timer.ChoiceDelay).getData())) {
-                    for (Role r : RoleHandler.getRoleList().values()) {
-                        if (r.getChoices().size() > 0 && r.getChoice() == Choice.None) {
-                            r.ExecuteChoice(r.getChoices().get(new Random().nextInt(r.getChoices().size())));
-                        }
-                    }
-                }
-            }
-
-            if (mode instanceof CampMode && (time == game.getTimer(Timer.RoleTime).getData() || main.isForceRole()) && hasForceRole == false) {
+            /*
+            Implementation of Role Time && forcing role
+             */
+            if (mode instanceof CampMode && (time == game.getTimer(Timer.RoleTime).getData() || main.isForceRole()) && !hasForceRole) {
                 hasForceRole = true;
                 if (mode instanceof CampMode) {
                     RoleHandler.GiveRole();
@@ -243,12 +203,9 @@ public class Cycle extends BukkitRunnable{
 
                 }
             }
-
-            if (mode instanceof DWUHC && time == game.getTimer(Timer.CyberiumTime).getData()) {
-                CyberiumHandler.giveAllCybermanCyberriumCompass();
-                CyberiumHandler.GenerateLocationOfDropCyberium(true, null);
-            }
-            //Annonce des temps avant les timers
+            /*
+            Announcing Timer if they are TimeDependent
+             */
             for (int ann : this.annonced) {
                 String str = TimeUtility.transform(ann, "§b", "§b", "§b");
                 for (Timer timer : Timer.values()) {
@@ -260,6 +217,9 @@ public class Cycle extends BukkitRunnable{
 
                 }
             }
+            /*
+            Check for every player if they are disconnected for more than Disconnect Time
+             */
             if (time % 20 == 0) {
                 for (Offline_Player offplayer : game.getOfflinelist()) {
                     ArrayList<UUID> uuid = new ArrayList<UUID>();
@@ -276,19 +236,7 @@ public class Cycle extends BukkitRunnable{
                     }
                 }
             }
-            if (mode instanceof DWUHC && time > game.getTimer(Timer.CyberiumTime).getData() && time % 5 == 0) {
-                if (CyberiumHandler.HostPlayer != null) {
-                    CyberiumHandler.setallCybermanCompassToLocation(Bukkit.getPlayer(CyberiumHandler.HostPlayer).getLocation());
-                } else if (CyberiumHandler.Cyberiumlocation != null) {
-                    CyberiumHandler.setallCybermanCompassToLocation(CyberiumHandler.Cyberiumlocation);
-                } else {
-                    for (UUID uu : RoleHandler.getRoleList().keySet()) {
-                        if (!DWUHC.generateCybermanRoleList().contains(RoleHandler.getRoleList().get(uu).getClass()))
-                            continue;
-                        Bukkit.getPlayer(uu).setCompassTarget(Bukkit.getPlayer(uu).getLocation());
-                    }
-                }
-            }
+
             timer++;
             time++;
         }

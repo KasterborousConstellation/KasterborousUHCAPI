@@ -6,9 +6,7 @@ import fr.supercomete.head.GameUtils.Events.PlayerEvents.PlayerEventHandler;
 import fr.supercomete.head.GameUtils.Events.PlayerEvents.PlayerEvents;
 import fr.supercomete.head.GameUtils.Fights.Fight;
 import fr.supercomete.head.GameUtils.Fights.FightHandler;
-import fr.supercomete.head.role.RoleState.KarvanistaRoleState;
 import fr.supercomete.head.role.Triggers.*;
-import fr.supercomete.head.role.content.DWUHC.*;
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
 import org.bukkit.Location;
@@ -17,7 +15,7 @@ import org.bukkit.Sound;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Projectile;
-import org.bukkit.entity.Snowman;
+
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
@@ -37,7 +35,6 @@ import fr.supercomete.head.GameUtils.GameConfigurable.Configurable;
 import fr.supercomete.head.GameUtils.GameMode.ModeHandler.ModeAPI;
 import fr.supercomete.head.GameUtils.GameMode.ModeModifier.CampMode;
 import fr.supercomete.head.GameUtils.GameMode.ModeModifier.DelayedDeath;
-import fr.supercomete.head.GameUtils.GameMode.Modes.DWUHC;
 import fr.supercomete.head.GameUtils.GameMode.Modes.Mode;
 import fr.supercomete.head.GameUtils.Time.Timer;
 import fr.supercomete.head.PlayerUtils.PlayerUtility;
@@ -46,10 +43,7 @@ import fr.supercomete.head.role.CoolDown;
 import fr.supercomete.head.role.Role;
 import fr.supercomete.head.role.RoleHandler;
 import fr.supercomete.head.role.Bonus.BonusType;
-import fr.supercomete.head.role.KarvanistaPacte.Proposal;
-import fr.supercomete.head.role.RoleState.InfectedRoleState;
 import fr.supercomete.head.role.RoleState.RoleStateTypes;
-import fr.supercomete.head.role.content.DWUHC.SoldatUNIT.SoldierType;
 import fr.supercomete.nbthandler.NbtTagHandler;
 import fr.supercomete.tasks.Cycle;
 import fr.supercomete.tasks.DelayedModeDeath;
@@ -61,19 +55,7 @@ class EntityDamageListeners implements Listener {
     }
     @EventHandler(priority = EventPriority.HIGHEST)
     public void PlayerDeathEvent(EntityDamageEvent e) {
-        if (RoleHandler.IsRoleGenerated()) {
-            for (final Role role : RoleHandler.getRoleList().values()) {
-                if (role instanceof GreatIntelligence) {
-                    final GreatIntelligence great = (GreatIntelligence) role;
-                    for (Snowman snowman : great.getEntities()) {
-                        if (snowman == e.getEntity()) {
-                            e.setCancelled(true);
-                            return;
-                        }
-                    }
-                }
-            }
-        }
+
         if (e.getEntity() instanceof Player) {
             final Player player = (Player) e.getEntity();
             if (Main.currentGame.getNodamagePlayerList().contains(player.getUniqueId())
@@ -87,35 +69,6 @@ class EntityDamageListeners implements Listener {
                     if(RoleHandler.getRoleOf(player)instanceof Trigger_OnTakingHit){
                         Trigger_OnTakingHit hit=(Trigger_OnTakingHit)RoleHandler.getRoleOf(player);
                         hit.TakingDamage(player,e);
-                    }
-                    if (RoleHandler.getRoleOf(player) instanceof Jenny_Flint) {
-                        int total_peopleat100 = 0;
-                        final Jenny_Flint flint = (Jenny_Flint) RoleHandler.getRoleOf(player);
-                        for (UUID u : flint.getPercentmap().keySet()) {
-                            if (flint.getPercentmap().get(u) == 100 && u != flint.getOwner()) {
-                                total_peopleat100 += 1.0;
-                            }
-                        }
-                        flint.getFirstBonus(BonusType.Force).setLevel(total_peopleat100);
-                    }
-                    if (RoleHandler.getRoleOf(player) instanceof Karvanista) {
-                        Karvanista karvanista= (Karvanista) RoleHandler.getRoleOf(player);
-                        if (karvanista.finished) {
-                            for (final Proposal proposal : karvanista.allpacte) {
-                                if (proposal instanceof Trigger_OnTakingHit ) {
-                                    Trigger_OnTakingHit hit = (Trigger_OnTakingHit)proposal;
-                                    hit.TakingDamage(player, e);
-                                }
-                            }
-                        }
-                    } else if (RoleHandler.getRoleOf(player).hasRoleState(RoleStateTypes.Karvanista)) {
-                        KarvanistaRoleState component = (KarvanistaRoleState) RoleHandler.getRoleOf(player).getRoleState(RoleStateTypes.Karvanista);
-                        for (Proposal proposal : component.proposal) {
-                            if (proposal instanceof Trigger_OnTakingHit) {
-                                Trigger_OnTakingHit hit=(Trigger_OnTakingHit)proposal;
-                                hit.TakingDamage(player, e);
-                            }
-                        }
                     }
                 }
             }
@@ -207,47 +160,7 @@ class EntityDamageListeners implements Listener {
             }
             final Entity damagerit = f.getDamager();
             final Entity damaged = f.getEntity();
-            if (damagerit instanceof Player && damaged instanceof Player) {
-                Player player = (Player) f.getDamager();
-                Player dmg = (Player) f.getEntity();
-                ItemStack currentItem = player.getItemInHand();
-                if ((currentItem.getType() == Material.IRON_SWORD || currentItem.getType() == Material.WOOD_SWORD
-                        || currentItem.getType() == Material.GOLD_SWORD
-                        || currentItem.getType() == Material.DIAMOND_SWORD
-                        || currentItem.getType() == Material.STONE_SWORD)
-                        && Main.currentGame.getScenarios().contains(Scenarios.NoSword)) {
-                    e.setCancelled(true);
-                    player.sendMessage(Main.UHCTypo + "§cLe scénario " + Scenarios.NoSword.getName() + " est activé");
-                    return;
-                }
-                if (ModeAPI.getModeByIntRepresentation(Main.currentGame.getEmode()) instanceof DWUHC
-                        && RoleHandler.IsRoleGenerated()) {
-                    if ((currentItem.getType() == Material.IRON_SWORD || currentItem.getType() == Material.WOOD_SWORD
-                            || currentItem.getType() == Material.GOLD_SWORD
-                            || currentItem.getType() == Material.DIAMOND_SWORD
-                            || currentItem.getType() == Material.STONE_SWORD)
-                            && RoleHandler.getRoleOf(player) instanceof Supreme_Dalek) {
-                        player.sendMessage(Main.UHCTypo + "+1PE");
-                        ((Supreme_Dalek) RoleHandler.getRoleOf(player)).addPe(1);
-                    }
-                }
-                if (NbtTagHandler.hasUUIDTAG(currentItem)) {
-                    if (NbtTagHandler.getUUIDTAG(currentItem) == 3) {
-                        player.setItemInHand(new ItemStack(Material.AIR));
-                        if(RoleHandler.getRoleOf(player)instanceof CyberPlanner &&RoleHandler.getRoleOf(dmg).getDefaultCamp()==Camps.DoctorCamp && !RoleHandler.getRoleOf(dmg).hasRoleState(RoleStateTypes.Purified)){
-                            CyberPlanner planner =(CyberPlanner)RoleHandler.getRoleOf(player);
-                            RoleHandler.getRoleOf(dmg).addRoleState(new InfectedRoleState(RoleStateTypes.Infected));
-                            RoleHandler.getRoleOf(dmg).setCamp(Camps.EnnemiDoctorCamp);
-                            player.sendMessage(Main.UHCTypo + "Vous avez infecté " + dmg.getName());
-                            dmg.sendMessage(Main.UHCTypo + "Vous avez été infecté par §4" + player.getName());
-                            planner.infected=dmg.getUniqueId();
-                        }else{
-                            player.sendMessage(Main.UHCTypo + "L'infection a échoué.");
-                        }
 
-                    }
-                }
-            }
         } else if (e.getCause().equals(DamageCause.PROJECTILE)) {
             if (e.getEntity() instanceof Player) {
                 Player player = (Player) e.getEntity();
@@ -259,33 +172,17 @@ class EntityDamageListeners implements Listener {
                         if (RoleHandler.IsRoleGenerated()) {
                             Role role = RoleHandler.getRoleOf(shooter);
                             boolean cancel = false;
-
                             if (role instanceof Trigger_OnHitPlayer) {
                                 boolean tmp = ((Trigger_OnHitPlayer) role).OnHitPlayer(shooter,player, e.getDamage(), e.getCause());
                                 if (tmp) {
                                     cancel = true;
                                 }
                             }
-
                             if (cancel) {
                                 e.setCancelled(true);
                                 return;
                             }
                             FightHandler.Fight(new Fight(player.getUniqueId(),shooter.getUniqueId()));
-                            if (role instanceof SoldatUNIT) {
-                                SoldatUNIT soldat = (SoldatUNIT) role;
-                                if (soldat.soldiertype == SoldierType.Garde) {
-
-                                    CoolDown cap = soldat.generalCoolDown;
-                                    if (((SoldatUNIT) role).isActivated()) {
-                                        if (cap.getUtilisation() > 0) {
-                                            cap.addUtilisation(-1);
-                                            shooter.sendMessage(Main.UHCTypo + "§aVous avez touché votre cible avec une fleche empoisonnée. Utilisation restante: §4" + cap.getUtilisation());
-                                            player.addPotionEffect(new PotionEffect(PotionEffectType.POISON, 8 * 20, 0, false, false));
-                                        }
-                                    }
-                                }
-                            }
                         }
                     }
                 }
@@ -382,17 +279,6 @@ class EntityDamageListeners implements Listener {
                         if (r2 instanceof Trigger_OnKill) {
                             ((Trigger_OnKill) r2).onKill(damager, player);
                         }
-                        if (r2.hasRoleState(RoleStateTypes.Karvanista)) {
-                            KarvanistaRoleState component = (KarvanistaRoleState) r2.getRoleState(RoleStateTypes.Karvanista);
-                            for (final Proposal proposal : component.proposal) {
-                                if (proposal.IsActivated) {
-                                    if (proposal instanceof Trigger_OnKill) {
-                                        ((Trigger_OnKill) proposal).onKill(player, damager);
-                                    }
-                                }
-                            }
-                        }
-
                     }
                 }
                 // To cancel death heal the player and add return statement

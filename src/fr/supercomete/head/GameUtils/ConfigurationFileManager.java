@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 
+import fr.supercomete.head.GameUtils.GameMode.ModeModifier.CampMode;
 import fr.supercomete.head.GameUtils.Time.TimeUtility;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -13,7 +14,6 @@ import org.bukkit.inventory.meta.ItemMeta;
 import fr.supercomete.datamanager.FileManager.Fileutils;
 import fr.supercomete.enums.Gstate;
 import fr.supercomete.head.GameUtils.GameMode.ModeHandler.ModeAPI;
-import fr.supercomete.head.GameUtils.GameMode.Modes.DWUHC;
 import fr.supercomete.head.GameUtils.GameMode.Modes.Mode;
 import fr.supercomete.head.GameUtils.Time.Timer;
 import fr.supercomete.head.core.Main;
@@ -87,8 +87,7 @@ public class ConfigurationFileManager{
 			ArrayList<String> strl = new ArrayList<String>();
 			int nbrscenarios = game.getScenarios().size();
 			strl.add("§7 │" + ChatColor.WHITE + "Mode: §1" + ModeAPI.getModeByIntRepresentation(game.getEmode()).getName());
-			if (ModeAPI.getModeByIntRepresentation(game.getEmode()) instanceof DWUHC) {
-				
+			if (ModeAPI.getModeByIntRepresentation(game.getEmode()) instanceof CampMode) {
 				strl.add("§7 │" + ChatColor.WHITE + "Roles: §4" + Main.CountIntegerValue(game.getRoleCompoMap()));
 			}
 			strl.add("§7 │" + ChatColor.WHITE + "Bordure: " + ChatColor.GOLD
@@ -98,7 +97,7 @@ public class ConfigurationFileManager{
 					+ TimeUtility.transform(game.getTimer(Timer.PvPTime).getData(), "§7", "§7", "§7"));
 			strl.add("§7 │" + ChatColor.WHITE + "Bordure: " + ChatColor.RED
 					+ TimeUtility.transform(game.getTimer(Timer.BorderTime).getData(), "§7", "§7", "§7"));
-			if (ModeAPI.getModeByIntRepresentation(game.getEmode()) instanceof DWUHC) {
+			if (ModeAPI.getModeByIntRepresentation(game.getEmode()) instanceof CampMode) {
 				strl.add("§7 │" + ChatColor.WHITE + "Role: " + ChatColor.RED
 						+ TimeUtility.transform(game.getTimer(Timer.RoleTime).getData(), "§7", "§7", "§7"));
 			}

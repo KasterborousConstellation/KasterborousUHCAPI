@@ -10,6 +10,7 @@ import fr.supercomete.head.GameUtils.Enchants.EnchantLimit;
 import fr.supercomete.head.GameUtils.Enchants.EnchantType;
 import fr.supercomete.head.GameUtils.GUI.EnchantLimitGUI;
 import fr.supercomete.head.GameUtils.GameConfigurable.Configurable;
+import fr.supercomete.head.GameUtils.Scenarios.KasterborousScenario;
 import fr.supercomete.head.GameUtils.Time.TimeUtility;
 import fr.supercomete.head.GameUtils.Time.TimerType;
 import fr.supercomete.head.GameUtils.Time.WatchTime;
@@ -51,7 +52,6 @@ import fr.supercomete.head.Inventory.InventoryUtils;
 import fr.supercomete.head.PlayerUtils.PlayerUtility;
 import fr.supercomete.head.core.Main;
 import fr.supercomete.head.role.RoleHandler;
-import fr.supercomete.head.role.content.DWUHC.Supreme_Dalek;
 import fr.supercomete.head.structure.Structure;
 import fr.supercomete.head.world.WorldSeedGetter;
 import fr.supercomete.head.world.worldgenerator;
@@ -220,48 +220,6 @@ final class InventoryClickListeners implements Listener{
 			}
 
 			break;
-		case "§dEchange d'énergie":
-			event.setCancelled(true);
-			Supreme_Dalek supreme = (Supreme_Dalek)RoleHandler.getRoleOf(player);
-			switch (currentSlot) {
-			case 2:
-				if (supreme.PE >= 14* Math.pow(2, Main.getAmountOfSupremeEffect(player))) {
-					supreme.addPe((int) (0 - (14 * Math.pow(2, Main.getAmountOfSupremeEffect(player)))));
-					player.removePotionEffect(PotionEffectType.INCREASE_DAMAGE);
-					player.addPotionEffect(new PotionEffect(PotionEffectType.INCREASE_DAMAGE, 20 * 80, 0, false, false));
-					player.closeInventory();
-					player.sendMessage(Main.UHCTypo + "§aVous avez échangé vos PE contre l'effet §4force");
-				} else
-					player.sendMessage(Main.UHCTypo + "§cVous n'avez pas assez de §aPE");
-				break;
-			case 4:
-				if (supreme.PE >= 7
-						* Math.pow(2, Main.getAmountOfSupremeEffect(player))) {
-					supreme.addPe((int) (0 - (7 * Math.pow(2, Main.getAmountOfSupremeEffect(player)))));
-					player.removePotionEffect(PotionEffectType.DAMAGE_RESISTANCE);
-					player.addPotionEffect(
-							new PotionEffect(PotionEffectType.DAMAGE_RESISTANCE, 20 * 40, 0, false, false));
-					player.closeInventory();
-					player.sendMessage(Main.UHCTypo + "§aVous avez échangé vos PE contre l'effet §7résistance");
-				} else
-					player.sendMessage(Main.UHCTypo + "§cVous n'avez pas assez de §aPE");
-				break;
-			case 6:
-				if (supreme.PE >= 7
-						* Math.pow(2, Main.getAmountOfSupremeEffect(player))) {
-					supreme.addPe((int) (0 - (7 * Math.pow(2, Main.getAmountOfSupremeEffect(player)))));
-					player.removePotionEffect(PotionEffectType.SPEED);
-					player.addPotionEffect(new PotionEffect(PotionEffectType.SPEED, 20 * 100, 0, false, false));
-					player.closeInventory();
-					player.sendMessage(Main.UHCTypo + "§aVous avez échangé vos PE contre l'effet §rrapidité");
-				} else
-					player.sendMessage(Main.UHCTypo + "§cVous n'avez pas assez de éaPE");
-
-				break;
-			default:
-				break;
-			}
-			break;
 		case "§dSlots":
 			event.setCancelled(true);
 			switch (currentSlot) {
@@ -299,13 +257,13 @@ final class InventoryClickListeners implements Listener{
 				new ModeGUI(ModeAPI.getModeByIntRepresentation(Main.currentGame.getEmode()), player).open();
 				break;
 			default:
-				if (currentSlot - 9 >= 0 && currentSlot - 9 < Scenarios.values().length) {
-					if (Main.currentGame.getScenarios().contains(Scenarios.values()[currentSlot - 9])) {
-						main.removeScenarios(Scenarios.values()[currentSlot - 9]);
+				if (currentSlot - 9 >= 0 && currentSlot - 9 < ModeAPI.getScenarios().size()) {
+					if (Main.currentGame.getScenarios().contains(ModeAPI.getScenarios().get(currentSlot - 9))) {
+						main.removeScenarios(ModeAPI.getScenarios().get(currentSlot-9));
 					} else {
-					    Scenarios scenarios= Scenarios.values()[currentSlot - 9];
+					    KasterborousScenario scenarios= ModeAPI.getScenarios().get(currentSlot - 9);
 						if (scenarios.getCompatiblity().IsCompatible(Main.currentGame.getMode()))
-						    main.addScenarios(Scenarios.values()[currentSlot - 9]);
+						    main.addScenarios(ModeAPI.getScenarios().get(currentSlot - 9));
 						else
 							player.sendMessage(Main.UHCTypo + "§CScénario imcompatible");
 					}

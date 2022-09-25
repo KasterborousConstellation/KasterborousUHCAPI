@@ -6,6 +6,8 @@ import fr.supercomete.head.GameUtils.Enchants.EnchantHandler;
 import fr.supercomete.head.GameUtils.Enchants.EnchantLimit;
 import fr.supercomete.head.GameUtils.Events.GameEvents.Event;
 import fr.supercomete.head.GameUtils.Events.PlayerEvents.PlayerEvent;
+import fr.supercomete.head.GameUtils.GameConfigurable.KasterBorousConfigurable;
+import fr.supercomete.head.GameUtils.Scenarios.KasterborousScenario;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -41,7 +43,7 @@ public class Game {
 	private ArrayList<WatchTime> timelist = new ArrayList<>();
 	private boolean IsTeamActivated = false;
 	private ArrayList<Team> TeamList = new ArrayList<>();
-	private ArrayList<Scenarios> scenarios = new ArrayList<>();
+	private ArrayList<KasterborousScenario> scenarios = new ArrayList<>();
 	private HashMap<String, Integer> roleCompoMap = new HashMap<>();
 	private ArrayList<Configurable> configList = new ArrayList<>();
 	private HashMap<UUID, Integer> KillList = new HashMap<>();
@@ -104,9 +106,10 @@ public class Game {
 	public Game(int indexmode,Main main) {
 		this.setEmode(indexmode);
 		this.init(main);
-		for (int ps = 0; ps < Configurable.LIST.values().length; ps++) {
+		for (int ps = 0; ps < ModeAPI.getConfigurables().size(); ps++) {
 			if (ps >= getConfigList().size()) {
-				getConfigList().add(new Configurable(Configurable.LIST.values()[ps],Configurable.LIST.values()[ps].getBaseData(),Configurable.LIST.values()[ps].getType()));
+                KasterBorousConfigurable conf = ModeAPI.getConfigurables().get(ps);
+				getConfigList().add(new Configurable(conf,conf.getBaseData(),conf.getType()));
 			}
 		}
 	}
@@ -244,15 +247,23 @@ public class Game {
 	public void setMaxNumberOfplayer(int maxNumberOfplayer) {
 		this.maxNumberOfplayer = maxNumberOfplayer;
 	}
-	public ArrayList<Scenarios> getScenarios() {
+	public ArrayList<KasterborousScenario> getScenarios() {
 		return scenarios;
 	}
-	public void setScenarios(ArrayList<Scenarios> scenarios) {
+	public void setScenarios(ArrayList<KasterborousScenario> scenarios) {
 		this.scenarios = scenarios;
 	}
 	public String getGameName() {
 		return GameName;
 	}
+    public boolean hasScenarios(KasterborousScenario scenario){
+        for(KasterborousScenario scenario1 :this.getScenarios()){
+            if(scenario1.equals(scenario)){
+                return true;
+            }
+        }
+        return false;
+    }
 	public void setGameName(String gameName) {
 		GameName = gameName;
 	}
@@ -268,7 +279,7 @@ public class Game {
 	public void setConfigList(ArrayList<Configurable> configList) {
 		this.configList = configList;
 	}
-	public int getDataFrom(Configurable.LIST config) {
+	public int getDataFrom(KasterBorousConfigurable config) {
 		for (Configurable conf : this.getConfigList()) {
 			if (conf.getId().equals(config))
 				return conf.getData();

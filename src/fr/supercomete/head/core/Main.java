@@ -13,11 +13,11 @@ import fr.supercomete.commands.*;
 import fr.supercomete.head.GameUtils.Events.GameEvents.EventsHandler;
 import fr.supercomete.head.GameUtils.Events.PlayerEvents.PlayerEventHandler;
 import fr.supercomete.head.GameUtils.Fights.FightHandler;
+import fr.supercomete.head.GameUtils.GameConfigurable.Configurable;
 import fr.supercomete.head.GameUtils.GameMode.Modes.*;
+import fr.supercomete.head.GameUtils.Scenarios.KasterborousScenario;
 import fr.supercomete.head.GameUtils.Time.TimeUtility;
 import fr.supercomete.head.GameUtils.Time.TimerType;
-import fr.supercomete.head.role.content.DWUHC.*;
-import fr.supercomete.head.role.content.EchoEchoUHC.*;
 import fr.supercomete.tasks.Cycle;
 import org.bukkit.*;
 import org.bukkit.enchantments.Enchantment;
@@ -52,11 +52,9 @@ import fr.supercomete.head.Inventory.InventoryHandler;
 import fr.supercomete.head.Inventory.InventoryUtils;
 import fr.supercomete.head.Listeners.ListenersRegisterer;
 import fr.supercomete.head.PlayerUtils.PlayerUtility;
-import fr.supercomete.head.role.CyberiumHandler;
 import fr.supercomete.head.role.Role;
 import fr.supercomete.head.role.RoleBuilder;
 import fr.supercomete.head.role.RoleHandler;
-import fr.supercomete.head.role.Key.TardisHandler;
 import fr.supercomete.head.serverupdater.UpdateServerInfo;
 import fr.supercomete.head.structure.StructureHandler;
 import fr.supercomete.head.world.BiomeGenerator;
@@ -65,8 +63,6 @@ import fr.supercomete.head.world.scoreboardmanager;
 import fr.supercomete.head.world.worldgenerator;
 import fr.supercomete.head.world.ScoreBoard.ScoreBoardManager;
 import fr.supercomete.tasks.GAutostart;
-import fr.supercomete.tasks.HelixTask;
-import fr.supercomete.tasks.particles.DalekCaanParticle;
 import org.jetbrains.annotations.NotNull;
 public class Main extends JavaPlugin {
 	public final static String UHCTypo = "§aEchosia"+"§7 » ";
@@ -110,58 +106,15 @@ public class Main extends JavaPlugin {
 		}else {
 			Bukkit.broadcastMessage("§dServerProtocol: §4Offline");
 		}
-		ModeAPI.registerMode(new Null_Mode(),this);
+        for(final Scenarios scenarios: Scenarios.values()){
+            ModeAPI.RegisterScenarios(scenarios);
+        }
+        for(final Configurable.LIST conf : Configurable.LIST.values()){
+            ModeAPI.RegisterConfigurable(conf);
+        }
+		ModeAPI.registerMode(new Null_Mode());
 		UHCClassic uhcclassic = new UHCClassic();	
-		ModeAPI.registerMode(uhcclassic,this);
-		final DWUHC doctorwho = new DWUHC();
-		doctorwho.RegisterRole(Dalek.class);
-		doctorwho.RegisterRole(DalekCaan.class);
-		doctorwho.RegisterRole(DalekStrategic.class);
-		doctorwho.RegisterRole(DalekSec.class);
-		doctorwho.RegisterRole(Supreme_Dalek.class);
-		
-		doctorwho.RegisterRole(Cyberman.class);
-		doctorwho.RegisterRole(CyberPlanner.class);
-		doctorwho.RegisterRole(CyberBrouilleur.class);
-		doctorwho.RegisterRole(Cybermite.class);
-		
-		doctorwho.RegisterRole(GreatIntelligence.class);
-		doctorwho.RegisterRole(Davros.class);
-		
-		doctorwho.RegisterRole(SoldatUNIT.class);
-		doctorwho.RegisterRole(RoryWilliams.class);
-		doctorwho.RegisterRole(AmyPond.class);
-		doctorwho.RegisterRole(Captain_Jack_Harkness.class);
-		doctorwho.RegisterRole(TheDoctor.class);
-		doctorwho.RegisterRole(Bill_Potts.class);
-		doctorwho.RegisterRole(Harriet_Jones.class);
-		//doctorwho.RegisterRole(Jenny_Flint.class); //Removed because need rework
-		doctorwho.RegisterRole(RiverSong.class);
-		doctorwho.RegisterRole(RoseTyler.class);
-		doctorwho.RegisterRole(Strax.class);
-		doctorwho.RegisterRole(Vastra.class);
-		doctorwho.RegisterRole(TheMaster.class);
-		doctorwho.RegisterRole(Kate_Stewart.class);
-		doctorwho.RegisterRole(DannyPink.class);
-		doctorwho.RegisterRole(ClaraOswald.class);									
-		
-		doctorwho.RegisterRole(Rusty.class);
-		doctorwho.RegisterRole(Zygon.class);
-		doctorwho.RegisterRole(Pting.class);
-		doctorwho.RegisterRole(Karvanista.class);
-
-		doctorwho.RegisterRole(Tecteun.class);
-		doctorwho.RegisterRole(WeapingAngel.class);
-		
-		doctorwho.getStructure().add(Main.structurehandler.extractStructure("Tardis"));
-		ModeAPI.registerMode(doctorwho,this);
-        EchoEchoUHC uhc = new EchoEchoUHC();
-        uhc.RegisterRole(Lucien.class);
-        uhc.RegisterRole(Flavio.class);
-        uhc.RegisterRole(Lois.class);
-        uhc.RegisterRole(Nicolas.class);
-        uhc.RegisterRole(Neo.class);
-        ModeAPI.registerMode(uhc,this);
+		ModeAPI.registerMode(uhcclassic);
 		Bukkit.broadcastMessage("§dVersion: 0.8.9 Build("+Compiledate.getDate()+"/"+(Compiledate.getMonth()+1)+") §6Alpha");
 		currentGame=new Game(ModeAPI.getIntRepresentation(new Null_Mode()),this);
 		if((this.getConfig().getString("serverapi.serverconfig.echosiakey").equalsIgnoreCase("EchosiaBest"))){
@@ -177,13 +130,11 @@ public class Main extends JavaPlugin {
 		RoleHandler.setIsRoleGenerated(false);
 		Bukkit.getServer().getWorld("world").setDifficulty(Difficulty.PEACEFUL);
 		getCommand("menu").setExecutor(new MenuCommand(this));
-		getCommand("cversion").setExecutor(new versionCommand(this));
 		getCommand("rules").setExecutor(new RulesCommand(this));
 		getCommand("team").setExecutor(new TeamCommand(this));
 		getCommand("inv").setExecutor(new InvCommand());
 		getCommand("h").setExecutor(new HostCommand(this));
 		getCommand("role").setExecutor(new RoleCommand(this));
-		getCommand("dw").setExecutor(new DwCommand(this));
 		getCommand("roles").setExecutor(new RolesCommand(this));
 		getCommand("compo").setExecutor(new RolesCommand(this));
 		getCommand("doc").setExecutor(new docCommand(this));
@@ -209,7 +160,6 @@ public class Main extends JavaPlugin {
 		new worldgenerator(this);
 		new TeamManager(this);
 		new WinCondition(this);
-		new TardisHandler(this);
 		WorldGarbageCollector.init(this);
 		final PluginManager pm = getServer().getPluginManager();
 		if(!ListenersRegisterer.Register(pm,this))Bukkit.broadcastMessage("§4Une erreur fatale est apparue pendant la phase d'initialisation d'écoute de Spigot");
@@ -302,18 +252,7 @@ public class Main extends JavaPlugin {
 			return false;
 		}
 	}
-	public void createDalekCaan(Player player) {
-		DalekCaanParticle particle = new DalekCaanParticle(player.getUniqueId(), 10*90);
-		particle.runTaskTimer(this, 0, 2L);
-		Location loc = player.getLocation();
-		loc.setY(loc.getY()+55);
-		loc.getWorld().strikeLightning(loc);
-		HelixTask helix = new HelixTask(loc, 14,false);
-		helix.runTaskTimer(this, 0, 1L);
-		
-		HelixTask h = new HelixTask(loc, 14,true);
-		h.runTaskTimer(this, 350L, 15L);
-	}
+
 	public void StartGame(Player player) {
 		if (this.getGenmode().equals(GenerationMode.Generating)) {
 			player.sendMessage(UHCTypo + "§cLa génération de la carte est déjà en cours");
@@ -331,7 +270,7 @@ public class Main extends JavaPlugin {
 		if (this.forcedpvp) {
 			this.forcedpvp = false;
 		}
-		CyberiumHandler.reset();
+
 		
 		if (CountIntegerValue(currentGame.getRoleCompoMap()) < countnumberofplayer() && Main.currentGame.getMode() instanceof CampMode) {
 			player.sendMessage(UHCTypo + "§cIl n'y a pas assez de rôles pour commencer la partie  "
@@ -346,13 +285,13 @@ public class Main extends JavaPlugin {
         EventsHandler.onLauch();
 		diamondmap.replaceAll((k, v) -> 0);
 		if (Main.currentGame.getGamestate() == Gstate.Waiting) {
-			for (Scenarios sc : Main.currentGame.getScenarios()) {
+			for (KasterborousScenario sc : Main.currentGame.getScenarios()) {
 				if (!sc.getCompatiblity().IsCompatible(Main.currentGame.getMode())) {
 					Main.currentGame.getScenarios().remove(sc);
 					player.sendMessage(UHCTypo + "§cErreur, le scénario +" + sc.getName() + "est incompatible");
 				}
 			}
-			TardisHandler.IsTardisGenerated=false;
+
 			allplayereffectclear();
 			Main.currentGame.setGamestate(Gstate.Starting);
 			Main.currentGame.setFirstBorder(Main.currentGame.getCurrentBorder());
@@ -377,7 +316,7 @@ public class Main extends JavaPlugin {
 		}
 	}
 	public void StopGame(Player player) {
-		CyberiumHandler.reset();
+
 		if (player != null) {
 			if (Main.currentGame.getGamestate() == Gstate.Waiting) {
 				player.sendMessage(UHCTypo + "§cIl n'y a aucune partie en cours");
@@ -449,15 +388,15 @@ public class Main extends JavaPlugin {
 		}
 		return false;
 	}
-	public void addScenarios(Scenarios sc) {
+	public void addScenarios(KasterborousScenario sc) {
 		Main.currentGame.getScenarios().add(sc);
 	}
-	public void removeScenarios(Scenarios sc) {
+	public void removeScenarios(KasterborousScenario sc) {
 		Main.currentGame.getScenarios().remove(sc);
 	}
 	public void updateScenariosInventory(Player player) {
-		for (int i = 0; Scenarios.values().length > i; i++) {
-			Scenarios sc = Scenarios.values()[i];
+		for (int i = 0; ModeAPI.getScenarios().size() > i; i++) {
+			KasterborousScenario sc = ModeAPI.getScenarios().get(i);
 			String bool = (Main.currentGame.getScenarios().contains(sc)) ? "§aOn" : "§cOff";
 			ArrayList<String> Lines = new ArrayList<String>();
 			if (sc == Scenarios.DiamondLimit)
@@ -705,6 +644,7 @@ public class Main extends JavaPlugin {
 		}
 		return str;
 	}
+
 	public static boolean searchintoarrayLocationDistance(ArrayList<Location> list,double distance,Location testedLocation) {
 		if(list.size()==0)return true;
 		double mindistance=distance;

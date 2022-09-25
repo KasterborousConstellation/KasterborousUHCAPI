@@ -1,8 +1,6 @@
 package fr.supercomete.head.GameUtils.GameConfigurable;
 import java.util.ArrayList;
 
-import fr.supercomete.head.GameUtils.GameMode.Modes.DWUHC;
-import fr.supercomete.head.GameUtils.GameMode.Modes.EchoEchoUHC;
 import fr.supercomete.head.GameUtils.Time.TimeUtility;
 import org.bukkit.Material;
 import org.bukkit.event.inventory.ClickType;
@@ -11,17 +9,17 @@ import org.bukkit.inventory.meta.ItemMeta;
 
 import fr.supercomete.head.Inventory.InventoryHandler;
 import fr.supercomete.head.core.Main;
-public  class Configurable {
+public final class Configurable {
     public static boolean ExtractBool(int i) {
         return i % 2 == 0;
     }
-    public static boolean ExtractBool(LIST config) {
+    public static boolean ExtractBool(KasterBorousConfigurable config) {
         return Main.currentGame.getDataFrom(config) % 2 == 0;
     }
     private int data;
-    private LIST id;
+    private KasterBorousConfigurable id;
     private ConfigurableType type;
-    public Configurable(LIST id, int data, ConfigurableType type) {
+    public Configurable(KasterBorousConfigurable id, int data, ConfigurableType type) {
         this.setId(id);
         this.setData(data);
         this.setType(type);
@@ -126,11 +124,11 @@ public  class Configurable {
     }
 
 
-    public LIST getId() {
+    public KasterBorousConfigurable getId() {
         return id;
     }
 
-    public void setId(LIST id) {
+    public void setId(KasterBorousConfigurable id) {
         this.id = id;
     }
 
@@ -142,7 +140,7 @@ public  class Configurable {
         this.type = type;
     }
 
-    public enum LIST {
+    public enum LIST implements KasterBorousConfigurable{
         DigDown(
                 Material.GOLD_SPADE,
                 "DigDown",
@@ -373,66 +371,7 @@ public  class Configurable {
                 new AddingRule(10, 60),
                 new TypeBinding(BindingType.Player)
         ),
-        StewartUpdate(
-                Material.WATCH,
-                "Temps de Stewarts",
-                "Defini le nombre de secondes nécessaires pour faire avancer d'un % la recherche d'indice de Lethbridge-Stewart",
-                1,
-                ConfigurableType.Timer,
-                new Bound(1, 10),
-                new AddingRule(1, 3),
-                new ModeBinding(new DWUHC())
-        ),
-        TardisKey(
-                Material.TRIPWIRE_HOOK,
-                "Nombre de clef du Tardis",
-                "Defini le nombre de clef que le tardis va distribuer. La première clef va toujours au Docteur si il est dans la composition. Le reste des clefs, est distribué entre les role ayant le status: Companion",
-                5,
-                ConfigurableType.Integer,
-                new Bound(0, 5),
-                new AddingRule(1),
-                new ModeBinding(new DWUHC())
-        ),
-        TardisEjectionTime(
-                Material.SLIME_BLOCK,
-                "Temps avant ejection du Tardis",
-                "Defini le temps avant lequel un joueur est ejecté du Tardis.",
-                120,
-                ConfigurableType.Timer,
-                new Bound(60, 3600),
-                new AddingRule(1, 10),
-                new ModeBinding(new DWUHC())
-        ),
-        SoldierSpyTime(
-                Material.WATCH,
-                "Durée de l'enquête du Soldat Enquêteur",
-                "Defini le temps que prend une enquête du Soldat Enquêteur",
-                60 * 10,
-                ConfigurableType.Timer,
-                new Bound(60, 3600),
-                new AddingRule(1, 10),
-                new ModeBinding(new DWUHC())
-        ),
-        KarvanistaTime(
-                Material.HOPPER,
-                "Durée de la persuasion de Karvanista",
-                "Défini le temps durant lequel Karvanista doit persuader son allié.",
-                60*7,
-                ConfigurableType.Timer,
-                new Bound(60,20*60),
-                new AddingRule(1,10),
-                new ModeBinding(new DWUHC())
-        ),
-        LoisFlagTime(
-                Material.HOPPER,
-                "Temps drapeaux",
-                "Défini le temps entre chaque apparation de drapeaux de Loïs",
-                60*7,
-                ConfigurableType.Timer,
-                new Bound(60,10*60),
-                new AddingRule(1,10),
-                new ModeBinding(new EchoEchoUHC())
-        )
+
         ;
         private final String name;
         private final String description;
