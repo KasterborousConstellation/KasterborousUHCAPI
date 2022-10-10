@@ -22,7 +22,6 @@ import fr.supercomete.head.core.Main;
 import fr.supercomete.head.structure.Structure;
 public abstract class Mode {
     public final void ModeDefaultOnDeath(final Offline_Player player,Location deathLocation){
-
         InventoryUtils.dropInventory(player.getInventory(),deathLocation,deathLocation.getWorld());
         player.getInventory().clear();
         Main.playerlist.remove(player.getPlayer());

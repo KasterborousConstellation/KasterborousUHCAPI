@@ -1,5 +1,6 @@
 package fr.supercomete.commands;
 
+import fr.supercomete.head.GameUtils.GameMode.ModeHandler.MapHandler;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -24,15 +25,16 @@ public class BlackSeedCommand implements CommandExecutor {
 		if(sender instanceof Player){
             Player player=(Player)sender;
             if(cmd.getName().equalsIgnoreCase("blacklistseed") ||cmd.getName().equalsIgnoreCase("blseed")) {
-				if(PlayerAccountManager.getPlayerAccount(player).hasRank(Rank.Admin)) {						
-					if(player.getWorld().equals(worldgenerator.currentPlayWorld)) {
+				if(PlayerAccountManager.getPlayerAccount(player).hasRank(Rank.Admin)) {
+                    assert MapHandler.getMap() != null;
+                    if(player.getWorld().equals(MapHandler.getMap().getPlayWorld())) {
 						final File file = new File("/var/games/minecraft/Library/Seeds/",""+Main.generator.getBiome());
 						final String content = Fileutils.loadContent(file);
-						final String[] mod = content.split(worldgenerator.currentPlayWorld.getSeed()+"L,");
-						String end ="";
-						for(String s : mod)end+=s;
-						Fileutils.save(file, end);
-						player.sendMessage(Main.UHCTypo+"La seed "+worldgenerator.currentPlayWorld.getSeed()+" est maintenant blacklist.");
+						final String[] mod = content.split(MapHandler.getMap().getPlayWorld().getSeed()+"L,");
+						StringBuilder end = new StringBuilder();
+						for(String s : mod) end.append(s);
+						Fileutils.save(file, end.toString());
+						player.sendMessage(Main.UHCTypo+"La seed "+MapHandler.getMap().getPlayWorld().getSeed()+" est maintenant blacklist.");
 					}else player.sendMessage(Main.UHCTypo+"Vous êtes pas dans le bon monde");
 				}else {
 					player.sendMessage(Main.UHCTypo+"§cErreur vous n'avez pas le droit d'utiliser cette commande.");

@@ -2,6 +2,7 @@ package fr.supercomete.head.world;
 
 import java.util.UUID;
 
+import fr.supercomete.head.GameUtils.GameMode.ModeHandler.MapHandler;
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
 import org.bukkit.Location;
@@ -14,25 +15,25 @@ import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import fr.supercomete.enums.GenerationMode;
-import fr.supercomete.head.GameUtils.GameMode.ModeHandler.ModeAPI;
+import fr.supercomete.head.GameUtils.GameMode.ModeHandler.KtbsAPI;
 import fr.supercomete.head.core.Main;
 import fr.supercomete.head.structure.Structure;
 import fr.supercomete.tasks.generatorcycle;
 
 public class worldgenerator {
-	public static World currentPlayWorld;
-	public static World structureworld;
 	private static Main main;
 	public worldgenerator(Main main) {
 		worldgenerator.main = main;
 	}
 	static UUID worlduuid;
 	public static void generateworld() {
+        MapHandler.reset();
 		worlduuid = UUID.randomUUID();
 		for (Player player : Bukkit.getOnlinePlayers()) {
 			player.teleport(main.spawn);
 			player.setGameMode(GameMode.ADVENTURE);
 		}
+        assert MapHandler.getMap()!=null;
 		new BukkitRunnable() {
 			
 			@Override
@@ -41,20 +42,20 @@ public class worldgenerator {
 				final WorldCreator wc = new WorldCreator("StructureWorld");
 		        wc.type(WorldType.FLAT);
 		        wc.generatorSettings("2;0;1;"); //This is what makes the world empty (void)
-		        structureworld =  wc.createWorld();
-		        structureworld.setGameRuleValue("doMobSpawning", "false");
-		        if(ModeAPI.getModeByIntRepresentation(Main.currentGame.getEmode()).getStructure().size()>0) {
+		        MapHandler.getMap().setStructureWorld(wc.createWorld());
+                MapHandler.getMap().getStructureWorld().setGameRuleValue("doMobSpawning", "false");
+		        if(KtbsAPI.getCurrentGame().getMode().getStructure().size()>0) {
 		        	Bukkit.broadcastMessage("§b[Génération des structures]");
 		        	int i =0;
-		        	for(Structure structure : ModeAPI.getModeByIntRepresentation(Main.currentGame.getEmode()).getStructure()) {
-		        		final Location location = new Location(structureworld, i*1000 +10000, 10, i*1000 +10000);
+		        	for(Structure structure : KtbsAPI.getCurrentGame().getMode().getStructure()) {
+		        		final Location location = new Location(MapHandler.getMap().getStructureWorld(),i*1000 +10000, 10, i*1000 +10000);
 		        		Bukkit.broadcastMessage("   §bGénération: "+structure.getStructurename());
 		        		structure.generateStructure(location);
 		        		Main.currentGame.getMode().setStructureLocation(location, structure.getStructurename());
 		        		i++;
 		        	}
 		        }
-		        for(Entity entity : structureworld.getEntities()) {
+		        for(Entity entity : MapHandler.getMap().getStructureWorld().getEntities()) {
 		        	if(entity instanceof Item) {
 		        		entity.remove();
 		        	}
@@ -66,19 +67,18 @@ public class worldgenerator {
 				creaWorld.type(WorldType.CUSTOMIZED);
 				creaWorld.generatorSettings(biomegen.generateWorldSetting());
 				
-				currentPlayWorld = Bukkit.createWorld(creaWorld);
-				new worldBorderHandler(Main.currentGame.getFirstBorder(), 0, 0, currentPlayWorld);
+				MapHandler.getMap().setCurrentWorld(Bukkit.createWorld(creaWorld));
+				new worldBorderHandler(Main.currentGame.getFirstBorder(), 0, 0, MapHandler.getMap().getPlayWorld());
 				Main.currentGame.setGenmode(GenerationMode.WorldCreatedOnly);
 				Bukkit.broadcastMessage("§bGénération du monde terminée");
 				
 			}
-		}.runTaskLater(main, 120L);
-		
-		return;
+		}.runTaskLater(main, 50L);
 	}
 	public static void pregen() {
+        assert MapHandler.getMap()!=null;
 		Bukkit.broadcastMessage("§dPré-génération du monde");
-		final generatorcycle cycle = new generatorcycle((int) (Main.currentGame.getFirstBorder() / 2), currentPlayWorld,main);
+		final generatorcycle cycle = new generatorcycle((int) (Main.currentGame.getFirstBorder() / 2), MapHandler.getMap().getPlayWorld(),main);
 		cycle.runTaskTimer(main, 0, 1L);
 	}
 }

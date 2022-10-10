@@ -3,7 +3,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.UUID;
 import java.util.concurrent.CopyOnWriteArrayList;
-
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -12,7 +11,6 @@ import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
-
 import fr.supercomete.head.Inventory.InventoryUtils;
 import fr.supercomete.head.core.Main;
 public class FullGUI extends GUI{
@@ -57,10 +55,7 @@ public class FullGUI extends GUI{
 			if (e.getInventory().equals(gui.inv)) {
 				e.setCancelled(true);
 				final int currentSlot = e.getSlot();
-//				final ClickType action = e.getClick();
-				
 				switch (currentSlot) {
-				
 				default:
 					final ArrayList<ItemStack> stack = Main.currentGame.getFullinv().get(gui.player.getUniqueId());
 					if(currentSlot>8 && currentSlot<9 +stack.size()) {

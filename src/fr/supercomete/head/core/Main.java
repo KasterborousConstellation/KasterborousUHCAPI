@@ -14,6 +14,7 @@ import fr.supercomete.head.GameUtils.Events.GameEvents.EventsHandler;
 import fr.supercomete.head.GameUtils.Events.PlayerEvents.PlayerEventHandler;
 import fr.supercomete.head.GameUtils.Fights.FightHandler;
 import fr.supercomete.head.GameUtils.GameConfigurable.Configurable;
+import fr.supercomete.head.GameUtils.GameMode.ModeHandler.MapHandler;
 import fr.supercomete.head.GameUtils.GameMode.Modes.*;
 import fr.supercomete.head.GameUtils.Scenarios.KasterborousScenario;
 import fr.supercomete.head.GameUtils.Time.TimeUtility;
@@ -45,7 +46,7 @@ import fr.supercomete.head.GameUtils.Game;
 import fr.supercomete.head.GameUtils.Lag;
 import fr.supercomete.head.GameUtils.TeamManager;
 import fr.supercomete.head.GameUtils.WinCondition;
-import fr.supercomete.head.GameUtils.GameMode.ModeHandler.ModeAPI;
+import fr.supercomete.head.GameUtils.GameMode.ModeHandler.KtbsAPI;
 import fr.supercomete.head.GameUtils.GameMode.ModeModifier.CampMode;
 import fr.supercomete.head.GameUtils.Time.Timer;
 import fr.supercomete.head.Inventory.InventoryHandler;
@@ -55,7 +56,6 @@ import fr.supercomete.head.PlayerUtils.PlayerUtility;
 import fr.supercomete.head.role.Role;
 import fr.supercomete.head.role.RoleBuilder;
 import fr.supercomete.head.role.RoleHandler;
-import fr.supercomete.head.serverupdater.UpdateServerInfo;
 import fr.supercomete.head.structure.StructureHandler;
 import fr.supercomete.head.world.BiomeGenerator;
 import fr.supercomete.head.world.WorldGarbageCollector;
@@ -80,7 +80,7 @@ public class Main extends JavaPlugin {
 	public static boolean devmode;
 	public static Map<UUID, Integer> diamondmap = new HashMap<>();
 	public static ProfileSerializationManager manager = new ProfileSerializationManager();
-	public static UpdateServerInfo serverinfo;
+
 	public static BiomeGenerator generator;
 	public static StructureHandler structurehandler;
 	public static UUID host;
@@ -88,7 +88,12 @@ public class Main extends JavaPlugin {
 	public static ArrayList<UUID>bypass = new ArrayList<>();
 	public static Cycle currentCycle=null;
     public static Main INSTANCE;
-
+    @Override
+    public void onDisable(){
+        for(final KasterborousRunnable run: KtbsAPI.getRunnables()){
+            run.onAPIStop();
+        }
+    }
 	@SuppressWarnings("deprecation")
 	@Override
 	public void onEnable() {
@@ -101,28 +106,17 @@ public class Main extends JavaPlugin {
 		host = null;
 		Date Compiledate = null;
 		Compiledate = getClassBuildTime();
-		if(loadServerProtocol()) {
-			Bukkit.broadcastMessage("§dServerProtocol: §aOnline");
-		}else {
-			Bukkit.broadcastMessage("§dServerProtocol: §4Offline");
-		}
         for(final Scenarios scenarios: Scenarios.values()){
-            ModeAPI.RegisterScenarios(scenarios);
+            KtbsAPI.RegisterScenarios(scenarios);
         }
         for(final Configurable.LIST conf : Configurable.LIST.values()){
-            ModeAPI.RegisterConfigurable(conf);
+            KtbsAPI.RegisterConfigurable(conf);
         }
-		ModeAPI.registerMode(new Null_Mode());
+		KtbsAPI.registerMode(new Null_Mode());
 		UHCClassic uhcclassic = new UHCClassic();	
-		ModeAPI.registerMode(uhcclassic);
+		KtbsAPI.registerMode(uhcclassic);
 		Bukkit.broadcastMessage("§dVersion: 0.8.9 Build("+Compiledate.getDate()+"/"+(Compiledate.getMonth()+1)+") §6Alpha");
-		currentGame=new Game(ModeAPI.getIntRepresentation(new Null_Mode()),this);
-		if((this.getConfig().getString("serverapi.serverconfig.echosiakey").equalsIgnoreCase("EchosiaBest"))){
-			Bukkit.broadcastMessage("HubUpdate Status: §aConnected");
-			serverinfo= new UpdateServerInfo(this);
-		}else {
-			Bukkit.broadcastMessage("HubUpdate Status: §cNot linked");
-		}
+		currentGame=new Game((new Null_Mode()).getName(),this);
 		Bukkit.getServer().getScheduler().scheduleSyncRepeatingTask(this, new Lag(), 100L, 1L);// LagO'meter
 		spawn = new Location(Bukkit.getWorld("world"), getConfig().getInt("serverapi.spawn.x"),
 				getConfig().getInt("serverapi.spawn.y"), getConfig().getInt("serverapi.spawn.z"));
@@ -151,7 +145,8 @@ public class Main extends JavaPlugin {
         getCommand("bypass").setExecutor(new BypassCommand(this));
         getCommand("tpin").setExecutor(new TpInCommand(this));
         getCommand("timeleft").setExecutor(new TimeLeftCommand(this));
-		scoreboardmanager score = new scoreboardmanager(this);
+        getServer().getMessenger().registerOutgoingPluginChannel(this, "BungeeCord");
+        scoreboardmanager score = new scoreboardmanager(this);
 		score.ChangeScoreboard();
 		new InventoryHandler(this);
 		new ConfigurationFileManager(this);
@@ -180,14 +175,16 @@ public class Main extends JavaPlugin {
 			Bukkit.broadcastMessage("§eDevMode: §aOn");
 		}
         EventsHandler.init();
-		new BukkitRunnable() {
-			
-			@Override
-			public void run() {
-				serverinfo.write();
-			}
-		}.runTaskTimer(this, 0, 20L);
+        new BukkitRunnable(){
+            @Override
+            public void run() {
+                for(final KasterborousRunnable run: KtbsAPI.getRunnables()){
+                    run.onAPILaunch();
+                }
+            }
+        }.runTaskLater(this,30L);
 	}
+
     private static Date getClassBuildTime() {
         Date d = null;
         Class<?> currentClass = new Object() {}.getClass().getEnclosingClass();
@@ -291,18 +288,19 @@ public class Main extends JavaPlugin {
 					player.sendMessage(UHCTypo + "§cErreur, le scénario +" + sc.getName() + "est incompatible");
 				}
 			}
-
+            ScoreBoardManager.reset();
 			allplayereffectclear();
 			Main.currentGame.setGamestate(Gstate.Starting);
 			Main.currentGame.setFirstBorder(Main.currentGame.getCurrentBorder());
-			worldgenerator.currentPlayWorld.setGameRuleValue("naturalRegeneration", "false");
-			worldgenerator.currentPlayWorld.setGameRuleValue("doFireTick", "false");
-			worldgenerator.currentPlayWorld.setGameRuleValue("doMobSpawning", "true");
-			worldgenerator.currentPlayWorld.setGameRuleValue("doDaylightCycle", "false");
-			worldgenerator.currentPlayWorld.setGameRuleValue("keepinventory", "true");
-			worldgenerator.currentPlayWorld.setDifficulty(Difficulty.HARD);
+            assert MapHandler.getMap() != null;
+            MapHandler.getMap().getPlayWorld().setGameRuleValue("naturalRegeneration", "false");
+            MapHandler.getMap().getPlayWorld().setGameRuleValue("doFireTick", "false");
+            MapHandler.getMap().getPlayWorld().setGameRuleValue("doMobSpawning", "true");
+            MapHandler.getMap().getPlayWorld().setGameRuleValue("doDaylightCycle", "false");
+            MapHandler.getMap().getPlayWorld().setGameRuleValue("keepinventory", "true");
+            MapHandler.getMap().getPlayWorld().setDifficulty(Difficulty.HARD);
 			GAutostart start = new GAutostart(this);
-			worldgenerator.currentPlayWorld.setPVP(false);
+            MapHandler.getMap().getPlayWorld().setPVP(false);
 			start.runTaskTimer(this, 0, 20);
 			
 			if (Main.currentGame.getTimer(Timer.PvPTime).getData() < Timer.PvPTime.getMinimal())
@@ -327,6 +325,7 @@ public class Main extends JavaPlugin {
 				return;
 			}
 		}
+        ScoreBoardManager.reset();
 		Main.currentGame.getFullinv().clear();
 		RoleHandler.setHistoric(null);
 		this.nodamage = true;
@@ -362,6 +361,7 @@ public class Main extends JavaPlugin {
                     if(Main.currentGame.isGameState(Gstate.Waiting))
                         pl.addPotionEffect(new PotionEffect(PotionEffectType.SATURATION, 999999, 0));
                 }
+                MapHandler.setMapToNull();
             }
         }.runTaskLater(this,21);
         new BukkitRunnable(){
@@ -395,8 +395,8 @@ public class Main extends JavaPlugin {
 		Main.currentGame.getScenarios().remove(sc);
 	}
 	public void updateScenariosInventory(Player player) {
-		for (int i = 0; ModeAPI.getScenarios().size() > i; i++) {
-			KasterborousScenario sc = ModeAPI.getScenarios().get(i);
+		for (int i = 0; KtbsAPI.getScenarios().size() > i; i++) {
+			KasterborousScenario sc = KtbsAPI.getScenarios().get(i);
 			String bool = (Main.currentGame.getScenarios().contains(sc)) ? "§aOn" : "§cOff";
 			ArrayList<String> Lines = new ArrayList<String>();
 			if (sc == Scenarios.DiamondLimit)
@@ -626,15 +626,7 @@ public class Main extends JavaPlugin {
 	public void setForcerole(boolean forcerole) {
 		this.forcerole = forcerole;
 	}
-	public static int getAmountOfSupremeEffect(Player player) {
-		int count=0;
-		for(PotionEffect effect : player.getActivePotionEffects()) {
-			if(!(effect.getType().equals(PotionEffectType.ABSORPTION )|| effect.getType().equals(PotionEffectType.REGENERATION)|| effect.getType().equals(PotionEffectType.NIGHT_VISION))) {
-				count++;
-			}
-		}
-		return count;
-	}
+
 	@SuppressWarnings("unchecked")
 	public static <T>  T[] convertArrayToTable(Class<?> Tclass,ArrayList<T> array) {
 		T[] str ;
@@ -645,7 +637,7 @@ public class Main extends JavaPlugin {
 		return str;
 	}
 
-	public static boolean searchintoarrayLocationDistance(ArrayList<Location> list,double distance,Location testedLocation) {
+	public static boolean searchintoarrayLocationDistance(List<Location> list,double distance,Location testedLocation) {
 		if(list.size()==0)return true;
 		double mindistance=distance;
 		for(Location loc : list) {

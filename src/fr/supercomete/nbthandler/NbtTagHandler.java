@@ -48,8 +48,6 @@ public final class NbtTagHandler {
    14| Flux item Tecteun
    15| Temporal FlashBack WeapingAngel
 
-
-
    101 Joke Flavio
    102 Mango Flavio
    103 Mein kampf Lucien

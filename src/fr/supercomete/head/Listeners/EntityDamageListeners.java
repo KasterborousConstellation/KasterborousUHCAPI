@@ -6,6 +6,7 @@ import fr.supercomete.head.GameUtils.Events.PlayerEvents.PlayerEventHandler;
 import fr.supercomete.head.GameUtils.Events.PlayerEvents.PlayerEvents;
 import fr.supercomete.head.GameUtils.Fights.Fight;
 import fr.supercomete.head.GameUtils.Fights.FightHandler;
+import fr.supercomete.head.GameUtils.GameMode.ModeHandler.MapHandler;
 import fr.supercomete.head.role.Triggers.*;
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
@@ -32,7 +33,7 @@ import fr.supercomete.head.GameUtils.Scenarios.Scenarios;
 import fr.supercomete.head.GameUtils.DeathCause;
 import fr.supercomete.head.GameUtils.HistoricData;
 import fr.supercomete.head.GameUtils.GameConfigurable.Configurable;
-import fr.supercomete.head.GameUtils.GameMode.ModeHandler.ModeAPI;
+import fr.supercomete.head.GameUtils.GameMode.ModeHandler.KtbsAPI;
 import fr.supercomete.head.GameUtils.GameMode.ModeModifier.CampMode;
 import fr.supercomete.head.GameUtils.GameMode.ModeModifier.DelayedDeath;
 import fr.supercomete.head.GameUtils.GameMode.Modes.Mode;
@@ -238,13 +239,14 @@ class EntityDamageListeners implements Listener {
                         if (!RoleHandler.IsRoleGenerated()) {
                             Bukkit.broadcastMessage(Main.UHCTypo+"Le joueur +§4" + player.getName()+ "§7 a été revive.");
                             player.setHealth(player.getMaxHealth());
-                            PlayerUtility.PlayerRandomTPMap(player);
+                            assert MapHandler.getMap() != null;
+                            MapHandler.getMap().PlayerRandomTPMap(player,12);
                             return;
                         }
                     } else {
                         if (!Cycle.hasPvpForced || (Main.currentGame.getTimer(Timer.PvPTime).getData() > Main.currentGame.getTime() && !Cycle.hasPvpForced)) {
                             player.setHealth(player.getMaxHealth());
-                            PlayerUtility.PlayerRandomTPMap(player);
+                            MapHandler.getMap().PlayerRandomTPMap(player,12);
                             return;
                         }
                     }
@@ -271,7 +273,8 @@ class EntityDamageListeners implements Listener {
 
                     if (revive) {
                         player.setHealth(player.getMaxHealth());
-                        PlayerUtility.PlayerRandomTPMap(player);
+                        assert MapHandler.getMap() != null;
+                        MapHandler.getMap().PlayerRandomTPMap(player,12);
                         return;
                     }
                     if (damager != null) {
@@ -286,7 +289,7 @@ class EntityDamageListeners implements Listener {
                 Location deathLocation = player.getLocation();
                 if (deathLocation == null)
                     return;
-                Mode mode = ModeAPI.getModeByIntRepresentation(Main.currentGame.getEmode());
+                Mode mode = KtbsAPI.getCurrentGame().getMode();
                 if (mode instanceof DelayedDeath && RoleHandler.IsRoleGenerated()) {
                     DelayedModeDeath delayed = new DelayedModeDeath(mode, deathLocation, damager, player, ((DelayedDeath)mode).getDeathDelay());
                     player.setGameMode(GameMode.SPECTATOR);

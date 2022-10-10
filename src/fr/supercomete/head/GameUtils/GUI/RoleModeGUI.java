@@ -18,7 +18,7 @@ import org.bukkit.inventory.ItemStack;
 import fr.supercomete.enums.Camps;
 import fr.supercomete.head.Exception.InvalidModeException;
 import fr.supercomete.head.GameUtils.TeamManager;
-import fr.supercomete.head.GameUtils.GameMode.ModeHandler.ModeAPI;
+import fr.supercomete.head.GameUtils.GameMode.ModeHandler.KtbsAPI;
 import fr.supercomete.head.GameUtils.GameMode.ModeModifier.CampMode;
 import fr.supercomete.head.GameUtils.GameMode.Modes.Mode;
 import fr.supercomete.head.Inventory.InventoryHandler;
@@ -32,20 +32,9 @@ public class RoleModeGUI extends GUI {
 	private Inventory inv;
 	private int currentIndex = 0;
 	private Player player;
-	public RoleModeGUI(Mode mode) {
-		if (mode instanceof CampMode) {
-			this.m = (CampMode) mode;
-			this.inv = generateinv(0);
+	public RoleModeGUI() {
+			this.m = null;
 			this.player = null;
-			if (player != null)
-				allGui.add(this);
-		} else {
-			try {
-				throw new InvalidModeException("Error in " + this.getClass(), new Throwable());
-			} catch (InvalidModeException e) {
-				e.printStackTrace();
-			}
-		}
 	}
 	public RoleModeGUI(Mode mode, Player player) {
 		if (mode instanceof CampMode) {
@@ -83,17 +72,17 @@ public class RoleModeGUI extends GUI {
 			i++;
 		}
 //		 Main.getRoleTypeList(m.getPrimitiveCamps()[index]);
-		CopyOnWriteArrayList<Class<?>> preformated = ModeAPI.getPrimitiveModeByClass(m.getClass()).getRegisteredrole();
+		CopyOnWriteArrayList<Class<?>> preformated = KtbsAPI.getPrimitiveModeByClass(m.getClass()).getRegisteredrole();
 		CopyOnWriteArrayList<Class<?>> formated = new CopyOnWriteArrayList<Class<?>>();
 		
 		for(Class<?> clz : preformated) {
-			if(ModeAPI.getRoleByClass(clz).getCamp().equals(m.getPrimitiveCamps()[index])){
+			if(KtbsAPI.getRoleByClass(clz).getCamp().equals(m.getPrimitiveCamps()[index])){
 				formated.add(clz);
 			}
 		}
 		for (int e =0;e<formated.size();e++) {
 			Class<?> r = formated.get(e);
-			Role rt = ModeAPI.getRoleByClass(r);
+			Role rt = KtbsAPI.getRoleByClass(r);
 			List<String> strl = (rt.AskIfUnique())
 					? Arrays.asList("§3Camp: " + rt.getDefaultCamp().getColor() + rt.getDefaultCamp().getName(),
 							InventoryHandler.ClickBool)
@@ -131,21 +120,21 @@ public class RoleModeGUI extends GUI {
 				e.setCancelled(true);
 				switch (currentslot) {
 				case 49:
-					new ModeGUI((Mode)this.m, role.player).open();
-//					InventoryHandler.openinventory(role.player, ModeAPI.getModeByIntRepresentation(Main.currentGame.getEmode()).getGUInumber());
+					new ModeGUI((Mode)role.m, role.player).open();
+//					InventoryHandler.openinventory(role.player, KtbsAPI.getModeByIntRepresentation(Main.currentGame.getEmode()).getGUInumber());
 //					allGui.REMOVE(ROLE);
 					break;
 				default:
 					if (currentslot < role.m.getPrimitiveCamps().length) {
 						role.open(currentslot);
 					} else if (currentslot >= 9
-							&& currentslot < ModeAPI.getRoleinModebyCamp(ModeAPI.getPrimitiveModeByClass(role.m.getClass()),role.m.getPrimitiveCamps()[role.currentIndex]).size()
+							&& currentslot < KtbsAPI.getRoleinModebyCamp(KtbsAPI.getPrimitiveModeByClass(role.m.getClass()),role.m.getPrimitiveCamps()[role.currentIndex]).size()
 									+ 9) {
 						
-						Class<?> r = ModeAPI.getRoleinModebyCamp(ModeAPI.getPrimitiveModeByClass(role.m.getClass()),role.m.getPrimitiveCamps()[role.currentIndex])
+						Class<?> r = KtbsAPI.getRoleinModebyCamp(KtbsAPI.getPrimitiveModeByClass(role.m.getClass()),role.m.getPrimitiveCamps()[role.currentIndex])
 								.get(currentslot - 9);
 						HashMap<Class<?>, Integer> array =Main.currentGame.getRoleCompoMap();
-						Role rt =ModeAPI.getRoleByClass(r);
+						Role rt =KtbsAPI.getRoleByClass(r);
 						if (rt.AskIfUnique()) {
 							if (array.containsKey(r)) {
 								array.remove(r);

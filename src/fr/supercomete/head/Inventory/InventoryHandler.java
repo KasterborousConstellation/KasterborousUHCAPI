@@ -21,7 +21,7 @@ import fr.supercomete.enums.Gstate;
 import fr.supercomete.head.GameUtils.Scenarios.Scenarios;
 import fr.supercomete.head.GameUtils.Team;
 import fr.supercomete.head.GameUtils.TeamManager;
-import fr.supercomete.head.GameUtils.GameMode.ModeHandler.ModeAPI;
+import fr.supercomete.head.GameUtils.GameMode.ModeHandler.KtbsAPI;
 import fr.supercomete.head.GameUtils.GameMode.Modes.Mode;
 import fr.supercomete.head.GameUtils.Time.Timer;
 import fr.supercomete.head.core.Main;
@@ -85,8 +85,8 @@ public class InventoryHandler {
 			for(int i=0;i<9;i++) {
 				inv.setItem(53-i, InventoryUtils.createColorItem(Material.STAINED_GLASS_PANE, " ", 1, (short) 2));
 			}
-			for(int i=0;ModeAPI.getScenarios().size()>i;i++) {
-				KasterborousScenario sc = ModeAPI.getScenarios().get(i);
+			for(int i=0;KtbsAPI.getScenarios().size()>i;i++) {
+				KasterborousScenario sc = KtbsAPI.getScenarios().get(i);
 				String bool=(Main.currentGame.getScenarios().contains(sc))?"§aOn":"§cOff";
 				ArrayList<String>Lines=new ArrayList<String>();
 				if(sc==Scenarios.DiamondLimit){

@@ -9,7 +9,6 @@ import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 
 import fr.supercomete.head.GameUtils.ColorScheme;
-import fr.supercomete.head.GameUtils.GameMode.ModeHandler.ModeAPI;
 import fr.supercomete.head.core.Main;
 
 public class ScoreBoardManager {
@@ -23,12 +22,18 @@ public class ScoreBoardManager {
 		SimpleScoreboard ss = new SimpleScoreboard("§1»§aEchosia§1«");
 		int max = generateScoreboard(player).size();
 		for(int i =0;i < max;i++)
-		ss.add(generateScoreboard(player).get(i), max-i);
+		    ss.add(generateScoreboard(player).get(i), max-i);
 		ss.update();
 		ss.send(player);
 		
 		boards.put(player.getUniqueId(), ss);
 	}
+    public static void reset(){
+        boards.clear();
+        for(Player player : Bukkit.getOnlinePlayers()){
+            init(player);
+        }
+    }
 	public static void update(Player player) {
 		if(boards.get(player.getUniqueId())==null)init(player);
 		SimpleScoreboard ss = boards.get(player.getUniqueId());

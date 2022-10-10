@@ -6,6 +6,8 @@ import java.util.UUID;
 import fr.supercomete.head.GameUtils.Fights.Fight;
 import fr.supercomete.head.GameUtils.Fights.FightHandler;
 
+import fr.supercomete.head.GameUtils.GameConfigurable.Configurable;
+import fr.supercomete.head.GameUtils.GameMode.ModeHandler.MapHandler;
 import fr.supercomete.head.role.Triggers.Trigger_OnScoreBoardUpdate;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -18,18 +20,15 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
-import org.bukkit.scoreboard.NameTagVisibility;
+import org.bukkit.scoreboard.*;
 
-
-import org.bukkit.scoreboard.Scoreboard;
-import org.bukkit.scoreboard.Team;
 
 import fr.supercomete.enums.Gstate;
 import fr.supercomete.head.GameUtils.Scenarios.Scenarios;
 import fr.supercomete.head.GameUtils.ColorScheme;
 import fr.supercomete.head.GameUtils.Lag;
 import fr.supercomete.head.GameUtils.TeamManager;
-import fr.supercomete.head.GameUtils.GameMode.ModeHandler.ModeAPI;
+import fr.supercomete.head.GameUtils.GameMode.ModeHandler.KtbsAPI;
 import fr.supercomete.head.GameUtils.GameMode.ModeModifier.CampMode;
 import fr.supercomete.head.GameUtils.GameMode.ModeModifier.TeamMode;
 
@@ -68,7 +67,7 @@ public class scoreboardmanager {
 				for (final Player player : Bukkit.getServer().getOnlinePlayers()) {
 					//Fix bug that kill people if they go under -64 y
 					//Players cannot go under -5 if they are into uhc playworld 
-					if(player.getWorld().equals(worldgenerator.currentPlayWorld)) {
+					if(MapHandler.getMap()!=null&&player.getWorld().equals(MapHandler.getMap().getPlayWorld())) {
 						if(player.getLocation().getY()<-5) {
 							player.teleport(new Location(player.getWorld(), player.getLocation().getX(), 150, player.getLocation().getZ()));
 						}
@@ -99,7 +98,7 @@ public class scoreboardmanager {
 					tps = Math.round(tps);
 					tps = tps / 100;
 					sendHeadAndFooter(player,
-							s + "» " + p + ModeAPI.getModeByIntRepresentation(Main.currentGame.getEmode()).getName() + s
+							s + "» " + p + KtbsAPI.getCurrentGame().getMode().getName() + s
 									+ " «" + "\n" + t + "Ping: §a" + getPing(player) + "ms " + t + "TPS: §a" + tps
 									+ "\n",
 							"\n" + t + "https://discord.gg/" + main.getDiscordLink() + "\n" + s + "»" + p
@@ -114,8 +113,7 @@ public class scoreboardmanager {
 					if (Main.currentGame.isGameState(Gstate.Waiting)) {
 						Main.currentGame.setFirstBorder(Main.currentGame.getCurrentBorder());
 					}
-					if((Objects.equals(main.getConfig().getString("serverapi.serverconfig.echosiakey"), "EchosiaBest")))
-                        Main.serverinfo.write();
+
 					if (Main.currentGame.getScenarios().contains(Scenarios.FireEnchantLess)) {
 						Inventory inv = player.getInventory();
 						for (ItemStack it : inv) {
@@ -137,19 +135,6 @@ public class scoreboardmanager {
 		if(timer==0) {
 			SimpleScoreboard ss = ScoreBoardManager.boards.get(player.getUniqueId());
 			Scoreboard sc = ScoreBoardManager.boards.get(player.getUniqueId()).getScoreboard();
-			/*
-			try {
-				sc.getObjective("§a%").unregister();
-			}catch (Exception e) {}
-			try {
-				sc.getObjective("%").unregister();
-			}catch (Exception e) {}
-			try {
-				sc.getObjective("§b%").unregister();
-			}catch (Exception e) {}
-			try {
-				sc.getObjective("§d§d%").unregister();
-			}catch (Exception e) {}*/
 			if (RoleHandler.IsRoleGenerated()) {
 				if(RoleHandler.getRoleOf(player)!=null) {
 					Role role = RoleHandler.getRoleOf(player);
@@ -157,87 +142,10 @@ public class scoreboardmanager {
 					player.setWalkSpeed(0.2F * ((100.0F+addpercent)/100.0F));
 				}
 				if (RoleHandler.getRoleList().containsKey(player.getUniqueId())) {
-                    ((Trigger_OnScoreBoardUpdate)RoleHandler.getRoleOf(player)).onScoreBoardUpdate(player,ss);
-					/*if (RoleHandler.getRoleOf(player) instanceof Jenny_Flint) {
-						Jenny_Flint role = (Jenny_Flint) RoleHandler.getRoleOf(player);			
-						Objective ob = sc.registerNewObjective("%", "score2");
-						ob.setDisplaySlot(DisplaySlot.BELOW_NAME);
-						Score score2;
-						for (UUID uu:role.getPercentmap().keySet()) {
-							Player p = Bukkit.getPlayer(uu);
-							if (p == null || player.getUniqueId()==uu)
-								continue;
-							score2 = ob.getScore(p.getName());
-							if (role.getPercentmap().get(uu) == 99 && p != player) {
-								String value = (RoleHandler.getRoleOf(p) instanceof Vastra) ? "§aest Vasta":"§cn'est pas Vastra";
-								player.sendMessage(Main.UHCTypo + "§3" + p.getName() + " " + value);
-							}
-							if (player.getLocation().distance(p.getLocation()) < 10 && role.getPercentmap().get(uu) < 100) {
-								role.getPercentmap().put(uu, role.getPercentmap().get(uu) + 1);
-							}
-							int total_peopleat100 = 0;
-							Jenny_Flint flint = (Jenny_Flint) RoleHandler.getRoleOf(player);
-							for (UUID u : flint.getPercentmap().keySet()) {
-								if (flint.getPercentmap().get(u) == 100 && u != flint.getOwner()) {
-									total_peopleat100++;
-								}
-							}
-							role.setAmount(total_peopleat100);
-							score2.setScore(role.getPercentmap().get(uu));
-						}
-						ss.send(player);
-					}else if(RoleHandler.getRoleOf(player)instanceof Kate_Stewart) {
-						Kate_Stewart role = (Kate_Stewart)RoleHandler.getRoleOf(player);
-						Objective ob = sc.registerNewObjective("§a%", "score");
-						ob.setDisplaySlot(DisplaySlot.BELOW_NAME);
-						Score score3;
-						for (UUID uu : role.getIndices().keySet()) {
-							Player p = Bukkit.getPlayer(uu);
-							if (p == null || player.getUniqueId()==uu)
-								continue;
-							score3 = ob.getScore(p.getName());
-							if(player.getLocation().getWorld()==p.getLocation().getWorld()&&player.getLocation().distance(p.getLocation())<20) {
-								if(Main.currentGame.getTime()%Main.currentGame.getDataFrom(Configurable.LIST.StewartUpdate)==0 && Main.getPlayerlist().contains(uu))role.updateProgression(uu);
-							}
-							score3.setScore(role.getProgression().get(uu));
-						}
-						ss.send(player);
-					
-					}else if(RoleHandler.getRoleOf(player)instanceof Strax) {
-						Objective ob = sc.registerNewObjective("§b%", "score3");
-						ob.setDisplaySlot(DisplaySlot.BELOW_NAME);
-						Score score; 
-						for (UUID uu : Main.getPlayerlist()) {
-							Player p = Bukkit.getPlayer(uu);
-							if (p == null || player.getUniqueId()==uu)
-								continue;
-							score = ob.getScore(p.getName());
-							final double health =p.getHealth()/p.getMaxHealth()*100.0;
-							final int heal = (int) Math.round(health);
-							score.setScore(heal);
-						}
-						ss.send(player);
-					}else if(RoleHandler.getRoleOf(player)instanceof GreatIntelligence) {
-						final GreatIntelligence intell =(GreatIntelligence) RoleHandler.getRoleOf(player);
-                        if(!intell.isShowing()) {
-							if(intell.getTeleportedsnowman()!=null) {
-								if(player.getWorld()==intell.getTeleportedsnowman().getWorld()) {
-									if(player.getLocation().distance(intell.getTeleportedsnowman())>5) {
-										player.addPotionEffect(new PotionEffect(PotionEffectType.SLOW, 120, 0),false);
-										intell.setTeleportedsnowman(null);
-										intell.setShowing(true);
-										intell.show(player);
-									}else {
-										if(player.hasPotionEffect(PotionEffectType.INVISIBILITY)) {
-											player.removePotionEffect(PotionEffectType.INVISIBILITY);
-										}
-										intell.hide(player);
-										player.addPotionEffect(new PotionEffect(PotionEffectType.INVISIBILITY,20*3,1,false,false),false);
-									}
-								}
-							}
-						}
-					}*/
+                    if(RoleHandler.getRoleOf(player)instanceof Trigger_OnScoreBoardUpdate){
+                        ((Trigger_OnScoreBoardUpdate)RoleHandler.getRoleOf(player)).onScoreBoardUpdate(player,ss,sc);
+                        ss.send();
+                    }
 				}
 			}else {
 				player.setWalkSpeed(0.2F);
@@ -329,7 +237,6 @@ public class scoreboardmanager {
 			((CraftPlayer) p).getHandle().playerConnection.sendPacket(length);
 		}
 	}
-
 	public static void titlemessage(String str, Player player) {
 		IChatBaseComponent chatTitle = ChatSerializer.a("{\"text\":\"" + str + "\"}");
 		PacketPlayOutTitle title = new PacketPlayOutTitle(EnumTitleAction.TITLE, chatTitle);

@@ -1,10 +1,7 @@
 package fr.supercomete.head.GameUtils.GameMode.ModeHandler;
 
 import java.lang.reflect.InvocationTargetException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.LinkedList;
-import java.util.UUID;
+import java.util.*;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 import fr.supercomete.enums.Camps;
@@ -16,11 +13,13 @@ import fr.supercomete.head.GameUtils.GameConfigurable.KasterBorousConfigurable;
 import fr.supercomete.head.GameUtils.GameMode.ModeModifier.Command;
 import fr.supercomete.head.GameUtils.GameMode.Modes.Mode;
 import fr.supercomete.head.GameUtils.Scenarios.KasterborousScenario;
-import fr.supercomete.head.GameUtils.Scenarios.Scenarios;
+import fr.supercomete.head.core.KasterborousRunnable;
 import fr.supercomete.head.core.Main;
 import fr.supercomete.head.role.Role;
 import org.bukkit.craftbukkit.v1_8_R3.CraftServer;
-public class ModeAPI {
+import org.jetbrains.annotations.NotNull;
+public class KtbsAPI {
+    private static final ArrayList<KasterborousRunnable>runnables = new ArrayList<>();
 	private static final ArrayList<Mode> registeredModes = new ArrayList<>();
     private static final ArrayList<KasterborousScenario> registered_scenarios = new ArrayList<>();
     private static final LinkedList<KasterBorousConfigurable> configurables = new LinkedList<>();
@@ -36,7 +35,24 @@ public class ModeAPI {
     public static void RegisterScenarios(KasterborousScenario... scenarios){
         RegisterScenarios(new ArrayList<>(Arrays.asList(scenarios)));
     }
-
+    public static ArrayList<KasterborousRunnable> getRunnables(){
+        return runnables;
+    }
+    public static void RegisterRunnable(ArrayList<KasterborousRunnable>scenarios){
+        for(final KasterborousRunnable scenario: runnables){
+            for(final KasterborousRunnable compared : scenarios){
+                if(scenario.equals(compared)){
+                    try{
+                        throw new AlreadyRegisterdScenario("Duplicate runnable registration");
+                    }catch (AlreadyRegisterdScenario e){
+                        e.printStackTrace();
+                        return;
+                    }
+                }
+            }
+        }
+        runnables.addAll(scenarios);
+    }
     public static void RegisterScenarios(ArrayList<KasterborousScenario>scenarios){
         for(final KasterborousScenario scenario: registered_scenarios){
             for(final KasterborousScenario compared : scenarios){
@@ -84,7 +100,7 @@ public class ModeAPI {
 	public static Class<?> getRoleClassByString(String str){
 		for(Class<?> cl : Main.currentGame.getMode().getRegisteredrole()) {
 			Role role = getRoleByClass(cl);
-			if(role.getName().equals(str)) {
+			if(Objects.requireNonNull(role).getName().equals(str)) {
 				return cl;
 			}
 		}
@@ -92,14 +108,6 @@ public class ModeAPI {
 	}
 	
 	public static Role getRoleByClass(Class<?> claz) {
-		/*if(!(claz.getSuperclass().equals(Role.class)||claz.getSuperclass().equals(NakimeCastleRole.class)||claz.getSuperclass().equals(DWRole.class))) {
-			try {
-				throw new InvalidRoleClassException();
-			} catch (InvalidRoleClassException e) {
-				e.printStackTrace();
-				return null;
-			}
-		}*/
 		try {
 			return (Role) claz.getConstructors()[0].newInstance(UUID.randomUUID());
 		} catch (InstantiationException | IllegalAccessException | IllegalArgumentException | InvocationTargetException
@@ -109,18 +117,14 @@ public class ModeAPI {
 		}
 	}
 	public static CopyOnWriteArrayList<Class<?>> getRoleinModebyCamp(Mode mode,Camps camp){
-		@SuppressWarnings("unchecked")
-		CopyOnWriteArrayList<Class<?>> formated = (CopyOnWriteArrayList<Class<?>>) mode.getRegisteredrole().clone();
-		for(Class<?> claz : formated) {
-			if(getRoleByClass(claz).getCamp()!=camp) {
-				formated.remove(claz);
-			}
-		}
-		return formated;
+        @SuppressWarnings("unchecked")
+		CopyOnWriteArrayList<Class<?>> formatted = (CopyOnWriteArrayList<Class<?>>) mode.getRegisteredrole().clone();
+        formatted.removeIf(clazz -> Objects.requireNonNull(getRoleByClass(clazz)).getCamp() != camp);
+		return formatted;
 	}
-	private static Role getRoleByClass(Class<?> claz,UUID uuid) {
+	private static Role getRoleByClass(@NotNull Class<?> clazz, UUID uuid) {
 		try {
-			return (Role) claz.getConstructors()[0].newInstance(uuid);
+			return (Role) clazz.getConstructors()[0].newInstance(uuid);
 		} catch (InstantiationException | IllegalAccessException | IllegalArgumentException | InvocationTargetException
 				| SecurityException e) {
 			e.printStackTrace();
@@ -131,7 +135,6 @@ public class ModeAPI {
 		registeredModes.add(mode);
         if(mode instanceof Command){
             final Command command =(Command) mode;
-
             ((CraftServer) Main.INSTANCE.getServer()).getCommandMap().register(command.getCommand().getName(), command.getCommand());
         }
 	}
@@ -157,10 +160,21 @@ public class ModeAPI {
 	public static ArrayList<Mode> getRegisteredModes() {
 		return registeredModes;
 	}
-	public static Mode getModeByIntRepresentation(int rep) {
-		return registeredModes.get(rep);
+	public static Mode getModeByName(String rep) {
+        for(Mode mode : registeredModes) {
+            if (mode.getName().equals(rep)) {
+                return mode;
+            }
+        }
+        try{
+            throw new UnregisteredModeException();
+        }catch (UnregisteredModeException e){
+            e.printStackTrace();
+        }
+        return null;
+
 	}
-	//We have to represent a mode by an int because Mode class is abstract and can't be saved as a Gson
+	//We have to represent a mode by a String because Mode class is abstract and can't be saved as a Gson
     public static Mode getMode(Class<?> mode){
 	    for(Mode mode_ : registeredModes){
 	        if(mode_.getClass().equals(mode)){
@@ -174,19 +188,6 @@ public class ModeAPI {
         }
 	    return null;
     }
-	public static int getIntRepresentation(Mode mode) {
-		int i =0;
-		for(Mode m : ModeAPI.getRegisteredModes()) {
-			if(m.getClass().equals(mode.getClass())) {
-				return i;
-			}
-			i++;
-		}
-		try {
-			throw new UnregisteredModeException("Can't convert " +mode.getClass()+" to int because "+mode.getClass()+" is unregistered in "+ ModeAPI.class,new Throwable());
-		}catch (UnregisteredModeException e) {
-			e.printStackTrace();
-			return 0;
-		}
-	}
+
+
 }

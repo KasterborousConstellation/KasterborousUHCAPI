@@ -1,4 +1,5 @@
 package fr.supercomete.commands;
+import fr.supercomete.head.GameUtils.GameMode.ModeHandler.MapHandler;
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
 import org.bukkit.command.Command;
@@ -40,7 +41,8 @@ public class DisperseCommand implements CommandExecutor {
 						if(target.getWorld()==player.getWorld()) {
 							if(target.getGameMode()!=GameMode.SPECTATOR) {
 								if(target.getLocation().distance(player.getLocation())<=v) {
-									PlayerUtility.PlayerRandomTPMap(target);
+                                    assert MapHandler.getMap() != null;
+                                    MapHandler.getMap().PlayerRandomTPMap(player,10);
 								}
 							}
 						}

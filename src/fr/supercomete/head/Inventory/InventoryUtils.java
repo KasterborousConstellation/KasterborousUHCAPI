@@ -105,7 +105,6 @@ public class InventoryUtils {
 			Main.currentGame.setFullinv(stack);
 		}
 	}
-	
 	public static void addOrDrop(Player player, ItemStack it) {
 		if (!testPlayerInvFull(player.getInventory())) {
 			player.getInventory().addItem(it);
@@ -113,26 +112,9 @@ public class InventoryUtils {
 			dropAtPlayer(player, it);
 		}
 	}
-
 	public static void dropAtPlayer(Player player, ItemStack it) {
 		player.getWorld().dropItemNaturally(player.getLocation(), it);
 	}
-
-	public static ItemStack getBillPottsPotion() {
-		final Potion pot = new Potion(PotionType.INSTANT_HEAL);
-		pot.setSplash(true);
-		pot.setLevel(1);
-		return pot.toItemStack(3);
-	}
-
-	public static ItemStack getHarrietJonesItem() {
-		final ItemStack it = getItem(Material.DIAMOND_SWORD, null, null);
-		ItemMeta im = it.getItemMeta();
-		im.addEnchant(Enchantment.DAMAGE_ALL, 3, true);
-		it.setItemMeta(im);
-		return it;
-	}
-
 	public static TextComponent createTextWithHoverText(String text, String hover) {
 		TextComponent message = new TextComponent(text);
 		message.setHoverEvent(new HoverEvent(Action.SHOW_TEXT, new ComponentBuilder(hover).create()));

@@ -1,9 +1,13 @@
 package fr.supercomete.head.Listeners;
 
+import fr.supercomete.head.GameUtils.GameMode.ModeHandler.MapHandler;
+import net.minecraft.server.v1_8_R3.Entity;
+import net.minecraft.server.v1_8_R3.PacketPlayOutEntityTeleport;
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.Material;
+import org.bukkit.craftbukkit.v1_8_R3.entity.CraftPlayer;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -31,34 +35,51 @@ final class JoinListener implements Listener {
             player.setOp(true);
         }
         if (Main.currentGame.isGameState(Gstate.Waiting)) {
-            player.teleport(main.spawn);
-            player.addPotionEffect(new PotionEffect(PotionEffectType.SATURATION, 999999, 0));
-        }
-        if (Main.currentGame.isGameState(Gstate.Waiting)) {
             player.setGameMode(GameMode.ADVENTURE);
             player.teleport(main.spawn);
+            PacketPlayOutEntityTeleport packet = new PacketPlayOutEntityTeleport((Entity)player);
+            for(Player player1: Bukkit.getOnlinePlayers()){
+                ((CraftPlayer)player1).getHandle().playerConnection.sendPacket(packet);
+            }
             player.setMaxHealth(20);
             player.setHealth(20);
             player.setFoodLevel(20);
             player.getInventory().clear();
             PlayerUtility.GiveHotBarStuff(player);
+            player.addPotionEffect(new PotionEffect(PotionEffectType.SATURATION, 999999, 0));
             player.getInventory().setBoots(new ItemStack(Material.AIR));
             player.getInventory().setHelmet(new ItemStack(Material.AIR));
             player.getInventory().setChestplate(new ItemStack(Material.AIR));
             player.getInventory().setLeggings(new ItemStack(Material.AIR));
+            for(Player player1: Bukkit.getOnlinePlayers()){
+                player.showPlayer(player1);
+                player1.showPlayer(player);
+            }
         } else {
+            assert MapHandler.getMap() != null;
             if (!Main.playerlist.contains(player.getUniqueId())) {
                 player.setGameMode(GameMode.SPECTATOR);
-                player.teleport(new Location(worldgenerator.currentPlayWorld, 0, 150, 0));
+                player.teleport(new Location(MapHandler.getMap().getPlayWorld(), 0, 150, 0));
+                PacketPlayOutEntityTeleport packet = new PacketPlayOutEntityTeleport((Entity)player);
+                for(Player player1: Bukkit.getOnlinePlayers()){
+                    ((CraftPlayer)player1).getHandle().playerConnection.sendPacket(packet);
+                }
             } else if (Main.currentGame.hasOfflinePlayer(player)) {
                 Offline_Player offPlayer = Main.currentGame.getOffline_Player(player);
                 Bukkit.broadcastMessage("§7Le joueur " + offPlayer.getUsername() + " se reconnecte après §a" + offPlayer.getTimeElapsedSinceDeconnexion() + "s");
                 Location loc = offPlayer.getLocation();
                 player.teleport(loc);
-
+                PacketPlayOutEntityTeleport packet = new PacketPlayOutEntityTeleport((Entity)player);
+                for(Player player1: Bukkit.getOnlinePlayers()){
+                    ((CraftPlayer)player1).getHandle().playerConnection.sendPacket(packet);
+                }
             } else {
                 player.getInventory().clear();
-                player.teleport(worldgenerator.currentPlayWorld.getSpawnLocation());
+                player.teleport(MapHandler.getMap().getPlayWorld().getSpawnLocation());
+                PacketPlayOutEntityTeleport packet = new PacketPlayOutEntityTeleport((Entity)player);
+                for(Player player1: Bukkit.getOnlinePlayers()){
+                    ((CraftPlayer)player1).getHandle().playerConnection.sendPacket(packet);
+                }
             }
         }
     }

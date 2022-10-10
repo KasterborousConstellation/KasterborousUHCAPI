@@ -7,6 +7,7 @@ import java.util.UUID;
 import fr.supercomete.head.GameUtils.Events.GameEvents.Event;
 import fr.supercomete.head.GameUtils.Game;
 import fr.supercomete.head.GameUtils.GameConfigurable.Configurable;
+import fr.supercomete.head.GameUtils.GameMode.ModeHandler.MapHandler;
 import fr.supercomete.head.GameUtils.GameMode.Modes.Mode;
 import fr.supercomete.head.GameUtils.Time.TimeUtility;
 import fr.supercomete.head.role.Triggers.*;
@@ -123,7 +124,7 @@ public class Cycle extends BukkitRunnable{
              */
             if (timer == (game.getTimer(Timer.EpisodeTime)).getData() / 2) {
                 game.setGamestate(Gstate.Day);
-                worldgenerator.currentPlayWorld.setTime(1000);
+                MapHandler.getMap().getPlayWorld().setTime(1000);
                 Bukkit.broadcastMessage(Main.UHCTypo + "§6Le jour se §elève§6.");
                 for (UUID uu : Main.getPlayerlist()) {
                     Player player = Bukkit.getPlayer(uu);
@@ -142,7 +143,7 @@ public class Cycle extends BukkitRunnable{
              */
             if ((time == game.getTimer(Timer.PvPTime).getData() || main.isForcedpvp()) && !hasPvpForced) {
                 hasPvpForced = true;
-                worldgenerator.currentPlayWorld.setPVP(true);
+                MapHandler.getMap().getPlayWorld().setPVP(true);
                 Bukkit.broadcastMessage(Main.UHCTypo + "§6Le PVP est activé");
                 if (game.getScenarios().contains(Scenarios.FinalHeal)) Main.finalheal();
             }
@@ -151,7 +152,7 @@ public class Cycle extends BukkitRunnable{
              */
             if (timer == (game.getTimer(Timer.EpisodeTime)).getData()) {
                 game.setGamestate(Gstate.Night);
-                worldgenerator.currentPlayWorld.setTime(18000);
+                MapHandler.getMap().getPlayWorld().setTime(18000);
                 Bukkit.broadcastMessage(Main.UHCTypo + " §9La nuit §btombe§9.");
                 timer = 0;
                 for (UUID uu : Main.getPlayerlist()) {

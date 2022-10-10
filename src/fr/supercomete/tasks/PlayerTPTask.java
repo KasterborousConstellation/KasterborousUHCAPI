@@ -1,11 +1,15 @@
 package fr.supercomete.tasks;
 import java.util.ArrayList;
 
+import fr.supercomete.head.GameUtils.GameMode.ModeHandler.MapHandler;
 import fr.supercomete.head.PlayerUtils.PlayerUtility;
+import net.minecraft.server.v1_8_R3.Entity;
+import net.minecraft.server.v1_8_R3.PacketPlayOutEntityTeleport;
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.Material;
+import org.bukkit.craftbukkit.v1_8_R3.entity.CraftPlayer;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.scheduler.BukkitRunnable;
@@ -20,9 +24,7 @@ public class PlayerTPTask extends BukkitRunnable {
 	public PlayerTPTask(Main main, ArrayList<Location> loclist) {
 		this.arrll = loclist;
 		this.main = main;
-		for (Player pl : Bukkit.getOnlinePlayers()) {
-			playerlist.add(pl);
-		}
+        playerlist.addAll(Bukkit.getOnlinePlayers());
 	}
 	@Override
 	public void run() {
@@ -36,23 +38,14 @@ public class PlayerTPTask extends BukkitRunnable {
 		} else {
 			final Player player = playerlist.get(iteration);
 			final Location loc = arrll.get(iteration);
-			worldgenerator.currentPlayWorld.loadChunk(loc.getBlockX(), loc.getBlockZ());
-			player.teleport(loc);
-			player.setMaxHealth(20);
-			player.setHealth(20);
-			player.setFoodLevel(40);
-			player.setExp(0);
-			player.setLevel(0);
-			player.getInventory().clear();
-			player.getInventory().setHelmet(new ItemStack(Material.AIR));
-			player.getInventory().setChestplate(new ItemStack(Material.AIR));
-			player.getInventory().setLeggings(new ItemStack(Material.AIR));
-			player.getInventory().setBoots(new ItemStack(Material.AIR));
-			if (player.getGameMode() != GameMode.SPECTATOR)
-				player.setGameMode(GameMode.SURVIVAL);
-			player.setBedSpawnLocation(loc);
-			for (Player pl : playerlist)
+            for (Player pl : playerlist)
                 PlayerUtility.sendActionbar(pl,"§b[§r" + (iteration + 1) + "/" + playerlist.size() + "§b] §a" + player.getName());
+            MapHandler.getMap().getPlayWorld().loadChunk(loc.getBlockX(), loc.getBlockZ());
+			player.teleport(loc);
+            PacketPlayOutEntityTeleport packet = new PacketPlayOutEntityTeleport((Entity)player);
+            for(final Player player1: Bukkit.getOnlinePlayers()){
+                ((CraftPlayer)player1).getHandle().playerConnection.sendPacket(packet);
+            }
 			iteration++;
 		}
 	}

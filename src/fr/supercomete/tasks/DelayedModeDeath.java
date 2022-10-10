@@ -1,4 +1,5 @@
 package fr.supercomete.tasks;
+import fr.supercomete.head.GameUtils.GameMode.ModeHandler.MapHandler;
 import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.Sound;
@@ -34,7 +35,8 @@ public class DelayedModeDeath extends BukkitRunnable{
 			player.teleport(new Location(deathlocation.getWorld(), 0, 200, 0));
 		}
 		if(player.getGameMode()!=GameMode.SPECTATOR){
-			PlayerUtility.PlayerRandomTPMap(player);
+            assert MapHandler.getMap() != null;
+            MapHandler.getMap().PlayerRandomTPMap(player,12);
 			stop(delayed);
 		}
 		if(Main.currentGame.getGamestate()==Gstate.Waiting){

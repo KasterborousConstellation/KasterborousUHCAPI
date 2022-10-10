@@ -135,14 +135,6 @@ public class PlayerUtility{
 		}
 		return target;
 	}
-	public static void PlayerRandomTPMap(Player player) {
-		ArrayList<UUID> uu = new ArrayList<UUID>();
-		uu.add(player.getUniqueId());
-		Main.currentGame.setNodamagePlayerList(uu);
-		NoDamage nodamage = new NoDamage(main, 20);
-		nodamage.runTaskTimer(main, 0, 20L);
-		player.teleport(new Location(worldgenerator.currentPlayWorld,new Random().nextInt((int)(Main.currentGame.getCurrentBorder()/2-(Main.currentGame.getCurrentBorder())/4)),150,new Random().nextInt((int)(Main.currentGame.getCurrentBorder()/2-(Main.currentGame.getCurrentBorder())/4))));
-	}
 	public static void addProperlyEffect(@Nullable Player player, PotionEffect effect) {
 		/*
 		 * Add a potion effect only if the player has the same potioneffect with a lower amplifier or if the player hasn't this potioneffect

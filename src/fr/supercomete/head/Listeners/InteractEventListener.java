@@ -91,52 +91,7 @@ final class InteractEventListener implements Listener {
             if(RoleHandler.IsRoleGenerated()){
                 final Role role = RoleHandler.getRoleOf(player);
                 if(role instanceof Trigger_OnInteractWithUUIDItem){
-                    ((Trigger_OnInteractWithUUIDItem)role).OnInteractWithUUIDItem(player,NbtTagHandler.getUUIDTAG(currentItem),e.getAction());
-                }
-            }
-        }
-        if(NbtTagHandler.hasAnyTAG(currentItem,"FLAG")){
-            e.setCancelled(true);
-            int id = (int) NbtTagHandler.getAnyTag(currentItem,"FLAG");
-            if(id==104) {
-                if (RoleHandler.IsRoleGenerated()) {
-                    if (RoleHandler.getRoleList().size() > 1) {
-                        final ArrayList<Player> players = new ArrayList<>();
-                        for (Player p : Bukkit.getOnlinePlayers()) {
-                            if (RoleHandler.getRoleList().containsKey(p.getUniqueId())) {
-                                players.add(p);
-                            }
-                        }
-                        int random = (players.size() == 0) ? 0 : new Random().nextInt(players.size());
-                        final Player r1 = players.get(random);
-                        players.remove(r1);
-                        random = (players.size() == 0) ? 0 : new Random().nextInt(players.size());
-                        final Player r2 = players.get(random);
-                        final Role role1 = RoleHandler.getRoleOf(r1);
-                        final Role role2 = RoleHandler.getRoleOf(r2);
-                        final String str = (role1.getCamp().equals(role2.getCamp())) ? "§asont dans le même camp" : "§cne sont pas dans le même camp";
-                        player.sendMessage(Main.UHCTypo + r1.getName() + " et " + r2.getName() + " " + str);
-                        if (player.getItemInHand().getAmount() > 1) {
-                            player.getItemInHand().setAmount(player.getItemInHand().getAmount() - 1);
-                        } else {
-                            player.setItemInHand(null);
-                        }
-
-                    } else {
-                        player.sendMessage(Main.UHCTypo + "§cVous ne pouvez pas utiliser cet objet.");
-                    }
-                }
-            }else if(id ==105) {
-                if (RoleHandler.IsRoleGenerated()) {
-                    if (player.getItemInHand().getAmount() > 1) {
-                        player.getItemInHand().setAmount(player.getItemInHand().getAmount() - 1);
-                    } else {
-                        player.setItemInHand(null);
-                    }
-                    final PotionEffect speed = new PotionEffect(PotionEffectType.SPEED, 20 * 60, 0, false, false);
-                    final PotionEffect resistance = new PotionEffect(PotionEffectType.DAMAGE_RESISTANCE, 20 * 60, 0, false, false);
-                    final PotionEffect force = new PotionEffect(PotionEffectType.INCREASE_DAMAGE, 20 * 60, 0, false, false);
-                    PlayerUtility.addProperlyEffect(player, Arrays.asList(speed, resistance, force).get(new Random().nextInt(3)));
+                    ((Trigger_OnInteractWithUUIDItem)role).OnInteractWithUUIDItem(player,NbtTagHandler.getUUIDTAG(currentItem),e);
                 }
             }
         }

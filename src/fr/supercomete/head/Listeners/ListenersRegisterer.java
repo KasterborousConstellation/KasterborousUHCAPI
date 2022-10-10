@@ -36,7 +36,7 @@ public class ListenersRegisterer {
 			pm.registerEvents(new InteractEventListener(), main);
 			pm.registerEvents(new EntityDamageListeners(main), main);
 			pm.registerEvents(new JoinListener(main), main);
-
+            pm.registerEvents(new RoleModeGUI(), main);
 			pm.registerEvents(new OnQuitListener(), main);
 			pm.registerEvents(new PlayerInteractEntityListener(), main);
 			pm.registerEvents(new EnchantItemListener(), main);

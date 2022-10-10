@@ -13,7 +13,7 @@ import org.bukkit.inventory.meta.ItemMeta;
 
 import fr.supercomete.datamanager.FileManager.Fileutils;
 import fr.supercomete.enums.Gstate;
-import fr.supercomete.head.GameUtils.GameMode.ModeHandler.ModeAPI;
+import fr.supercomete.head.GameUtils.GameMode.ModeHandler.KtbsAPI;
 import fr.supercomete.head.GameUtils.GameMode.Modes.Mode;
 import fr.supercomete.head.GameUtils.Time.Timer;
 import fr.supercomete.head.core.Main;
@@ -43,7 +43,7 @@ public class ConfigurationFileManager{
 			return;
 		}
 
-		final File folder = new File(getModePath(ModeAPI.getModeByIntRepresentation(Main.currentGame.getEmode())), "/" + player.getUniqueId() + "/");
+		final File folder = new File(getModePath(KtbsAPI.getCurrentGame().getMode()), "/" + player.getUniqueId() + "/");
 		final File file = new File(folder, game.getGameName() + ".json");
 		if (!file.exists()) {
 			try {
@@ -58,7 +58,7 @@ public class ConfigurationFileManager{
 	}
 
 	public static File getPlayerPath(Player player) {
-		return new File(getModePath(ModeAPI.getModeByIntRepresentation(Main.currentGame.getEmode())), "/" + player.getUniqueId() + "/");
+		return new File(getModePath(KtbsAPI.getCurrentGame().getMode()), "/" + player.getUniqueId() + "/");
 	}
 
 	public static ArrayList<File> getallJsonInsideFolder(File folder) {
@@ -72,7 +72,7 @@ public class ConfigurationFileManager{
 		return filelist;
 	}
 	public static void RemoveFile(Player player, int index) {
-		final File folder = new File(getModePath(ModeAPI.getModeByIntRepresentation(Main.currentGame.getEmode())), "/" + player.getUniqueId() + "/");
+		final File folder = new File(getModePath(KtbsAPI.getCurrentGame().getMode()), "/" + player.getUniqueId() + "/");
 		final ArrayList<File> configs = getallJsonInsideFolder(folder);
 		final File file = configs.get(index);
 		file.delete();
@@ -86,8 +86,8 @@ public class ConfigurationFileManager{
 			Game game = Main.manager.deserialize(json);
 			ArrayList<String> strl = new ArrayList<String>();
 			int nbrscenarios = game.getScenarios().size();
-			strl.add("§7 │" + ChatColor.WHITE + "Mode: §1" + ModeAPI.getModeByIntRepresentation(game.getEmode()).getName());
-			if (ModeAPI.getModeByIntRepresentation(game.getEmode()) instanceof CampMode) {
+			strl.add("§7 │" + ChatColor.WHITE + "Mode: §1" + KtbsAPI.getCurrentGame().getMode().getName());
+			if (KtbsAPI.getCurrentGame().getMode()instanceof CampMode) {
 				strl.add("§7 │" + ChatColor.WHITE + "Roles: §4" + Main.CountIntegerValue(game.getRoleCompoMap()));
 			}
 			strl.add("§7 │" + ChatColor.WHITE + "Bordure: " + ChatColor.GOLD
@@ -97,7 +97,7 @@ public class ConfigurationFileManager{
 					+ TimeUtility.transform(game.getTimer(Timer.PvPTime).getData(), "§7", "§7", "§7"));
 			strl.add("§7 │" + ChatColor.WHITE + "Bordure: " + ChatColor.RED
 					+ TimeUtility.transform(game.getTimer(Timer.BorderTime).getData(), "§7", "§7", "§7"));
-			if (ModeAPI.getModeByIntRepresentation(game.getEmode()) instanceof CampMode) {
+			if (KtbsAPI.getCurrentGame().getMode() instanceof CampMode) {
 				strl.add("§7 │" + ChatColor.WHITE + "Role: " + ChatColor.RED
 						+ TimeUtility.transform(game.getTimer(Timer.RoleTime).getData(), "§7", "§7", "§7"));
 			}
@@ -125,12 +125,11 @@ public class ConfigurationFileManager{
 	}
 
 	public static void loadConfigFile(Player player, int index) {
-		final File folder = new File(getModePath(ModeAPI.getModeByIntRepresentation(Main.currentGame.getEmode())), "/" + player.getUniqueId() + "/");
+		final File folder = new File(getModePath(KtbsAPI.getCurrentGame().getMode()), "/" + player.getUniqueId() + "/");
 		final ArrayList<File> configs = getallJsonInsideFolder(folder);
 		final File file = configs.get(index);
 		final String json = Fileutils.loadContent(file);
-		final Game game = Main.manager.deserialize(json);
-		Main.currentGame = game;
+        Main.currentGame = Main.manager.deserialize(json);
 		player.sendMessage(Main.UHCTypo + "Configuration chargée");
 	}
 }

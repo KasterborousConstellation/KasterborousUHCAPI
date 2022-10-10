@@ -2,9 +2,6 @@ package fr.supercomete.head.Exception;
 
 public class InvalidModeException extends Exception {
 
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 3629547882651569328L;
 
 	public InvalidModeException() {

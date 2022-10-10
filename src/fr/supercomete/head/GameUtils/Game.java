@@ -17,7 +17,7 @@ import fr.supercomete.enums.GenerationMode;
 import fr.supercomete.enums.Gstate;
 import fr.supercomete.head.GameUtils.Scenarios.Scenarios;
 import fr.supercomete.head.GameUtils.GameConfigurable.Configurable;
-import fr.supercomete.head.GameUtils.GameMode.ModeHandler.ModeAPI;
+import fr.supercomete.head.GameUtils.GameMode.ModeHandler.KtbsAPI;
 import fr.supercomete.head.GameUtils.GameMode.Modes.Mode;
 import fr.supercomete.head.GameUtils.Time.BoundedWatchTime;
 import fr.supercomete.head.GameUtils.Time.Timer;
@@ -27,7 +27,7 @@ import fr.supercomete.head.core.Main;
 import org.bukkit.scheduler.BukkitRunnable;
 
 public class Game {
-	private int emode;
+	private String emode;
 	private Gstate gamestate = Gstate.Waiting;
 	private int maxNumberOfplayer = 0;
 	private String GameName = "UHC #" + new Random().nextInt(10000);
@@ -70,11 +70,11 @@ public class Game {
 		getArmorhash().put(Material.IRON_BOOTS, true);
 
 		for(Timer timer :Timer.values()) {
-			if(timer.getCompatibility().IsCompatible(ModeAPI.getModeByIntRepresentation(emode))&&timer.getBound()==null)
+			if(timer.getCompatibility().IsCompatible(KtbsAPI.getModeByName(emode))&&timer.getBound()==null)
 			timelist.add(new WatchTime(timer));
 		}
 		for(Timer timer : Timer.values()) {
-			if(timer.getCompatibility().IsCompatible(ModeAPI.getModeByIntRepresentation(emode))&&timer.getBound()!=null) {
+			if(timer.getCompatibility().IsCompatible(KtbsAPI.getModeByName(emode))&&timer.getBound()!=null) {
 				timelist.add(new BoundedWatchTime(timer,timer.getBound()));
 			}
 		}
@@ -103,12 +103,12 @@ public class Game {
 		this.timelist = timelist;
 	}
 
-	public Game(int indexmode,Main main) {
-		this.setEmode(indexmode);
+	public Game(String emode,Main main) {
+		this.setEmode(emode);
 		this.init(main);
-		for (int ps = 0; ps < ModeAPI.getConfigurables().size(); ps++) {
+		for (int ps = 0; ps < KtbsAPI.getConfigurables().size(); ps++) {
 			if (ps >= getConfigList().size()) {
-                KasterBorousConfigurable conf = ModeAPI.getConfigurables().get(ps);
+                KasterBorousConfigurable conf = KtbsAPI.getConfigurables().get(ps);
 				getConfigList().add(new Configurable(conf,conf.getBaseData(),conf.getType()));
 			}
 		}
@@ -156,21 +156,21 @@ public class Game {
 	public HashMap<Class<?>, Integer> getRoleCompoMap() {
 		HashMap<Class<?>, Integer> hash = new HashMap<>();
 		for (Entry<String, Integer> entry : roleCompoMap.entrySet()) {
-			hash.put(ModeAPI.getRoleClassByString(entry.getKey()), entry.getValue());
+			hash.put(KtbsAPI.getRoleClassByString(entry.getKey()), entry.getValue());
 		}
 		return hash;
 	}
 	public void setRoleCompoMap(HashMap<Class<?>, Integer> roleCompoMap) {
         HashMap<String, Integer> ret = new HashMap<String, Integer>();
 		for (Entry<Class<?>, Integer> src : roleCompoMap.entrySet()) {
-			ret.put(Objects.requireNonNull(ModeAPI.getRoleByClass(src.getKey())).getName(), src.getValue());
+			ret.put(Objects.requireNonNull(KtbsAPI.getRoleByClass(src.getKey())).getName(), src.getValue());
 		}
 		this.roleCompoMap = ret;
 	}
 
 	public boolean hasClassInRoleCompoMap(Class<?> claz) {
 		for (String c : roleCompoMap.keySet()) {
-			Class<?> cl = ModeAPI.getRoleClassByString(c);
+			Class<?> cl = KtbsAPI.getRoleClassByString(c);
             if (cl!=null&&cl.equals(claz))
 				return true;
 		}
@@ -300,7 +300,7 @@ public class Game {
         return "";
 	}
 	public Mode getMode() {
-		return ModeAPI.getModeByIntRepresentation(this.emode);
+		return KtbsAPI.getModeByName(this.emode);
 	}
 
 
@@ -352,11 +352,11 @@ public class Game {
 		this.armorhash = armorhash;
 	}
 
-	public int getEmode() {
+	public String getEmode() {
 		return emode;
 	}
 
-	public void setEmode(int emode) {
+	public void setEmode(String emode) {
 		this.emode = emode;
 	}
 	/**

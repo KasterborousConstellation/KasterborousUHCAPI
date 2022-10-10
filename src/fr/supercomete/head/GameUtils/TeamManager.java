@@ -5,7 +5,7 @@ import java.util.UUID;
 
 import org.bukkit.ChatColor;
 
-import fr.supercomete.head.GameUtils.GameMode.ModeHandler.ModeAPI;
+import fr.supercomete.head.GameUtils.GameMode.ModeHandler.KtbsAPI;
 import fr.supercomete.head.GameUtils.GameMode.Modes.UHCClassic;
 import fr.supercomete.head.core.Main;
 
@@ -19,7 +19,7 @@ public final class TeamManager {
 	public static void createTeams(int numberofteam) {
 		ArrayList<Team> teamlist=Main.currentGame.getTeamList();
 		teamlist.clear();
-		boolean bol= !(ModeAPI.getModeByIntRepresentation(Main.currentGame.getEmode()) instanceof UHCClassic);
+		boolean bol= !(KtbsAPI.getCurrentGame().getMode() instanceof UHCClassic);
 		int total=numberofteam;
 		for(int r=0;r<numberofteam/9+1;r++){
 			int n=total;
@@ -49,21 +49,18 @@ public final class TeamManager {
 	}
 	public static ChatColor getColorOfShortColor(short sh) {
 		switch (15-sh) {
-		case 0:
-			return ChatColor.WHITE;
-		case 1:
+            case 1:
 			return ChatColor.GOLD;
 		case 2:
-			return ChatColor.LIGHT_PURPLE;
+            case 6:
+                return ChatColor.LIGHT_PURPLE;
 		case 3:
 			return ChatColor.AQUA;
 		case 4:
 			return ChatColor.YELLOW;
 		case 5:
 			return ChatColor.GREEN;
-		case 6:
-			return ChatColor.LIGHT_PURPLE;
-		case 7:
+            case 7:
 			return ChatColor.DARK_GRAY;
 		case 8:
 			return ChatColor.GRAY;
@@ -73,15 +70,11 @@ public final class TeamManager {
 			return ChatColor.DARK_PURPLE;
 		case 11:
 			return ChatColor.BLUE;
-		case 12:
-			return ChatColor.WHITE;
-		case 13:
+            case 13:
 			return ChatColor.DARK_GREEN;
 		case 14:
 			return ChatColor.RED ;
-		case 15:
-			return ChatColor.WHITE;
-		default:
+            default:
 			return ChatColor.WHITE;
 		}
 		

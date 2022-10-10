@@ -10,6 +10,7 @@ import fr.supercomete.head.GameUtils.Enchants.EnchantLimit;
 import fr.supercomete.head.GameUtils.Enchants.EnchantType;
 import fr.supercomete.head.GameUtils.GUI.EnchantLimitGUI;
 import fr.supercomete.head.GameUtils.GameConfigurable.Configurable;
+import fr.supercomete.head.GameUtils.GameMode.ModeHandler.MapHandler;
 import fr.supercomete.head.GameUtils.Scenarios.KasterborousScenario;
 import fr.supercomete.head.GameUtils.Time.TimeUtility;
 import fr.supercomete.head.GameUtils.Time.TimerType;
@@ -45,7 +46,7 @@ import fr.supercomete.head.GameUtils.TeamManager;
 import fr.supercomete.head.GameUtils.WhiteListHandler;
 import fr.supercomete.head.GameUtils.GUI.AdvancedRulesGUI;
 import fr.supercomete.head.GameUtils.GUI.ModeGUI;
-import fr.supercomete.head.GameUtils.GameMode.ModeHandler.ModeAPI;
+import fr.supercomete.head.GameUtils.GameMode.ModeHandler.KtbsAPI;
 import fr.supercomete.head.GameUtils.Time.Timer;
 import fr.supercomete.head.Inventory.InventoryHandler;
 import fr.supercomete.head.Inventory.InventoryUtils;
@@ -200,7 +201,7 @@ final class InventoryClickListeners implements Listener{
 			event.setCancelled(true);
 			switch (currentSlot) {
 			case 49:
-				new ModeGUI(ModeAPI.getModeByIntRepresentation(Main.currentGame.getEmode()), player).open();
+				new ModeGUI(KtbsAPI.getCurrentGame().getMode(), player).open();
 				break;
 			case 4:
 				ConfigurationFileManager.createConfigFile(Main.currentGame, player);
@@ -244,7 +245,7 @@ final class InventoryClickListeners implements Listener{
 				main.updateSlotsInventory(player);
 				break;
 			case 22:
-				new ModeGUI(ModeAPI.getModeByIntRepresentation(Main.currentGame.getEmode()), player).open();
+				new ModeGUI(KtbsAPI.getCurrentGame().getMode(), player).open();
 				break;
 			default:
 				break;
@@ -254,16 +255,16 @@ final class InventoryClickListeners implements Listener{
 			event.setCancelled(true);
 			switch (currentSlot) {
 			case 49:
-				new ModeGUI(ModeAPI.getModeByIntRepresentation(Main.currentGame.getEmode()), player).open();
+				new ModeGUI(KtbsAPI.getCurrentGame().getMode(), player).open();
 				break;
 			default:
-				if (currentSlot - 9 >= 0 && currentSlot - 9 < ModeAPI.getScenarios().size()) {
-					if (Main.currentGame.getScenarios().contains(ModeAPI.getScenarios().get(currentSlot - 9))) {
-						main.removeScenarios(ModeAPI.getScenarios().get(currentSlot-9));
+				if (currentSlot - 9 >= 0 && currentSlot - 9 < KtbsAPI.getScenarios().size()) {
+					if (Main.currentGame.getScenarios().contains(KtbsAPI.getScenarios().get(currentSlot - 9))) {
+						main.removeScenarios(KtbsAPI.getScenarios().get(currentSlot-9));
 					} else {
-					    KasterborousScenario scenarios= ModeAPI.getScenarios().get(currentSlot - 9);
+					    KasterborousScenario scenarios= KtbsAPI.getScenarios().get(currentSlot - 9);
 						if (scenarios.getCompatiblity().IsCompatible(Main.currentGame.getMode()))
-						    main.addScenarios(ModeAPI.getScenarios().get(currentSlot - 9));
+						    main.addScenarios(KtbsAPI.getScenarios().get(currentSlot - 9));
 						else
 							player.sendMessage(Main.UHCTypo + "§CScénario imcompatible");
 					}
@@ -302,7 +303,7 @@ final class InventoryClickListeners implements Listener{
 			event.setCancelled(true);
 			switch (currentSlot) {
 			case 49:
-				new ModeGUI(ModeAPI.getModeByIntRepresentation(Main.currentGame.getEmode()), player).open();
+				new ModeGUI(KtbsAPI.getCurrentGame().getMode(), player).open();
 				break;
 			case 9:
 			case 10:
@@ -354,7 +355,7 @@ final class InventoryClickListeners implements Listener{
 			event.setCancelled(true);
 			switch (currentSlot) {
 			case 22:
-				new ModeGUI(ModeAPI.getModeByIntRepresentation(Main.currentGame.getEmode()), player).open();
+				new ModeGUI(KtbsAPI.getCurrentGame().getMode(), player).open();
 				break;
 			case 12:
 				if (currentClick.isShiftClick() && currentClick.isRightClick())
@@ -526,7 +527,7 @@ final class InventoryClickListeners implements Listener{
 				player.getOpenInventory().setItem(22, it);
 				break;
 			case 49:
-				new ModeGUI(ModeAPI.getModeByIntRepresentation(Main.currentGame.getEmode()), player).open();
+				new ModeGUI(KtbsAPI.getCurrentGame().getMode(), player).open();
 				break;
 			case 13:
 				if(Main.currentGame.getGenmode()==GenerationMode.Done ||Main.currentGame.getGenmode()==GenerationMode.WorldCreatedOnly) {
@@ -548,7 +549,7 @@ final class InventoryClickListeners implements Listener{
 						main.getConfig().getInt("serverapi.spawn.z")));
 				break;
 			case 1:
-				player.teleport(new Location(worldgenerator.currentPlayWorld, 0,100,0));
+				player.teleport(new Location(MapHandler.getMap().getPlayWorld(), 0,100,0));
 				break;
 			default:
 				if(currentSlot>1 && currentSlot < 2+Main.currentGame.getMode().getStructure().size()) {
@@ -611,7 +612,7 @@ final class InventoryClickListeners implements Listener{
 				TeamManager.setupTeams();
 				break;
 			case 22:
-				new ModeGUI(ModeAPI.getModeByIntRepresentation(Main.currentGame.getEmode()), player).open();
+				new ModeGUI(KtbsAPI.getCurrentGame().getMode(), player).open();
 				break;
 			default:
 				break;
@@ -646,7 +647,7 @@ final class InventoryClickListeners implements Listener{
 			event.setCancelled(true);
 			switch (currentSlot) {
 			case 22:
-				new ModeGUI(ModeAPI.getModeByIntRepresentation(Main.currentGame.getEmode()), player).open();
+				new ModeGUI(KtbsAPI.getCurrentGame().getMode(), player).open();
 				break;
 			case 14:
 				ArrayList<UUID> it = new ArrayList<UUID>();
@@ -669,7 +670,7 @@ final class InventoryClickListeners implements Listener{
 			event.setCancelled(true);
 			switch (currentSlot) {
 			case 22:
-				new ModeGUI(ModeAPI.getModeByIntRepresentation(Main.currentGame.getEmode()), player).open();
+				new ModeGUI(KtbsAPI.getCurrentGame().getMode(), player).open();
 				break;
 			case 11:
 				player.sendMessage("§aWhitelist "+Main.TranslateBoolean(Bukkit.hasWhitelist()));
@@ -697,7 +698,7 @@ final class InventoryClickListeners implements Listener{
 			event.setCancelled(true);
 			switch (currentSlot) {
 			case 49:
-				new ModeGUI(ModeAPI.getModeByIntRepresentation(Main.currentGame.getEmode()), player).open();
+				new ModeGUI(KtbsAPI.getCurrentGame().getMode(), player).open();
 				break;
 			default:
 			}

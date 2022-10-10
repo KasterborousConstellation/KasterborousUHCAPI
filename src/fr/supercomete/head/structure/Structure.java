@@ -1,5 +1,6 @@
 package fr.supercomete.head.structure;
 
+import fr.supercomete.head.GameUtils.GameMode.ModeHandler.MapHandler;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.World;
@@ -42,7 +43,7 @@ public class Structure {
 		return structurename;
 	}
 	public Location getLocation() {
-		return new Location(worldgenerator.structureworld, x, y, z);
+		return new Location(MapHandler.getMap().getStructureWorld(), x, y, z);
 	}
 	public void setLocation(Location location) {
 		x=(int)location.getX();

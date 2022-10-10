@@ -1,6 +1,8 @@
 package fr.supercomete.head.world;
 import java.io.File;
 import java.util.ArrayList;
+
+import fr.supercomete.head.GameUtils.GameMode.ModeHandler.MapHandler;
 import org.bukkit.Bukkit;
 import org.bukkit.World;
 import org.bukkit.scheduler.BukkitRunnable;
@@ -15,7 +17,7 @@ public class WorldGarbageCollector {
 			@Override
 			public void run() {
 				for(World world : Bukkit.getWorlds()) {
-                    if(!(allowed.contains(world.getName())|| world == worldgenerator.currentPlayWorld|| world == worldgenerator.structureworld || world.getPlayers().size()!=0)) {
+                    if(!(allowed.contains(world.getName())|| world == (MapHandler.getMap() != null ? MapHandler.getMap().getPlayWorld() : false) || world == (MapHandler.getMap() != null ? MapHandler.getMap().getStructureWorld() : false) || world.getPlayers().size()!=0)) {
                         unloadWorld(world);
                         deleteWorld(world.getWorldFolder());
                     }

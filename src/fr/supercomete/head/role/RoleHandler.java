@@ -6,10 +6,11 @@ import java.util.HashMap;
 import java.util.Random;
 import java.util.UUID;
 import fr.supercomete.commands.RolesCommand;
-import fr.supercomete.head.GameUtils.GameMode.ModeHandler.ModeAPI;
+import fr.supercomete.head.GameUtils.GameMode.ModeHandler.KtbsAPI;
 import fr.supercomete.head.GameUtils.GameMode.ModeModifier.CampMode;
 import fr.supercomete.head.GameUtils.Time.TimeUtility;
 import org.bukkit.Bukkit;
+import org.bukkit.GameMode;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import fr.supercomete.enums.Camps;
@@ -31,7 +32,7 @@ public class RoleHandler {
 		ArrayList<UUID> uu=new ArrayList<UUID>();
 		HashMap<Class<?>,Integer> rolelist=Main.currentGame.getRoleCompoMap();
 		for(UUID uud:Main.getPlayerlist()) {
-			if(Bukkit.getPlayer(uud)==null || !(Bukkit.getPlayer(uud).isOnline())) {
+			if(Bukkit.getPlayer(uud)==null || !(Bukkit.getPlayer(uud).isOnline()) || Bukkit.getPlayer(uud).getGameMode()==GameMode.SPECTATOR ||Main.bypass.contains(uud)) {
 				Main.playerlist.remove(uud);
 			}else
                 uu.add(uud);
@@ -108,20 +109,11 @@ public class RoleHandler {
 		player.sendMessage("---------------------------------------------");
 		player.sendMessage("§lVotre rôle est "+role.getCamp().getColor()+role.getName()+" "+addDisplay);
 		player.sendMessage("  §lCamp: "+role.getCamp().getColor()+role.getCamp().getName());
-		
-		/*if(role instanceof DWRole) {
-            DWRole dwrole=(DWRole)role;
-			StringBuilder status= new StringBuilder();
-            if(dwrole.getStatus().length==0) {
-				status = new StringBuilder("§bAucun");
-			}else {
-				for(Status stat :dwrole.getStatus()) {
-					status.append(stat.getName()).append("  ");
-				}
-			}
-			player.sendMessage("  §lStatus: "+ status);
-		}*/
-		
+        if(role.getAddon()!=null){
+            role.getAddon().DisplayHead(player);
+        }
+
+
 		if(!role.getRoleinfo().isEmpty()) { 
 			player.sendMessage("Description:");
 			for(String str:role.getRoleinfo()) {
@@ -136,15 +128,9 @@ public class RoleHandler {
 			}
 		}
 		player.sendMessage("---------------------------------------------");
-		/*if(role instanceof DWRole) {
-            DWRole dwrole =(DWRole) role;
-            for(TardisKey key:dwrole.getTardiskeys()) {
-				String content =key.getBonus().getBonusToString();
-				
-				player.sendMessage("§b"+key.getKeytype().getName()+": "+content);
-			}
-			
-		}*/
+        if(role.getAddon()!=null){
+            role.getAddon().DisplayBottom(player);
+        }
 	}
 	public static void DisplayDeath(Player player) {
 		DisplayDeath(new Offline_Player(player));
@@ -199,7 +185,7 @@ public class RoleHandler {
 		return"§6"+((RoleHandler.getWhoHaveRole(rt)==null)?"Aucun":Bukkit.getPlayer(RoleHandler.getWhoHaveRole(rt)).getName());
 	}
     public static void showcompo(final Player player){
-        if (ModeAPI.getModeByIntRepresentation(Main.currentGame.getEmode()) instanceof CampMode) {
+        if (KtbsAPI.getCurrentGame().getMode() instanceof CampMode) {
             if (RoleHandler.IsRoleGenerated()) {
                 HashMap<Class<?>, Integer> map = new HashMap<>();
                 for (Role r : RoleHandler.getRoleList().values()) {
