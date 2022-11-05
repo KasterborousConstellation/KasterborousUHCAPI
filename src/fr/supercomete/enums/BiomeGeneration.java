@@ -28,7 +28,7 @@ public enum BiomeGeneration {
 		if((modification==-1)) {
 			return InventoryUtils.getItem(material, null,null);
 		}else
-		return InventoryUtils.createColorItem(material, null, 1, modification);
+		    return InventoryUtils.createColorItem(material, null, 1, modification);
 	}
 	public Biome getTargetBiome() {
 		return biome;

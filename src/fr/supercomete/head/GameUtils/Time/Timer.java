@@ -8,7 +8,6 @@ public enum Timer {
 	BorderTime("Début du mouvement de la bordure",60,Compatibility.allModes,4800,TimerType.TimeDependent,null,true),
 	RoleTime("Roles",60,Compatibility.allModes,1200,TimerType.TimeDependent,null,true),
 	InvincibilityTime("Fin de l'invincibilité",10,Compatibility.allModes,15,TimerType.TimeDependent,null,false),
-	ChoiceDelay("Delai maximum de choix de version",30,Compatibility.allModes,5*60,TimerType.Literal,null,false),
 	;
 	private final String name;
 	private final int min;

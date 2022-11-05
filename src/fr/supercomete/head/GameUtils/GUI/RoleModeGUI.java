@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 
+import fr.supercomete.head.role.KasterBorousCamp;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -15,7 +16,6 @@ import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 
-import fr.supercomete.enums.Camps;
 import fr.supercomete.head.Exception.InvalidModeException;
 import fr.supercomete.head.GameUtils.TeamManager;
 import fr.supercomete.head.GameUtils.GameMode.ModeHandler.KtbsAPI;
@@ -66,7 +66,7 @@ public class RoleModeGUI extends GUI {
 		}
 		int i = 0;
 
-		for (Camps camp : m.getPrimitiveCamps()) {
+		for (KasterBorousCamp camp : m.getPrimitiveCamps()) {
 			tmp.setItem(i, InventoryUtils.createColorItem(Material.WOOL, "§r" + camp.getColor() + camp.getName(), 1,
 					TeamManager.getShortOfChatColor(camp.getColor())));
 			i++;

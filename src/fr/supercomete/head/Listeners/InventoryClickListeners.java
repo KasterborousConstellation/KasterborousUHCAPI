@@ -32,15 +32,11 @@ import org.bukkit.inventory.CraftingInventory;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
-import org.bukkit.potion.PotionEffect;
-import org.bukkit.potion.PotionEffectType;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import fr.supercomete.enums.BiomeGeneration;
 import fr.supercomete.enums.GenerationMode;
 import fr.supercomete.enums.Gstate;
-import fr.supercomete.head.GameUtils.Scenarios.Scenarios;
-import fr.supercomete.head.GameUtils.ConfigurationFileManager;
 import fr.supercomete.head.GameUtils.Team;
 import fr.supercomete.head.GameUtils.TeamManager;
 import fr.supercomete.head.GameUtils.WhiteListHandler;
@@ -52,7 +48,6 @@ import fr.supercomete.head.Inventory.InventoryHandler;
 import fr.supercomete.head.Inventory.InventoryUtils;
 import fr.supercomete.head.PlayerUtils.PlayerUtility;
 import fr.supercomete.head.core.Main;
-import fr.supercomete.head.role.RoleHandler;
 import fr.supercomete.head.structure.Structure;
 import fr.supercomete.head.world.WorldSeedGetter;
 import fr.supercomete.head.world.worldgenerator;
@@ -197,30 +192,6 @@ final class InventoryClickListeners implements Listener{
 				break;
 			}
 			break;
-		case "§dFichiers de sauvegarde":
-			event.setCancelled(true);
-			switch (currentSlot) {
-			case 49:
-				new ModeGUI(KtbsAPI.getCurrentGame().getMode(), player).open();
-				break;
-			case 4:
-				ConfigurationFileManager.createConfigFile(Main.currentGame, player);
-				Main.updateConfigFile(player);
-				break;
-			default:
-				if (currentSlot > 8 && currentSlot < 9 + ConfigurationFileManager
-						.getallJsonInsideFolder(ConfigurationFileManager.getPlayerPath(player)).size()) {
-					if (currentClick == ClickType.RIGHT) {
-						ConfigurationFileManager.loadConfigFile(player, currentSlot - 9);
-					} else if (currentClick.isLeftClick() && currentClick.isShiftClick()) {
-						ConfigurationFileManager.RemoveFile(player, currentSlot - 9);
-						Main.updateConfigFile(player);
-					}
-				}
-				break;
-			}
-
-			break;
 		case "§dSlots":
 			event.setCancelled(true);
 			switch (currentSlot) {
@@ -251,28 +222,7 @@ final class InventoryClickListeners implements Listener{
 				break;
 			}
 			break;
-		case "§dScenarios":
-			event.setCancelled(true);
-			switch (currentSlot) {
-			case 49:
-				new ModeGUI(KtbsAPI.getCurrentGame().getMode(), player).open();
-				break;
-			default:
-				if (currentSlot - 9 >= 0 && currentSlot - 9 < KtbsAPI.getScenarios().size()) {
-					if (Main.currentGame.getScenarios().contains(KtbsAPI.getScenarios().get(currentSlot - 9))) {
-						main.removeScenarios(KtbsAPI.getScenarios().get(currentSlot-9));
-					} else {
-					    KasterborousScenario scenarios= KtbsAPI.getScenarios().get(currentSlot - 9);
-						if (scenarios.getCompatiblity().IsCompatible(Main.currentGame.getMode()))
-						    main.addScenarios(KtbsAPI.getScenarios().get(currentSlot - 9));
-						else
-							player.sendMessage(Main.UHCTypo + "§CScénario imcompatible");
-					}
-					main.updateScenariosInventory(player);
-				}
-				break;
-			}
-			break;
+
 		case "§dRules":
 			event.setCancelled(true);
 			switch (currentSlot) {

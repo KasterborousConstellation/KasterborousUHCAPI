@@ -19,7 +19,6 @@ public enum Scenarios implements KasterborousScenario {
 	KillSwitch("KillSwitch", Compatibility.allModes,Material.ENDER_PEARL),
 	GoldenHead("GoldenHead", Compatibility.allModes,Material.GOLDEN_APPLE),
 	BetaZombie("BetaZombie", Compatibility.allModes,Material.ROTTEN_FLESH),
-	DiamondLimit("DiamondLimit", Compatibility.allModes,Material.DIAMOND),
 	BloodDiamond("BloodDiamond", Compatibility.allModes,Material.REDSTONE),
 	NoFood("NoFood", Compatibility.allModes,Material.GOLDEN_CARROT)
     ;

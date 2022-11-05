@@ -71,6 +71,4 @@ public class ScoreBoardManager {
 		list.add(ChatColor.BOLD+"§7------------------");
 		return list;
 	}
-	
-
 }

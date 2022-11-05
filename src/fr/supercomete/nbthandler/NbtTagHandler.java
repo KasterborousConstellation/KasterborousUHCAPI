@@ -1,4 +1,5 @@
 package fr.supercomete.nbthandler;
+
 import org.bukkit.craftbukkit.v1_8_R3.inventory.CraftItemStack;
 import org.bukkit.inventory.ItemStack;
 public final class NbtTagHandler {

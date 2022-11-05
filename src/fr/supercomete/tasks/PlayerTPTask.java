@@ -42,7 +42,7 @@ public class PlayerTPTask extends BukkitRunnable {
                 PlayerUtility.sendActionbar(pl,"§b[§r" + (iteration + 1) + "/" + playerlist.size() + "§b] §a" + player.getName());
             MapHandler.getMap().getPlayWorld().loadChunk(loc.getBlockX(), loc.getBlockZ());
 			player.teleport(loc);
-            PacketPlayOutEntityTeleport packet = new PacketPlayOutEntityTeleport((Entity)player);
+            PacketPlayOutEntityTeleport packet = new PacketPlayOutEntityTeleport(((CraftPlayer) player).getHandle());
             for(final Player player1: Bukkit.getOnlinePlayers()){
                 ((CraftPlayer)player1).getHandle().playerConnection.sendPacket(packet);
             }

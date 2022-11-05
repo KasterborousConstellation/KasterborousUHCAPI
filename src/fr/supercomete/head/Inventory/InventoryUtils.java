@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.UUID;
 
+
 import fr.supercomete.nbthandler.NbtTagHandler;
 import net.md_5.bungee.api.chat.ClickEvent;
 import org.bukkit.Location;
@@ -19,7 +20,7 @@ import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.potion.Potion;
 import org.bukkit.potion.PotionType;
 
-import fr.supercomete.head.core.Main;
+
 import net.md_5.bungee.api.chat.ComponentBuilder;
 import net.md_5.bungee.api.chat.HoverEvent;
 import net.md_5.bungee.api.chat.HoverEvent.Action;

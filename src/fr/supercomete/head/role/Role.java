@@ -7,7 +7,6 @@ import java.util.UUID;
 
 import org.bukkit.inventory.ItemStack;
 
-import fr.supercomete.enums.Camps;
 import fr.supercomete.head.core.Main;
 import fr.supercomete.head.role.Bonus.Bonus;
 import fr.supercomete.head.role.Bonus.BonusType;
@@ -18,7 +17,7 @@ import org.checkerframework.checker.nullness.qual.NonNull;
 
 public abstract class Role{
 	private UUID owner;
-	private Camps camp;
+	private KasterBorousCamp camp;
 	private ArrayList<Bonus> bonus = new ArrayList<>();
 	private ArrayList<RoleState> rolestatelist = new ArrayList<RoleState>();
 	public Role(UUID owner){
@@ -30,19 +29,19 @@ public abstract class Role{
     }
     public abstract String[] AskMoreInfo();
 	public abstract String askName();
-	public abstract Camps getDefaultCamp();
+	public abstract KasterBorousCamp getDefaultCamp();
 	public abstract List<String> askRoleInfo();
 	public abstract ItemStack[] askItemStackgiven();
 	public abstract boolean AskIfUnique();
 	public abstract String AskHeadTag();
-	public Camps getCamp() {
+	public KasterBorousCamp getCamp() {
 		return camp;
 	}
 	@NonNull
 	public String getName() {
 		return askName();
 	}
-	public void setCamp(Camps camp) {
+	public void setCamp(KasterBorousCamp camp) {
 		this.camp=camp;
 	}
 	public UUID getOwner() {
@@ -97,13 +96,24 @@ public abstract class Role{
 		}
 		return null;
 	}
+    public RoleState getRoleState(Class<?> RoleStateClass) {
+        for(RoleState rolestate : this.getRolestatelist()) {
+            if(rolestate.getClass().equals(RoleStateClass))return rolestate;
+        }
+        return null;
+    }
 	public boolean hasRoleState(RoleStateTypes rolestatetype) {
 		for(RoleState state : this.rolestatelist) {
 			if(state.getRoleStateType().equals(rolestatetype))return true;
 		}
 		return false;
 	}
-
+    public boolean hasRoleState(Class<?> rolestateClass) {
+        for(RoleState state : this.rolestatelist) {
+            if(state.getClass().equals(rolestateClass))return true;
+        }
+        return false;
+    }
 	public ArrayList<Bonus> getBonus() {
 		return bonus;
 	}

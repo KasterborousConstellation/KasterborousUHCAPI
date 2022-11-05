@@ -27,7 +27,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
-import fr.supercomete.enums.Camps;
+
 import fr.supercomete.enums.Gstate;
 import fr.supercomete.head.GameUtils.Scenarios.Scenarios;
 import fr.supercomete.head.GameUtils.DeathCause;

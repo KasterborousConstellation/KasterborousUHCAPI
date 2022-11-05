@@ -47,11 +47,13 @@ public class Gstart extends BukkitRunnable{
 					}
 				}
 			}
-			PlayerUtility.giveStuff(Main.getPlayerlist());
             //Essai de fix le bug de desync d'inventaire en espérant que ça marche.
 			for(UUID uuid:Main.getPlayerlist()) {
                 Main.currentGame.getKillList().put(uuid, 0);
                 Player player = Bukkit.getPlayer(uuid);
+                if(player==null){
+                    continue;
+                }
                 PlayerInventory inventory = player.getInventory();
                 new BukkitRunnable() {
                     @Override
@@ -77,6 +79,12 @@ public class Gstart extends BukkitRunnable{
                     }
                 }.runTaskLater(Main.INSTANCE, 1L);
             }
+            new BukkitRunnable(){
+                @Override
+                public void run() {
+                    PlayerUtility.giveStuff(Main.getPlayerlist());
+                }
+            }.runTaskLater(Main.INSTANCE,2L);
 			cancel();
 		}
 		if(timer==1 || timer ==2 || timer ==3|| timer ==4|| timer ==5|| timer ==10)Bukkit.broadcastMessage(Main.UHCTypo+"§rDébut de la partie dans §c"+timer);

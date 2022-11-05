@@ -41,7 +41,6 @@ import fr.supercomete.datamanager.FileManager.ProfileSerializationManager;
 import fr.supercomete.enums.GenerationMode;
 import fr.supercomete.enums.Gstate;
 import fr.supercomete.head.GameUtils.Scenarios.Scenarios;
-import fr.supercomete.head.GameUtils.ConfigurationFileManager;
 import fr.supercomete.head.GameUtils.Game;
 import fr.supercomete.head.GameUtils.Lag;
 import fr.supercomete.head.GameUtils.TeamManager;
@@ -149,7 +148,6 @@ public class Main extends JavaPlugin {
         scoreboardmanager score = new scoreboardmanager(this);
 		score.ChangeScoreboard();
 		new InventoryHandler(this);
-		new ConfigurationFileManager(this);
 		new RoleBuilder(this);
 		RoleHandler.IsHiddenRoleNCompo = false;
 		new worldgenerator(this);
@@ -394,25 +392,6 @@ public class Main extends JavaPlugin {
 	public void removeScenarios(KasterborousScenario sc) {
 		Main.currentGame.getScenarios().remove(sc);
 	}
-	public void updateScenariosInventory(Player player) {
-		for (int i = 0; KtbsAPI.getScenarios().size() > i; i++) {
-			KasterborousScenario sc = KtbsAPI.getScenarios().get(i);
-			String bool = (Main.currentGame.getScenarios().contains(sc)) ? "§aOn" : "§cOff";
-			ArrayList<String> Lines = new ArrayList<String>();
-			if (sc == Scenarios.DiamondLimit)
-				Lines.add("§3Limite de diamant: §b" + currentGame.getDiamondlimit());
-			String compatibility = (sc.getCompatiblity().IsCompatible(Main.currentGame.getMode())) ? "§a✔" : "§c✖";
-			Lines.add(compatibility + "§r§7Compatibilité:");
-			ItemStack item = InventoryUtils.getItem(sc.getMat(), "§b" + sc.getName() + " " + bool, Lines);
-			if (Main.currentGame.getScenarios().contains(sc)) {
-				item.addUnsafeEnchantment(Enchantment.SILK_TOUCH, 1);
-				ItemMeta im = item.getItemMeta();
-				im.addItemFlags(ItemFlag.HIDE_ENCHANTS);
-				item.setItemMeta(im);
-			}
-			player.getOpenInventory().setItem(i + 9, item);
-		}
-	}
 	public void updateSlotsInventory(Player player) {
 		String name = (Main.currentGame.getMaxNumberOfplayer() == 0) ? "§rSlots:§a Illimité" 
 				: "§rSlots:§a " + Main.currentGame.getMaxNumberOfplayer();
@@ -585,35 +564,7 @@ public class Main extends JavaPlugin {
 		player.getOpenInventory().setItem(31, InventoryUtils.createColorItem(Material.STAINED_GLASS, "§bPrégénerer le monde", 1, (short)5));
 		player.getOpenInventory().setItem(13, InventoryUtils.getItem(Material.IRON_DOOR, "§dMondes", Collections.singletonList("§bCliquer ici pour pouvoir changer de monde")));
 	}
-	public static void updateConfigFile(Player player) {
-		for (int i = 9; i < 43; i++) {
-			player.getOpenInventory().setItem(i, new ItemStack(Material.AIR));
-		}
-		for (int i = 0; i < 9; i++) {
-			player.getOpenInventory().setItem(i,
-					InventoryUtils.createColorItem(Material.STAINED_GLASS_PANE, " ", 1, (short) 11));
-		}
-		for (int i = 0; i < 9; i++) {
-			player.getOpenInventory().setItem(45 + i,
-					InventoryUtils.createColorItem(Material.STAINED_GLASS_PANE, " ", 1, (short) 11));
-		}
-		ItemStack it = InventoryUtils.createColorItem(Material.WOOL, "§aCréer une configuration", 1, (short) 5);
-		ItemMeta im = it.getItemMeta();
-		im.setLore(SplitCorrectlyString(
-				"Sauvegarde la partie actuelle comme une configuration. Cette configuration est sauvegardée jusqu'a ce qu'elle soit détruite. Les configurations ci dessous sont les configurations sauvegardées de ce mode de jeux. Attention les configurations sont personnelles.",
-				35, "§7"));
-		it.setItemMeta(im);
 
-		player.getOpenInventory().setItem(4, it);
-		ArrayList<ItemStack> configs = ConfigurationFileManager.convertFileIntoItemStack(
-				ConfigurationFileManager.getallJsonInsideFolder(ConfigurationFileManager.getPlayerPath(player)));
-		for (int i = 0; i < ConfigurationFileManager
-				.getallJsonInsideFolder(ConfigurationFileManager.getPlayerPath(player)).size(); i++) {
-			player.getOpenInventory().setItem(i + 9, configs.get(i));
-		}
-		player.getOpenInventory().setItem(49,
-				InventoryUtils.getItem(Material.ARROW, "§7Retour", Collections.singletonList("§rRetour au menu de configuration")));
-	}
 	public static int CountIntegerValue(HashMap<?, Integer> map) {
 		int add = 0;
 		for (int i : map.values())

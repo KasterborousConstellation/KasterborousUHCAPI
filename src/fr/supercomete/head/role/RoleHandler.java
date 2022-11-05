@@ -13,7 +13,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
-import fr.supercomete.enums.Camps;
+
 import fr.supercomete.head.GameUtils.Historic;
 import fr.supercomete.head.GameUtils.HistoricData;
 import fr.supercomete.head.Inventory.InventoryUtils;
@@ -209,12 +209,12 @@ public class RoleHandler {
 	public static void setHistoric(Historic historic) {
 		RoleHandler.historic = historic;
 	}
-	private static String transform(Camps camp) {
-		if(camp!=Camps.Neutral && camp!=Camps.Solo) {
-			return "§6Victoire: "+camp.getColor()+camp.getName();
-		}else {
-			return "§6Victoire"+camp.getColor()+" §6Solo";
-		}
+	private static String transform(KasterBorousCamp camp) {
+        if(camp.singleplayervictory()){
+            return "§6Victoire"+camp.getColor()+" §6Solo";
+        }else{
+            return "§6Victoire: "+camp.getColor()+camp.getName();
+        }
 	}
 	public static ArrayList<String> getRoleDescription(HistoricData data){
 		ArrayList<String> arr = new ArrayList<String>();

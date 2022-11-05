@@ -1,7 +1,7 @@
 package fr.supercomete.head.GameUtils.GameMode.ModeModifier;
 
-import fr.supercomete.enums.Camps;
 
+import fr.supercomete.head.role.KasterBorousCamp;
 public interface CampMode extends GameModeModifier{
-	Camps[] getPrimitiveCamps();
+	KasterBorousCamp[] getPrimitiveCamps();
 }

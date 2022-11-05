@@ -51,7 +51,7 @@ public class ModeGUI extends GUI {
 			allGui.add(this);
 	}
 
-	protected Inventory generateinv() {
+	protected Inventory generateinv(){
 		Inventory tmp = Bukkit.createInventory(null, 54,m.getName());
 		if(m instanceof Null_Mode) {
 			tmp=Bukkit.createInventory(null, 54,"§dChoix du mode de jeux");
@@ -85,7 +85,6 @@ public class ModeGUI extends GUI {
 			it2.setItemMeta(im2);
 			tmp.setItem(26, it2);
 			tmp.setItem(4,InventoryUtils.getItem(Material.PAPER,"§rEvents",null));
-			tmp.setItem(22, InventoryUtils.getItem(Material.FEATHER, "§aConfigs", null));
 			tmp.setItem(5, InventoryUtils.getItem(Material.ANVIL, "§rConfigurable",null));
 			tmp.setItem(10, InventoryUtils.getItem(Material.BOOK, "§rWhitelist/Ouverture",null));
 			tmp.setItem(16, InventoryUtils.getItem(Material.DIAMOND_CHESTPLATE, "§rEnchantement", null));
@@ -110,7 +109,6 @@ public class ModeGUI extends GUI {
 			}
 			tmp.setItem(49, InventoryUtils.getItem(Material.ARROW, "§7Retour", Collections.singletonList("§rRetour au choix du mode de jeu")));
 		}
-		
 		return tmp;
 	}
 
@@ -163,9 +161,6 @@ public class ModeGUI extends GUI {
 							InventoryHandler.openinventory(player,2);							
 						}else player.sendMessage(Main.UHCTypo+"§cImpossible d'acceder à la génération pendant la partie");
 						break;
-					case 22:
-						InventoryHandler.openinventory(player, 19);
-						break;
 					case 48:
 						main.StartGame(player);
 						break;
@@ -191,7 +186,7 @@ public class ModeGUI extends GUI {
 									+ "§cErreur avant de changer de mode de jeux, veuillez mettre fin à la partie");
 						break;
 					case 37:
-						InventoryHandler.openinventory(player, 4);
+						new ScenarioGUI(player).open();
 						break;
 					case 27:
 						InventoryHandler.openinventory(player, 8);

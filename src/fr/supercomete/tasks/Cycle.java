@@ -10,6 +10,7 @@ import fr.supercomete.head.GameUtils.GameConfigurable.Configurable;
 import fr.supercomete.head.GameUtils.GameMode.ModeHandler.MapHandler;
 import fr.supercomete.head.GameUtils.GameMode.Modes.Mode;
 import fr.supercomete.head.GameUtils.Time.TimeUtility;
+import fr.supercomete.head.PlayerUtils.PlayerUtility;
 import fr.supercomete.head.role.Triggers.*;
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;

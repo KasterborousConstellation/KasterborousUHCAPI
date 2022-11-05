@@ -134,7 +134,7 @@ public class scoreboardmanager {
 	public static void SetallScoreboard(Player player) {
 		if(timer==0) {
 			SimpleScoreboard ss = ScoreBoardManager.boards.get(player.getUniqueId());
-			Scoreboard sc = ScoreBoardManager.boards.get(player.getUniqueId()).getScoreboard();
+			Scoreboard sc = ss.getScoreboard();
 			if (RoleHandler.IsRoleGenerated()) {
 				if(RoleHandler.getRoleOf(player)!=null) {
 					Role role = RoleHandler.getRoleOf(player);

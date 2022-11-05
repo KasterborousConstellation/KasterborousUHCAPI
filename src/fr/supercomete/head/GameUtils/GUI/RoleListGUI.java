@@ -3,6 +3,7 @@ import java.util.Map.Entry;
 import java.util.UUID;
 import java.util.concurrent.CopyOnWriteArrayList;
 
+import fr.supercomete.head.role.KasterBorousCamp;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -14,7 +15,7 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.SkullMeta;
 
-import fr.supercomete.enums.Camps;
+
 import fr.supercomete.head.GameUtils.HistoricData;
 import fr.supercomete.head.GameUtils.TeamManager;
 import fr.supercomete.head.GameUtils.GameMode.ModeModifier.CampMode;
@@ -47,7 +48,7 @@ public class RoleListGUI extends GUI{
 		}
 		CampMode campmode = (CampMode) Main.currentGame.getMode();
 		int i=0;
-		for (Camps camp : campmode.getPrimitiveCamps()) {
+		for (KasterBorousCamp camp : campmode.getPrimitiveCamps()) {
 			tmp.setItem(i, InventoryUtils.createColorItem(Material.WOOL, "§r" + camp.getColor() + camp.getName(), 1,TeamManager.getShortOfChatColor(camp.getColor())));
 			i++;
 		}

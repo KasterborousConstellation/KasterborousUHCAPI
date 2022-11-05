@@ -22,6 +22,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.SkullMeta;
 import org.bukkit.potion.PotionEffect;
+import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.util.BlockIterator;
 
 import fr.supercomete.head.Inventory.InventoryToBase64;
@@ -45,7 +46,13 @@ public class PlayerUtility{
 				for(int i=0;i<it.length;i++){
 					pl.getInventory().setItem(i, it[i]);
 				}
-				pl.updateInventory();
+                new BukkitRunnable(){
+                    @Override
+                    public void run() {
+                        pl.updateInventory();
+                    }
+                }.runTaskLater(Main.INSTANCE,0L);
+
 			}
 		}catch(IOException e){e.printStackTrace();}
 	}

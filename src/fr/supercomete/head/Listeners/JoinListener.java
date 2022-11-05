@@ -21,6 +21,7 @@ import fr.supercomete.head.PlayerUtils.Offline_Player;
 import fr.supercomete.head.PlayerUtils.PlayerUtility;
 import fr.supercomete.head.core.Main;
 import fr.supercomete.head.world.worldgenerator;
+import org.bukkit.scheduler.BukkitRunnable;
 
 final class JoinListener implements Listener {
     private Main main;
@@ -37,10 +38,19 @@ final class JoinListener implements Listener {
         if (Main.currentGame.isGameState(Gstate.Waiting)) {
             player.setGameMode(GameMode.ADVENTURE);
             player.teleport(main.spawn);
-            PacketPlayOutEntityTeleport packet = new PacketPlayOutEntityTeleport((Entity)player);
-            for(Player player1: Bukkit.getOnlinePlayers()){
-                ((CraftPlayer)player1).getHandle().playerConnection.sendPacket(packet);
-            }
+            PacketPlayOutEntityTeleport packet = new PacketPlayOutEntityTeleport(((CraftPlayer) player).getHandle());
+            new BukkitRunnable() {
+                @Override
+                public void run() {
+                    for(Player player1:Bukkit.getOnlinePlayers()) {
+                        ((CraftPlayer) player1).getHandle().playerConnection.sendPacket(packet);
+                        player.hidePlayer(player1);
+                        player1.hidePlayer(player);
+                        player.showPlayer(player1);
+                        player1.showPlayer(player);
+                    }
+                }
+            }.runTaskLater(Main.INSTANCE,3L);
             player.setMaxHealth(20);
             player.setHealth(20);
             player.setFoodLevel(20);
@@ -51,16 +61,13 @@ final class JoinListener implements Listener {
             player.getInventory().setHelmet(new ItemStack(Material.AIR));
             player.getInventory().setChestplate(new ItemStack(Material.AIR));
             player.getInventory().setLeggings(new ItemStack(Material.AIR));
-            for(Player player1: Bukkit.getOnlinePlayers()){
-                player.showPlayer(player1);
-                player1.showPlayer(player);
-            }
+
         } else {
             assert MapHandler.getMap() != null;
             if (!Main.playerlist.contains(player.getUniqueId())) {
                 player.setGameMode(GameMode.SPECTATOR);
                 player.teleport(new Location(MapHandler.getMap().getPlayWorld(), 0, 150, 0));
-                PacketPlayOutEntityTeleport packet = new PacketPlayOutEntityTeleport((Entity)player);
+                PacketPlayOutEntityTeleport packet = new PacketPlayOutEntityTeleport(((CraftPlayer) player).getHandle());
                 for(Player player1: Bukkit.getOnlinePlayers()){
                     ((CraftPlayer)player1).getHandle().playerConnection.sendPacket(packet);
                 }
@@ -69,14 +76,14 @@ final class JoinListener implements Listener {
                 Bukkit.broadcastMessage("§7Le joueur " + offPlayer.getUsername() + " se reconnecte après §a" + offPlayer.getTimeElapsedSinceDeconnexion() + "s");
                 Location loc = offPlayer.getLocation();
                 player.teleport(loc);
-                PacketPlayOutEntityTeleport packet = new PacketPlayOutEntityTeleport((Entity)player);
+                PacketPlayOutEntityTeleport packet = new PacketPlayOutEntityTeleport(((CraftPlayer) player).getHandle());
                 for(Player player1: Bukkit.getOnlinePlayers()){
                     ((CraftPlayer)player1).getHandle().playerConnection.sendPacket(packet);
                 }
             } else {
                 player.getInventory().clear();
                 player.teleport(MapHandler.getMap().getPlayWorld().getSpawnLocation());
-                PacketPlayOutEntityTeleport packet = new PacketPlayOutEntityTeleport((Entity)player);
+                PacketPlayOutEntityTeleport packet = new PacketPlayOutEntityTeleport(((CraftPlayer) player).getHandle());
                 for(Player player1: Bukkit.getOnlinePlayers()){
                     ((CraftPlayer)player1).getHandle().playerConnection.sendPacket(packet);
                 }

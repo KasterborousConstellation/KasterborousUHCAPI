@@ -4,12 +4,13 @@ import java.util.HashMap;
 import java.util.Map.Entry;
 import java.util.Objects;
 
+import fr.supercomete.head.role.KasterBorousCamp;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-import fr.supercomete.enums.Camps;
+
 import fr.supercomete.head.GameUtils.GameMode.ModeHandler.KtbsAPI;
 import fr.supercomete.head.GameUtils.GameMode.ModeModifier.CampMode;
 import fr.supercomete.head.core.Main;
@@ -35,7 +36,8 @@ public class RolesCommand implements CommandExecutor {
 	}
 	public static void display(HashMap<Class<?>, Integer> map, Player player) {
 		player.sendMessage(Main.UHCTypo + "§6Composition §r(§a"+Main.CountIntegerValue(map)+"§r)");
-		for (Camps camp : Camps.values()) {
+        CampMode mode = (CampMode) KtbsAPI.getCurrentGame().getMode();
+		for (KasterBorousCamp camp : mode.getPrimitiveCamps()) {
 			HashMap<Class<?>, Integer> campsMap = new HashMap<Class<?>, Integer>();
 			for (Entry<Class<?>, Integer> entry : map.entrySet()) {
 				if (Objects.requireNonNull(KtbsAPI.getRoleByClass(entry.getKey())).getDefaultCamp() == camp)

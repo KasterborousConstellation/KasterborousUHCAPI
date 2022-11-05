@@ -77,34 +77,7 @@ public class InventoryHandler {
 			inv.setItem(15, InventoryUtils.getItem(Material.STONE_BUTTON, "§r+10 Slots", null));
 			inv.setItem(22, InventoryUtils.getItem(Material.ARROW, "§7Retour", Collections.singletonList("§rRetour au menu de configuration")));
 			break;
-		case 4://Scenarios GUI
-			inv=Bukkit.createInventory(null, 54,"§dScenarios");
-			for(int i=0;i<9;i++) {
-				inv.setItem(i, InventoryUtils.createColorItem(Material.STAINED_GLASS_PANE, " ", 1, (short) 2));
-			}
-			for(int i=0;i<9;i++) {
-				inv.setItem(53-i, InventoryUtils.createColorItem(Material.STAINED_GLASS_PANE, " ", 1, (short) 2));
-			}
-			for(int i=0;KtbsAPI.getScenarios().size()>i;i++) {
-				KasterborousScenario sc = KtbsAPI.getScenarios().get(i);
-				String bool=(Main.currentGame.getScenarios().contains(sc))?"§aOn":"§cOff";
-				ArrayList<String>Lines=new ArrayList<String>();
-				if(sc==Scenarios.DiamondLimit){
-                    Lines.add("§3Limite de diamant: §b"+Main.currentGame.getDiamondlimit());
-                }
-				String compatibility=(sc.getCompatiblity().IsCompatible(Main.currentGame.getMode()))?"§a✔":"§c✖";
-				Lines.add(compatibility+"§r§7Compatibilité");
-				ItemStack item = InventoryUtils.getItem(sc.getMat(),"§b"+sc.getName()+" "+bool,Lines);
-				if(Main.currentGame.getScenarios().contains(sc)) {
-					item.addUnsafeEnchantment(Enchantment.SILK_TOUCH, 1);
-					ItemMeta ime=item.getItemMeta();
-					ime.addItemFlags(ItemFlag.HIDE_ENCHANTS);
-					item.setItemMeta(ime);
-				}
-				inv.setItem(i+9, item);
-			}
-			inv.setItem(49,InventoryUtils.getItem(Material.ARROW, "§7Retour", Collections.singletonList("§rRetour au menu de configuration")));
-			break;
+
 		case 5://Rules GUI
 			inv=Bukkit.createInventory(null, 54,"§dRules");
 			inv.setItem(0, InventoryUtils.createColorItem(Material.STAINED_GLASS_PANE, " ", 1, (short)6));
@@ -146,8 +119,7 @@ public class InventoryHandler {
 				KasterborousScenario sc=Main.currentGame.getScenarios().get(i);
 				ArrayList<String>Lines=new ArrayList<String>();
 				String compatibility=(sc.getCompatiblity().IsCompatible(Main.currentGame.getMode()))?"§a✔":"§c✖";
-				if(sc==Scenarios.DiamondLimit)Lines.add("§3Limite de diamant: §b"+Main.currentGame.getDiamondlimit());
-				Lines.add(compatibility+"§r§7Compatibilité:");
+				Lines.add(compatibility+"§r§7Compatible");
 				ItemStack item = InventoryUtils.getItem(sc.getMat(),"§b"+sc.getName(),Lines);
 				if(Main.currentGame.getScenarios().contains(sc)){
 					item.addUnsafeEnchantment(Enchantment.SILK_TOUCH, 1);
@@ -249,11 +221,6 @@ public class InventoryHandler {
 		case 15://Configuration Avancée
 			inv=Bukkit.createInventory(null, 54,"§dConfiguration Avancée");
 			player.openInventory(inv);
-			return;
-		case 19://Fichier de sauvegarde
-			inv= Bukkit.createInventory(null, 54, "§dFichiers de sauvegarde");
-			player.openInventory(inv);
-			Main.updateConfigFile(player);
 			return;
 		case 20: //Téléportations
 			inv= Bukkit.createInventory(null,9,"§dTéléportations");

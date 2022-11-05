@@ -3,6 +3,7 @@ package fr.supercomete.head.Listeners;
 import java.util.Random;
 
 import fr.supercomete.head.GameUtils.GameConfigurable.Configurable;
+import fr.supercomete.head.GameUtils.GameMode.ModeHandler.KtbsAPI;
 import fr.supercomete.head.PlayerUtils.PlayerUtility;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -48,7 +49,7 @@ final class BlockBreakListener implements Listener {
 				player.sendMessage(Main.UHCTypo + "Le scénario " + Scenarios.BloodDiamond.getName()
 						+ " est activé. Ce scénario vous a infligé 1/2coeurs de dégat");
 			}
-			if (Main.currentGame.getScenarios().contains(Scenarios.DiamondLimit)) {
+			if (KtbsAPI.getCurrentGame().getDataFrom(Configurable.LIST.DiamondLimit)!=0) {
 				int current = 0;
 				if (Main.diamondmap.containsKey(player.getUniqueId()))
 					current = Main.diamondmap.get(player.getUniqueId());
