@@ -1,8 +1,10 @@
 package fr.supercomete.head.GameUtils.GameMode.ModeHandler;
-
 import java.lang.reflect.InvocationTargetException;
 import java.util.*;
 import java.util.concurrent.CopyOnWriteArrayList;
+import fr.supercomete.head.API.GameProvider;
+import fr.supercomete.head.API.HostProvider;
+import fr.supercomete.head.API.KtbsProvider;
 import fr.supercomete.head.Exception.AlreadyRegisterdScenario;
 import fr.supercomete.head.Exception.AlreadyRegisteredConfigurable;
 import fr.supercomete.head.Exception.UnregisteredModeException;
@@ -18,11 +20,17 @@ import fr.supercomete.head.role.Role;
 import org.bukkit.craftbukkit.v1_8_R3.CraftServer;
 import org.jetbrains.annotations.NotNull;
 public class KtbsAPI {
+    private KtbsProvider provider;
     private static final ArrayList<KasterborousRunnable> runnables = new ArrayList<>();
     private static final ArrayList<Mode> registeredModes = new ArrayList<>();
     private static final ArrayList<KasterborousScenario> registered_scenarios = new ArrayList<>();
     private static final LinkedList<KasterBorousConfigurable> configurables = new LinkedList<>();
-
+    public HostProvider getHostProvider(){
+        return provider.getHostProvider();
+    }
+    public GameProvider getGameProvider(){
+        return provider.getGameProvider();
+    }
     public static Game getCurrentGame() {
         return Main.currentGame;
     }

@@ -1,15 +1,19 @@
 package fr.supercomete.head.API;
 
+import fr.supercomete.head.GameUtils.Game;
 import fr.supercomete.head.core.Main;
+import fr.supercomete.head.world.BiomeGenerator;
 import org.bukkit.entity.Player;
 
 import java.util.ArrayList;
 import java.util.UUID;
 
-public class KtbsProvider implements HostProvider{
-
+public class KtbsProvider implements HostProvider,GameProvider{
     public HostProvider getHostProvider(){
         return (HostProvider) this;
+    }
+    public GameProvider getGameProvider(){
+        return (GameProvider) this;
     }
     @Override
     public ArrayList<UUID> getCohosts() {
@@ -45,12 +49,26 @@ public class KtbsProvider implements HostProvider{
 
     @Override
     public boolean isBypassed(Player player) {
-        return (isCohost(player)||isHost(player))&&
-                Main.bypass.contains(player.getUniqueId());
+        return (isCohost(player)||isHost(player))&&Main.bypass.contains(player.getUniqueId());
     }
 
     @Override
     public boolean isBypassed(UUID uuid) {
-        return (isHost(uuid)||isCohost(uuid))&& Main.bypass.contains(uuid);
+        return (isCohost(uuid)||isHost(uuid))&&Main.bypass.contains(uuid);
+    }
+
+    @Override
+    public Game getCurrentGame() {
+        return Main.currentGame;
+    }
+
+    @Override
+    public ArrayList<UUID> getPlayerList() {
+        return Main.getPlayerlist();
+    }
+
+    @Override
+    public BiomeGenerator getBiomeGenerator() {
+        return Main.generator;
     }
 }

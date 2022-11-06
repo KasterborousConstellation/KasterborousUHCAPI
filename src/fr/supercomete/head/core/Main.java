@@ -1,5 +1,4 @@
 package fr.supercomete.head.core;
-
 import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.Array;
@@ -8,7 +7,6 @@ import java.net.URL;
 import java.util.*;
 import java.util.jar.JarFile;
 import java.util.zip.ZipEntry;
-
 import fr.supercomete.commands.*;
 import fr.supercomete.head.GameUtils.Events.GameEvents.EventsHandler;
 import fr.supercomete.head.GameUtils.Events.PlayerEvents.PlayerEventHandler;
@@ -21,9 +19,7 @@ import fr.supercomete.head.GameUtils.Time.TimeUtility;
 import fr.supercomete.head.GameUtils.Time.TimerType;
 import fr.supercomete.tasks.Cycle;
 import org.bukkit.*;
-import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
-import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.ShapedRecipe;
 import org.bukkit.inventory.meta.ItemMeta;
@@ -32,7 +28,6 @@ import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import org.bukkit.scheduler.BukkitRunnable;
-
 import fr.supercomete.ServerExchangeProtocol.File.PlayerAccountManager;
 import fr.supercomete.ServerExchangeProtocol.Rank.Rank;
 import fr.supercomete.ServerExchangeProtocol.Server.Server;
@@ -79,7 +74,6 @@ public class Main extends JavaPlugin {
 	public static boolean devmode;
 	public static Map<UUID, Integer> diamondmap = new HashMap<>();
 	public static ProfileSerializationManager manager = new ProfileSerializationManager();
-
 	public static BiomeGenerator generator;
 	public static StructureHandler structurehandler;
 	public static UUID host;
