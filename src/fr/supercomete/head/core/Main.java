@@ -57,7 +57,7 @@ import fr.supercomete.head.world.scoreboardmanager;
 import fr.supercomete.head.world.worldgenerator;
 import fr.supercomete.head.world.ScoreBoard.ScoreBoardManager;
 import fr.supercomete.tasks.GAutostart;
-import org.jetbrains.annotations.NotNull;
+
 public class Main extends JavaPlugin {
 	public final static String UHCTypo = "§aEchosia"+"§7 » ";
 	public final static String ScoreBoardUHCTypo = ChatColor.GREEN+"Echosia ";
@@ -458,7 +458,7 @@ public class Main extends JavaPlugin {
 				"§r" + this.generateNameTimer(this.getCompatibleTimer().get(this.Selected)), null));
 		player.getOpenInventory().getItem(18 + this.Selected).setType(Material.COMPASS);
 	}
-	public void updateTeamsInventory(@NotNull Player player) {
+	public void updateTeamsInventory(final Player player) {
 		short col = (short) ((Main.currentGame.IsTeamActivated()) ? 5 : 14);
 		String bool = (Main.currentGame.IsTeamActivated()) ? "§aOn" : "§cOff";
 		player.getOpenInventory().setItem(11, InventoryUtils.getItem(Material.WOOL, "§bNombre de joueur par équipe: §4"+Main.currentGame.getNumberOfPlayerPerTeam(),Arrays.asList(InventoryHandler.ClickTypoAdd+"1",InventoryHandler.ClickTypoRemove+"1")));
@@ -468,7 +468,7 @@ public class Main extends JavaPlugin {
 						"§bNombre d'équipes: §a" + Main.currentGame.getTeamNumber(),
 						Arrays.asList(InventoryHandler.ClickTypoAdd + "1", InventoryHandler.ClickTypoRemove + "1")));
 	}
-	public String generateNameTimer(@NotNull Timer t) {
+	public String generateNameTimer(Timer t) {
 		return "§r" + t.getName() + " §c" + TimeUtility.transform((t.getType()==TimerType.TimeDependent)?Main.currentGame.getTimer(t).getData()-Main.currentGame.getTime():Main.currentGame.getTimer(t).getData(), "§5", "§5", "§d");
 	}
 

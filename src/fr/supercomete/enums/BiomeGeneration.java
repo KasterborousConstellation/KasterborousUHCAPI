@@ -1,5 +1,7 @@
 package fr.supercomete.enums;
 import javax.annotation.Nullable;
+
+
 import org.bukkit.Material;
 import org.bukkit.block.Biome;
 import org.bukkit.inventory.ItemStack;
@@ -14,7 +16,7 @@ public enum BiomeGeneration {
 	private final Biome biome;
 	private final String name;
 	private final int biomeint;
-	BiomeGeneration(String name,Material material,@Nullable short modification,Biome targetedBiome,int biomeint) {
+	BiomeGeneration(String name, Material material, @Nullable short modification, Biome targetedBiome, int biomeint) {
 		this.material=material;
 		this.modification=modification;	
 		this.biome=targetedBiome;

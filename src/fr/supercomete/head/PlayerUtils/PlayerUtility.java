@@ -1,11 +1,10 @@
 package fr.supercomete.head.PlayerUtils;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Random;
-import java.util.UUID;
 
-import fr.supercomete.head.role.RoleHandler;
+import fr.supercomete.head.Inventory.InventoryToBase64;
+import fr.supercomete.head.Inventory.InventoryUtils;
+import fr.supercomete.head.core.Main;
+import fr.supercomete.nbthandler.NbtTagHandler;
+import net.md_5.bungee.api.ChatColor;
 import net.minecraft.server.v1_8_R3.IChatBaseComponent;
 import net.minecraft.server.v1_8_R3.PacketPlayOutChat;
 import org.bukkit.Bukkit;
@@ -25,13 +24,10 @@ import org.bukkit.potion.PotionEffect;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.util.BlockIterator;
 
-import fr.supercomete.head.Inventory.InventoryToBase64;
-import fr.supercomete.head.Inventory.InventoryUtils;
-import fr.supercomete.head.core.Main;
-import fr.supercomete.head.world.worldgenerator;
-import fr.supercomete.nbthandler.NbtTagHandler;
-import fr.supercomete.tasks.NoDamage;
-import net.md_5.bungee.api.ChatColor;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.UUID;
 public class PlayerUtility{
 	private static Main main;
 	public PlayerUtility(Main main) {

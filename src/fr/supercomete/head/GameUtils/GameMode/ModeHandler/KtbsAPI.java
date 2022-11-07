@@ -2,6 +2,8 @@ package fr.supercomete.head.GameUtils.GameMode.ModeHandler;
 import java.lang.reflect.InvocationTargetException;
 import java.util.*;
 import java.util.concurrent.CopyOnWriteArrayList;
+
+import com.sun.istack.internal.NotNull;
 import fr.supercomete.head.API.GameProvider;
 import fr.supercomete.head.API.HostProvider;
 import fr.supercomete.head.API.KtbsProvider;
@@ -18,7 +20,8 @@ import fr.supercomete.head.core.Main;
 import fr.supercomete.head.role.KasterBorousCamp;
 import fr.supercomete.head.role.Role;
 import org.bukkit.craftbukkit.v1_8_R3.CraftServer;
-import org.jetbrains.annotations.NotNull;
+
+
 public class KtbsAPI {
     private KtbsProvider provider;
     private static final ArrayList<KasterborousRunnable> runnables = new ArrayList<>();
