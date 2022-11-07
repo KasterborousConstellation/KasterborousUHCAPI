@@ -7,6 +7,7 @@ import com.sun.istack.internal.NotNull;
 import fr.supercomete.head.API.GameProvider;
 import fr.supercomete.head.API.HostProvider;
 import fr.supercomete.head.API.KtbsProvider;
+import fr.supercomete.head.API.MapProvider;
 import fr.supercomete.head.Exception.AlreadyRegisterdScenario;
 import fr.supercomete.head.Exception.AlreadyRegisteredConfigurable;
 import fr.supercomete.head.Exception.UnregisteredModeException;
@@ -29,11 +30,12 @@ public class KtbsAPI {
     private static final ArrayList<KasterborousScenario> registered_scenarios = new ArrayList<>();
     private static final LinkedList<KasterBorousConfigurable> configurables = new LinkedList<>();
     public HostProvider getHostProvider(){
-        return provider.getHostProvider();
+        return provider;
     }
     public GameProvider getGameProvider(){
-        return provider.getGameProvider();
+        return provider;
     }
+    public MapProvider getMapProvider(){return provider;}
     public static Game getCurrentGame() {
         return Main.currentGame;
     }

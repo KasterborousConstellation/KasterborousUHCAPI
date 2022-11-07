@@ -1,6 +1,7 @@
 package fr.supercomete.head.API;
 
 import fr.supercomete.head.GameUtils.Game;
+import fr.supercomete.head.GameUtils.GameMode.ModeHandler.MapHandler;
 import fr.supercomete.head.core.Main;
 import fr.supercomete.head.world.BiomeGenerator;
 import org.bukkit.entity.Player;
@@ -8,13 +9,7 @@ import org.bukkit.entity.Player;
 import java.util.ArrayList;
 import java.util.UUID;
 
-public class KtbsProvider implements HostProvider,GameProvider{
-    public HostProvider getHostProvider(){
-        return (HostProvider) this;
-    }
-    public GameProvider getGameProvider(){
-        return (GameProvider) this;
-    }
+public class KtbsProvider implements HostProvider,GameProvider,MapProvider{
     @Override
     public ArrayList<UUID> getCohosts() {
         return Main.cohost;
@@ -70,5 +65,15 @@ public class KtbsProvider implements HostProvider,GameProvider{
     @Override
     public BiomeGenerator getBiomeGenerator() {
         return Main.generator;
+    }
+
+    @Override
+    public MapHandler.Map getMap() {
+        return MapHandler.getMap();
+    }
+
+    @Override
+    public boolean IsMapGenerated() {
+        return MapHandler.getMap()!=null;
     }
 }
