@@ -1,14 +1,14 @@
 package fr.supercomete.head.API;
-
 import fr.supercomete.head.GameUtils.Game;
 import fr.supercomete.head.GameUtils.GameMode.ModeHandler.MapHandler;
 import fr.supercomete.head.core.Main;
+import fr.supercomete.head.structure.StructureHandler;
 import fr.supercomete.head.world.BiomeGenerator;
 import org.bukkit.entity.Player;
-
 import java.util.ArrayList;
-import java.util.UUID;
 
+import java.util.Map;
+import java.util.UUID;
 public class KtbsProvider implements HostProvider,GameProvider,MapProvider{
     @Override
     public ArrayList<UUID> getCohosts() {
@@ -65,6 +65,16 @@ public class KtbsProvider implements HostProvider,GameProvider,MapProvider{
     @Override
     public BiomeGenerator getBiomeGenerator() {
         return Main.generator;
+    }
+
+    @Override
+    public Map<UUID, Integer> getDiamondLimit() {
+        return Main.diamondmap;
+    }
+
+    @Override
+    public StructureHandler getStructureHandler() {
+        return Main.structurehandler;
     }
 
     @Override
