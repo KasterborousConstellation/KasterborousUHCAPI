@@ -24,6 +24,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.ShapedRecipe;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.plugin.PluginManager;
+import org.bukkit.plugin.ServicePriority;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
@@ -83,14 +84,15 @@ public class Main extends JavaPlugin {
     public static Main INSTANCE;
     @Override
     public void onDisable(){
-        for(final KasterborousRunnable run: KtbsAPI.getRunnables()){
+        for(final KasterborousRunnable run: Bukkit.getServicesManager().load(KtbsAPI.class).getKTBSRunnableProvider().getRunnables()){
             run.onAPIStop();
         }
     }
 	@SuppressWarnings("deprecation")
 	@Override
 	public void onEnable() {
-
+        KtbsAPI api = new KtbsAPI();
+        Bukkit.getServicesManager().register(KtbsAPI.class,api,this, ServicePriority.Lowest);
         INSTANCE=this;
 		generator = new BiomeGenerator();
 		structurehandler= new StructureHandler(this);
@@ -100,14 +102,14 @@ public class Main extends JavaPlugin {
 		Date Compiledate = null;
 		Compiledate = getClassBuildTime();
         for(final Scenarios scenarios: Scenarios.values()){
-            KtbsAPI.RegisterScenarios(scenarios);
+            api.getScenariosProvider().RegisterScenarios(scenarios);
         }
         for(final Configurable.LIST conf : Configurable.LIST.values()){
-            KtbsAPI.RegisterConfigurable(conf);
+            api.getConfigurableProvider().RegisterConfigurable(conf);
         }
-		KtbsAPI.registerMode(new Null_Mode());
+		api.getModeProvider().registerMode(new Null_Mode());
 		UHCClassic uhcclassic = new UHCClassic();	
-		KtbsAPI.registerMode(uhcclassic);
+		api.getModeProvider().registerMode(uhcclassic);
 		Bukkit.broadcastMessage("§dVersion: 0.8.9 Build("+Compiledate.getDate()+"/"+(Compiledate.getMonth()+1)+") §6Alpha");
 		currentGame=new Game((new Null_Mode()).getName(),this);
 		Bukkit.getServer().getScheduler().scheduleSyncRepeatingTask(this, new Lag(), 100L, 1L);// LagO'meter
@@ -170,7 +172,7 @@ public class Main extends JavaPlugin {
         new BukkitRunnable(){
             @Override
             public void run() {
-                for(final KasterborousRunnable run: KtbsAPI.getRunnables()){
+                for(final KasterborousRunnable run: api.getKTBSRunnableProvider().getRunnables()){
                     run.onAPILaunch();
                 }
             }

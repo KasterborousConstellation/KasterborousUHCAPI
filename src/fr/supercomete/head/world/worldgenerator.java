@@ -44,10 +44,10 @@ public class worldgenerator {
 		        wc.generatorSettings("2;0;1;"); //This is what makes the world empty (void)
 		        MapHandler.getMap().setStructureWorld(wc.createWorld());
                 MapHandler.getMap().getStructureWorld().setGameRuleValue("doMobSpawning", "false");
-		        if(KtbsAPI.getCurrentGame().getMode().getStructure().size()>0) {
+		        if(Main.currentGame.getMode().getStructure().size()>0) {
 		        	Bukkit.broadcastMessage("§b[Génération des structures]");
 		        	int i =0;
-		        	for(Structure structure : KtbsAPI.getCurrentGame().getMode().getStructure()) {
+		        	for(Structure structure : Main.currentGame.getMode().getStructure()) {
 		        		final Location location = new Location(MapHandler.getMap().getStructureWorld(),i*1000 +10000, 10, i*1000 +10000);
 		        		Bukkit.broadcastMessage("   §bGénération: "+structure.getStructurename());
 		        		structure.generateStructure(location);

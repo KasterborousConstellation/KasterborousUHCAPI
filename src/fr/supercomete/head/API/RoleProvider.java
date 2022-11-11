@@ -6,7 +6,7 @@ import fr.supercomete.head.role.Role;
 
 import java.util.concurrent.CopyOnWriteArrayList;
 
-public interface RoleRegisterer {
+public interface RoleProvider {
     void registerRole(Mode mode, Class<?> role);
     Class<?> getRoleClassByName(String name);
     Role getRoleByClass(Class<?> clz);

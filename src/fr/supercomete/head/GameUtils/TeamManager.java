@@ -19,7 +19,7 @@ public final class TeamManager {
 	public static void createTeams(int numberofteam) {
 		ArrayList<Team> teamlist=Main.currentGame.getTeamList();
 		teamlist.clear();
-		boolean bol= !(KtbsAPI.getCurrentGame().getMode() instanceof UHCClassic);
+		boolean bol= !(Main.currentGame.getMode() instanceof UHCClassic);
 		int total=numberofteam;
 		for(int r=0;r<numberofteam/9+1;r++){
 			int n=total;

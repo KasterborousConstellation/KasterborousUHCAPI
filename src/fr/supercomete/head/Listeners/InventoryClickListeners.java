@@ -216,7 +216,7 @@ final class InventoryClickListeners implements Listener{
 				main.updateSlotsInventory(player);
 				break;
 			case 22:
-				new ModeGUI(KtbsAPI.getCurrentGame().getMode(), player).open();
+				new ModeGUI(Main.currentGame.getMode(), player).open();
 				break;
 			default:
 				break;
@@ -253,7 +253,7 @@ final class InventoryClickListeners implements Listener{
 			event.setCancelled(true);
 			switch (currentSlot) {
 			case 49:
-				new ModeGUI(KtbsAPI.getCurrentGame().getMode(), player).open();
+				new ModeGUI(Main.currentGame.getMode(), player).open();
 				break;
 			case 9:
 			case 10:
@@ -305,7 +305,7 @@ final class InventoryClickListeners implements Listener{
 			event.setCancelled(true);
 			switch (currentSlot) {
 			case 22:
-				new ModeGUI(KtbsAPI.getCurrentGame().getMode(), player).open();
+				new ModeGUI(Main.currentGame.getMode(), player).open();
 				break;
 			case 12:
 				if (currentClick.isShiftClick() && currentClick.isRightClick())
@@ -477,7 +477,7 @@ final class InventoryClickListeners implements Listener{
 				player.getOpenInventory().setItem(22, it);
 				break;
 			case 49:
-				new ModeGUI(KtbsAPI.getCurrentGame().getMode(), player).open();
+				new ModeGUI(Main.currentGame.getMode(), player).open();
 				break;
 			case 13:
 				if(Main.currentGame.getGenmode()==GenerationMode.Done ||Main.currentGame.getGenmode()==GenerationMode.WorldCreatedOnly) {
@@ -562,7 +562,7 @@ final class InventoryClickListeners implements Listener{
 				TeamManager.setupTeams();
 				break;
 			case 22:
-				new ModeGUI(KtbsAPI.getCurrentGame().getMode(), player).open();
+				new ModeGUI(Main.currentGame.getMode(), player).open();
 				break;
 			default:
 				break;
@@ -597,7 +597,7 @@ final class InventoryClickListeners implements Listener{
 			event.setCancelled(true);
 			switch (currentSlot) {
 			case 22:
-				new ModeGUI(KtbsAPI.getCurrentGame().getMode(), player).open();
+				new ModeGUI(Main.currentGame.getMode(), player).open();
 				break;
 			case 14:
 				ArrayList<UUID> it = new ArrayList<UUID>();
@@ -620,7 +620,7 @@ final class InventoryClickListeners implements Listener{
 			event.setCancelled(true);
 			switch (currentSlot) {
 			case 22:
-				new ModeGUI(KtbsAPI.getCurrentGame().getMode(), player).open();
+				new ModeGUI(Main.currentGame.getMode(), player).open();
 				break;
 			case 11:
 				player.sendMessage("§aWhitelist "+Main.TranslateBoolean(Bukkit.hasWhitelist()));
@@ -648,7 +648,7 @@ final class InventoryClickListeners implements Listener{
 			event.setCancelled(true);
 			switch (currentSlot) {
 			case 49:
-				new ModeGUI(KtbsAPI.getCurrentGame().getMode(), player).open();
+				new ModeGUI(Main.currentGame.getMode(), player).open();
 				break;
 			default:
 			}

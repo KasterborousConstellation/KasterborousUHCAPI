@@ -50,7 +50,7 @@ final class BlockBreakListener implements Listener {
 				player.sendMessage(Main.UHCTypo + "Le scénario " + Scenarios.BloodDiamond.getName()
 						+ " est activé. Ce scénario vous a infligé 1/2coeurs de dégat");
 			}
-			if (KtbsAPI.getCurrentGame().getDataFrom(Configurable.LIST.DiamondLimit)!=0) {
+			if (Main.currentGame.getDataFrom(Configurable.LIST.DiamondLimit)!=0) {
 				int current = 0;
 				if (Main.diamondmap.containsKey(player.getUniqueId()))
 					current = Main.diamondmap.get(player.getUniqueId());

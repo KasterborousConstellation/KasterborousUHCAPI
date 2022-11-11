@@ -289,7 +289,7 @@ class EntityDamageListeners implements Listener {
                 Location deathLocation = player.getLocation();
                 if (deathLocation == null)
                     return;
-                Mode mode = KtbsAPI.getCurrentGame().getMode();
+                Mode mode = Main.currentGame.getMode();
                 if (mode instanceof DelayedDeath && RoleHandler.IsRoleGenerated()) {
                     DelayedModeDeath delayed = new DelayedModeDeath(mode, deathLocation, damager, player, ((DelayedDeath)mode).getDeathDelay());
                     player.setGameMode(GameMode.SPECTATOR);

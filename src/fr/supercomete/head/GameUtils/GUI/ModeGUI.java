@@ -32,6 +32,7 @@ import fr.supercomete.head.PlayerUtils.PlayerUtility;
 import fr.supercomete.head.core.Main;
 
 public class ModeGUI extends GUI {
+    private static KtbsAPI api = Bukkit.getServicesManager().load(KtbsAPI.class);
 	private static final CopyOnWriteArrayList<ModeGUI> allGui = new CopyOnWriteArrayList<ModeGUI>();
 	private Inventory inv;
 	private final Mode m;
@@ -55,8 +56,8 @@ public class ModeGUI extends GUI {
 		Inventory tmp = Bukkit.createInventory(null, 54,m.getName());
 		if(m instanceof Null_Mode) {
 			tmp=Bukkit.createInventory(null, 54,"§dChoix du mode de jeux");
-			for(int i=1;i<KtbsAPI.getRegisteredModes().size();i++){
-				tmp.setItem(i-1, InventoryUtils.getItem(KtbsAPI.getRegisteredModes().get(i).getMaterial(),"§r§b"+KtbsAPI.getRegisteredModes().get(i).getName(),KtbsAPI.getRegisteredModes().get(i).getDescription()));
+			for(int i=1;i<api.getModeProvider().getRegisteredModes().size();i++){
+				tmp.setItem(i-1, InventoryUtils.getItem(api.getModeProvider().getRegisteredModes().get(i).getMaterial(),"§r§b"+api.getModeProvider().getRegisteredModes().get(i).getName(),api.getModeProvider().getRegisteredModes().get(i).getDescription()));
 			}
 		}else {
 			tmp.setItem(0,  InventoryUtils.createColorItem(Material.STAINED_GLASS_PANE, " ", 1, (short)3));
@@ -134,8 +135,8 @@ public class ModeGUI extends GUI {
 					}
 					switch (currentSlot) {
 					default:
-						if(currentSlot<KtbsAPI.getRegisteredModes().size()-1) {
-                            Mode chosenMode = KtbsAPI.getRegisteredModes().get(currentSlot+1);
+						if(currentSlot<api.getModeProvider().getRegisteredModes().size()-1) {
+                            Mode chosenMode = api.getModeProvider().getRegisteredModes().get(currentSlot+1);
                             if(chosenMode instanceof Permission){
                                 final Permission perm = (Permission) chosenMode;
                                 Rank rank = perm.getPermission();
@@ -144,7 +145,7 @@ public class ModeGUI extends GUI {
                                 }
                             }
 							Main.currentGame= new Game(chosenMode.getName(),main);
-							new ModeGUI(KtbsAPI.getRegisteredModes().get(currentSlot+1), mode.player).open();
+							new ModeGUI(api.getModeProvider().getRegisteredModes().get(currentSlot+1), mode.player).open();
 //							InventoryHandler.openinventory(player, KtbsAPI.getModeByIntRepresentation(Main.currentGame.getEmode()).getGUInumber());
 						}
 						break;
@@ -202,7 +203,7 @@ public class ModeGUI extends GUI {
 						break;
 					case 35:
 						if(mode.m instanceof CampMode) {
-							new RoleModeGUI(KtbsAPI.getCurrentGame().getMode(),player).open(0);
+							new RoleModeGUI(api.getGameProvider().getCurrentGame().getMode(),player).open(0);
 						}else if(mode.m instanceof TeamMode) {
 							InventoryHandler.openinventory(mode.player, 10);
 						}

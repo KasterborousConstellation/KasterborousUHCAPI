@@ -23,6 +23,7 @@ import fr.supercomete.head.core.Main;
 import org.bukkit.inventory.meta.ItemMeta;
 
 public class ScenarioGUI extends GUI{
+    private static KtbsAPI api = Bukkit.getServicesManager().load(KtbsAPI.class);
     private static final CopyOnWriteArrayList<ScenarioGUI> allGui = new CopyOnWriteArrayList<ScenarioGUI>();
     private Inventory inv;
     private Player player;
@@ -44,8 +45,8 @@ public class ScenarioGUI extends GUI{
         for(int i=0;i<9;i++) {
             tmp.setItem(53-i, InventoryUtils.createColorItem(Material.STAINED_GLASS_PANE, " ", 1, (short) 2));
         }
-        for(int i = 0; KtbsAPI.getScenarios().size()>i; i++) {
-            KasterborousScenario sc = KtbsAPI.getScenarios().get(i);
+        for(int i = 0; api.getScenariosProvider().getScenarios().size()>i; i++) {
+            KasterborousScenario sc = api.getScenariosProvider().getScenarios().get(i);
             String bool=(Main.currentGame.getScenarios().contains(sc))?"§aOn":"§cOff";
             ArrayList<String>Lines=new ArrayList<String>();
             String compatibility=(sc.getCompatiblity().IsCompatible(Main.currentGame.getMode()))?"§a✔":"§c✖";
@@ -74,16 +75,16 @@ public class ScenarioGUI extends GUI{
                 int slot = e.getSlot();
                 switch (slot) {
                     case 49:
-                        new ModeGUI(KtbsAPI.getCurrentGame().getMode(), gui.player).open();
+                        new ModeGUI(Main.currentGame.getMode(), gui.player).open();
                         break;
                     default:
-                        if (slot - 9 >= 0 && slot - 9 < KtbsAPI.getScenarios().size()) {
-                            if (Main.currentGame.getScenarios().contains(KtbsAPI.getScenarios().get(slot - 9))) {
-                                Main.INSTANCE.removeScenarios(KtbsAPI.getScenarios().get(slot-9));
+                        if (slot - 9 >= 0 && slot - 9 < api.getScenariosProvider().getScenarios().size()) {
+                            if (Main.currentGame.getScenarios().contains(api.getScenariosProvider().getScenarios().get(slot - 9))) {
+                                Main.INSTANCE.removeScenarios(api.getScenariosProvider().getScenarios().get(slot-9));
                             } else {
-                                KasterborousScenario scenarios= KtbsAPI.getScenarios().get(slot - 9);
+                                KasterborousScenario scenarios= api.getScenariosProvider().getScenarios().get(slot - 9);
                                 if (scenarios.getCompatiblity().IsCompatible(Main.currentGame.getMode()))
-                                    Main.INSTANCE.addScenarios(KtbsAPI.getScenarios().get(slot - 9));
+                                    Main.INSTANCE.addScenarios(api.getScenariosProvider().getScenarios().get(slot - 9));
                                 else
                                     gui.player.sendMessage(Main.UHCTypo + "§CScénario imcompatible");
                             }
