@@ -42,4 +42,7 @@ public class KtbsAPI {
     public KTBSRunnableProvider getKTBSRunnableProvider(){
         return provider;
     }
+    public FightProvider getFightProvider(){
+        return provider;
+    }
 }
