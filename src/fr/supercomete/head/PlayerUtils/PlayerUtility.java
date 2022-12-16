@@ -48,7 +48,6 @@ public class PlayerUtility{
                         pl.updateInventory();
                     }
                 }.runTaskLater(Main.INSTANCE,0L);
-
 			}
 		}catch(IOException e){e.printStackTrace();}
 	}
@@ -138,24 +137,7 @@ public class PlayerUtility{
 		}
 		return target;
 	}
-	public static void addProperlyEffect(@Nullable Player player, PotionEffect effect) {
-		/*
-		 * Add a potion effect only if the player has the same potioneffect with a lower amplifier or if the player hasn't this potioneffect
-		 */
-        if(player==null)return;
-		if(player.hasPotionEffect(effect.getType())) {
-			int amplifier = 0;
-			for(final PotionEffect pot : player.getActivePotionEffects()) {
-				if(pot.getType().equals(effect.getType()))amplifier=pot.getAmplifier();
-			}
-			if(!(amplifier>effect.getAmplifier())) {
-				player.removePotionEffect(effect.getType());
-				player.addPotionEffect(effect);
-			}
-		}else {
-			player.addPotionEffect(effect);
-		}
-	}
+
     public static void sendActionbar(Player p, String message) {
         IChatBaseComponent icbc = IChatBaseComponent.ChatSerializer.a("{\"text\": \"" + message + "\"}");
         PacketPlayOutChat bar = new PacketPlayOutChat(icbc, (byte) 2);

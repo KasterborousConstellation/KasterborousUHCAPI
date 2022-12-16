@@ -1,10 +1,7 @@
 package fr.supercomete.head.role;
-
 import fr.supercomete.head.GameUtils.Time.TimeUtility;
 import fr.supercomete.head.core.Main;
-
 import java.util.ArrayList;
-
 public class CommandUse {
     private final ArrayList<String>names = new ArrayList<>();
     private final ArrayList<Integer>times = new ArrayList<>();

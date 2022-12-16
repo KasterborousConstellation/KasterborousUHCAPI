@@ -10,6 +10,8 @@ import fr.supercomete.head.GameUtils.GameMode.ModeHandler.MapHandler;
 import fr.supercomete.head.GameUtils.GameMode.ModeModifier.Command;
 import fr.supercomete.head.GameUtils.GameMode.Modes.Mode;
 import fr.supercomete.head.GameUtils.Scenarios.KasterborousScenario;
+import fr.supercomete.head.PlayerUtils.EffectHandler;
+import fr.supercomete.head.PlayerUtils.KTBSEffect;
 import fr.supercomete.head.core.KasterborousRunnable;
 import fr.supercomete.head.core.Main;
 import fr.supercomete.head.role.KasterBorousCamp;
@@ -18,10 +20,12 @@ import fr.supercomete.head.structure.StructureHandler;
 import fr.supercomete.head.world.BiomeGenerator;
 import org.bukkit.craftbukkit.v1_8_R3.CraftServer;
 import org.bukkit.entity.Player;
+import org.bukkit.potion.PotionEffect;
+
 import java.lang.reflect.InvocationTargetException;
 import java.util.*;
 import java.util.concurrent.CopyOnWriteArrayList;
-public class KtbsProvider implements FightProvider,HostProvider,GameProvider,MapProvider,RoleProvider,ModeProvider,ConfigurableProvider,KTBSRunnableProvider,ScenariosProvider{
+public class KtbsProvider implements PotionEffectProvider,FightProvider,HostProvider,GameProvider,MapProvider,RoleProvider,ModeProvider,ConfigurableProvider,KTBSRunnableProvider,ScenariosProvider{
     private int call = 0;
     private void update(){
         call++;
@@ -349,5 +353,38 @@ public class KtbsProvider implements FightProvider,HostProvider,GameProvider,Map
             }
         }
         return fights;
+    }
+
+    @Override
+    public boolean hasNullifer(Player player) {
+        if(EffectHandler.effects.containsKey(player.getUniqueId())){
+            return false;
+        }
+        for(KTBSEffect effect : EffectHandler.effects.get(player.getUniqueId())){
+            if(effect.type==null){
+                return true;
+            }
+        }
+        return false;
+    }
+
+    @Override
+    public void applyPotionEffect(Player player,KTBSEffect effect) {
+        EffectHandler.apply(player,effect);
+    }
+
+    @Override
+    public ArrayList<PotionEffect> getPotionEffect(Player player){
+        ArrayList<PotionEffect>potions=new ArrayList<>();
+        List<KTBSEffect> effects = EffectHandler.effects.get(player.getUniqueId());
+        if(effects==null||effects.size()==0){
+            return new ArrayList<>();
+        }
+        for(final KTBSEffect effect : EffectHandler.effects.get(player.getUniqueId())){
+            if(effect.type!=null){
+                potions.add(new PotionEffect(effect.type, effect.duration, effect.level,false,false));
+            }
+        }
+        return potions;
     }
 }

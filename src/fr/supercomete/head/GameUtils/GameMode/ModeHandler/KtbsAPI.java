@@ -19,7 +19,9 @@ public class KtbsAPI {
         provider= new KtbsProvider();
     }
 
-
+    public PotionEffectProvider getPotionEffectProvider(){
+        return provider;
+    }
     public HostProvider getHostProvider(){
         return provider;
     }

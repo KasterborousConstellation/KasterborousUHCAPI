@@ -144,24 +144,19 @@ class EntityDamageListeners implements Listener {
                                 cancel = true;
                             }
                         }
-
-                        if (NbtTagHandler.hasUUIDTAG(damager.getItemInHand())) {
+                        /*if (NbtTagHandler.hasUUIDTAG(damager.getItemInHand())) {
                             if (NbtTagHandler.getUUIDTAG(damager.getItemInHand()) == 11 && f.getEntity() instanceof Player) {
                                 PlayerUtility.addProperlyEffect((Player) f.getEntity(), new PotionEffect(PotionEffectType.CONFUSION, 10 * 20, 0, false, false));
                             }
-                        }
+                        }*/
                         if (cancel) {
                             e.setCancelled(true);
                             return;
                         }
-                        FightHandler.Fight(new Fight(((Player)f.getEntity()).getUniqueId(),damager.getUniqueId()));
+                        FightHandler.Fight(new Fight((f.getEntity()).getUniqueId(),damager.getUniqueId()));
                     }
-
                 }
             }
-            final Entity damagerit = f.getDamager();
-            final Entity damaged = f.getEntity();
-
         } else if (e.getCause().equals(DamageCause.PROJECTILE)) {
             if (e.getEntity() instanceof Player) {
                 Player player = (Player) e.getEntity();
@@ -322,7 +317,6 @@ class EntityDamageListeners implements Listener {
                         RoleHandler.getHistoric().setEntry(player.getUniqueId(), data);
                     }
                 }
-
             }
         }
     }
