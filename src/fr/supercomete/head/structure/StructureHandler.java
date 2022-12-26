@@ -1,10 +1,13 @@
 package fr.supercomete.head.structure;
-import java.io.File;
-import java.io.IOException;
+import java.io.*;
+import java.nio.charset.StandardCharsets;
+import java.util.Objects;
 import java.util.logging.Level;
+import java.util.stream.Collectors;
 
 import fr.supercomete.datamanager.FileManager.Fileutils;
 import fr.supercomete.head.core.Main;
+import jdk.nashorn.internal.parser.JSONParser;
 import org.bukkit.Bukkit;
 
 public class StructureHandler {
@@ -25,9 +28,14 @@ public class StructureHandler {
 		Fileutils.save(file, jsoncontent);
 	}
 	public Structure extractStructure(Class<?>pluginClass,String name) {
-		final File file = new File(pluginClass.getClassLoader().getResource(name+".struct").getFile());
         Bukkit.getLogger().log(Level.FINE,"Loading: "+name+".struct");
-		final Structure structure = Main.manager.deserializeStructure(Fileutils.loadContent(file));
-		return structure;
+        try {
+            final Structure structure = Main.manager.deserializeStructure(Fileutils.readFileFromResources(pluginClass,name+".struct"));
+            return structure;
+        }catch (IOException e) {
+            e.printStackTrace();
+            return null;
+        }
 	}
+
 }
