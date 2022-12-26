@@ -8,5 +8,4 @@ public enum RoleStateTypes {
 	UNITSoldier(),
 	MasterCyberium(),
     Karvanista(),
-	
 }

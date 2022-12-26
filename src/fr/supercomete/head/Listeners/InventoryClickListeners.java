@@ -71,8 +71,6 @@ final class InventoryClickListeners implements Listener{
 	@EventHandler
 	public void PrepareAnvilEvent(InventoryClickEvent event) {
 	    final Player player = (Player)event.getWhoClicked();
-		if (event.getClickedInventory() == null)
-			return;
 		if (event.getClickedInventory().getType() == InventoryType.ANVIL && event.getWhoClicked() instanceof Player) {
 			if (event.getClickedInventory() instanceof AnvilInventory) {
                 AnvilInventory inv = (AnvilInventory) event.getClickedInventory();
@@ -182,8 +180,6 @@ final class InventoryClickListeners implements Listener{
 		final ItemStack currentItem = event.getCurrentItem();
 		final ClickType currentClick = event.getClick();
 		final int currentSlot = event.getSlot();
-		if (currentClick == ClickType.DOUBLE_CLICK)
-			return;
 		switch (currentInv.getName()) {
 		case "§dMultiplicateur":
 			event.setCancelled(true);
@@ -366,125 +362,6 @@ final class InventoryClickListeners implements Listener{
 						Arrays.asList("", InventoryHandler.ClickTypoAdd + "10",
 								InventoryHandler.ClickTypoMassAdd + "100", InventoryHandler.ClickTypoRemove + "10",
 								InventoryHandler.ClickTypoMassRemove + "100")));
-				break;
-			default:
-				break;
-			}
-			break;
-		case "§dGénération":
-			event.setCancelled(true);
-			switch (currentSlot) {
-			case 29:
-				if (!Main.currentGame.isGameState(Gstate.Waiting)) {
-					player.sendMessage(Main.UHCTypo + "§cImpossible de générer une carte pendant une partie");
-					return;
-				}
-				if(main.getGenmode() != GenerationMode.Generating) {
-					worldgenerator.generateworld();
-				}else {
-					player.sendMessage(Main.UHCTypo+"§cImpossible: Le monde ne peut pas être créé lors de la génération ou de la prégénération");
-				}
-				break;
-				
-			case 33:
-				if (!Main.currentGame.isGameState(Gstate.Waiting)) {
-					player.sendMessage(Main.UHCTypo + "§cImpossible de générer une carte pendant une partie");
-					return;
-				}
-				if (main.getGenmode() != GenerationMode.Generating && main.getGenmode()!=GenerationMode.WorldCreatedOnly) {
-					player.closeInventory();
-					worldgenerator.generateworld();
-					new BukkitRunnable() {
-						
-						@Override
-						public void run() {
-							worldgenerator.pregen();
-							
-						}
-					}.runTaskLater(main, 200L);
-					
-									
-				}
-				break;
-			case 31:
-				if (!Main.currentGame.isGameState(Gstate.Waiting)) {
-					player.sendMessage(Main.UHCTypo + "§cImpossible de pré-générer une carte pendant une partie");
-					return;
-				}
-				if(main.getGenmode()==GenerationMode.WorldCreatedOnly) {
-					player.closeInventory();
-					worldgenerator.pregen();
-				}else {
-					player.sendMessage(Main.UHCTypo+"§cImpossible: Le monde doit être seulement généré afin de lancer une prégénération");
-				}
-				break;
-			case 19:
-				Main.generator.setLavaLake(!Main.generator.getLavaLake());
-				Main.updateGeneration(player);
-				break;
-			case 9:
-				if (currentClick.isRightClick() && Main.generator.getCoalboost() < 5) {
-					Main.generator.setCoalboost(Main.generator.getCoalboost() + 1);
-				} else if (currentClick.isLeftClick() && Main.generator.getCoalboost() > 1) {
-					Main.generator.setCoalboost(Main.generator.getCoalboost() - 1);
-				}
-				Main.updateGeneration(player);
-				break;
-			case 18:
-				if (currentClick.isRightClick() && Main.generator.getIronboost() < 5) {
-					Main.generator.setIronboost(Main.generator.getIronboost() + 1);
-				} else if (currentClick.isLeftClick() && Main.generator.getIronboost() > 1) {
-					Main.generator.setIronboost(Main.generator.getIronboost() - 1);
-				}
-				Main.updateGeneration(player);
-				break;
-			case 27:
-				if (currentClick.isRightClick() && Main.generator.getLapisboost() < 5) {
-					Main.generator.setLapisboost(Main.generator.getLapisboost() + 1);
-				} else if (currentClick.isLeftClick() && Main.generator.getLapisboost() > 1) {
-					Main.generator.setLapisboost(Main.generator.getLapisboost() - 1);
-				}
-				Main.updateGeneration(player);
-				break;
-			case 36:
-				if (currentClick.isRightClick() && Main.generator.getGoldboost() < 5) {
-					Main.generator.setGoldboost(Main.generator.getGoldboost() + 1);
-				} else if (currentClick.isLeftClick() && Main.generator.getGoldboost() > 1) {
-					Main.generator.setGoldboost(Main.generator.getGoldboost() - 1);
-				}
-				Main.updateGeneration(player);
-				break;
-			case 10:
-				if (currentClick.isRightClick() && Main.generator.getDiamondboost() < 5) {
-					Main.generator.setDiamondboost(Main.generator.getDiamondboost() + 1);
-				} else if (currentClick.isLeftClick() && Main.generator.getDiamondboost() > 1) {
-					Main.generator.setDiamondboost(Main.generator.getDiamondboost() - 1);
-				}
-				Main.updateGeneration(player);
-				break;
-			case 22:
-				int ordinal = Main.generator.getBiome().ordinal();
-				ordinal = (ordinal + 1) % BiomeGeneration.values().length;
-				Main.generator.setBiome(BiomeGeneration.values()[ordinal]);
-				ItemStack it = Main.generator.getBiome().getItem();
-				ItemMeta meta = it.getItemMeta();
-				meta.setDisplayName("§bBiome: §a" + Main.generator.getBiome().getName());
-				ArrayList<String> strl = Main.SplitCorrectlyString("Défini le biome de la carte. Cliquer pour changer.",
-						45, "§7");
-				strl.add("§cNombre de Seeds: §4" + WorldSeedGetter.getAmountOfSeed(Main.generator.getBiome()));
-				meta.setLore(strl);
-				it.setItemMeta(meta);
-				player.getOpenInventory().setItem(22, it);
-				break;
-			case 49:
-				new ModeGUI(Main.currentGame.getMode(), player).open();
-				break;
-			case 13:
-				if(Main.currentGame.getGenmode()==GenerationMode.Done ||Main.currentGame.getGenmode()==GenerationMode.WorldCreatedOnly) {
-					InventoryHandler.openinventory(player, 22);
-				}else {
-					player.sendMessage("§cCette action est impossible");
-				}
 				break;
 			default:
 				break;

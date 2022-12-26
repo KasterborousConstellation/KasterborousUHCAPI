@@ -6,13 +6,29 @@ import org.bukkit.entity.Player;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.scheduler.BukkitRunnable;
 import java.util.*;
+import java.util.concurrent.CopyOnWriteArrayList;
+import java.util.logging.Level;
+
 public class EffectHandler {
-    public static HashMap<UUID, List<KTBSEffect>> effects = new HashMap<>();
+    public static HashMap<UUID, CopyOnWriteArrayList<KTBSEffect>> effects = new HashMap<>();
 
     public static void apply(Player player, KTBSEffect effect) {
         if (effects.containsKey(player.getUniqueId())) {
-            List<KTBSEffect> l = effects.get(player.getUniqueId());
-            l.add(effect);
+            CopyOnWriteArrayList<KTBSEffect> l = effects.get(player.getUniqueId());
+            boolean found = false;
+            for(KTBSEffect iterate : l){
+                if(iterate.type==effect.type){
+                    if(iterate.level<=effect.level){
+                        l.remove(iterate);
+                        l.add(effect);
+                        found=true;
+                        break;
+                    }
+                }
+            }
+            if(!found){
+                l.add(effect);
+            }
             effects.put(
                     player.getUniqueId(),
                     l
@@ -20,7 +36,7 @@ public class EffectHandler {
         } else {
             effects.put(
                     player.getUniqueId(),
-                    Collections.singletonList(effect)
+                    new CopyOnWriteArrayList<>(Collections.singletonList(effect))
             );
         }
     }
@@ -38,7 +54,7 @@ public class EffectHandler {
         new BukkitRunnable() {
             @Override
             public void run() {
-                for (Map.Entry<UUID, List<KTBSEffect>> entry : effects.entrySet()) {
+                for (Map.Entry<UUID, CopyOnWriteArrayList<KTBSEffect>> entry : effects.entrySet()) {
                     final UUID uuid = entry.getKey();
                     final Player player = Bukkit.getPlayer(uuid);
                     if (player == null) {
@@ -51,22 +67,23 @@ public class EffectHandler {
                                 if (effect.type != null) {
                                     player.removePotionEffect(effect.type);
                                 }
-                                effect.duration--;
+                                effect.duration-=20;
                             }
                         } else {
                             for (final KTBSEffect effect : effects.get(uuid)) {
-                                addProperlyEffect(player, new PotionEffect(effect.type, effect.duration, effect.level, false, false));
-                                effect.duration--;
+                                addProperlyEffect(player, new PotionEffect(effect.type, effect.duration-1, effect.level, false, false));
+                                effect.duration-=20;
                             }
                         }
                     }
-                    final List<KTBSEffect> list = effects.get(uuid);
+                    final CopyOnWriteArrayList<KTBSEffect> list = effects.get(uuid);
                     for (final KTBSEffect effect : list) {
                         if (effect.duration <= 0) {
                             list.remove(effect);
                         }
                     }
                     effects.put(uuid, list);
+
                 }
             }
         }.runTaskTimer(
@@ -84,7 +101,7 @@ public class EffectHandler {
             for (final PotionEffect pot : player.getActivePotionEffects()) {
                 if (pot.getType().equals(effect.getType())) amplifier = pot.getAmplifier();
             }
-            if (!(amplifier > effect.getAmplifier())) {
+            if (amplifier <= effect.getAmplifier()) {
                 player.removePotionEffect(effect.getType());
                 player.addPotionEffect(effect);
             }

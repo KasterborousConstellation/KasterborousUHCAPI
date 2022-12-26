@@ -17,7 +17,6 @@ public class ScoreBoardManager {
 		ScoreBoardManager.main=main;
 	}
 	public static HashMap<UUID, SimpleScoreboard> boards = new HashMap<>();
-
 	public static void init(Player player) {
 		SimpleScoreboard ss = new SimpleScoreboard("§1»§aEchosia§1«");
 		int max = generateScoreboard(player).size();
@@ -51,17 +50,12 @@ public class ScoreBoardManager {
 		ChatColor t = scheme.getTertiary();
 		list.add(ChatColor.BOLD+"§7§7------------------");
 		final String number = (Main.currentGame.getMaxNumberOfplayer()==0)?"":p+"("+s+Main.countnumberofplayer()+t+"/"+s+Main.currentGame.getMaxNumberOfplayer()+p+")";
-		
 		list.add(Main.currentGame.getColorScheme().getPrimary() + Main.currentGame.getGameName());
 		list.add(number);
 		list.add("§r");
 		list.add("§c» " + p + "Host " + t + "» " + s + ((Main.host!=null&& Bukkit.getPlayer(Main.host)!=null)?Bukkit.getPlayer(Main.host).getName():"§cUnknown"));
-
 		list.add("§c» " + p + "Mode " + t + "» " + s+ Main.currentGame.getMode().getName());
-		
-			
 		list.add("§c» " + p + "Kills " + t + "» " + s + ((Main.currentGame.getKillList().get(player.getUniqueId())==null)?"Aucun":Main.currentGame.getKillList().get(player.getUniqueId())));
-		
 		list.add("§c» " + p + "Groupe " + t + "» " + s + Main.currentGame.getGroupe());
 		list.add("§r§r");
 		list.add("§c» " + p + "Temps " + t + "» " + s+ Main.transformScoreBoardType(Main.currentGame.getTime(), s.toString(), s.toString()));

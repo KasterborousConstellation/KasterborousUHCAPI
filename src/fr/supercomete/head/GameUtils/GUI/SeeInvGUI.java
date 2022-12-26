@@ -42,17 +42,7 @@ public class SeeInvGUI extends GUI{
 		for(int i=0;i<openPlayer.getInventory().getSize();i++) {
 			ItemStack it = openPlayer.getInventory().getItem(i);
 			if(openPlayer.getInventory().getItem(i)!=null && openPlayer.getInventory().getItem(i).getType()!=Material.AIR)
-			{	
-				if(hide&&NbtTagHandler.hasUUIDTAG(openPlayer.getInventory().getItem(i)))
-				{
-					if(NbtTagHandler.getUUIDTAG(openPlayer.getInventory().getItem(i))==8)
-					{
-						it = InventoryUtils.getItem(Material.COBBLESTONE, null, null);
-						it.setAmount((new Random().nextInt(63))+1);
-						if(i<9)
-							tmp.setItem(36+i, it);else tmp.setItem(i, it);
-					}
-				}
+			{
 				if(i<9)
 					tmp.setItem(36+i, it);else tmp.setItem(i, it);
 			}

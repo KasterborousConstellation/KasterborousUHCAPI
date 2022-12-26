@@ -7,6 +7,7 @@ import fr.supercomete.head.GameUtils.Events.PlayerEvents.PlayerEvents;
 import fr.supercomete.head.GameUtils.Fights.Fight;
 import fr.supercomete.head.GameUtils.Fights.FightHandler;
 import fr.supercomete.head.GameUtils.GameMode.ModeHandler.MapHandler;
+import fr.supercomete.head.PlayerUtils.KTBSEffect;
 import fr.supercomete.head.role.Triggers.*;
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
@@ -56,7 +57,6 @@ class EntityDamageListeners implements Listener {
     }
     @EventHandler(priority = EventPriority.HIGHEST)
     public void PlayerDeathEvent(EntityDamageEvent e) {
-
         if (e.getEntity() instanceof Player) {
             final Player player = (Player) e.getEntity();
             if (Main.currentGame.getNodamagePlayerList().contains(player.getUniqueId())
@@ -144,19 +144,18 @@ class EntityDamageListeners implements Listener {
                                 cancel = true;
                             }
                         }
-                        /*if (NbtTagHandler.hasUUIDTAG(damager.getItemInHand())) {
-                            if (NbtTagHandler.getUUIDTAG(damager.getItemInHand()) == 11 && f.getEntity() instanceof Player) {
-                                PlayerUtility.addProperlyEffect((Player) f.getEntity(), new PotionEffect(PotionEffectType.CONFUSION, 10 * 20, 0, false, false));
-                            }
-                        }*/
                         if (cancel) {
                             e.setCancelled(true);
                             return;
                         }
-                        FightHandler.Fight(new Fight((f.getEntity()).getUniqueId(),damager.getUniqueId()));
+                        FightHandler.Fight(new Fight(((Player)f.getEntity()).getUniqueId(),damager.getUniqueId()));
                     }
+
                 }
             }
+            final Entity damagerit = f.getDamager();
+            final Entity damaged = f.getEntity();
+
         } else if (e.getCause().equals(DamageCause.PROJECTILE)) {
             if (e.getEntity() instanceof Player) {
                 Player player = (Player) e.getEntity();
@@ -317,6 +316,7 @@ class EntityDamageListeners implements Listener {
                         RoleHandler.getHistoric().setEntry(player.getUniqueId(), data);
                     }
                 }
+
             }
         }
     }

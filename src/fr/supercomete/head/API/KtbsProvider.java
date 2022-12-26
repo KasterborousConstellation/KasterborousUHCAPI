@@ -357,7 +357,7 @@ public class KtbsProvider implements PotionEffectProvider,FightProvider,HostProv
 
     @Override
     public boolean hasNullifer(Player player) {
-        if(EffectHandler.effects.containsKey(player.getUniqueId())){
+        if(!EffectHandler.effects.containsKey(player.getUniqueId())){
             return false;
         }
         for(KTBSEffect effect : EffectHandler.effects.get(player.getUniqueId())){

@@ -22,11 +22,10 @@ public class AdvancedRulesGUI extends GUI{
 	private static final CopyOnWriteArrayList<AdvancedRulesGUI> allGui = new CopyOnWriteArrayList<AdvancedRulesGUI>();
 	private Inventory inv;
 	private Player player;
-	public AdvancedRulesGUI(Main main) {
+	public AdvancedRulesGUI(Main main){
 		this.player=null;
 	}
 	public AdvancedRulesGUI(Player player) {
-		this.player=null;
 		this.player=player;
 		if (player != null)
 			allGui.add(this);

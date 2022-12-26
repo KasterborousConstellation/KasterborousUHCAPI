@@ -8,8 +8,11 @@ import fr.supercomete.head.role.Triggers.Trigger_OnFightEnd;
 import fr.supercomete.head.role.Triggers.Trigger_onFightBegin;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
+
+import java.util.ArrayList;
 import java.util.UUID;
 import java.util.concurrent.CopyOnWriteArrayList;
+
 public class Fight {
     private final int begin;
     private final UUID first;
@@ -77,6 +80,7 @@ public class Fight {
                     }
                 }
             }
+
     }
     public UUID getFirst(){
         return first;

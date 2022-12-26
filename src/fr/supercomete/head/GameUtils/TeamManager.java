@@ -1,11 +1,7 @@
 package fr.supercomete.head.GameUtils;
-
 import java.util.ArrayList;
 import java.util.UUID;
-
 import org.bukkit.ChatColor;
-
-import fr.supercomete.head.GameUtils.GameMode.ModeHandler.KtbsAPI;
 import fr.supercomete.head.GameUtils.GameMode.Modes.UHCClassic;
 import fr.supercomete.head.core.Main;
 

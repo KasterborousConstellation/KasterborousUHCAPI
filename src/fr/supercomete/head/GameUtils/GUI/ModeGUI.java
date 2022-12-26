@@ -108,7 +108,7 @@ public class ModeGUI extends GUI {
 				}
 				tmp.setItem(35, titem);
 			}
-			tmp.setItem(49, InventoryUtils.getItem(Material.ARROW, "§7Retour", Collections.singletonList("§rRetour au choix du mode de jeu")));
+			tmp.setItem(45, InventoryUtils.getItem(Material.BARRIER, "§7Retour", Collections.singletonList("§rRetour au choix du mode de jeu")));
 		}
 		return tmp;
 	}
@@ -159,14 +159,14 @@ public class ModeGUI extends GUI {
                             break;
 					case 3:
 						if(Main.currentGame.getGamestate().equals(Gstate.Waiting)) {
-							InventoryHandler.openinventory(player,2);							
+							new GenerationGUI(player).open();
 						}else player.sendMessage(Main.UHCTypo+"§cImpossible d'acceder à la génération pendant la partie");
 						break;
 					case 48:
 						main.StartGame(player);
 						break;
 					case 26:
-						InventoryHandler.openinventory(player, 3);
+						new GenerationGUI(player).open();
 						break;
 					case 50:
 						main.StopGame(player);
@@ -178,7 +178,7 @@ public class ModeGUI extends GUI {
 						main.Selected= 0;
 						InventoryHandler.openinventory(player, 7);
 						break;
-					case 49:
+					case 45:
 						if (Main.currentGame.isGameState(Gstate.Waiting)) {
 							Main.currentGame = new Game((new Null_Mode()).getName(),main);
 							new ModeGUI(new Null_Mode(), mode.player).open();

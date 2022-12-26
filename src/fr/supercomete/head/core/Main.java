@@ -6,17 +6,22 @@ import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.*;
 import java.util.jar.JarFile;
+import java.util.logging.Level;
 import java.util.zip.ZipEntry;
 import fr.supercomete.commands.*;
+import fr.supercomete.head.Exception.KTBSNetworkFailure;
 import fr.supercomete.head.GameUtils.Events.GameEvents.EventsHandler;
 import fr.supercomete.head.GameUtils.Events.PlayerEvents.PlayerEventHandler;
 import fr.supercomete.head.GameUtils.Fights.FightHandler;
 import fr.supercomete.head.GameUtils.GameConfigurable.Configurable;
 import fr.supercomete.head.GameUtils.GameMode.ModeHandler.MapHandler;
+import fr.supercomete.head.GameUtils.GameMode.ModeModifier.Permission;
 import fr.supercomete.head.GameUtils.GameMode.Modes.*;
 import fr.supercomete.head.GameUtils.Scenarios.KasterborousScenario;
 import fr.supercomete.head.GameUtils.Time.TimeUtility;
 import fr.supercomete.head.GameUtils.Time.TimerType;
+import fr.supercomete.head.PlayerUtils.EffectHandler;
+import fr.supercomete.head.PlayerUtils.KTBSEffect;
 import fr.supercomete.tasks.Cycle;
 import org.bukkit.*;
 import org.bukkit.entity.Player;
@@ -82,6 +87,7 @@ public class Main extends JavaPlugin {
 	public static ArrayList<UUID>bypass = new ArrayList<>();
 	public static Cycle currentCycle=null;
     public static Main INSTANCE;
+    public static boolean KTBSNetwork_Connected;
     @Override
     public void onDisable(){
         for(final KasterborousRunnable run: Bukkit.getServicesManager().load(KtbsAPI.class).getKTBSRunnableProvider().getRunnables()){
@@ -91,6 +97,17 @@ public class Main extends JavaPlugin {
 	@SuppressWarnings("deprecation")
 	@Override
 	public void onEnable() {
+        /*
+        Initialisation du network KTBS
+         */
+        try{
+            Server server = ServerManager.getCurrentPluginServer();
+            Bukkit.broadcastMessage("§6KTBS_Network : §aConnected");
+            KTBSNetwork_Connected=true;
+        }catch (Exception e){
+            Bukkit.broadcastMessage("§6KTBS_Network: §cDisconnected");
+            KTBSNetwork_Connected=false;
+        }
         KtbsAPI api = new KtbsAPI();
         Bukkit.getServicesManager().register(KtbsAPI.class,api,this, ServicePriority.Lowest);
         INSTANCE=this;
@@ -110,7 +127,7 @@ public class Main extends JavaPlugin {
 		api.getModeProvider().registerMode(new Null_Mode());
 		UHCClassic uhcclassic = new UHCClassic();	
 		api.getModeProvider().registerMode(uhcclassic);
-		Bukkit.broadcastMessage("§dVersion: 0.8.9 Build("+Compiledate.getDate()+"/"+(Compiledate.getMonth()+1)+") §6Alpha");
+		Bukkit.broadcastMessage("§dVersion: 0.9.1 Build("+Compiledate.getDate()+"/"+(Compiledate.getMonth()+1)+") §1Beta-Ouverte");
 		currentGame=new Game((new Null_Mode()).getName(),this);
 		Bukkit.getServer().getScheduler().scheduleSyncRepeatingTask(this, new Lag(), 100L, 1L);// LagO'meter
 		spawn = new Location(Bukkit.getWorld("world"), getConfig().getInt("serverapi.spawn.x"),
@@ -165,6 +182,7 @@ public class Main extends JavaPlugin {
 		goldenHeadRecipe.setIngredient('#', Material.SKULL_ITEM, 3);
 		Bukkit.getServer().addRecipe(goldenHeadRecipe);
 		Main.devmode=getConfig().getBoolean("serverapi.serverconfig.devmode");
+        EffectHandler.init();
 		if(devmode) {
 			Bukkit.broadcastMessage("§eDevMode: §aOn");
 		}
@@ -174,6 +192,19 @@ public class Main extends JavaPlugin {
             public void run() {
                 for(final KasterborousRunnable run: api.getKTBSRunnableProvider().getRunnables()){
                     run.onAPILaunch();
+                }
+                for(Mode mode : Bukkit.getServicesManager().load(KtbsAPI.class).getModeProvider().getRegisteredModes()){
+                    if(mode instanceof Permission && !KTBSNetwork_Connected){
+                        try {
+                            throw new KTBSNetworkFailure();
+                        } catch (KTBSNetworkFailure e) {
+                            e.printStackTrace();
+                            Bukkit.getLogger().log(Level.WARNING,"THIS IS A KASTERBOROUS SYSTEM FAULT.\n" +
+                                    "IF YOU SEE THAT MESSAGE: A MODE REQUIRING A CONNECTION TO KASTERBOROUS NETWORK HAS BEEN LOADED UNSUCESSFULLY \n" +
+                                    "IF YOU SHOULD BE CONNECTED TO KTBS_NETWORK, PLEASE CONTACT SUPERCOMETE. OTHERWISE, REMOVE THIS MODE.");
+                            Bukkit.getServer().shutdown();
+                        }
+                    }
                 }
             }
         }.runTaskLater(this,30L);
@@ -216,10 +247,10 @@ public class Main extends JavaPlugin {
         bypass.removeIf(uu -> !(Main.IsHost(uu) || Main.IsCohost(uu)));
     }
     public static boolean IsHost(UUID player) {
-        return (host!=null && host.equals(player))||PlayerAccountManager.getPlayerAccount(player).hasRank(Rank.Admin);
+        return (host!=null && host.equals(player))||(KTBSNetwork_Connected&&PlayerAccountManager.getPlayerAccount(player).hasRank(Rank.Admin));
     }
 	public static boolean IsHost(Player player) {
-		return (host!=null && host.equals(player.getUniqueId()))||PlayerAccountManager.getPlayerAccount(player).hasRank(Rank.Admin); 
+		return (host!=null && host.equals(player.getUniqueId()))||(KTBSNetwork_Connected&&PlayerAccountManager.getPlayerAccount(player).hasRank(Rank.Admin));
 	}
 	public static boolean IsCohost(Player player) {
 		return cohost.contains(player.getUniqueId());
@@ -547,18 +578,6 @@ public class Main extends JavaPlugin {
 		ArrayList<String> strl = SplitCorrectlyString(todiplay, charperline, chat.toString());
 		for (String str : strl)
 			player.sendMessage(str);
-	}
-	public static void updateGeneration(Player player) {
-		player.getOpenInventory().setItem(33, InventoryUtils.createColorItem(Material.STAINED_GLASS, "§bCréer le monde et prégénerer", 1, (short)3));
-		player.getOpenInventory().setItem(9, InventoryUtils.getItem(Material.COAL_ORE, "§fMultiplicateur de Charbon §a"+Main.generator.getCoalboost(), Arrays.asList(InventoryHandler.ClickTypoAdd+"1",InventoryHandler.ClickTypoRemove+"1")));
-		player.getOpenInventory().setItem(18, InventoryUtils.getItem(Material.IRON_ORE, "§fMultiplicateur de Fer §a"+Main.generator.getIronboost(), Arrays.asList(InventoryHandler.ClickTypoAdd+"1",InventoryHandler.ClickTypoRemove+"1")));
-		player.getOpenInventory().setItem(27, InventoryUtils.getItem(Material.LAPIS_ORE, "§fMultiplicateur de Lapis §a"+Main.generator.getLapisboost(), Arrays.asList(InventoryHandler.ClickTypoAdd+"1",InventoryHandler.ClickTypoRemove+"1")));
-		player.getOpenInventory().setItem(36, InventoryUtils.getItem(Material.GOLD_ORE, "§fMultiplicateur d'or §a"+Main.generator.getGoldboost(), Arrays.asList(InventoryHandler.ClickTypoAdd+"1",InventoryHandler.ClickTypoRemove+"1")));
-		player.getOpenInventory().setItem(10, InventoryUtils.getItem(Material.DIAMOND_ORE, "§fMultiplicateur de diamant §a"+Main.generator.getDiamondboost(), Arrays.asList(InventoryHandler.ClickTypoAdd+"1",InventoryHandler.ClickTypoRemove+"1")));
-		player.getOpenInventory().setItem(19, InventoryUtils.getItem(Material.LAVA_BUCKET, "§4Lac de lave en surface: "+Main.TranslateBoolean(Main.generator.getLavaLake()), Arrays.asList("§7Defini si les lacs de lave se générent en surface",InventoryHandler.ClickBool)));
-		player.getOpenInventory().setItem(29, InventoryUtils.createColorItem(Material.STAINED_GLASS, "§bCréer le monde", 1, (short)14));
-		player.getOpenInventory().setItem(31, InventoryUtils.createColorItem(Material.STAINED_GLASS, "§bPrégénerer le monde", 1, (short)5));
-		player.getOpenInventory().setItem(13, InventoryUtils.getItem(Material.IRON_DOOR, "§dMondes", Collections.singletonList("§bCliquer ici pour pouvoir changer de monde")));
 	}
 
 	public static int CountIntegerValue(HashMap<?, Integer> map) {
