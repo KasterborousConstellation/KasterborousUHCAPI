@@ -3,7 +3,7 @@ import javax.annotation.Nullable;
 import fr.supercomete.head.GameUtils.Scenarios.Compatibility;
 public enum Timer {
 	RealEpisodeTime("Durée d'un épisode",180,Compatibility.allModes,1200,TimerType.Literal,null,false),
-	EpisodeTime("Durée d'un cycle jour/nuit",180,Compatibility.allModes,600,TimerType.Literal,null,false),
+	DayNightCycle("Durée d'un cycle jour/nuit",180,Compatibility.allModes,600,TimerType.Literal,null,false),
 	PvPTime("PvP",60,Compatibility.allModes,1200,TimerType.TimeDependent,null,true),
 	BorderTime("Début du mouvement de la bordure",60,Compatibility.allModes,4800,TimerType.TimeDependent,null,true),
 	RoleTime("Roles",60,Compatibility.allModes,1200,TimerType.TimeDependent,null,true),

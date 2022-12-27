@@ -1,5 +1,4 @@
 package fr.supercomete.head.world.ScoreBoard;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.UUID;
@@ -10,7 +9,6 @@ import org.bukkit.entity.Player;
 
 import fr.supercomete.head.GameUtils.ColorScheme;
 import fr.supercomete.head.core.Main;
-
 public class ScoreBoardManager {
 	private static Main main;
 	public ScoreBoardManager(Main main) {

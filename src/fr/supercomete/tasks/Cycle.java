@@ -1,16 +1,15 @@
 package fr.supercomete.tasks;
-import java.awt.*;
 import java.util.ArrayList;
-import java.util.Random;
 import java.util.UUID;
 
 import fr.supercomete.head.GameUtils.Events.GameEvents.Event;
 import fr.supercomete.head.GameUtils.Game;
 import fr.supercomete.head.GameUtils.GameConfigurable.Configurable;
+import fr.supercomete.head.GameUtils.GameMode.ModeHandler.KtbsAPI;
 import fr.supercomete.head.GameUtils.GameMode.ModeHandler.MapHandler;
 import fr.supercomete.head.GameUtils.GameMode.Modes.Mode;
 import fr.supercomete.head.GameUtils.Time.TimeUtility;
-import fr.supercomete.head.PlayerUtils.PlayerUtility;
+import fr.supercomete.head.core.KasterborousRunnable;
 import fr.supercomete.head.role.Triggers.*;
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
@@ -27,7 +26,7 @@ import fr.supercomete.head.PlayerUtils.Offline_Player;
 import fr.supercomete.head.core.Main;
 import fr.supercomete.head.role.Role;
 import fr.supercomete.head.role.RoleHandler;
-import fr.supercomete.head.world.worldgenerator;
+
 public class Cycle extends BukkitRunnable{
 	private final Main main;
 	public Cycle(Main main) {
@@ -43,23 +42,30 @@ public class Cycle extends BukkitRunnable{
 	public static boolean hasForceRole=false;
     public Mode mode = Main.currentGame.getMode();
     public Game game = Main.currentGame;
+    private KtbsAPI api = Bukkit.getServicesManager().load(KtbsAPI.class);
 	//AnnoncedTimes 
 	private final int[] annonced=new int[] {10*60,5*60,3*60,60,30,10,5,4,3,2,1};
 	@Override
 	public void run() {
         if(Main.getPlayerlist().size()>0){
             if (time == 0) {
-                timer = ((game.getTimer(Timer.EpisodeTime)).getData() / 2) - 1;
+                timer = ((game.getTimer(Timer.DayNightCycle)).getData() / 2) - 1;
                 ArrayList<Player> pllist = new ArrayList<>();
                 for (Player player : Bukkit.getOnlinePlayers())
                     if (player.getGameMode() != GameMode.SPECTATOR) pllist.add(player);
                 for (Player pl : pllist) {
                     mode.OnStart(pl);
                 }
+                for(KasterborousRunnable runnable : api.getKTBSRunnableProvider().getRunnables()){
+                    runnable.onGameLaunch(api);
+                }
             }
             if ((time == game.getTimer(Timer.BorderTime).getData() || main.isForcebordure()) && !hasBordureForced) {
                 hasBordureForced = true;
                 Bukkit.broadcastMessage(Main.UHCTypo + "La bordure est en mouvement");
+                for(KasterborousRunnable runnable : api.getKTBSRunnableProvider().getRunnables()){
+                    runnable.onTimer(Timer.BorderTime);
+                }
             }
             if (!game.isGameState(Gstate.Waiting) && !game.isGameState(Gstate.Starting) && time > 0) {
                 game.setEpisode(days);
@@ -84,6 +90,9 @@ public class Cycle extends BukkitRunnable{
                 } else {
                     if (game.getTime() >= 0) {
                         mode.onAnyTime(player);
+                        for(KasterborousRunnable runnable : api.getKTBSRunnableProvider().getRunnables()){
+                            runnable.onTick(game.getGamestate(),api);
+                        }
                         if (RoleHandler.getRoleOf(player) != null) {
                             Role role = RoleHandler.getRoleOf(player);
                             if (role instanceof Trigger_WhileAnyTime) {
@@ -123,7 +132,7 @@ public class Cycle extends BukkitRunnable{
             /*
             Night switch
              */
-            if (timer == (game.getTimer(Timer.EpisodeTime)).getData() / 2) {
+            if (timer == (game.getTimer(Timer.DayNightCycle)).getData() / 2) {
                 game.setGamestate(Gstate.Day);
                 MapHandler.getMap().getPlayWorld().setTime(1000);
                 Bukkit.broadcastMessage(Main.UHCTypo + "§6Le jour se §elève§6.");
@@ -144,6 +153,9 @@ public class Cycle extends BukkitRunnable{
              */
             if ((time == game.getTimer(Timer.PvPTime).getData() || main.isForcedpvp()) && !hasPvpForced) {
                 hasPvpForced = true;
+                for(KasterborousRunnable runnable : api.getKTBSRunnableProvider().getRunnables()){
+                    runnable.onTimer(Timer.PvPTime);
+                }
                 MapHandler.getMap().getPlayWorld().setPVP(true);
                 Bukkit.broadcastMessage(Main.UHCTypo + "§6Le PVP est activé");
                 if (game.getScenarios().contains(Scenarios.FinalHeal)) Main.finalheal();
@@ -151,7 +163,7 @@ public class Cycle extends BukkitRunnable{
             /*
             Day switch
              */
-            if (timer == (game.getTimer(Timer.EpisodeTime)).getData()) {
+            if (timer == (game.getTimer(Timer.DayNightCycle)).getData()) {
                 game.setGamestate(Gstate.Night);
                 MapHandler.getMap().getPlayWorld().setTime(18000);
                 Bukkit.broadcastMessage(Main.UHCTypo + " §9La nuit §btombe§9.");
@@ -193,6 +205,9 @@ public class Cycle extends BukkitRunnable{
                 hasForceRole = true;
                 if (mode instanceof CampMode) {
                     RoleHandler.GiveRole();
+                }
+                for(KasterborousRunnable runnable : api.getKTBSRunnableProvider().getRunnables()){
+                    runnable.onTimer(Timer.RoleTime);
                 }
                 for (Player player : Bukkit.getOnlinePlayers()) {
                     mode.onRoleTime(player);
@@ -246,6 +261,9 @@ public class Cycle extends BukkitRunnable{
             game.setGamestate(Gstate.Waiting);
             for (Player player : Bukkit.getOnlinePlayers()) {
                 mode.onEndingTime(player);
+            }
+            for(KasterborousRunnable runnable : api.getKTBSRunnableProvider().getRunnables()){
+                runnable.onGameEnd(api);
             }
             cancel();
         }

@@ -133,24 +133,19 @@ public class ModeGUI extends GUI {
 						player.sendMessage(Main.UHCTypo + "§cVous ne pouvez pas changer de mode de jeux pendant une partie");
 						return;
 					}
-					switch (currentSlot) {
-					default:
-						if(currentSlot<api.getModeProvider().getRegisteredModes().size()-1) {
-                            Mode chosenMode = api.getModeProvider().getRegisteredModes().get(currentSlot+1);
-                            if(chosenMode instanceof Permission){
-                                final Permission perm = (Permission) chosenMode;
-                                Rank rank = perm.getPermission();
-                                if(!PlayerAccountManager.getPlayerAccount(mode.player).hasRank(rank)){
-                                    return;
-                                }
+                    if (currentSlot < api.getModeProvider().getRegisteredModes().size() - 1) {
+                        Mode chosenMode = api.getModeProvider().getRegisteredModes().get(currentSlot + 1);
+                        if (chosenMode instanceof Permission) {
+                            final Permission perm = (Permission) chosenMode;
+                            Rank rank = perm.getPermission();
+                            if (!PlayerAccountManager.getPlayerAccount(mode.player).hasRank(rank)) {
+                                return;
                             }
-							Main.currentGame= new Game(chosenMode.getName(),main);
-							new ModeGUI(api.getModeProvider().getRegisteredModes().get(currentSlot+1), mode.player).open();
-//							InventoryHandler.openinventory(player, KtbsAPI.getModeByIntRepresentation(Main.currentGame.getEmode()).getGUInumber());
-						}
-						break;
-					}
-					break;
+                        }
+                        Main.currentGame = new Game(chosenMode.getName(), main);
+                        new ModeGUI(api.getModeProvider().getRegisteredModes().get(currentSlot + 1), mode.player).open();
+                    }
+                    break;
 				}else{
 					e.setCancelled(true);
 					switch (currentSlot) {
@@ -166,7 +161,7 @@ public class ModeGUI extends GUI {
 						main.StartGame(player);
 						break;
 					case 26:
-						new GenerationGUI(player).open();
+						InventoryHandler.openinventory(player,3);
 						break;
 					case 50:
 						main.StopGame(player);

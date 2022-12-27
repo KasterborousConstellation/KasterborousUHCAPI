@@ -8,7 +8,6 @@ import org.bukkit.scheduler.BukkitRunnable;
 import java.util.*;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.logging.Level;
-
 public class EffectHandler {
     public static HashMap<UUID, CopyOnWriteArrayList<KTBSEffect>> effects = new HashMap<>();
 

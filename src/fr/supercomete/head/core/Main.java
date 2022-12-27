@@ -91,7 +91,7 @@ public class Main extends JavaPlugin {
     @Override
     public void onDisable(){
         for(final KasterborousRunnable run: Bukkit.getServicesManager().load(KtbsAPI.class).getKTBSRunnableProvider().getRunnables()){
-            run.onAPIStop();
+            run.onAPIStop(Bukkit.getServicesManager().load(KtbsAPI.class));
         }
     }
 	@SuppressWarnings("deprecation")
@@ -157,7 +157,10 @@ public class Main extends JavaPlugin {
         getCommand("bypass").setExecutor(new BypassCommand(this));
         getCommand("tpin").setExecutor(new TpInCommand(this));
         getCommand("timeleft").setExecutor(new TimeLeftCommand(this));
+        getCommand("ti").setExecutor(new TeamInventory());
+
         getServer().getMessenger().registerOutgoingPluginChannel(this, "BungeeCord");
+
         scoreboardmanager score = new scoreboardmanager(this);
 		score.ChangeScoreboard();
 		new InventoryHandler(this);
@@ -190,9 +193,18 @@ public class Main extends JavaPlugin {
         new BukkitRunnable(){
             @Override
             public void run() {
-                for(final KasterborousRunnable run: api.getKTBSRunnableProvider().getRunnables()){
-                    run.onAPILaunch();
+                //Enregistre les KtbsRunnables des scenarios
+                for(KasterborousScenario scenario : api.getScenariosProvider().getScenarios()){
+                    if(scenario.getAttachedRunnable()!=null){
+                        api.getKTBSRunnableProvider().RegisterRunnable(new ArrayList<>(scenario.getAttachedRunnable()));
+                    }
                 }
+                //Indique le lancement de l'api
+                for(final KasterborousRunnable run: api.getKTBSRunnableProvider().getRunnables()){
+                    run.onAPILaunch(api);
+                }
+                //Verifie les erreurs du systeme KTBS network
+
                 for(Mode mode : Bukkit.getServicesManager().load(KtbsAPI.class).getModeProvider().getRegisteredModes()){
                     if(mode instanceof Permission && !KTBSNetwork_Connected){
                         try {
