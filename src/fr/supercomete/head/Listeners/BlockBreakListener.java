@@ -5,6 +5,7 @@ import java.util.Random;
 import fr.supercomete.head.GameUtils.GameConfigurable.Configurable;
 import fr.supercomete.head.GameUtils.GameMode.ModeHandler.KtbsAPI;
 import fr.supercomete.head.PlayerUtils.PlayerUtility;
+import net.minecraft.server.v1_8_R3.WorldServer;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
@@ -18,9 +19,9 @@ import org.bukkit.inventory.ItemStack;
 import fr.supercomete.head.GameUtils.Scenarios.Scenarios;
 import fr.supercomete.head.Inventory.InventoryUtils;
 import fr.supercomete.head.core.Main;
-import fr.supercomete.head.world.worldgenerator;
+
 import net.minecraft.server.v1_8_R3.EntityExperienceOrb;
-import net.minecraft.server.v1_8_R3.World;
+
 
 final class BlockBreakListener implements Listener {
 	private final Main main;
@@ -49,7 +50,7 @@ final class BlockBreakListener implements Listener {
 				player.sendMessage(Main.UHCTypo + "Le scénario " + Scenarios.BloodDiamond.getName()
 						+ " est activé. Ce scénario vous a infligé 1/2coeurs de dégat");
 			}
-			if (KtbsAPI.getCurrentGame().getDataFrom(Configurable.LIST.DiamondLimit)!=0) {
+			if (Main.currentGame.getDataFrom(Configurable.LIST.DiamondLimit)!=0) {
 				int current = 0;
 				if (Main.diamondmap.containsKey(player.getUniqueId()))
 					current = Main.diamondmap.get(player.getUniqueId());
@@ -162,7 +163,7 @@ final class BlockBreakListener implements Listener {
 	//Taken from https://bukkit.org/threads/how-can-i-spawn-exp-orbs.92451/
 		public void spawnOrb(Location l, int amount, int value) {
 			  double x = l.getX(), y = l.getY(), z = l.getZ();
-			  World w = ((CraftWorld)l.getWorld()).getHandle();
+			  WorldServer w = ((CraftWorld)l.getWorld()).getHandle();
 			  for(int i = 0; i < value; i++) {
 			    w.addEntity(new EntityExperienceOrb(w, x, y, z, value));
 			  }

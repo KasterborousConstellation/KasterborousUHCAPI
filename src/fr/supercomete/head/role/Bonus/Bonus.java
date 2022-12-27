@@ -1,6 +1,4 @@
 package fr.supercomete.head.role.Bonus;
-
-
 public class Bonus {
 	private BonusType type;
 	private int level;
@@ -15,7 +13,7 @@ public class Bonus {
             case Speed:
                 return "§bVitesse §1+" + getLevel() + "%";
             case Heart:
-                return "§dCoeurs Bonus §5+" + getLevel() + "§d½♥";
+                return "§dCoeurs Bonus §5+" + (double)getLevel()/2.0 + "§d♥";
             case NoFall :
                 return "§aNoFall";
         }

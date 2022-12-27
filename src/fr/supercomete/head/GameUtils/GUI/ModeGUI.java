@@ -32,6 +32,7 @@ import fr.supercomete.head.PlayerUtils.PlayerUtility;
 import fr.supercomete.head.core.Main;
 
 public class ModeGUI extends GUI {
+    private static KtbsAPI api = Bukkit.getServicesManager().load(KtbsAPI.class);
 	private static final CopyOnWriteArrayList<ModeGUI> allGui = new CopyOnWriteArrayList<ModeGUI>();
 	private Inventory inv;
 	private final Mode m;
@@ -55,8 +56,8 @@ public class ModeGUI extends GUI {
 		Inventory tmp = Bukkit.createInventory(null, 54,m.getName());
 		if(m instanceof Null_Mode) {
 			tmp=Bukkit.createInventory(null, 54,"§dChoix du mode de jeux");
-			for(int i=1;i<KtbsAPI.getRegisteredModes().size();i++){
-				tmp.setItem(i-1, InventoryUtils.getItem(KtbsAPI.getRegisteredModes().get(i).getMaterial(),"§r§b"+KtbsAPI.getRegisteredModes().get(i).getName(),KtbsAPI.getRegisteredModes().get(i).getDescription()));
+			for(int i=1;i<api.getModeProvider().getRegisteredModes().size();i++){
+				tmp.setItem(i-1, InventoryUtils.getItem(api.getModeProvider().getRegisteredModes().get(i).getMaterial(),"§r§b"+api.getModeProvider().getRegisteredModes().get(i).getName(),api.getModeProvider().getRegisteredModes().get(i).getDescription()));
 			}
 		}else {
 			tmp.setItem(0,  InventoryUtils.createColorItem(Material.STAINED_GLASS_PANE, " ", 1, (short)3));
@@ -107,7 +108,7 @@ public class ModeGUI extends GUI {
 				}
 				tmp.setItem(35, titem);
 			}
-			tmp.setItem(49, InventoryUtils.getItem(Material.ARROW, "§7Retour", Collections.singletonList("§rRetour au choix du mode de jeu")));
+			tmp.setItem(45, InventoryUtils.getItem(Material.BARRIER, "§7Retour", Collections.singletonList("§rRetour au choix du mode de jeu")));
 		}
 		return tmp;
 	}
@@ -132,24 +133,19 @@ public class ModeGUI extends GUI {
 						player.sendMessage(Main.UHCTypo + "§cVous ne pouvez pas changer de mode de jeux pendant une partie");
 						return;
 					}
-					switch (currentSlot) {
-					default:
-						if(currentSlot<KtbsAPI.getRegisteredModes().size()-1) {
-                            Mode chosenMode = KtbsAPI.getRegisteredModes().get(currentSlot+1);
-                            if(chosenMode instanceof Permission){
-                                final Permission perm = (Permission) chosenMode;
-                                Rank rank = perm.getPermission();
-                                if(!PlayerAccountManager.getPlayerAccount(mode.player).hasRank(rank)){
-                                    return;
-                                }
+                    if (currentSlot < api.getModeProvider().getRegisteredModes().size() - 1) {
+                        Mode chosenMode = api.getModeProvider().getRegisteredModes().get(currentSlot + 1);
+                        if (chosenMode instanceof Permission) {
+                            final Permission perm = (Permission) chosenMode;
+                            Rank rank = perm.getPermission();
+                            if (!PlayerAccountManager.getPlayerAccount(mode.player).hasRank(rank)) {
+                                return;
                             }
-							Main.currentGame= new Game(chosenMode.getName(),main);
-							new ModeGUI(KtbsAPI.getRegisteredModes().get(currentSlot+1), mode.player).open();
-//							InventoryHandler.openinventory(player, KtbsAPI.getModeByIntRepresentation(Main.currentGame.getEmode()).getGUInumber());
-						}
-						break;
-					}
-					break;
+                        }
+                        Main.currentGame = new Game(chosenMode.getName(), main);
+                        new ModeGUI(api.getModeProvider().getRegisteredModes().get(currentSlot + 1), mode.player).open();
+                    }
+                    break;
 				}else{
 					e.setCancelled(true);
 					switch (currentSlot) {
@@ -158,14 +154,14 @@ public class ModeGUI extends GUI {
                             break;
 					case 3:
 						if(Main.currentGame.getGamestate().equals(Gstate.Waiting)) {
-							InventoryHandler.openinventory(player,2);							
+							new GenerationGUI(player).open();
 						}else player.sendMessage(Main.UHCTypo+"§cImpossible d'acceder à la génération pendant la partie");
 						break;
 					case 48:
 						main.StartGame(player);
 						break;
 					case 26:
-						InventoryHandler.openinventory(player, 3);
+						InventoryHandler.openinventory(player,3);
 						break;
 					case 50:
 						main.StopGame(player);
@@ -177,7 +173,7 @@ public class ModeGUI extends GUI {
 						main.Selected= 0;
 						InventoryHandler.openinventory(player, 7);
 						break;
-					case 49:
+					case 45:
 						if (Main.currentGame.isGameState(Gstate.Waiting)) {
 							Main.currentGame = new Game((new Null_Mode()).getName(),main);
 							new ModeGUI(new Null_Mode(), mode.player).open();
@@ -202,7 +198,7 @@ public class ModeGUI extends GUI {
 						break;
 					case 35:
 						if(mode.m instanceof CampMode) {
-							new RoleModeGUI(KtbsAPI.getCurrentGame().getMode(),player).open(0);
+							new RoleModeGUI(api.getGameProvider().getCurrentGame().getMode(),player).open(0);
 						}else if(mode.m instanceof TeamMode) {
 							InventoryHandler.openinventory(mode.player, 10);
 						}

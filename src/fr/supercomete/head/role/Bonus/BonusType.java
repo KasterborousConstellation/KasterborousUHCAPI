@@ -1,5 +1,4 @@
 package fr.supercomete.head.role.Bonus;
-
 public enum BonusType {
 	Force("Force"),
 	Speed("Vitesse"),

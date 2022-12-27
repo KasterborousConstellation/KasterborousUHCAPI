@@ -1,10 +1,8 @@
 package fr.supercomete.datamanager.FileManager;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileReader;
-import java.io.FileWriter;
-import java.io.IOException;
+import java.io.*;
+import java.nio.charset.StandardCharsets;
+import java.util.stream.Collectors;
 
 public class Fileutils {
 	public static void createFile(File file) throws IOException{
@@ -24,6 +22,13 @@ public class Fileutils {
 			e.printStackTrace();
 		}
 	}
+    public static String readFileFromResources(Class<?> claz, String fileName) throws IOException {
+        ClassLoader classLoader = claz.getClassLoader();
+        try (InputStream inputStream = classLoader.getResourceAsStream(fileName)) {
+            return new BufferedReader(new InputStreamReader(inputStream, StandardCharsets.UTF_8))
+                    .lines().collect(Collectors.joining("\n"));
+        }
+    }
 	public static String loadContent(File file) {
 		if(file.exists()) {
 			try {

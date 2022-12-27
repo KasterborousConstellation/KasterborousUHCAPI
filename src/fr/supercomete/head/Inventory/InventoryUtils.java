@@ -1,34 +1,22 @@
 package fr.supercomete.head.Inventory;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.UUID;
-
-
+import fr.supercomete.head.core.Main;
 import fr.supercomete.nbthandler.NbtTagHandler;
 import net.md_5.bungee.api.chat.ClickEvent;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.World;
-import org.bukkit.craftbukkit.v1_8_R3.entity.CraftPlayer;
-import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
-import org.bukkit.potion.Potion;
-import org.bukkit.potion.PotionType;
-
-
 import net.md_5.bungee.api.chat.ComponentBuilder;
 import net.md_5.bungee.api.chat.HoverEvent;
 import net.md_5.bungee.api.chat.HoverEvent.Action;
 import net.md_5.bungee.api.chat.TextComponent;
-import net.minecraft.server.v1_8_R3.IChatBaseComponent;
-import net.minecraft.server.v1_8_R3.IChatBaseComponent.ChatSerializer;
-import net.minecraft.server.v1_8_R3.PacketPlayOutChat;
-
 public class InventoryUtils {
 	public static ArrayList<Material> AllHastyItem() {
 		ArrayList<Material> AllHastyItem = new ArrayList<Material>();
@@ -75,7 +63,6 @@ public class InventoryUtils {
 		is.setItemMeta(im);
 		return is;
 	}
-
 	public static ItemStack createSkullItem(String value, String name, List<String> customlore) {
 		ItemStack is = CustomHeads.create(value);
 		ItemMeta im = is.getItemMeta();
@@ -84,7 +71,6 @@ public class InventoryUtils {
 		is.setItemMeta(im);
 		return is;
 	}
-
 	public static boolean testPlayerInvFull(Inventory inv) {
 		for (ItemStack it : inv) {
 			if (it == null) {
@@ -127,8 +113,4 @@ public class InventoryUtils {
         message.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND,command));
         return message;
     }
-
-
-	
-	
 }

@@ -1,7 +1,6 @@
 serverapi:
   serverconfig:
     devmode: false
-    echosiakey: "PlaceHolder"
     DiscordLink: "xxxxx"
     ServerId: "xxxx.xxxx"
   spawn:

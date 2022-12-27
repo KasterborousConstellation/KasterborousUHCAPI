@@ -47,3 +47,5 @@ commands:
     description: "Un commande de téléportation de meilleure qualité."
   timeleft:
     description: "Permet de savoir les timers de la game"
+  ti:
+    description: "Utile pour le scénarios Team-Inventory"

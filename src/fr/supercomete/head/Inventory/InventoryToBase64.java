@@ -26,7 +26,6 @@ public class InventoryToBase64 {
             throw new IllegalStateException("Unable to save item stacks.", e);
         }    
     }
-
     public static Inventory fromBase64(String data) throws IOException {
         try {
             ByteArrayInputStream inputStream = new ByteArrayInputStream(Base64Coder.decodeLines(data));

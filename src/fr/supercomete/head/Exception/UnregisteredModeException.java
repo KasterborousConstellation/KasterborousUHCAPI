@@ -6,12 +6,10 @@ public class UnregisteredModeException extends Exception {
 	private static final long serialVersionUID = -4309533394739281614L;
 
 	public UnregisteredModeException() {
-		// TODO Auto-generated constructor stub
 	}
 
 	public UnregisteredModeException(String arg0) {
 		super(arg0);
-		// TODO Auto-generated constructor stub
 	}
 
 	public UnregisteredModeException(Throwable arg0) {

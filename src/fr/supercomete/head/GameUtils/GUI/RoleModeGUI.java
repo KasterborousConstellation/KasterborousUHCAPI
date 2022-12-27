@@ -27,6 +27,7 @@ import fr.supercomete.head.core.Main;
 import fr.supercomete.head.role.Role;
 
 public class RoleModeGUI extends GUI {
+    private static KtbsAPI api = Bukkit.getServicesManager().load(KtbsAPI.class);
 	private static final CopyOnWriteArrayList<RoleModeGUI> allGui = new CopyOnWriteArrayList<RoleModeGUI>();
 	private CampMode m;
 	private Inventory inv;
@@ -72,17 +73,17 @@ public class RoleModeGUI extends GUI {
 			i++;
 		}
 //		 Main.getRoleTypeList(m.getPrimitiveCamps()[index]);
-		CopyOnWriteArrayList<Class<?>> preformated = KtbsAPI.getPrimitiveModeByClass(m.getClass()).getRegisteredrole();
+		CopyOnWriteArrayList<Class<?>> preformated = api.getModeProvider().getMode(m.getClass()).getRegisteredrole();
 		CopyOnWriteArrayList<Class<?>> formated = new CopyOnWriteArrayList<Class<?>>();
 		
 		for(Class<?> clz : preformated) {
-			if(KtbsAPI.getRoleByClass(clz).getCamp().equals(m.getPrimitiveCamps()[index])){
+			if(api.getRoleProvider().getRoleByClass(clz).getCamp().equals(m.getPrimitiveCamps()[index])){
 				formated.add(clz);
 			}
 		}
 		for (int e =0;e<formated.size();e++) {
 			Class<?> r = formated.get(e);
-			Role rt = KtbsAPI.getRoleByClass(r);
+			Role rt = api.getRoleProvider().getRoleByClass(r);
 			List<String> strl = (rt.AskIfUnique())
 					? Arrays.asList("§3Camp: " + rt.getDefaultCamp().getColor() + rt.getDefaultCamp().getName(),
 							InventoryHandler.ClickBool)
@@ -128,13 +129,13 @@ public class RoleModeGUI extends GUI {
 					if (currentslot < role.m.getPrimitiveCamps().length) {
 						role.open(currentslot);
 					} else if (currentslot >= 9
-							&& currentslot < KtbsAPI.getRoleinModebyCamp(KtbsAPI.getPrimitiveModeByClass(role.m.getClass()),role.m.getPrimitiveCamps()[role.currentIndex]).size()
+							&& currentslot < api.getRoleProvider().getRolesByCamp(api.getModeProvider().getMode(role.m.getClass()),role.m.getPrimitiveCamps()[role.currentIndex]).size()
 									+ 9) {
 						
-						Class<?> r = KtbsAPI.getRoleinModebyCamp(KtbsAPI.getPrimitiveModeByClass(role.m.getClass()),role.m.getPrimitiveCamps()[role.currentIndex])
+						Class<?> r = api.getRoleProvider().getRolesByCamp(api.getModeProvider().getMode(role.m.getClass()),role.m.getPrimitiveCamps()[role.currentIndex])
 								.get(currentslot - 9);
 						HashMap<Class<?>, Integer> array =Main.currentGame.getRoleCompoMap();
-						Role rt =KtbsAPI.getRoleByClass(r);
+						Role rt =api.getRoleProvider().getRoleByClass(r);
 						if (rt.AskIfUnique()) {
 							if (array.containsKey(r)) {
 								array.remove(r);

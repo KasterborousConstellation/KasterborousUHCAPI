@@ -1,11 +1,7 @@
 package fr.supercomete.head.GameUtils;
-
 import java.util.ArrayList;
 import java.util.UUID;
-
 import org.bukkit.ChatColor;
-
-import fr.supercomete.head.GameUtils.GameMode.ModeHandler.KtbsAPI;
 import fr.supercomete.head.GameUtils.GameMode.Modes.UHCClassic;
 import fr.supercomete.head.core.Main;
 
@@ -19,7 +15,7 @@ public final class TeamManager {
 	public static void createTeams(int numberofteam) {
 		ArrayList<Team> teamlist=Main.currentGame.getTeamList();
 		teamlist.clear();
-		boolean bol= !(KtbsAPI.getCurrentGame().getMode() instanceof UHCClassic);
+		boolean bol= !(Main.currentGame.getMode() instanceof UHCClassic);
 		int total=numberofteam;
 		for(int r=0;r<numberofteam/9+1;r++){
 			int n=total;

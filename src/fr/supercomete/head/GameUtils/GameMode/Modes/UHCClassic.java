@@ -89,8 +89,7 @@ public class UHCClassic extends Mode implements TeamMode{
 	}
 	@Override
 	public void onAnyTime(Player player) {
-		// TODO Auto-generated method stub
-		
+
 	}
 
     @Override

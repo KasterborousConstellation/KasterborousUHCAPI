@@ -1,18 +1,14 @@
 package fr.supercomete.head.Inventory;
-
 // Comment the line below in if you use compatre
 //import com.GitHub.johnnyjayjay.compatre.NmsDependent;
-
 import net.minecraft.server.v1_8_R3.MojangsonParser;
 import net.minecraft.server.v1_8_R3.NBTTagCompound;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.craftbukkit.v1_8_R3.inventory.CraftItemStack;
 import org.bukkit.inventory.ItemStack;
-
 import java.util.Arrays;
 import java.util.UUID;
-
 /**
  * Class with a utility method to get custom heads as ItemStacks with Spigot.
  * The code below can easily be adjusted to work with any version 

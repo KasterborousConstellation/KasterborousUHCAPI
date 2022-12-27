@@ -8,7 +8,6 @@ import org.bukkit.entity.Player;
 import net.minecraft.server.v1_8_R3.PacketPlayOutEntityEquipment;
 
 public interface InvisibleRoleWithArmor {
-	
 	default void hide(Player player) {
 		if (player == null || player.getInventory() == null)
 			return;

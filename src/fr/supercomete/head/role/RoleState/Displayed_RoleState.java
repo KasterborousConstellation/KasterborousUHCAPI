@@ -10,7 +10,7 @@ public class Displayed_RoleState extends PermanentRoleSate {
 		String str = "";
 		str = display;
 		if(this instanceof StolenRoleState)
-		str= str.replace("#From", ((StolenRoleState)this).getFrom().getName());
+		    str= str.replace("#From", ((StolenRoleState)this).getFrom().getName());
 		return str;
 	}
 	public void setDisplay(String display) {

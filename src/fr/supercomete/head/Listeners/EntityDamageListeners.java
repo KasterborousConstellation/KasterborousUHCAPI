@@ -7,6 +7,7 @@ import fr.supercomete.head.GameUtils.Events.PlayerEvents.PlayerEvents;
 import fr.supercomete.head.GameUtils.Fights.Fight;
 import fr.supercomete.head.GameUtils.Fights.FightHandler;
 import fr.supercomete.head.GameUtils.GameMode.ModeHandler.MapHandler;
+import fr.supercomete.head.PlayerUtils.KTBSEffect;
 import fr.supercomete.head.role.Triggers.*;
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
@@ -56,7 +57,6 @@ class EntityDamageListeners implements Listener {
     }
     @EventHandler(priority = EventPriority.HIGHEST)
     public void PlayerDeathEvent(EntityDamageEvent e) {
-
         if (e.getEntity() instanceof Player) {
             final Player player = (Player) e.getEntity();
             if (Main.currentGame.getNodamagePlayerList().contains(player.getUniqueId())
@@ -142,12 +142,6 @@ class EntityDamageListeners implements Listener {
                             boolean tmp = ((Trigger_OnHitPlayer) role).OnHitPlayer(damager,(Player) f.getEntity(), f.getDamage(), f.getCause());
                             if (tmp) {
                                 cancel = true;
-                            }
-                        }
-
-                        if (NbtTagHandler.hasUUIDTAG(damager.getItemInHand())) {
-                            if (NbtTagHandler.getUUIDTAG(damager.getItemInHand()) == 11 && f.getEntity() instanceof Player) {
-                                PlayerUtility.addProperlyEffect((Player) f.getEntity(), new PotionEffect(PotionEffectType.CONFUSION, 10 * 20, 0, false, false));
                             }
                         }
                         if (cancel) {
@@ -289,7 +283,7 @@ class EntityDamageListeners implements Listener {
                 Location deathLocation = player.getLocation();
                 if (deathLocation == null)
                     return;
-                Mode mode = KtbsAPI.getCurrentGame().getMode();
+                Mode mode = Main.currentGame.getMode();
                 if (mode instanceof DelayedDeath && RoleHandler.IsRoleGenerated()) {
                     DelayedModeDeath delayed = new DelayedModeDeath(mode, deathLocation, damager, player, ((DelayedDeath)mode).getDeathDelay());
                     player.setGameMode(GameMode.SPECTATOR);

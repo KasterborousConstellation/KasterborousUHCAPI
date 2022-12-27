@@ -2,8 +2,6 @@ package fr.supercomete.head.Inventory;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
-import java.util.List;
-
 import fr.supercomete.head.GameUtils.Enchants.EnchantHandler;
 import fr.supercomete.head.GameUtils.Enchants.EnchantType;
 import fr.supercomete.head.GameUtils.Scenarios.KasterborousScenario;
@@ -16,17 +14,12 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
-
 import fr.supercomete.enums.Gstate;
-import fr.supercomete.head.GameUtils.Scenarios.Scenarios;
 import fr.supercomete.head.GameUtils.Team;
 import fr.supercomete.head.GameUtils.TeamManager;
-import fr.supercomete.head.GameUtils.GameMode.ModeHandler.KtbsAPI;
-import fr.supercomete.head.GameUtils.GameMode.Modes.Mode;
 import fr.supercomete.head.GameUtils.Time.Timer;
 import fr.supercomete.head.core.Main;
 import fr.supercomete.head.structure.Structure;
-import fr.supercomete.head.world.WorldSeedGetter;
 import net.md_5.bungee.api.ChatColor;
 public class InventoryHandler {
 	private static Main main;
@@ -41,27 +34,6 @@ public class InventoryHandler {
 	public static void openinventory(Player player,int id){
 		Inventory inv;
 		switch(id) {
-		case 2:
-			inv=Bukkit.createInventory(null, 54,"§dGénération");
-			for(int i=0;i<9;i++) {
-				inv.setItem(i, InventoryUtils.createColorItem(Material.STAINED_GLASS_PANE, " ", 1, (short) 11));
-			}
-			ItemStack it = Main.generator.getBiome().getItem();
-			ItemMeta meta = it.getItemMeta();
-			meta.setDisplayName("§bBiome: §a"+Main.generator.getBiome().getName());
-			ArrayList<String> strl =Main.SplitCorrectlyString("Défini le biome de la carte. Cliquer pour changer.", 45, "§7");
-			strl.add("§cNombre de Seeds: §4"+WorldSeedGetter.getAmountOfSeed(Main.generator.getBiome()));
-			meta.setLore(strl);
-			it.setItemMeta(meta);
-			inv.setItem(22, it);
-
-			for(int i=0;i<9;i++) {
-				inv.setItem(53-i, InventoryUtils.createColorItem(Material.STAINED_GLASS_PANE, " ", 1, (short) 11));
-			}
-			inv.setItem(49, InventoryUtils.getItem(Material.ARROW, "§7Retour", Collections.singletonList("§rRetour au menu de configuration")));
-			player.openInventory(inv);
-			Main.updateGeneration(player);
-			return;
 		case 3://Slots GUI
 			inv=Bukkit.createInventory(null, 27,"§dSlots");
 			if(Main.currentGame.IsTeamActivated())return;
@@ -77,7 +49,6 @@ public class InventoryHandler {
 			inv.setItem(15, InventoryUtils.getItem(Material.STONE_BUTTON, "§r+10 Slots", null));
 			inv.setItem(22, InventoryUtils.getItem(Material.ARROW, "§7Retour", Collections.singletonList("§rRetour au menu de configuration")));
 			break;
-
 		case 5://Rules GUI
 			inv=Bukkit.createInventory(null, 54,"§dRules");
 			inv.setItem(0, InventoryUtils.createColorItem(Material.STAINED_GLASS_PANE, " ", 1, (short)6));

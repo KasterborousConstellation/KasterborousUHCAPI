@@ -1,5 +1,4 @@
 package fr.supercomete.head.core;
-
 import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.Array;
@@ -7,32 +6,34 @@ import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.*;
 import java.util.jar.JarFile;
+import java.util.logging.Level;
 import java.util.zip.ZipEntry;
-
 import fr.supercomete.commands.*;
+import fr.supercomete.head.Exception.KTBSNetworkFailure;
 import fr.supercomete.head.GameUtils.Events.GameEvents.EventsHandler;
 import fr.supercomete.head.GameUtils.Events.PlayerEvents.PlayerEventHandler;
 import fr.supercomete.head.GameUtils.Fights.FightHandler;
 import fr.supercomete.head.GameUtils.GameConfigurable.Configurable;
 import fr.supercomete.head.GameUtils.GameMode.ModeHandler.MapHandler;
+import fr.supercomete.head.GameUtils.GameMode.ModeModifier.Permission;
 import fr.supercomete.head.GameUtils.GameMode.Modes.*;
 import fr.supercomete.head.GameUtils.Scenarios.KasterborousScenario;
 import fr.supercomete.head.GameUtils.Time.TimeUtility;
 import fr.supercomete.head.GameUtils.Time.TimerType;
+import fr.supercomete.head.PlayerUtils.EffectHandler;
+import fr.supercomete.head.PlayerUtils.KTBSEffect;
 import fr.supercomete.tasks.Cycle;
 import org.bukkit.*;
-import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
-import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.ShapedRecipe;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.plugin.PluginManager;
+import org.bukkit.plugin.ServicePriority;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import org.bukkit.scheduler.BukkitRunnable;
-
 import fr.supercomete.ServerExchangeProtocol.File.PlayerAccountManager;
 import fr.supercomete.ServerExchangeProtocol.Rank.Rank;
 import fr.supercomete.ServerExchangeProtocol.Server.Server;
@@ -62,7 +63,7 @@ import fr.supercomete.head.world.scoreboardmanager;
 import fr.supercomete.head.world.worldgenerator;
 import fr.supercomete.head.world.ScoreBoard.ScoreBoardManager;
 import fr.supercomete.tasks.GAutostart;
-import org.jetbrains.annotations.NotNull;
+
 public class Main extends JavaPlugin {
 	public final static String UHCTypo = "§aEchosia"+"§7 » ";
 	public final static String ScoreBoardUHCTypo = ChatColor.GREEN+"Echosia ";
@@ -79,7 +80,6 @@ public class Main extends JavaPlugin {
 	public static boolean devmode;
 	public static Map<UUID, Integer> diamondmap = new HashMap<>();
 	public static ProfileSerializationManager manager = new ProfileSerializationManager();
-
 	public static BiomeGenerator generator;
 	public static StructureHandler structurehandler;
 	public static UUID host;
@@ -87,16 +87,29 @@ public class Main extends JavaPlugin {
 	public static ArrayList<UUID>bypass = new ArrayList<>();
 	public static Cycle currentCycle=null;
     public static Main INSTANCE;
+    public static boolean KTBSNetwork_Connected;
     @Override
     public void onDisable(){
-        for(final KasterborousRunnable run: KtbsAPI.getRunnables()){
-            run.onAPIStop();
+        for(final KasterborousRunnable run: Bukkit.getServicesManager().load(KtbsAPI.class).getKTBSRunnableProvider().getRunnables()){
+            run.onAPIStop(Bukkit.getServicesManager().load(KtbsAPI.class));
         }
     }
 	@SuppressWarnings("deprecation")
 	@Override
 	public void onEnable() {
-
+        /*
+        Initialisation du network KTBS
+         */
+        try{
+            Server server = ServerManager.getCurrentPluginServer();
+            Bukkit.broadcastMessage("§6KTBS_Network : §aConnected");
+            KTBSNetwork_Connected=true;
+        }catch (Exception e){
+            Bukkit.broadcastMessage("§6KTBS_Network: §cDisconnected");
+            KTBSNetwork_Connected=false;
+        }
+        KtbsAPI api = new KtbsAPI();
+        Bukkit.getServicesManager().register(KtbsAPI.class,api,this, ServicePriority.Lowest);
         INSTANCE=this;
 		generator = new BiomeGenerator();
 		structurehandler= new StructureHandler(this);
@@ -106,15 +119,15 @@ public class Main extends JavaPlugin {
 		Date Compiledate = null;
 		Compiledate = getClassBuildTime();
         for(final Scenarios scenarios: Scenarios.values()){
-            KtbsAPI.RegisterScenarios(scenarios);
+            api.getScenariosProvider().RegisterScenarios(scenarios);
         }
         for(final Configurable.LIST conf : Configurable.LIST.values()){
-            KtbsAPI.RegisterConfigurable(conf);
+            api.getConfigurableProvider().RegisterConfigurable(conf);
         }
-		KtbsAPI.registerMode(new Null_Mode());
+		api.getModeProvider().registerMode(new Null_Mode());
 		UHCClassic uhcclassic = new UHCClassic();	
-		KtbsAPI.registerMode(uhcclassic);
-		Bukkit.broadcastMessage("§dVersion: 0.8.9 Build("+Compiledate.getDate()+"/"+(Compiledate.getMonth()+1)+") §6Alpha");
+		api.getModeProvider().registerMode(uhcclassic);
+		Bukkit.broadcastMessage("§dVersion: 0.9.1 Build("+Compiledate.getDate()+"/"+(Compiledate.getMonth()+1)+") §1Beta-Ouverte");
 		currentGame=new Game((new Null_Mode()).getName(),this);
 		Bukkit.getServer().getScheduler().scheduleSyncRepeatingTask(this, new Lag(), 100L, 1L);// LagO'meter
 		spawn = new Location(Bukkit.getWorld("world"), getConfig().getInt("serverapi.spawn.x"),
@@ -144,7 +157,10 @@ public class Main extends JavaPlugin {
         getCommand("bypass").setExecutor(new BypassCommand(this));
         getCommand("tpin").setExecutor(new TpInCommand(this));
         getCommand("timeleft").setExecutor(new TimeLeftCommand(this));
+        getCommand("ti").setExecutor(new TeamInventory());
+
         getServer().getMessenger().registerOutgoingPluginChannel(this, "BungeeCord");
+
         scoreboardmanager score = new scoreboardmanager(this);
 		score.ChangeScoreboard();
 		new InventoryHandler(this);
@@ -169,6 +185,7 @@ public class Main extends JavaPlugin {
 		goldenHeadRecipe.setIngredient('#', Material.SKULL_ITEM, 3);
 		Bukkit.getServer().addRecipe(goldenHeadRecipe);
 		Main.devmode=getConfig().getBoolean("serverapi.serverconfig.devmode");
+        EffectHandler.init();
 		if(devmode) {
 			Bukkit.broadcastMessage("§eDevMode: §aOn");
 		}
@@ -176,8 +193,30 @@ public class Main extends JavaPlugin {
         new BukkitRunnable(){
             @Override
             public void run() {
-                for(final KasterborousRunnable run: KtbsAPI.getRunnables()){
-                    run.onAPILaunch();
+                //Enregistre les KtbsRunnables des scenarios
+                for(KasterborousScenario scenario : api.getScenariosProvider().getScenarios()){
+                    if(scenario.getAttachedRunnable()!=null){
+                        api.getKTBSRunnableProvider().RegisterRunnable(new ArrayList<>(scenario.getAttachedRunnable()));
+                    }
+                }
+                //Indique le lancement de l'api
+                for(final KasterborousRunnable run: api.getKTBSRunnableProvider().getRunnables()){
+                    run.onAPILaunch(api);
+                }
+                //Verifie les erreurs du systeme KTBS network
+
+                for(Mode mode : Bukkit.getServicesManager().load(KtbsAPI.class).getModeProvider().getRegisteredModes()){
+                    if(mode instanceof Permission && !KTBSNetwork_Connected){
+                        try {
+                            throw new KTBSNetworkFailure();
+                        } catch (KTBSNetworkFailure e) {
+                            e.printStackTrace();
+                            Bukkit.getLogger().log(Level.WARNING,"THIS IS A KASTERBOROUS SYSTEM FAULT.\n" +
+                                    "IF YOU SEE THAT MESSAGE: A MODE REQUIRING A CONNECTION TO KASTERBOROUS NETWORK HAS BEEN LOADED UNSUCESSFULLY \n" +
+                                    "IF YOU SHOULD BE CONNECTED TO KTBS_NETWORK, PLEASE CONTACT SUPERCOMETE. OTHERWISE, REMOVE THIS MODE.");
+                            Bukkit.getServer().shutdown();
+                        }
+                    }
                 }
             }
         }.runTaskLater(this,30L);
@@ -220,10 +259,10 @@ public class Main extends JavaPlugin {
         bypass.removeIf(uu -> !(Main.IsHost(uu) || Main.IsCohost(uu)));
     }
     public static boolean IsHost(UUID player) {
-        return (host!=null && host.equals(player))||PlayerAccountManager.getPlayerAccount(player).hasRank(Rank.Admin);
+        return (host!=null && host.equals(player))||(KTBSNetwork_Connected&&PlayerAccountManager.getPlayerAccount(player).hasRank(Rank.Admin));
     }
 	public static boolean IsHost(Player player) {
-		return (host!=null && host.equals(player.getUniqueId()))||PlayerAccountManager.getPlayerAccount(player).hasRank(Rank.Admin); 
+		return (host!=null && host.equals(player.getUniqueId()))||(KTBSNetwork_Connected&&PlayerAccountManager.getPlayerAccount(player).hasRank(Rank.Admin));
 	}
 	public static boolean IsCohost(Player player) {
 		return cohost.contains(player.getUniqueId());
@@ -464,7 +503,7 @@ public class Main extends JavaPlugin {
 				"§r" + this.generateNameTimer(this.getCompatibleTimer().get(this.Selected)), null));
 		player.getOpenInventory().getItem(18 + this.Selected).setType(Material.COMPASS);
 	}
-	public void updateTeamsInventory(@NotNull Player player) {
+	public void updateTeamsInventory(final Player player) {
 		short col = (short) ((Main.currentGame.IsTeamActivated()) ? 5 : 14);
 		String bool = (Main.currentGame.IsTeamActivated()) ? "§aOn" : "§cOff";
 		player.getOpenInventory().setItem(11, InventoryUtils.getItem(Material.WOOL, "§bNombre de joueur par équipe: §4"+Main.currentGame.getNumberOfPlayerPerTeam(),Arrays.asList(InventoryHandler.ClickTypoAdd+"1",InventoryHandler.ClickTypoRemove+"1")));
@@ -474,7 +513,7 @@ public class Main extends JavaPlugin {
 						"§bNombre d'équipes: §a" + Main.currentGame.getTeamNumber(),
 						Arrays.asList(InventoryHandler.ClickTypoAdd + "1", InventoryHandler.ClickTypoRemove + "1")));
 	}
-	public String generateNameTimer(@NotNull Timer t) {
+	public String generateNameTimer(Timer t) {
 		return "§r" + t.getName() + " §c" + TimeUtility.transform((t.getType()==TimerType.TimeDependent)?Main.currentGame.getTimer(t).getData()-Main.currentGame.getTime():Main.currentGame.getTimer(t).getData(), "§5", "§5", "§d");
 	}
 
@@ -551,18 +590,6 @@ public class Main extends JavaPlugin {
 		ArrayList<String> strl = SplitCorrectlyString(todiplay, charperline, chat.toString());
 		for (String str : strl)
 			player.sendMessage(str);
-	}
-	public static void updateGeneration(Player player) {
-		player.getOpenInventory().setItem(33, InventoryUtils.createColorItem(Material.STAINED_GLASS, "§bCréer le monde et prégénerer", 1, (short)3));
-		player.getOpenInventory().setItem(9, InventoryUtils.getItem(Material.COAL_ORE, "§fMultiplicateur de Charbon §a"+Main.generator.getCoalboost(), Arrays.asList(InventoryHandler.ClickTypoAdd+"1",InventoryHandler.ClickTypoRemove+"1")));
-		player.getOpenInventory().setItem(18, InventoryUtils.getItem(Material.IRON_ORE, "§fMultiplicateur de Fer §a"+Main.generator.getIronboost(), Arrays.asList(InventoryHandler.ClickTypoAdd+"1",InventoryHandler.ClickTypoRemove+"1")));
-		player.getOpenInventory().setItem(27, InventoryUtils.getItem(Material.LAPIS_ORE, "§fMultiplicateur de Lapis §a"+Main.generator.getLapisboost(), Arrays.asList(InventoryHandler.ClickTypoAdd+"1",InventoryHandler.ClickTypoRemove+"1")));
-		player.getOpenInventory().setItem(36, InventoryUtils.getItem(Material.GOLD_ORE, "§fMultiplicateur d'or §a"+Main.generator.getGoldboost(), Arrays.asList(InventoryHandler.ClickTypoAdd+"1",InventoryHandler.ClickTypoRemove+"1")));
-		player.getOpenInventory().setItem(10, InventoryUtils.getItem(Material.DIAMOND_ORE, "§fMultiplicateur de diamant §a"+Main.generator.getDiamondboost(), Arrays.asList(InventoryHandler.ClickTypoAdd+"1",InventoryHandler.ClickTypoRemove+"1")));
-		player.getOpenInventory().setItem(19, InventoryUtils.getItem(Material.LAVA_BUCKET, "§4Lac de lave en surface: "+Main.TranslateBoolean(Main.generator.getLavaLake()), Arrays.asList("§7Defini si les lacs de lave se générent en surface",InventoryHandler.ClickBool)));
-		player.getOpenInventory().setItem(29, InventoryUtils.createColorItem(Material.STAINED_GLASS, "§bCréer le monde", 1, (short)14));
-		player.getOpenInventory().setItem(31, InventoryUtils.createColorItem(Material.STAINED_GLASS, "§bPrégénerer le monde", 1, (short)5));
-		player.getOpenInventory().setItem(13, InventoryUtils.getItem(Material.IRON_DOOR, "§dMondes", Collections.singletonList("§bCliquer ici pour pouvoir changer de monde")));
 	}
 
 	public static int CountIntegerValue(HashMap<?, Integer> map) {

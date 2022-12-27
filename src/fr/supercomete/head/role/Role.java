@@ -13,7 +13,7 @@ import fr.supercomete.head.role.Bonus.BonusType;
 import fr.supercomete.head.role.RoleState.RoleState;
 import fr.supercomete.head.role.RoleState.RoleStateOnAdd;
 import fr.supercomete.head.role.RoleState.RoleStateTypes;
-import org.checkerframework.checker.nullness.qual.NonNull;
+
 
 public abstract class Role{
 	private UUID owner;
@@ -37,7 +37,6 @@ public abstract class Role{
 	public KasterBorousCamp getCamp() {
 		return camp;
 	}
-	@NonNull
 	public String getName() {
 		return askName();
 	}

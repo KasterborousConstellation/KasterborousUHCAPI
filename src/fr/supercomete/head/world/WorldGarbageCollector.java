@@ -25,7 +25,6 @@ public class WorldGarbageCollector {
 			}			
 		}.runTaskTimer(main, 0L, 200L);
 	}
-	//Taken from https://bukkit.org/threads/unload-delete-copy-worlds.182814/
 	public static void unloadWorld(World world) {
 	    if(!world.equals(null)) {
 	        Bukkit.getServer().unloadWorld(world, true);

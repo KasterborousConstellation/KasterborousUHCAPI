@@ -8,6 +8,7 @@ import fr.supercomete.head.GameUtils.Events.GameEvents.Event;
 import fr.supercomete.head.GameUtils.Events.PlayerEvents.PlayerEvent;
 import fr.supercomete.head.GameUtils.GameConfigurable.KasterBorousConfigurable;
 import fr.supercomete.head.GameUtils.Scenarios.KasterborousScenario;
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -68,13 +69,13 @@ public class Game {
 		getArmorhash().put(Material.IRON_CHESTPLATE, true);
 		getArmorhash().put(Material.IRON_LEGGINGS, true);
 		getArmorhash().put(Material.IRON_BOOTS, true);
-
+        final KtbsAPI api = Bukkit.getServicesManager().load(KtbsAPI.class);
 		for(Timer timer :Timer.values()) {
-			if(timer.getCompatibility().IsCompatible(KtbsAPI.getModeByName(emode))&&timer.getBound()==null)
+			if(timer.getCompatibility().IsCompatible(api.getModeProvider().getModeByName(emode))&&timer.getBound()==null)
 			timelist.add(new WatchTime(timer));
 		}
 		for(Timer timer : Timer.values()) {
-			if(timer.getCompatibility().IsCompatible(KtbsAPI.getModeByName(emode))&&timer.getBound()!=null) {
+			if(timer.getCompatibility().IsCompatible(api.getModeProvider().getModeByName(emode))&&timer.getBound()!=null) {
 				timelist.add(new BoundedWatchTime(timer,timer.getBound()));
 			}
 		}
@@ -106,9 +107,10 @@ public class Game {
 	public Game(String emode,Main main) {
 		this.setEmode(emode);
 		this.init(main);
-		for (int ps = 0; ps < KtbsAPI.getConfigurables().size(); ps++) {
+        final KtbsAPI api = Bukkit.getServicesManager().load(KtbsAPI.class);
+		for (int ps = 0; ps < api.getConfigurableProvider().getConfigurables().size(); ps++) {
 			if (ps >= getConfigList().size()) {
-                KasterBorousConfigurable conf = KtbsAPI.getConfigurables().get(ps);
+                KasterBorousConfigurable conf = api.getConfigurableProvider().getConfigurables().get(ps);
 				getConfigList().add(new Configurable(conf,conf.getBaseData(),conf.getType()));
 			}
 		}
@@ -156,21 +158,21 @@ public class Game {
 	public HashMap<Class<?>, Integer> getRoleCompoMap() {
 		HashMap<Class<?>, Integer> hash = new HashMap<>();
 		for (Entry<String, Integer> entry : roleCompoMap.entrySet()) {
-			hash.put(KtbsAPI.getRoleClassByString(entry.getKey()), entry.getValue());
+			hash.put(Bukkit.getServicesManager().load(KtbsAPI.class).getRoleProvider().getRoleClassByName(entry.getKey()), entry.getValue());
 		}
 		return hash;
 	}
 	public void setRoleCompoMap(HashMap<Class<?>, Integer> roleCompoMap) {
         HashMap<String, Integer> ret = new HashMap<String, Integer>();
 		for (Entry<Class<?>, Integer> src : roleCompoMap.entrySet()) {
-			ret.put(Objects.requireNonNull(KtbsAPI.getRoleByClass(src.getKey())).getName(), src.getValue());
+			ret.put(Objects.requireNonNull(Bukkit.getServicesManager().load(KtbsAPI.class).getRoleProvider().getRoleByClass(src.getKey())).getName(), src.getValue());
 		}
 		this.roleCompoMap = ret;
 	}
 
 	public boolean hasClassInRoleCompoMap(Class<?> claz) {
 		for (String c : roleCompoMap.keySet()) {
-			Class<?> cl = KtbsAPI.getRoleClassByString(c);
+			Class<?> cl = Bukkit.getServicesManager().load(KtbsAPI.class).getRoleProvider().getRoleClassByName(c);
             if (cl!=null&&cl.equals(claz))
 				return true;
 		}
@@ -300,7 +302,7 @@ public class Game {
         return "";
 	}
 	public Mode getMode() {
-		return KtbsAPI.getModeByName(this.emode);
+		return Bukkit.getServicesManager().load(KtbsAPI.class).getModeProvider().getModeByName(this.emode);
 	}
 
 

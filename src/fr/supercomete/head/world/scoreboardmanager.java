@@ -98,7 +98,7 @@ public class scoreboardmanager {
 					tps = Math.round(tps);
 					tps = tps / 100;
 					sendHeadAndFooter(player,
-							s + "» " + p + KtbsAPI.getCurrentGame().getMode().getName() + s
+							s + "» " + p + Main.currentGame.getMode().getName() + s
 									+ " «" + "\n" + t + "Ping: §a" + getPing(player) + "ms " + t + "TPS: §a" + tps
 									+ "\n",
 							"\n" + t + "https://discord.gg/" + main.getDiscordLink() + "\n" + s + "»" + p

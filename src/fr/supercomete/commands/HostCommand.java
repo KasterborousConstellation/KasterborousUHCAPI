@@ -1,12 +1,12 @@
 package fr.supercomete.commands;
 
+import fr.supercomete.head.PlayerUtils.PlayerUtility;
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-import fr.supercomete.ServerExchangeProtocol.Account.PlayerAccount;
 import fr.supercomete.ServerExchangeProtocol.File.PlayerAccountManager;
 import fr.supercomete.ServerExchangeProtocol.Rank.Rank;
 import fr.supercomete.enums.Gstate;
@@ -31,7 +31,7 @@ public class HostCommand implements CommandExecutor {
 					player.sendMessage(Main.UHCTypo+"Commande inconnue /h help pour plus d'information");
 					return false;
 				}
-				if(!Main.IsHost(player) && !Main.IsCohost(player) && !PlayerAccountManager.getPlayerAccount(player).hasRank(Rank.Admin)) {
+				if(!Main.IsHost(player) && !Main.IsCohost(player) &&!Main.KTBSNetwork_Connected&&!PlayerAccountManager.getPlayerAccount(player).hasRank(Rank.Admin)) {
 					player.sendMessage(Main.UHCTypo+"§cVous n'avez pas le droit d'utiliser cette commande.");
 					return false;
 				}
@@ -123,8 +123,7 @@ public class HostCommand implements CommandExecutor {
 						if(args.length == 2) {
 							//Deop Old host
 							if(Main.host!=null) {
-								final PlayerAccount account =  PlayerAccountManager.getPlayerAccount(Main.host);
-								Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "/deop "+account.getUser());
+								Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "/deop "+ PlayerUtility.getNameByUUID(Main.host));
 							}
 							
 							final Player target= Bukkit.getPlayer(args[1]);

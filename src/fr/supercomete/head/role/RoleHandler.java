@@ -185,7 +185,7 @@ public class RoleHandler {
 		return"§6"+((RoleHandler.getWhoHaveRole(rt)==null)?"Aucun":Bukkit.getPlayer(RoleHandler.getWhoHaveRole(rt)).getName());
 	}
     public static void showcompo(final Player player){
-        if (KtbsAPI.getCurrentGame().getMode() instanceof CampMode) {
+        if (Main.currentGame.getMode() instanceof CampMode) {
             if (RoleHandler.IsRoleGenerated()) {
                 HashMap<Class<?>, Integer> map = new HashMap<>();
                 for (Role r : RoleHandler.getRoleList().values()) {

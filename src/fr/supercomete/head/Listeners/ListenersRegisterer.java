@@ -26,6 +26,7 @@ public class ListenersRegisterer {
 			pm.registerEvents(new EnchantLimitGUI(main),main);
 			pm.registerEvents(new EventGUI(main),main);
             pm.registerEvents(new ScenarioGUI(),main);
+            pm.registerEvents(new GenerationGUI(),main);
 			//Listeners
 			pm.registerEvents(new FurnaceBurnListener(main), main);
 			pm.registerEvents(new EntityDeathListener(), main);
@@ -42,6 +43,7 @@ public class ListenersRegisterer {
 			pm.registerEvents(new PlayerInteractEntityListener(), main);
 			pm.registerEvents(new EnchantItemListener(), main);
             pm.registerEvents(new AdvancementListener(),main);
+
 			return true;
 		} catch (Exception e) {
 			e.printStackTrace();
