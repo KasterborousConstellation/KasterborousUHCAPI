@@ -200,7 +200,9 @@ public class ModeGUI extends GUI {
 						if(mode.m instanceof CampMode) {
 							new RoleModeGUI(api.getGameProvider().getCurrentGame().getMode(),player).open(0);
 						}else if(mode.m instanceof TeamMode) {
-							InventoryHandler.openinventory(mode.player, 10);
+                            if(Main.currentGame.getGamestate()==Gstate.Waiting){
+                                InventoryHandler.openinventory(mode.player, 10);
+                            }else player.sendMessage(Main.UHCTypo+"§cLes équipes ne peuvent pas être modifiés pendant la partie.");
 						}
 						break;
 					default:

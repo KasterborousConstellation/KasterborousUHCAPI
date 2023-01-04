@@ -68,7 +68,6 @@ public class Gstart extends BukkitRunnable{
                         new BukkitRunnable() {
                             @Override
                             public void run() {
-                                player.updateInventory();
                                 player.setMaxHealth(20);
                                 player.setHealth(20);
                                 player.setFoodLevel(40);

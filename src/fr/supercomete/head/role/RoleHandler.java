@@ -28,7 +28,9 @@ public class RoleHandler {
 	private static boolean IsRoleGenerated;
 	private static HashMap<UUID, Role> RoleList=new HashMap<UUID, Role>();
 	private static Historic historic;
+    private static Random r = new Random();
 	public static void GiveRole(){
+        r.setSeed(System.currentTimeMillis());
 		ArrayList<UUID> uu=new ArrayList<UUID>();
 		HashMap<Class<?>,Integer> rolelist=Main.currentGame.getRoleCompoMap();
 		for(UUID uud:Main.getPlayerlist()) {
@@ -40,7 +42,7 @@ public class RoleHandler {
 		RoleList.clear();
 		Collections.shuffle(uu);
         for (UUID uuid : uu) {
-            int random = (rolelist.size() <= 1) ? 0 : new Random().nextInt(rolelist.size());
+            int random = (rolelist.size() <= 1) ? 0 : r.nextInt(rolelist.size());
             Class<?> rt = (Class<?>) rolelist.keySet().toArray()[random];
             RoleList.put(uuid, RoleBuilder.Build(rt, uuid));
             if (rolelist.get(rt) <= 1) {

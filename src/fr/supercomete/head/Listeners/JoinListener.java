@@ -74,12 +74,6 @@ final class JoinListener implements Listener {
             } else if (Main.currentGame.hasOfflinePlayer(player)) {
                 Offline_Player offPlayer = Main.currentGame.getOffline_Player(player);
                 Bukkit.broadcastMessage("§7Le joueur " + offPlayer.getUsername() + " se reconnecte après §a" + offPlayer.getTimeElapsedSinceDeconnexion() + "s");
-                Location loc = offPlayer.getLocation();
-                player.teleport(loc);
-                PacketPlayOutEntityTeleport packet = new PacketPlayOutEntityTeleport(((CraftPlayer) player).getHandle());
-                for(Player player1: Bukkit.getOnlinePlayers()){
-                    ((CraftPlayer)player1).getHandle().playerConnection.sendPacket(packet);
-                }
             } else {
                 player.getInventory().clear();
                 player.teleport(MapHandler.getMap().getPlayWorld().getSpawnLocation());

@@ -51,12 +51,14 @@ public class PlayerUtility{
 			}
 		}catch(IOException e){e.printStackTrace();}
 	}
+    public static void saveStuff(Inventory inv) {
+        String s= "";
+        s =InventoryToBase64.toBase64(inv);
+        main.getConfig().set("serverapi.stuff.actualconfig", s);
+        main.saveConfig();
+    }
 	public static void saveStuff(Player player) {
-		Inventory inv=player.getInventory();
-		String s= "";
-		s =InventoryToBase64.toBase64(inv);
-		main.getConfig().set("serverapi.stuff.actualconfig", s);
-		main.saveConfig();
+		saveStuff(player.getInventory());
 	}
 	public static String getNameByUUID(UUID target){
         String ally="";

@@ -16,6 +16,7 @@ import fr.supercomete.head.core.KasterborousRunnable;
 import fr.supercomete.head.core.Main;
 import fr.supercomete.head.role.KasterBorousCamp;
 import fr.supercomete.head.role.Role;
+import fr.supercomete.head.role.RoleHandler;
 import fr.supercomete.head.structure.StructureHandler;
 import fr.supercomete.head.world.BiomeGenerator;
 import org.bukkit.craftbukkit.v1_8_R3.CraftServer;
@@ -173,6 +174,26 @@ public class KtbsProvider implements PotionEffectProvider,FightProvider,HostProv
     }
 
     @Override
+    public Role getRoleOf(Player player) {
+        return RoleHandler.getRoleOf(player);
+    }
+
+    @Override
+    public Role getRoleOf(UUID uuid) {
+        return RoleHandler.getRoleOf(uuid);
+    }
+
+    @Override
+    public UUID getWhoHaveRole(Class<?> clz) {
+        return RoleHandler.getWhoHaveRole(clz);
+    }
+
+    @Override
+    public String FormalizedWhoHaveRole(Class<?> clz) {
+        return RoleHandler.FormalizedGetWhoHaveRole(clz);
+    }
+
+    @Override
     public boolean isModeRegistered(Mode mode) {
         update();
         for (Mode m : registeredModes) {
@@ -297,7 +318,7 @@ public class KtbsProvider implements PotionEffectProvider,FightProvider,HostProv
     }
 
     @Override
-    public ArrayList<KasterborousScenario> getScenarios() {
+    public ArrayList<KasterborousScenario> getRegisteredScenarios() {
         update();
         return registered_scenarios;
     }

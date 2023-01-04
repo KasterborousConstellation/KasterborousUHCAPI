@@ -1,10 +1,15 @@
 package fr.supercomete.head.GameUtils.Scenarios;
+import fr.supercomete.commands.TeamInventory;
 import fr.supercomete.enums.Gstate;
 import fr.supercomete.head.GameUtils.Command.KasterborousCommand;
 import fr.supercomete.head.GameUtils.GameMode.ModeHandler.KtbsAPI;
 import fr.supercomete.head.GameUtils.GameMode.ModeModifier.TeamMode;
+import fr.supercomete.head.GameUtils.Team;
+import fr.supercomete.head.GameUtils.TeamManager;
 import fr.supercomete.head.GameUtils.Time.Timer;
 import fr.supercomete.head.core.KasterborousRunnable;
+import fr.supercomete.head.core.Main;
+import org.bukkit.Bukkit;
 import org.bukkit.Material;
 
 import java.util.ArrayList;
@@ -32,7 +37,49 @@ public enum Scenarios implements KasterborousScenario {
 	BetaZombie("BetaZombie", Compatibility.allModes,Material.ROTTEN_FLESH),
 	BloodDiamond("BloodDiamond", Compatibility.allModes,Material.REDSTONE),
 	NoFood("NoFood", Compatibility.allModes,Material.GOLDEN_CARROT),
-    TeamInventory("Team-Inventory",new Compatibility(CompatibilityType.WhiteList,new Class[]{TeamMode.class}),Material.CHEST)
+    TeamInventory("Team-Inventory",new Compatibility(CompatibilityType.WhiteList,new Class[]{TeamMode.class}),Material.CHEST,Arrays.asList(new KasterborousRunnable(){
+
+        @Override
+        public String name() {
+            return "Team-Inventory-Runnables";
+        }
+
+        @Override
+        public void onAPILaunch(KtbsAPI api) {
+
+        }
+
+        @Override
+        public void onAPIStop(KtbsAPI api) {
+
+        }
+
+        @Override
+        public void onGameLaunch(KtbsAPI api) {
+            fr.supercomete.commands.TeamInventory.inventoryHashMap.clear();
+            for(Team team : Main.currentGame.getTeamList()){
+                fr.supercomete.commands.TeamInventory.inventoryHashMap.put(
+                        team,
+                        Bukkit.createInventory(null,54,""+TeamManager.getColorOfShortColor(team.getColor())+"Inventaire de l'équipe "+team.getTeamName())
+                );
+            }
+        }
+
+        @Override
+        public void onGameEnd(KtbsAPI api) {
+            fr.supercomete.commands.TeamInventory.inventoryHashMap.clear();
+        }
+
+        @Override
+        public void onTick(Gstate gstate, KtbsAPI api) {
+
+        }
+
+        @Override
+        public void onTimer(Timer timer) {
+
+        }
+    }))
     ;
 	private final String name;
 	private final Compatibility compatiblity;

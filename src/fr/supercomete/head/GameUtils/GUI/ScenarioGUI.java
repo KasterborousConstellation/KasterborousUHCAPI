@@ -1,7 +1,6 @@
 package fr.supercomete.head.GameUtils.GUI;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.concurrent.CopyOnWriteArrayList;
 
@@ -40,8 +39,8 @@ public class ScenarioGUI extends GUI{
     }
     private ArrayList<KasterborousScenario> getScenarios(int page){
         final ArrayList<KasterborousScenario> list = new ArrayList<>();
-        for(int i = 0 ; i < Math.max(0,api.getScenariosProvider().getScenarios().size()-36*page);i++){
-            list.add(api.getScenariosProvider().getScenarios().get(36*page+i));
+        for(int i = 0; i < Math.max(0,api.getScenariosProvider().getRegisteredScenarios().size()-36*page); i++){
+            list.add(api.getScenariosProvider().getRegisteredScenarios().get(36*page+i));
         }
         return list;
     }
@@ -107,15 +106,20 @@ public class ScenarioGUI extends GUI{
                     default:
                         final int clicked_slot_index= slot -9;
                         final int index = 36 * gui.page + clicked_slot_index;
-                        if (index >= 0 && index < api.getScenariosProvider().getScenarios().size()) {
-                            if (Main.currentGame.getScenarios().contains(api.getScenariosProvider().getScenarios().get(index))) {
-                                Main.INSTANCE.removeScenarios(api.getScenariosProvider().getScenarios().get(index));
+                        if (index >= 0 && index < api.getScenariosProvider().getRegisteredScenarios().size()) {
+                            KasterborousScenario scenarios= api.getScenariosProvider().getRegisteredScenarios().get(index);
+                            if (Main.currentGame.getScenarios().contains(scenarios)) {
+                                if(scenarios.onDisable()){
+                                    Main.INSTANCE.removeScenarios(scenarios);
+                                    Bukkit.broadcastMessage("§cDésactivation du scénario: §b"+scenarios.getName());
+                                }
                             } else {
-                                KasterborousScenario scenarios= api.getScenariosProvider().getScenarios().get(index);
                                 if (scenarios.getCompatiblity().IsCompatible(Main.currentGame.getMode()))
-                                    Main.INSTANCE.addScenarios(api.getScenariosProvider().getScenarios().get(index));
-                                else
-                                    gui.player.sendMessage(Main.UHCTypo + "§CScénario imcompatible");
+                                    if(scenarios.onEnable()){
+                                        Main.INSTANCE.addScenarios(scenarios);
+                                        Bukkit.broadcastMessage("§aActivation du scénario: §b"+scenarios.getName());
+                                    }
+                                else gui.player.sendMessage(Main.UHCTypo + "§CScénario imcompatible");
                             }
                             gui.open();
                         }

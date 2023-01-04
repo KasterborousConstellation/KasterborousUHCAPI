@@ -18,10 +18,10 @@ import fr.supercomete.head.GameUtils.GameMode.ModeHandler.MapHandler;
 import fr.supercomete.head.GameUtils.GameMode.ModeModifier.Permission;
 import fr.supercomete.head.GameUtils.GameMode.Modes.*;
 import fr.supercomete.head.GameUtils.Scenarios.KasterborousScenario;
+import fr.supercomete.head.GameUtils.Scenarios.StarterTools;
 import fr.supercomete.head.GameUtils.Time.TimeUtility;
 import fr.supercomete.head.GameUtils.Time.TimerType;
 import fr.supercomete.head.PlayerUtils.EffectHandler;
-import fr.supercomete.head.PlayerUtils.KTBSEffect;
 import fr.supercomete.tasks.Cycle;
 import org.bukkit.*;
 import org.bukkit.entity.Player;
@@ -121,6 +121,7 @@ public class Main extends JavaPlugin {
         for(final Scenarios scenarios: Scenarios.values()){
             api.getScenariosProvider().RegisterScenarios(scenarios);
         }
+        api.getScenariosProvider().RegisterScenarios(new StarterTools());
         for(final Configurable.LIST conf : Configurable.LIST.values()){
             api.getConfigurableProvider().RegisterConfigurable(conf);
         }
@@ -194,7 +195,7 @@ public class Main extends JavaPlugin {
             @Override
             public void run() {
                 //Enregistre les KtbsRunnables des scenarios
-                for(KasterborousScenario scenario : api.getScenariosProvider().getScenarios()){
+                for(KasterborousScenario scenario : api.getScenariosProvider().getRegisteredScenarios()){
                     if(scenario.getAttachedRunnable()!=null){
                         api.getKTBSRunnableProvider().RegisterRunnable(new ArrayList<>(scenario.getAttachedRunnable()));
                     }
