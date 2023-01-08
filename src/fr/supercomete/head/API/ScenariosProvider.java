@@ -5,4 +5,6 @@ public interface ScenariosProvider {
     ArrayList<KasterborousScenario> getRegisteredScenarios();
     void RegisterScenarios(KasterborousScenario... scenarios);
     void RegisterScenarios(ArrayList<KasterborousScenario> scenarios);
+    boolean IsScenarioActivated(String name);
+    KasterborousScenario getActivatedScenario(String name);
 }

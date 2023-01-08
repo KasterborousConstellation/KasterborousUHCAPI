@@ -8,6 +8,7 @@ import java.util.concurrent.CopyOnWriteArrayList;
 import fr.supercomete.ServerExchangeProtocol.File.PlayerAccountManager;
 import fr.supercomete.ServerExchangeProtocol.Rank.Rank;
 import fr.supercomete.head.GameUtils.GameMode.ModeModifier.Permission;
+import fr.supercomete.head.GameUtils.TeamManager;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -37,11 +38,10 @@ public class ModeGUI extends GUI {
 	private Inventory inv;
 	private final Mode m;
 	private final Player player;
-	private Main main;
+	private final Main main=Main.INSTANCE;
 	public ModeGUI(Mode mode, Main main) {
 		this.m=mode;
 		this.player=null;
-		this.main=main;
 	}
 	public ModeGUI(Mode mode, Player player) {
 		this.m = mode;
@@ -81,7 +81,7 @@ public class ModeGUI extends GUI {
 			SkullMeta im2=(SkullMeta)it2.getItemMeta();
 			it2.setDurability((short)3);
 			im2.setOwner(this.player.getName());
-			if(Main.currentGame.IsTeamActivated())im2.setLore(Collections.singletonList("§cImcompatible si les équipes sont activées"));
+			if(Main.currentGame.getMode()instanceof TeamMode)im2.setLore(Collections.singletonList("§cImcompatible si les équipes sont activées"));
 			im2.setDisplayName("§rSlots");
 			it2.setItemMeta(im2);
 			tmp.setItem(26, it2);
@@ -126,9 +126,7 @@ public class ModeGUI extends GUI {
 				int currentSlot= e.getSlot();
 				if(mode.m instanceof Null_Mode) {
 					e.setCancelled(true);
-					for(Player p : Bukkit.getOnlinePlayers()) {
-						PlayerUtility.GiveHotBarStuff(p);
-					}
+
 					if (!Main.currentGame.isGameState(Gstate.Waiting)) {
 						player.sendMessage(Main.UHCTypo + "§cVous ne pouvez pas changer de mode de jeux pendant une partie");
 						return;
@@ -143,7 +141,11 @@ public class ModeGUI extends GUI {
                             }
                         }
                         Main.currentGame = new Game(chosenMode.getName(), main);
+                        TeamManager.setupTeams();
                         new ModeGUI(api.getModeProvider().getRegisteredModes().get(currentSlot + 1), mode.player).open();
+                        for(Player p : Bukkit.getOnlinePlayers()) {
+                            PlayerUtility.GiveHotBarStuff(p);
+                        }
                     }
                     break;
 				}else{

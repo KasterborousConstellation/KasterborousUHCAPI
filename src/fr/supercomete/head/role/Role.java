@@ -56,9 +56,10 @@ public abstract class Role{
 	public ArrayList<String> getRoleinfo() {
 		ArrayList<String>arr=new ArrayList<>();
 		for(String str : askRoleInfo()) {
-			ArrayList<String> sm = Main.SplitCorrectlyString(str, 50, "§7");
+			ArrayList<String> sm = Main.SplitCorrectlyString(str, 60, "§7");
 			sm.set(0, ">"+sm.get(0));
             arr.addAll(sm);
+            arr.add("");
 		}
 		return arr;
 	}

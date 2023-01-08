@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.UUID;
 import org.bukkit.Bukkit;
 public class Team {
+    private UUID team_id;
 	private ArrayList<UUID> members;
 	private String Prefix,Suffix,TeamName;
 	private short color;
@@ -19,6 +20,7 @@ public class Team {
 		this.Char=c;
 		this.setMaxPlayerAmount(MaxPlayerAmount);
 		this.anonymousteam=anonymousteam;
+        this.team_id = UUID.randomUUID();
 	}
 	public String getTeamName() {
 		return TeamName;
@@ -39,6 +41,9 @@ public class Team {
 		if(members.size()+1>this.MaxPlayerAmount)return;
 		this.members.add(member);
 	}
+    public UUID getTeam_id(){
+        return team_id;
+    }
 	public void removeMember(UUID member) {
 		this.members.remove(member);
 	}

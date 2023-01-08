@@ -1,9 +1,10 @@
 package fr.supercomete.head.GameUtils.GUI;
 
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+import java.util.*;
 import java.util.concurrent.CopyOnWriteArrayList;
+import java.util.logging.Level;
 
 import fr.supercomete.head.role.KasterBorousCamp;
 import org.bukkit.Bukkit;
@@ -33,17 +34,37 @@ public class RoleModeGUI extends GUI {
 	private Inventory inv;
 	private int currentIndex = 0;
 	private Player player;
-	public RoleModeGUI() {
+    private CopyOnWriteArrayList<Class<?>> preformated;
+    private ArrayList<KasterBorousCamp>primitives;
+    public RoleModeGUI() {
 			this.m = null;
 			this.player = null;
+
 	}
 	public RoleModeGUI(Mode mode, Player player) {
 		if (mode instanceof CampMode) {
 			this.m = (CampMode) mode;
-			this.inv = generateinv(0);
+
 			this.player = player;
 			if (player != null)
 				allGui.add(this);
+            CopyOnWriteArrayList<Class<?>> preformated = api.getModeProvider().getMode(m.getClass()).getRegisteredrole();
+            ArrayList<KasterBorousCamp>primitives = new ArrayList<>();
+            for(Class<?> claz : preformated){
+                try{
+                    Method method = claz.getMethod("getCamp",null);
+                    Role role = (Role) claz.getConstructors()[0].newInstance(UUID.randomUUID());
+                    KasterBorousCamp camp =(KasterBorousCamp) method.invoke(role);
+                    if(!primitives.contains(camp)){
+                        primitives.add(camp);
+                    }
+                }catch (NoSuchMethodException |InvocationTargetException | IllegalAccessException | InstantiationException e) {
+                    e.printStackTrace();
+                }
+            }
+            this.primitives=primitives;
+            this.preformated=preformated;
+            this.inv = generateinv(0);
 		} else {
 			try {
 				throw new InvalidModeException("Error in " + this.getClass(), new Throwable());
@@ -59,25 +80,25 @@ public class RoleModeGUI extends GUI {
 		Inventory tmp = Bukkit.createInventory(null, 54,"§b"+((Mode)m).getName() + " Role");
 		for (int e = 0; e < 9; e++) {
 			tmp.setItem(e, InventoryUtils.createColorItem(Material.STAINED_GLASS_PANE, " ", 1,
-					TeamManager.getShortOfChatColor(m.getPrimitiveCamps()[index].getColor())));
+                    TeamManager.getShortOfChatColor(primitives.get(index).getColor())));
 		}
 		for (int e = 0; e < 9; e++) {
 			tmp.setItem(53 - e, InventoryUtils.createColorItem(Material.STAINED_GLASS_PANE, " ", 1,
-					TeamManager.getShortOfChatColor(m.getPrimitiveCamps()[index].getColor())));
+					TeamManager.getShortOfChatColor(primitives.get(index).getColor())));
 		}
 		int i = 0;
 
-		for (KasterBorousCamp camp : m.getPrimitiveCamps()) {
+		for (KasterBorousCamp camp : primitives) {
 			tmp.setItem(i, InventoryUtils.createColorItem(Material.WOOL, "§r" + camp.getColor() + camp.getName(), 1,
 					TeamManager.getShortOfChatColor(camp.getColor())));
 			i++;
 		}
-//		 Main.getRoleTypeList(m.getPrimitiveCamps()[index]);
-		CopyOnWriteArrayList<Class<?>> preformated = api.getModeProvider().getMode(m.getClass()).getRegisteredrole();
+//		 Main.getRoleTypeList(primitives.get(index));
+
 		CopyOnWriteArrayList<Class<?>> formated = new CopyOnWriteArrayList<Class<?>>();
 		
 		for(Class<?> clz : preformated) {
-			if(api.getRoleProvider().getRoleByClass(clz).getCamp().equals(m.getPrimitiveCamps()[index])){
+			if(api.getRoleProvider().getRoleByClass(clz).getCamp().equals(primitives.get(index))){
 				formated.add(clz);
 			}
 		}
@@ -126,13 +147,13 @@ public class RoleModeGUI extends GUI {
 //					allGui.REMOVE(ROLE);
 					break;
 				default:
-					if (currentslot < role.m.getPrimitiveCamps().length) {
+					if (currentslot < role.primitives.size()) {
 						role.open(currentslot);
 					} else if (currentslot >= 9
-							&& currentslot < api.getRoleProvider().getRolesByCamp(api.getModeProvider().getMode(role.m.getClass()),role.m.getPrimitiveCamps()[role.currentIndex]).size()
+							&& currentslot < api.getRoleProvider().getRolesByCamp(api.getModeProvider().getMode(role.m.getClass()),role.primitives.get(role.currentIndex)).size()
 									+ 9) {
 						
-						Class<?> r = api.getRoleProvider().getRolesByCamp(api.getModeProvider().getMode(role.m.getClass()),role.m.getPrimitiveCamps()[role.currentIndex])
+						Class<?> r = api.getRoleProvider().getRolesByCamp(api.getModeProvider().getMode(role.m.getClass()),role.primitives.get(role.currentIndex))
 								.get(currentslot - 9);
 						HashMap<Class<?>, Integer> array =Main.currentGame.getRoleCompoMap();
 						Role rt =api.getRoleProvider().getRoleByClass(r);

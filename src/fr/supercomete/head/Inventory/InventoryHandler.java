@@ -4,6 +4,7 @@ import java.util.Arrays;
 import java.util.Collections;
 import fr.supercomete.head.GameUtils.Enchants.EnchantHandler;
 import fr.supercomete.head.GameUtils.Enchants.EnchantType;
+import fr.supercomete.head.GameUtils.GameMode.ModeHandler.KtbsAPI;
 import fr.supercomete.head.GameUtils.Scenarios.KasterborousScenario;
 import fr.supercomete.head.GameUtils.Time.TimerType;
 import org.bukkit.Bukkit;
@@ -33,10 +34,10 @@ public class InventoryHandler {
 	public final static String ClickBool="§aClique droit pour Activer/Désactiver";
 	public static void openinventory(Player player,int id){
 		Inventory inv;
+        final KtbsAPI api= Bukkit.getServicesManager().load(KtbsAPI.class);
 		switch(id) {
 		case 3://Slots GUI
 			inv=Bukkit.createInventory(null, 27,"§dSlots");
-			if(Main.currentGame.IsTeamActivated())return;
 			inv.setItem(0,  InventoryUtils.createColorItem(Material.STAINED_GLASS_PANE, " ", 1, (short)6));
 			inv.setItem(8,  InventoryUtils.createColorItem(Material.STAINED_GLASS_PANE, " ", 1, (short)6));
 			inv.setItem(26, InventoryUtils.createColorItem(Material.STAINED_GLASS_PANE, " ", 1, (short)6));
@@ -151,9 +152,9 @@ public class InventoryHandler {
 			if(!Main.currentGame.isGameState(Gstate.Waiting))return;
 			for(int h=0;h<9;h++)inv.setItem(h, InventoryUtils.createColorItem(Material.STAINED_GLASS_PANE, " ", 1, (short)0));
 			for(int h=45;h<54;h++)inv.setItem(h, InventoryUtils.createColorItem(Material.STAINED_GLASS_PANE, " ", 1, (short)0));
-			for(int r=9;r<9+Main.currentGame.getTeamList().size();r++){
+			for(int r=9;r<9+api.getTeamProvider().getTeams().size();r++){
 				int index =r-9;
-				Team t=Main.currentGame.getTeamList().get(index);
+				Team t=api.getTeamProvider().getTeams().get(index);
 				ItemStack TeamStack=InventoryUtils.createColorItem(Material.BANNER,TeamManager.getColorOfShortColor(t.getColor()).toString()+t.getChar()+" "+TeamManager.getNameOfShortColor(t.getColor()),1, t.getColor());
 				ItemMeta itm=TeamStack.getItemMeta();
 				itm.setLore(t.getTeamItemLore());
@@ -163,11 +164,8 @@ public class InventoryHandler {
 			break;
 		case 10://Team Config
 			inv=Bukkit.createInventory(null, 27, "§dTeam Configuration");
-			short col=(short) ((Main.currentGame.IsTeamActivated())?5:14);
-			String bool=(Main.currentGame.IsTeamActivated())?"§aOn":"§cOff";
-			inv.setItem(11, InventoryUtils.getItem(Material.WOOL, "§bNombre de joueur par équipe: §4"+Main.currentGame.getNumberOfPlayerPerTeam(),Arrays.asList(InventoryHandler.ClickTypoAdd+"1",InventoryHandler.ClickTypoRemove+"1")));
-			inv.setItem(13, InventoryUtils.createColorItem(Material.WOOL, "§bTeam: "+bool, 1, col));
-			inv.setItem(15, InventoryUtils.getItem(Material.PAPER, "§bNombre d'équipes: §a"+Main.currentGame.getTeamNumber(), Arrays.asList(InventoryHandler.ClickTypoAdd+"1",InventoryHandler.ClickTypoRemove+"1")));
+			inv.setItem(11, InventoryUtils.getItem(Material.WOOL, "§bNombre de joueur par équipe: §4"+api.getTeamProvider().getNumberOfMemberPerTeam(),Arrays.asList(InventoryHandler.ClickTypoAdd+"1",InventoryHandler.ClickTypoRemove+"1")));
+			inv.setItem(15, InventoryUtils.getItem(Material.PAPER, "§bNombre d'équipes: §a"+api.getTeamProvider().getTeamNumber(), Arrays.asList(InventoryHandler.ClickTypoAdd+"1",InventoryHandler.ClickTypoRemove+"1")));
 			inv.setItem(22, InventoryUtils.getItem(Material.ARROW, "§7Retour", Collections.singletonList("§rRetour au menu de configuration")));
 			break;
 		case 11://StuffConfig

@@ -1,5 +1,7 @@
 package fr.supercomete.head.PlayerUtils;
 
+import fr.supercomete.head.GameUtils.GameMode.ModeModifier.TeamMode;
+import fr.supercomete.head.GameUtils.GameMode.Modes.UHCClassic;
 import fr.supercomete.head.Inventory.InventoryToBase64;
 import fr.supercomete.head.Inventory.InventoryUtils;
 import fr.supercomete.head.core.Main;
@@ -28,6 +30,8 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
+import java.util.logging.Level;
+
 public class PlayerUtility{
 	private static Main main;
 	public PlayerUtility(Main main) {
@@ -94,14 +98,15 @@ public class PlayerUtility{
 			it = NbtTagHandler.addAnyTag(it, "RoomTp", 1);
 			player.getInventory().setItem(1, it);
 		}
-		if (Main.currentGame.IsTeamActivated()) {
-			ItemStack it = InventoryUtils.createColorItem(Material.BANNER, "§bTeam", 1, (short) 3);
-			ItemMeta im = it.getItemMeta();
-			im.addItemFlags(ItemFlag.HIDE_ENCHANTS);
-			it.setItemMeta(im);
-			player.getInventory().setItem(0, it);
-		} else
-			player.getInventory().setItem(0, null);
+        if(Main.currentGame.getMode()instanceof TeamMode){
+            ItemStack it = InventoryUtils.createColorItem(Material.BANNER, "§bTeam", 1, (short) 0);
+            ItemMeta im = it.getItemMeta();
+            im.addItemFlags(ItemFlag.HIDE_ENCHANTS);
+            it.setItemMeta(im);
+            player.getInventory().setItem(0, it);
+        }else{
+            player.getInventory().setItem(0,null);
+        }
 	}
 	public static Player getTarget(Player player,int range){
 		Player target;

@@ -11,6 +11,7 @@ import fr.supercomete.head.GameUtils.Enchants.EnchantType;
 import fr.supercomete.head.GameUtils.GUI.EnchantLimitGUI;
 import fr.supercomete.head.GameUtils.GameConfigurable.Configurable;
 import fr.supercomete.head.GameUtils.GameMode.ModeHandler.MapHandler;
+import fr.supercomete.head.GameUtils.GameMode.ModeModifier.TeamMode;
 import fr.supercomete.head.GameUtils.Scenarios.KasterborousScenario;
 import fr.supercomete.head.GameUtils.Time.TimeUtility;
 import fr.supercomete.head.GameUtils.Time.TimerType;
@@ -71,7 +72,7 @@ final class InventoryClickListeners implements Listener{
 	@EventHandler
 	public void PrepareAnvilEvent(InventoryClickEvent event) {
 	    final Player player = (Player)event.getWhoClicked();
-		if (event.getClickedInventory().getType() == InventoryType.ANVIL && event.getWhoClicked() instanceof Player) {
+		if (event.getClickedInventory()!=null &&event.getClickedInventory().getType() == InventoryType.ANVIL && event.getWhoClicked() instanceof Player) {
 			if (event.getClickedInventory() instanceof AnvilInventory) {
                 AnvilInventory inv = (AnvilInventory) event.getClickedInventory();
                 ItemStack result = inv.getItem(2);
@@ -390,16 +391,16 @@ final class InventoryClickListeners implements Listener{
 			event.setCancelled(true);
 			switch (currentSlot) {
 			default:
-				if (currentSlot > 8 && currentSlot < 9 + Main.currentGame.getTeamList().size()) {
-					Team team = Main.currentGame.getTeamList().get(currentSlot - 9);
+				if (currentSlot > 8 && currentSlot < 9 + TeamManager.teamlist.size()) {
+					Team team = TeamManager.teamlist.get(currentSlot - 9);
 
 					Bukkit.broadcastMessage(Main.UHCTypo + player.getName() + " a rejoint l'équipe "
 							+ TeamManager.getColorOfShortColor(team.getColor()) + team.getTeamName());
-					for (Team t : Main.currentGame.getTeamList())
+					for (Team t : TeamManager.teamlist)
 						if (t.isMemberInTeam(player.getUniqueId()))
 							t.removeMember(player.getUniqueId());// Remove The player if the player have join another
 																	// team
-					Main.currentGame.getTeamList().get(currentSlot - 9).addMembers(player.getUniqueId());
+                    TeamManager.teamlist.get(currentSlot - 9).addMembers(player.getUniqueId());
 					player.closeInventory();
 				}
 				break;
@@ -409,32 +410,24 @@ final class InventoryClickListeners implements Listener{
 			event.setCancelled(true);
 			switch (currentSlot) {
 			case 11:
+                TeamMode teammode =(TeamMode) Main.currentGame.getMode();
 				if (currentClick.isRightClick()) {
-					if (Main.currentGame.getNumberOfPlayerPerTeam() < 10) {
-						Main.currentGame.setNumberOfPlayerPerTeam(Main.currentGame.getNumberOfPlayerPerTeam() + 1);
+					if (TeamManager.NumberOfPlayerPerTeam < teammode.TeamSizeBound().getMax()) {
+                        TeamManager.NumberOfPlayerPerTeam=(TeamManager.NumberOfPlayerPerTeam + 1);
 					}
 				} else {
-					if (Main.currentGame.getNumberOfPlayerPerTeam() > 2) {
-						Main.currentGame.setNumberOfPlayerPerTeam(Main.currentGame.getNumberOfPlayerPerTeam() - 1);
+					if (TeamManager.NumberOfPlayerPerTeam > teammode.TeamSizeBound().getMin()) {
+                        TeamManager.NumberOfPlayerPerTeam=(TeamManager.NumberOfPlayerPerTeam - 1);
 					}
 				}
 				main.updateTeamsInventory(player);
-				TeamManager.setupTeams();
-				break;
-			case 13:
-				Main.currentGame.setIsTeamActivated(!Main.currentGame.IsTeamActivated());
-				main.updateTeamsInventory(player);
-				for (Player p : Bukkit.getOnlinePlayers()) {
-					PlayerUtility.GiveHotBarStuff(p);
-				}
-				PlayerUtility.GiveHotBarStuff(player);
 				TeamManager.setupTeams();
 				break;
 			case 15:
-				if (currentClick.isRightClick() && Main.currentGame.getTeamNumber() + 1 < 37)
-					Main.currentGame.setTeamNumber(Main.currentGame.getTeamNumber() + 1);
-				if (currentClick.isLeftClick() && Main.currentGame.getTeamNumber() - 1 >= 2)
-					Main.currentGame.setTeamNumber(Main.currentGame.getTeamNumber() - 1);
+				if (currentClick.isRightClick() && TeamManager.TeamNumber + 1 < 37)
+                    TeamManager.TeamNumber=(TeamManager.TeamNumber + 1);
+				if (currentClick.isLeftClick() && TeamManager.TeamNumber - 1 >= 2)
+                    TeamManager.TeamNumber=(TeamManager.TeamNumber - 1);
 				main.updateTeamsInventory(player);
 				TeamManager.setupTeams();
 				break;

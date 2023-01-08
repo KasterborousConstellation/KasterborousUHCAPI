@@ -47,4 +47,5 @@ public class KtbsAPI {
     public FightProvider getFightProvider(){
         return provider;
     }
+    public TeamProvider getTeamProvider(){return provider;}
 }

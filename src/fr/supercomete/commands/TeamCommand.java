@@ -21,10 +21,6 @@ public class TeamCommand implements CommandExecutor {
 		if (sender instanceof Player) {
 			Player player = (Player) sender;
 			if (cmd.getName().equalsIgnoreCase("team")) {
-				if (!Main.currentGame.IsTeamActivated()) {
-					player.sendMessage(Main.UHCTypo + "Les équipes sont désactivés");
-					return false;
-				}
 				if (!Main.currentGame.isGameState(Gstate.Waiting)) {
 					player.sendMessage(Main.UHCTypo + "Les équipes ne peuvent pas être changés pendant la partie");
 					return false;

@@ -8,6 +8,7 @@ import fr.supercomete.head.GameUtils.Fights.FightHandler;
 
 import fr.supercomete.head.GameUtils.GameConfigurable.Configurable;
 import fr.supercomete.head.GameUtils.GameMode.ModeHandler.MapHandler;
+import fr.supercomete.head.PlayerUtils.BonusHandler;
 import fr.supercomete.head.role.Triggers.Trigger_OnScoreBoardUpdate;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -77,20 +78,22 @@ public class scoreboardmanager {
                     }
 					ScoreBoardManager.update(player);
 					SetallScoreboard(player);
+                    int count =20;
 					if(Main.currentGame.getMode()instanceof CampMode) {
 						if(RoleHandler.IsRoleGenerated()) {
 							Role role = RoleHandler.getRoleOf(player);
 							if(role!=null) {
-								int count =20;
 								if(role instanceof BonusHeart) {
 									BonusHeart bonus = (BonusHeart)role;
 									count+=bonus.getHPBonus();
 								}
 								count += role.getPowerOfBonus(BonusType.Heart);
-								player.setMaxHealth(count);
+
 							}
 						}
 					}
+                    int bonusheart = BonusHandler.getTotalOfBonus(player,BonusType.Heart);
+                    player.setMaxHealth(count+bonusheart);
 					for(final Fight fight: FightHandler.currentFight){
 					    fight.update(FightHandler.currentFight);
                     }
@@ -135,11 +138,12 @@ public class scoreboardmanager {
 		if(timer==0) {
 			SimpleScoreboard ss = ScoreBoardManager.boards.get(player.getUniqueId());
 			Scoreboard sc = ss.getScoreboard();
+            float addpercent=0;
 			if (RoleHandler.IsRoleGenerated()) {
 				if(RoleHandler.getRoleOf(player)!=null) {
 					Role role = RoleHandler.getRoleOf(player);
-					float addpercent = role.getPowerOfBonus(BonusType.Speed);
-					player.setWalkSpeed(0.2F * ((100.0F+addpercent)/100.0F));
+                    addpercent = role.getPowerOfBonus(BonusType.Speed);
+
 				}
 				if (RoleHandler.getRoleList().containsKey(player.getUniqueId())) {
                     if(RoleHandler.getRoleOf(player)instanceof Trigger_OnScoreBoardUpdate){
@@ -147,11 +151,11 @@ public class scoreboardmanager {
                         ss.send();
                     }
 				}
-			}else {
-				player.setWalkSpeed(0.2F);
 			}
-			if(Main.currentGame.IsTeamActivated()&& Main.currentGame.getMode()instanceof TeamMode) {
-				for (fr.supercomete.head.GameUtils.Team t : Main.currentGame.getTeamList()) {
+            float addbonus = BonusHandler.getTotalOfBonus(player,BonusType.Speed);
+            player.setWalkSpeed(0.2F * ((100.0F+addpercent+addbonus)/100.0F));
+			if(Main.currentGame.getMode()instanceof TeamMode) {
+				for (fr.supercomete.head.GameUtils.Team t : Bukkit.getServicesManager().load(KtbsAPI.class).getTeamProvider().getTeams()) {
 					ChatColor col = TeamManager.getColorOfShortColor(t.getColor());
 					String prefix = col.toString() + t.getChar() + " ";
 					if (sc.getTeam(t.getTeamName()) != null)
@@ -163,7 +167,7 @@ public class scoreboardmanager {
 					}
 				}
 			}else {
-				Main.currentGame.getTeamList().clear();
+				TeamManager.teamlist.clear();
 				if(Main.currentGame.getGamestate()== Gstate.Waiting) {
 					if(sc.getTeam("1cohost")!=null) {
 						sc.getTeam("1cohost").unregister();

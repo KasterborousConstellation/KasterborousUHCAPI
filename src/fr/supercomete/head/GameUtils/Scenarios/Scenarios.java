@@ -57,7 +57,7 @@ public enum Scenarios implements KasterborousScenario {
         @Override
         public void onGameLaunch(KtbsAPI api) {
             fr.supercomete.commands.TeamInventory.inventoryHashMap.clear();
-            for(Team team : Main.currentGame.getTeamList()){
+            for(Team team : api.getTeamProvider().getTeams()){
                 fr.supercomete.commands.TeamInventory.inventoryHashMap.put(
                         team,
                         Bukkit.createInventory(null,54,""+TeamManager.getColorOfShortColor(team.getColor())+"Inventaire de l'équipe "+team.getTeamName())

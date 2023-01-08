@@ -7,6 +7,7 @@ import fr.supercomete.head.GameUtils.Events.PlayerEvents.PlayerEvents;
 import fr.supercomete.head.GameUtils.Fights.Fight;
 import fr.supercomete.head.GameUtils.Fights.FightHandler;
 import fr.supercomete.head.GameUtils.GameMode.ModeHandler.MapHandler;
+import fr.supercomete.head.PlayerUtils.BonusHandler;
 import fr.supercomete.head.PlayerUtils.KTBSEffect;
 import fr.supercomete.head.role.Triggers.*;
 import org.bukkit.Bukkit;
@@ -106,6 +107,12 @@ class EntityDamageListeners implements Listener {
                 Player damager = (Player) f.getDamager();
                 // Thanks to package com.yahoo.brettbutcher98.PotionFix;
                 // For the strengthfix
+                int rolebonus = 0;
+                int base_bonus = BonusHandler.getTotalOfBonus(damager,BonusType.Force);
+                if (RoleHandler.IsRoleGenerated()) {
+                    Role role = RoleHandler.getRoleOf(damager);
+                    rolebonus= role.getPowerOfBonus(BonusType.Force);
+                }
                 if (damager.hasPotionEffect(PotionEffectType.INCREASE_DAMAGE)) {
                     float amplifier = 1;
                     for (final PotionEffect effect : damager.getActivePotionEffects()) {
@@ -113,7 +120,10 @@ class EntityDamageListeners implements Listener {
                             amplifier = effect.getAmplifier() + 1;
                         }
                     }
-                    e.setDamage((e.getDamage() / (1 + 1.299999952316284F * amplifier)) * ((100.0f + strengthrate * amplifier) / 100.0f));
+                    double total = rolebonus+base_bonus;
+                    e.setDamage((e.getDamage() / (1 + 1.299999952316284F * amplifier)) * ((100.0f + total+(strengthrate * amplifier)) / 100.0f));
+                }else{
+                    e.setDamage(e.getDamage() * ((double)100+rolebonus+base_bonus)/100.0);
                 }
                 if (f.getEntity() instanceof Player) {
                     final Player player = (Player) e.getEntity();
@@ -131,26 +141,23 @@ class EntityDamageListeners implements Listener {
                         e.setDamage(e.getDamage() * (100 - (resistancerate * amplifier)) / 80.0);
                     }
                 }
-                if (RoleHandler.IsRoleGenerated()) {
+                if (f.getEntity() instanceof Player) {
+                    boolean cancel = false;
                     Role role = RoleHandler.getRoleOf(damager);
-                    double forcepercent = 100.0;
-                    forcepercent += role.getPowerOfBonus(BonusType.Force);
-                    e.setDamage(e.getDamage() * (forcepercent / 100.0));
-                    if (f.getEntity() instanceof Player) {
-                        boolean cancel = false;
+                    if(RoleHandler.IsRoleGenerated()){
                         if (role instanceof Trigger_OnHitPlayer) {
                             boolean tmp = ((Trigger_OnHitPlayer) role).OnHitPlayer(damager,(Player) f.getEntity(), f.getDamage(), f.getCause());
                             if (tmp) {
                                 cancel = true;
                             }
                         }
-                        if (cancel) {
-                            e.setCancelled(true);
-                            return;
-                        }
-                        FightHandler.Fight(new Fight(((Player)f.getEntity()).getUniqueId(),damager.getUniqueId()));
                     }
 
+                    if (cancel) {
+                        e.setCancelled(true);
+                        return;
+                    }
+                    FightHandler.Fight(new Fight(((Player)f.getEntity()).getUniqueId(),damager.getUniqueId()));
                 }
             }
             final Entity damagerit = f.getDamager();

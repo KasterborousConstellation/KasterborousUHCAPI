@@ -13,10 +13,8 @@ import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
-
 import fr.supercomete.enums.GenerationMode;
 import fr.supercomete.enums.Gstate;
-import fr.supercomete.head.GameUtils.Scenarios.Scenarios;
 import fr.supercomete.head.GameUtils.GameConfigurable.Configurable;
 import fr.supercomete.head.GameUtils.GameMode.ModeHandler.KtbsAPI;
 import fr.supercomete.head.GameUtils.GameMode.Modes.Mode;
@@ -38,12 +36,8 @@ public class Game {
 	private double BorderSpeed = 4;
 	private int Time = 0;
 	private int Episode = 0;
-	private int TeamNumber = 4;
-	private int NumberOfPlayerPerTeam = 2;
 	private int Groupe = 6;
 	private ArrayList<WatchTime> timelist = new ArrayList<>();
-	private boolean IsTeamActivated = false;
-	private ArrayList<Team> TeamList = new ArrayList<>();
 	private ArrayList<KasterborousScenario> scenarios = new ArrayList<>();
 	private HashMap<String, Integer> roleCompoMap = new HashMap<>();
 	private ArrayList<Configurable> configList = new ArrayList<>();
@@ -72,7 +66,7 @@ public class Game {
         final KtbsAPI api = Bukkit.getServicesManager().load(KtbsAPI.class);
 		for(Timer timer :Timer.values()) {
 			if(timer.getCompatibility().IsCompatible(api.getModeProvider().getModeByName(emode))&&timer.getBound()==null)
-			timelist.add(new WatchTime(timer));
+			    timelist.add(new WatchTime(timer));
 		}
 		for(Timer timer : Timer.values()) {
 			if(timer.getCompatibility().IsCompatible(api.getModeProvider().getModeByName(emode))&&timer.getBound()!=null) {
@@ -85,9 +79,6 @@ public class Game {
                 EnchantHandler.init();
             }
         }.runTaskLater(main,1);
-	}
-	public boolean isIsTeamActivated() {
-		return IsTeamActivated;
 	}
 	public WatchTime getTimer(Timer timer) {
 		for(WatchTime time : timelist) {
@@ -105,7 +96,7 @@ public class Game {
 	}
 
 	public Game(String emode,Main main) {
-		this.setEmode(emode);
+		this.emode =emode;
 		this.init(main);
         final KtbsAPI api = Bukkit.getServicesManager().load(KtbsAPI.class);
 		for (int ps = 0; ps < api.getConfigurableProvider().getConfigurables().size(); ps++) {
@@ -143,18 +134,7 @@ public class Game {
 		}
 		return null;
 	}
-	public boolean IsTeamActivated() {
-		return IsTeamActivated;
-	}
-	public void setIsTeamActivated(boolean isTeamActivated) {
-		IsTeamActivated = isTeamActivated;
-	}
-	public ArrayList<Team> getTeamList() {
-		return TeamList;
-	}
-	public void setTeamList(ArrayList<Team> teamList) {
-		TeamList = teamList;
-	}
+
 	public HashMap<Class<?>, Integer> getRoleCompoMap() {
 		HashMap<Class<?>, Integer> hash = new HashMap<>();
 		for (Entry<String, Integer> entry : roleCompoMap.entrySet()) {
@@ -188,21 +168,6 @@ public class Game {
 	}
 
 
-	public int getTeamNumber() {
-		return TeamNumber;
-	}
-
-	public void setTeamNumber(int teamNumber) {
-		TeamNumber = teamNumber;
-	}
-
-	public int getNumberOfPlayerPerTeam() {
-		return NumberOfPlayerPerTeam;
-	}
-
-	public void setNumberOfPlayerPerTeam(int numberOfPlayerPerTeam) {
-		NumberOfPlayerPerTeam = numberOfPlayerPerTeam;
-	}
 
 	public int getDiamondlimit() {
 		return getDataFrom(Configurable.LIST.DiamondLimit);
@@ -352,14 +317,6 @@ public class Game {
 
 	public void setArmorhash(HashMap<Material, Boolean> armorhash) {
 		this.armorhash = armorhash;
-	}
-
-	public String getEmode() {
-		return emode;
-	}
-
-	public void setEmode(String emode) {
-		this.emode = emode;
 	}
 	/**
 	 * @return the genmode

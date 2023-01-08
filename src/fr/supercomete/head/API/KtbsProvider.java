@@ -1,6 +1,8 @@
 package fr.supercomete.head.API;
+import fr.supercomete.enums.Gstate;
 import fr.supercomete.head.Exception.AlreadyRegisterdScenario;
 import fr.supercomete.head.Exception.AlreadyRegisteredConfigurable;
+import fr.supercomete.head.Exception.UnableToProvideException;
 import fr.supercomete.head.Exception.UnregisteredModeException;
 import fr.supercomete.head.GameUtils.Fights.Fight;
 import fr.supercomete.head.GameUtils.Fights.FightHandler;
@@ -10,6 +12,8 @@ import fr.supercomete.head.GameUtils.GameMode.ModeHandler.MapHandler;
 import fr.supercomete.head.GameUtils.GameMode.ModeModifier.Command;
 import fr.supercomete.head.GameUtils.GameMode.Modes.Mode;
 import fr.supercomete.head.GameUtils.Scenarios.KasterborousScenario;
+import fr.supercomete.head.GameUtils.Team;
+import fr.supercomete.head.GameUtils.TeamManager;
 import fr.supercomete.head.PlayerUtils.EffectHandler;
 import fr.supercomete.head.PlayerUtils.KTBSEffect;
 import fr.supercomete.head.core.KasterborousRunnable;
@@ -19,14 +23,16 @@ import fr.supercomete.head.role.Role;
 import fr.supercomete.head.role.RoleHandler;
 import fr.supercomete.head.structure.StructureHandler;
 import fr.supercomete.head.world.BiomeGenerator;
+import org.bukkit.ChatColor;
 import org.bukkit.craftbukkit.v1_8_R3.CraftServer;
 import org.bukkit.entity.Player;
 import org.bukkit.potion.PotionEffect;
 
+import javax.annotation.Nullable;
 import java.lang.reflect.InvocationTargetException;
 import java.util.*;
 import java.util.concurrent.CopyOnWriteArrayList;
-public class KtbsProvider implements PotionEffectProvider,FightProvider,HostProvider,GameProvider,MapProvider,RoleProvider,ModeProvider,ConfigurableProvider,KTBSRunnableProvider,ScenariosProvider{
+public class KtbsProvider implements TeamProvider,PotionEffectProvider,FightProvider,HostProvider,GameProvider,MapProvider,RoleProvider,ModeProvider,ConfigurableProvider,KTBSRunnableProvider,ScenariosProvider{
     private int call = 0;
     private void update(){
         call++;
@@ -181,6 +187,24 @@ public class KtbsProvider implements PotionEffectProvider,FightProvider,HostProv
     @Override
     public Role getRoleOf(UUID uuid) {
         return RoleHandler.getRoleOf(uuid);
+    }
+
+    @Override
+    public void DisplayRole(Player player) {
+        update();
+        RoleHandler.DisplayRole(player);
+    }
+
+    @Override
+    public boolean IsCompoHiden() {
+        update();
+        return RoleHandler.IsHiddenRoleNCompo;
+    }
+
+    @Override
+    public void setCompoHiden(boolean hide) {
+        update();
+        RoleHandler.IsHiddenRoleNCompo=hide;
     }
 
     @Override
@@ -347,6 +371,26 @@ public class KtbsProvider implements PotionEffectProvider,FightProvider,HostProv
     }
 
     @Override
+    public boolean IsScenarioActivated(String name) {
+        for(KasterborousScenario ks : registered_scenarios){
+            if(ks.getName().equals(name)){
+                return true;
+            }
+        }
+        return false;
+    }
+
+    @Override
+    public @Nullable KasterborousScenario getActivatedScenario(String name) {
+        for(KasterborousScenario ks : registered_scenarios){
+            if(ks.getName().equals(name)){
+                return ks;
+            }
+        }
+        return null;
+    }
+
+    @Override
     public boolean isInCombat(Player player) {
         call++;
         return FightHandler.hasFight(player);
@@ -407,5 +451,62 @@ public class KtbsProvider implements PotionEffectProvider,FightProvider,HostProv
             }
         }
         return potions;
+    }
+
+    @Override
+    public Team getTeamOf(Player player) {
+        update();
+        return TeamManager.getTeamOfUUID(player.getUniqueId());
+    }
+
+    @Override
+    public Team getTeamOf(UUID uuid) {
+        update();
+        return TeamManager.getTeamOfUUID(uuid);
+    }
+
+    @Override
+    public ChatColor convertShortToColor(short color) {
+        update();
+        return TeamManager.getColorOfShortColor(color);
+    }
+
+    @Override
+    public ArrayList<Team> getTeams() {
+        update();
+        return TeamManager.teamlist;
+    }
+
+    @Override
+    public void resetTeams() throws UnableToProvideException {
+        if(Main.currentGame.getGamestate()!= Gstate.Waiting){
+            throw new UnableToProvideException();
+        }
+        update();
+        TeamManager.setupTeams();
+    }
+
+    @Override
+    public void setNumberOfMemberPerTeam(int number) {
+        update();
+        TeamManager.NumberOfPlayerPerTeam=number;
+    }
+
+    @Override
+    public void setTeamNumber(int number) {
+        update();
+        TeamManager.TeamNumber=number;
+    }
+
+    @Override
+    public int getTeamNumber() {
+        update();
+        return TeamManager.TeamNumber;
+    }
+
+    @Override
+    public int getNumberOfMemberPerTeam() {
+        update();
+        return TeamManager.NumberOfPlayerPerTeam;
     }
 }

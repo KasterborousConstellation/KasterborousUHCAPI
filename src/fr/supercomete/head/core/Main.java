@@ -18,9 +18,11 @@ import fr.supercomete.head.GameUtils.GameMode.ModeHandler.MapHandler;
 import fr.supercomete.head.GameUtils.GameMode.ModeModifier.Permission;
 import fr.supercomete.head.GameUtils.GameMode.Modes.*;
 import fr.supercomete.head.GameUtils.Scenarios.KasterborousScenario;
+import fr.supercomete.head.GameUtils.Scenarios.MonsterHunter;
 import fr.supercomete.head.GameUtils.Scenarios.StarterTools;
 import fr.supercomete.head.GameUtils.Time.TimeUtility;
 import fr.supercomete.head.GameUtils.Time.TimerType;
+import fr.supercomete.head.PlayerUtils.BonusHandler;
 import fr.supercomete.head.PlayerUtils.EffectHandler;
 import fr.supercomete.tasks.Cycle;
 import org.bukkit.*;
@@ -122,6 +124,7 @@ public class Main extends JavaPlugin {
             api.getScenariosProvider().RegisterScenarios(scenarios);
         }
         api.getScenariosProvider().RegisterScenarios(new StarterTools());
+        api.getScenariosProvider().RegisterScenarios(new MonsterHunter());
         for(final Configurable.LIST conf : Configurable.LIST.values()){
             api.getConfigurableProvider().RegisterConfigurable(conf);
         }
@@ -134,6 +137,7 @@ public class Main extends JavaPlugin {
 		spawn = new Location(Bukkit.getWorld("world"), getConfig().getInt("serverapi.spawn.x"),
 				getConfig().getInt("serverapi.spawn.y"), getConfig().getInt("serverapi.spawn.z"));
 		loadconfig();
+        BonusHandler.init();
 		RoleHandler.setIsRoleGenerated(false);
 		Bukkit.getServer().getWorld("world").setDifficulty(Difficulty.PEACEFUL);
 		getCommand("menu").setExecutor(new MenuCommand(this));
@@ -168,7 +172,7 @@ public class Main extends JavaPlugin {
 		new RoleBuilder(this);
 		RoleHandler.IsHiddenRoleNCompo = false;
 		new worldgenerator(this);
-		new TeamManager(this);
+		new TeamManager();
 		new WinCondition(this);
 		WorldGarbageCollector.init(this);
 		final PluginManager pm = getServer().getPluginManager();
@@ -505,13 +509,10 @@ public class Main extends JavaPlugin {
 		player.getOpenInventory().getItem(18 + this.Selected).setType(Material.COMPASS);
 	}
 	public void updateTeamsInventory(final Player player) {
-		short col = (short) ((Main.currentGame.IsTeamActivated()) ? 5 : 14);
-		String bool = (Main.currentGame.IsTeamActivated()) ? "§aOn" : "§cOff";
-		player.getOpenInventory().setItem(11, InventoryUtils.getItem(Material.WOOL, "§bNombre de joueur par équipe: §4"+Main.currentGame.getNumberOfPlayerPerTeam(),Arrays.asList(InventoryHandler.ClickTypoAdd+"1",InventoryHandler.ClickTypoRemove+"1")));
-		player.getOpenInventory().setItem(13, InventoryUtils.createColorItem(Material.WOOL, "§bTeam: " + bool, 1, col));
+		player.getOpenInventory().setItem(11, InventoryUtils.getItem(Material.WOOL, "§bNombre de joueur par équipe: §4"+TeamManager.NumberOfPlayerPerTeam,Arrays.asList(InventoryHandler.ClickTypoAdd+"1",InventoryHandler.ClickTypoRemove+"1")));
 		player.getOpenInventory()
 				.setItem(15, InventoryUtils.getItem(Material.PAPER,
-						"§bNombre d'équipes: §a" + Main.currentGame.getTeamNumber(),
+						"§bNombre d'équipes: §a" + TeamManager.TeamNumber,
 						Arrays.asList(InventoryHandler.ClickTypoAdd + "1", InventoryHandler.ClickTypoRemove + "1")));
 	}
 	public String generateNameTimer(Timer t) {

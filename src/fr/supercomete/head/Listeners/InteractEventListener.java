@@ -17,8 +17,8 @@ import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 
-import org.bukkit.potion.PotionEffect;
-import org.bukkit.potion.PotionEffectType;
+
+
 
 import fr.supercomete.enums.Gstate;
 import fr.supercomete.head.GameUtils.Scenarios.Scenarios;
@@ -57,7 +57,7 @@ final class InteractEventListener implements Listener {
         if (NbtTagHandler.hasAnyTAG(currentItem, "RoomTp")) {
             InventoryHandler.openinventory(player, 20);
         }
-        if (currentItem.getType() == Material.BANNER && Main.currentGame.IsTeamActivated()
+        if (currentItem.getType() == Material.BANNER
                 && Main.currentGame.getGamestate() == Gstate.Waiting
                 && currentItem.getItemMeta().hasItemFlag(ItemFlag.HIDE_ENCHANTS)) {
             player.performCommand("team");

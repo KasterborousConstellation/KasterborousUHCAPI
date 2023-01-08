@@ -197,8 +197,7 @@ public class RoleHandler {
                 if (!RoleHandler.IsHiddenRoleNCompo)
                     RolesCommand.display(map, player);
                 else
-                    player.sendMessage(Main.UHCTypo
-                            + "§4Impossible la composition est brouillée jusqu'a l'épisode suivant");
+                    player.sendMessage(Main.UHCTypo+"§4Impossible la composition est cachée");
             } else {
                 RolesCommand.display(Main.currentGame.getRoleCompoMap(), player);
             }

@@ -7,13 +7,12 @@ import fr.supercomete.head.core.Main;
 
 public final class TeamManager {
 	@SuppressWarnings("unused")
-	private static Main main;
-	public TeamManager(Main main) {
-		TeamManager.main=main;
-	}
-	static char[] ListOfChar= {' ','♦','♥','♣'};
+    public static int NumberOfPlayerPerTeam = 2;
+    public static int TeamNumber = 4;
+    public static ArrayList<Team> teamlist = new ArrayList<>();
+	static char[] ListOfChar= {'❤','♦','♠','♣'};
 	public static void createTeams(int numberofteam) {
-		ArrayList<Team> teamlist=Main.currentGame.getTeamList();
+
 		teamlist.clear();
 		boolean bol= !(Main.currentGame.getMode() instanceof UHCClassic);
 		int total=numberofteam;
@@ -29,19 +28,16 @@ public final class TeamManager {
 			if(n>16)n=16;
 		for(int i=0;i<n;i++) {
 			if(i==6||i==8||i==15||i==0||i==3||i==13||i==7)continue;
-			Team t= new Team(ListOfChar[r]+getNameOfShortColor((short)i), new ArrayList<UUID>(), "", "", (short)i, ListOfChar[r], Main.currentGame.getNumberOfPlayerPerTeam(),bol);
+			Team t= new Team(ListOfChar[r]+getNameOfShortColor((short)i), new ArrayList<UUID>(), "", "", (short)i, ListOfChar[r], NumberOfPlayerPerTeam,bol);
 			teamlist.add(t);
 		}
 		total-= Math.min(n, 9);
 		}
 	}
 	public static void setupTeams(){
-		if(!Main.currentGame.IsTeamActivated()){
-			Main.currentGame.getTeamList().clear();
-		}else {
-			createTeams(Main.currentGame.getTeamNumber());
-			Main.currentGame.setMaxNumberOfplayer(Main.currentGame.getTeamNumber()*Main.currentGame.getNumberOfPlayerPerTeam());
-		}
+        createTeams(TeamNumber);
+        Main.currentGame.setMaxNumberOfplayer(TeamNumber*NumberOfPlayerPerTeam);
+
 	}
 	public static ChatColor getColorOfShortColor(short sh) {
 		switch (15-sh) {
@@ -147,8 +143,7 @@ public final class TeamManager {
 		}
 	}
 	public static Team getTeamOfUUID(UUID player) {
-		if(!Main.currentGame.IsTeamActivated())return null;
-		for(Team t:Main.currentGame.getTeamList()){
+		for(Team t:teamlist){
 			if(t.isMemberInTeam(player)) {
 				return t;
 			}
@@ -156,12 +151,10 @@ public final class TeamManager {
 		return null;
 	}
 	public static void CompletingTeam(UUID player){
-		if(!Main.currentGame.IsTeamActivated())return;
 		if(TeamManager.getTeamOfUUID(player)!=null)return;
-		for(Team t:Main.currentGame.getTeamList()){
+		for(Team t:teamlist){
 			t.addMembers(player);
 			if(t.isMemberInTeam(player))break;
 		}
-		return;	
 	}
 }

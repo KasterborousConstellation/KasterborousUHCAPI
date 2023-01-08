@@ -15,6 +15,9 @@ public interface RoleProvider {
     CopyOnWriteArrayList<Class<?>> getRolesByCamp(Mode mode, KasterBorousCamp camp);
     Role getRoleOf(Player player);
     Role getRoleOf(UUID uuid);
+    void DisplayRole(Player player);
+    boolean IsCompoHiden();
+    void setCompoHiden(boolean hide);
     UUID getWhoHaveRole(Class<?> clz);
     String FormalizedWhoHaveRole(Class<?> clz);
 }
