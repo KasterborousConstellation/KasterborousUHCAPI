@@ -21,7 +21,7 @@ public class RolelistCommand implements CommandExecutor {
 			if(cmd.getName().equalsIgnoreCase("rolelist")) {
 				if(Main.currentGame.getMode()instanceof CampMode) {
 					if(RoleHandler.IsRoleGenerated()&& (Main.IsHost(player)||RoleHandler.getRoleList().containsKey(player.getUniqueId()))) {
-						new RoleListGUI(player,((CampMode)Main.currentGame.getMode()).getPrimitiveCamps()[0].getName()).open();
+						new RoleListGUI(player,"open").open();
 					}
 					
 				}else player.sendMessage("§cCe mode de jeu ne possède pas de systeme de rôle");

@@ -1,8 +1,13 @@
 package fr.supercomete.commands;
 
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map.Entry;
 import java.util.Objects;
+import java.util.UUID;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 import fr.supercomete.head.role.KasterBorousCamp;
 import org.bukkit.Bukkit;
@@ -39,7 +44,21 @@ public class RolesCommand implements CommandExecutor {
 	public static void display(HashMap<Class<?>, Integer> map, Player player) {
 		player.sendMessage(Main.UHCTypo + "§6Composition §r(§a"+Main.CountIntegerValue(map)+"§r)");
         CampMode mode = (CampMode) Main.currentGame.getMode();
-		for (KasterBorousCamp camp : mode.getPrimitiveCamps()) {
+        CopyOnWriteArrayList<Class<?>> preformated = Bukkit.getServicesManager().load(KtbsAPI.class).getModeProvider().getMode(Main.currentGame.getMode().getClass()).getRegisteredrole();
+        ArrayList<KasterBorousCamp> primitives = new ArrayList<>();
+        for(Class<?> claz : preformated){
+            try{
+                Method method = claz.getMethod("getCamp",null);
+                Role role = (Role) claz.getConstructors()[0].newInstance(UUID.randomUUID());
+                KasterBorousCamp camp =(KasterBorousCamp) method.invoke(role);
+                if(!primitives.contains(camp)){
+                    primitives.add(camp);
+                }
+            }catch (NoSuchMethodException | InvocationTargetException | IllegalAccessException | InstantiationException e) {
+                e.printStackTrace();
+            }
+        }
+		for (KasterBorousCamp camp : primitives) {
 			HashMap<Class<?>, Integer> campsMap = new HashMap<Class<?>, Integer>();
 			for (Entry<Class<?>, Integer> entry : map.entrySet()) {
 				if (Objects.requireNonNull(api.getRoleProvider().getRoleByClass(entry.getKey())).getDefaultCamp() == camp)

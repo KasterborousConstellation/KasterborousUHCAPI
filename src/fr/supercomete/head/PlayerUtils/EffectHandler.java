@@ -1,10 +1,12 @@
 package fr.supercomete.head.PlayerUtils;
 import fr.supercomete.head.core.Main;
 import org.bukkit.Bukkit;
-import org.bukkit.craftbukkit.libs.jline.internal.Nullable;
+
 import org.bukkit.entity.Player;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.scheduler.BukkitRunnable;
+
+import javax.annotation.Nullable;
 import java.util.*;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.logging.Level;

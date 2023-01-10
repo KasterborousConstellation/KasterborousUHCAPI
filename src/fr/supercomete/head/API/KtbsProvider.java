@@ -2,7 +2,6 @@ package fr.supercomete.head.API;
 import fr.supercomete.enums.Gstate;
 import fr.supercomete.head.Exception.AlreadyRegisterdScenario;
 import fr.supercomete.head.Exception.AlreadyRegisteredConfigurable;
-import fr.supercomete.head.Exception.UnableToProvideException;
 import fr.supercomete.head.Exception.UnregisteredModeException;
 import fr.supercomete.head.GameUtils.Fights.Fight;
 import fr.supercomete.head.GameUtils.Fights.FightHandler;
@@ -10,6 +9,7 @@ import fr.supercomete.head.GameUtils.Game;
 import fr.supercomete.head.GameUtils.GameConfigurable.KasterBorousConfigurable;
 import fr.supercomete.head.GameUtils.GameMode.ModeHandler.MapHandler;
 import fr.supercomete.head.GameUtils.GameMode.ModeModifier.Command;
+import fr.supercomete.head.GameUtils.GameMode.ModeModifier.TeamMode;
 import fr.supercomete.head.GameUtils.GameMode.Modes.Mode;
 import fr.supercomete.head.GameUtils.Scenarios.KasterborousScenario;
 import fr.supercomete.head.GameUtils.Team;
@@ -27,7 +27,6 @@ import org.bukkit.ChatColor;
 import org.bukkit.craftbukkit.v1_8_R3.CraftServer;
 import org.bukkit.entity.Player;
 import org.bukkit.potion.PotionEffect;
-
 import javax.annotation.Nullable;
 import java.lang.reflect.InvocationTargetException;
 import java.util.*;
@@ -455,32 +454,52 @@ public class KtbsProvider implements TeamProvider,PotionEffectProvider,FightProv
 
     @Override
     public Team getTeamOf(Player player) {
+        if(!(getCurrentGame().getMode()instanceof TeamMode))
+        {
+            return null;
+        }
         update();
         return TeamManager.getTeamOfUUID(player.getUniqueId());
     }
 
     @Override
     public Team getTeamOf(UUID uuid) {
+        if(!(getCurrentGame().getMode()instanceof TeamMode))
+        {
+            return null;
+        }
         update();
         return TeamManager.getTeamOfUUID(uuid);
     }
 
     @Override
     public ChatColor convertShortToColor(short color) {
+        if(!(getCurrentGame().getMode()instanceof TeamMode))
+        {
+            return null;
+        }
         update();
         return TeamManager.getColorOfShortColor(color);
     }
 
     @Override
-    public ArrayList<Team> getTeams() {
+    public ArrayList<Team> getTeams(){
+        if(!(getCurrentGame().getMode()instanceof TeamMode))
+        {
+            return null;
+        }
         update();
         return TeamManager.teamlist;
     }
 
     @Override
-    public void resetTeams() throws UnableToProvideException {
+    public void resetTeams() {
+        if(!(getCurrentGame().getMode()instanceof TeamMode))
+        {
+            return;
+        }
         if(Main.currentGame.getGamestate()!= Gstate.Waiting){
-            throw new UnableToProvideException();
+            return;
         }
         update();
         TeamManager.setupTeams();
@@ -488,24 +507,40 @@ public class KtbsProvider implements TeamProvider,PotionEffectProvider,FightProv
 
     @Override
     public void setNumberOfMemberPerTeam(int number) {
+        if(!(getCurrentGame().getMode()instanceof TeamMode))
+        {
+            return;
+        }
         update();
         TeamManager.NumberOfPlayerPerTeam=number;
     }
 
     @Override
     public void setTeamNumber(int number) {
+        if(!(getCurrentGame().getMode()instanceof TeamMode))
+        {
+            return;
+        }
         update();
         TeamManager.TeamNumber=number;
     }
 
     @Override
     public int getTeamNumber() {
+        if(!(getCurrentGame().getMode()instanceof TeamMode))
+        {
+            return-1;
+        }
         update();
         return TeamManager.TeamNumber;
     }
 
     @Override
     public int getNumberOfMemberPerTeam() {
+        if(!(getCurrentGame().getMode()instanceof TeamMode))
+        {
+            return -1;
+        }
         update();
         return TeamManager.NumberOfPlayerPerTeam;
     }

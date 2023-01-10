@@ -1,12 +1,8 @@
 package fr.supercomete.head.world;
-
 import java.lang.reflect.Field;
-import java.util.Objects;
 import java.util.UUID;
 import fr.supercomete.head.GameUtils.Fights.Fight;
 import fr.supercomete.head.GameUtils.Fights.FightHandler;
-
-import fr.supercomete.head.GameUtils.GameConfigurable.Configurable;
 import fr.supercomete.head.GameUtils.GameMode.ModeHandler.MapHandler;
 import fr.supercomete.head.PlayerUtils.BonusHandler;
 import fr.supercomete.head.role.Triggers.Trigger_OnScoreBoardUpdate;
@@ -20,10 +16,7 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
-
 import org.bukkit.scoreboard.*;
-
-
 import fr.supercomete.enums.Gstate;
 import fr.supercomete.head.GameUtils.Scenarios.Scenarios;
 import fr.supercomete.head.GameUtils.ColorScheme;
@@ -32,10 +25,7 @@ import fr.supercomete.head.GameUtils.TeamManager;
 import fr.supercomete.head.GameUtils.GameMode.ModeHandler.KtbsAPI;
 import fr.supercomete.head.GameUtils.GameMode.ModeModifier.CampMode;
 import fr.supercomete.head.GameUtils.GameMode.ModeModifier.TeamMode;
-
-
 import fr.supercomete.head.core.Main;
-
 import fr.supercomete.head.role.Role;
 import fr.supercomete.head.role.RoleHandler;
 import fr.supercomete.head.role.Bonus.BonusType;
@@ -47,7 +37,6 @@ import net.minecraft.server.v1_8_R3.IChatBaseComponent.ChatSerializer;
 import net.minecraft.server.v1_8_R3.PacketPlayOutPlayerListHeaderFooter;
 import net.minecraft.server.v1_8_R3.PacketPlayOutTitle;
 import net.minecraft.server.v1_8_R3.PacketPlayOutTitle.EnumTitleAction;
-
 public class scoreboardmanager {
 	private static Main main;
 	private static byte timer=0;
@@ -155,18 +144,18 @@ public class scoreboardmanager {
             float addbonus = BonusHandler.getTotalOfBonus(player,BonusType.Speed);
             player.setWalkSpeed(0.2F * ((100.0F+addpercent+addbonus)/100.0F));
 			if(Main.currentGame.getMode()instanceof TeamMode) {
-				for (fr.supercomete.head.GameUtils.Team t : Bukkit.getServicesManager().load(KtbsAPI.class).getTeamProvider().getTeams()) {
-					ChatColor col = TeamManager.getColorOfShortColor(t.getColor());
-					String prefix = col.toString() + t.getChar() + " ";
-					if (sc.getTeam(t.getTeamName()) != null)
-						sc.getTeam(t.getTeamName()).unregister();
-					sc.registerNewTeam(t.getTeamName()).setPrefix(prefix);
-					for (UUID uu : t.getMembers()) {
-						Player p = Bukkit.getPlayer(uu);
-						sc.getTeam(t.getTeamName()).addEntry(p.getName());
-					}
-				}
-			}else {
+                for (fr.supercomete.head.GameUtils.Team t : Bukkit.getServicesManager().load(KtbsAPI.class).getTeamProvider().getTeams()) {
+                    ChatColor col = TeamManager.getColorOfShortColor(t.getColor());
+                    String prefix = col.toString() + t.getChar() + " ";
+                    if (sc.getTeam(t.getTeamName()) != null)
+                        sc.getTeam(t.getTeamName()).unregister();
+                    sc.registerNewTeam(t.getTeamName()).setPrefix(prefix);
+                    for (UUID uu : t.getMembers()) {
+                        Player p = Bukkit.getPlayer(uu);
+                        sc.getTeam(t.getTeamName()).addEntry(p.getName());
+                    }
+                }
+            }else {
 				TeamManager.teamlist.clear();
 				if(Main.currentGame.getGamestate()== Gstate.Waiting) {
 					if(sc.getTeam("1cohost")!=null) {

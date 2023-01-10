@@ -8,7 +8,4 @@ public class TimeUtility {
         int[] e = { v / 60, v % 60 };
         return NumberColor + e[0] + MinutesColor + "m" + NumberColor + e[1] + SecondsColor + "s";
     }
-
-
-
 }

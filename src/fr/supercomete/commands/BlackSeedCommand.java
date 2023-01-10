@@ -1,18 +1,14 @@
 package fr.supercomete.commands;
-
 import fr.supercomete.head.GameUtils.GameMode.ModeHandler.MapHandler;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
-
 import fr.supercomete.ServerExchangeProtocol.File.PlayerAccountManager;
 import fr.supercomete.ServerExchangeProtocol.Rank.Rank;
 import fr.supercomete.datamanager.FileManager.Fileutils;
 import fr.supercomete.head.core.Main;
-
 import java.io.File;
-
 public class BlackSeedCommand implements CommandExecutor {
 	@SuppressWarnings("unused")
 	private final Main main;

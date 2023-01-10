@@ -103,28 +103,23 @@ public class UHCClassic extends Mode implements TeamMode{
 
     @Override
 	public void onDayTime(Player player) {
-		// TODO Auto-generated method stub
-		
+
 	}
 	@Override
 	public void onNightTime(Player player) {
-		// TODO Auto-generated method stub
-		
+
 	}
 	@Override
 	public void onEndingTime(Player player) {
-		// TODO Auto-generated method stub
-		
+
 	}
 	@Override
 	public void onRoleTime(Player player) {
-		// TODO Auto-generated method stub
-		
+
 	}
 	@Override
 	public void OnStart(Player player) {
-		// TODO Auto-generated method stub
-		
+
 	}
 	@Override
 	public boolean WinCondition() {

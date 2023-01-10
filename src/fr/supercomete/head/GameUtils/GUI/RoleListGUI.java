@@ -1,9 +1,15 @@
 package fr.supercomete.head.GameUtils.GUI;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+import java.util.ArrayList;
 import java.util.Map.Entry;
+import java.util.Objects;
 import java.util.UUID;
 import java.util.concurrent.CopyOnWriteArrayList;
 
+import fr.supercomete.head.GameUtils.GameMode.ModeHandler.KtbsAPI;
 import fr.supercomete.head.role.KasterBorousCamp;
+import fr.supercomete.head.role.Role;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -27,15 +33,32 @@ public class RoleListGUI extends GUI{
 	private Inventory inv;
 	private Player player;
 	private String openType;
+    ArrayList<KasterBorousCamp>primitives;
 	public RoleListGUI(Main main) {
 		this.player=null;
 	}
 	public RoleListGUI(Player player,String openType) {
-		this.player=null;
 		this.player=player;
-		this.openType=openType;
 		if (player != null)
 			allGui.add(this);
+        CopyOnWriteArrayList<Class<?>> preformated = Bukkit.getServicesManager().load(KtbsAPI.class).getModeProvider().getMode(Main.currentGame.getMode().getClass()).getRegisteredrole();
+        ArrayList<KasterBorousCamp> primitives = new ArrayList<>();
+        for(Class<?> claz : preformated){
+            try{
+                Method method = claz.getMethod("getCamp",null);
+                Role role = (Role) claz.getConstructors()[0].newInstance(UUID.randomUUID());
+                KasterBorousCamp camp =(KasterBorousCamp) method.invoke(role);
+                if(!primitives.contains(camp)){
+                    primitives.add(camp);
+                }
+            }catch (NoSuchMethodException | InvocationTargetException | IllegalAccessException | InstantiationException e) {
+                e.printStackTrace();
+            }
+        }
+        this.primitives=primitives;
+        if(Objects.equals(openType, "open")){
+            this.openType=primitives.get(0).getName();
+        }
 	}
 	
 	protected Inventory generateinv() {
@@ -48,7 +71,7 @@ public class RoleListGUI extends GUI{
 		}
 		CampMode campmode = (CampMode) Main.currentGame.getMode();
 		int i=0;
-		for (KasterBorousCamp camp : campmode.getPrimitiveCamps()) {
+		for (KasterBorousCamp camp : primitives) {
 			tmp.setItem(i, InventoryUtils.createColorItem(Material.WOOL, "§r" + camp.getColor() + camp.getName(), 1,TeamManager.getShortOfChatColor(camp.getColor())));
 			i++;
 		}
@@ -82,8 +105,8 @@ public class RoleListGUI extends GUI{
 				e.setCancelled(true);
 				int slot = e.getSlot();
 				CampMode mode =(CampMode) Main.currentGame.getMode();
-				if(slot<mode.getPrimitiveCamps().length) {
-					gui.openType= mode.getPrimitiveCamps()[slot].getName();
+				if(slot<primitives.size()) {
+					gui.openType= primitives.get(slot).getName();
 					gui.open();
 				}
 			}

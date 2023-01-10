@@ -149,25 +149,28 @@ public class InventoryHandler {
 			break;
 		case 9://Team
 			inv=Bukkit.createInventory(null, 54,"§dTeam");
+
 			if(!Main.currentGame.isGameState(Gstate.Waiting))return;
 			for(int h=0;h<9;h++)inv.setItem(h, InventoryUtils.createColorItem(Material.STAINED_GLASS_PANE, " ", 1, (short)0));
 			for(int h=45;h<54;h++)inv.setItem(h, InventoryUtils.createColorItem(Material.STAINED_GLASS_PANE, " ", 1, (short)0));
-			for(int r=9;r<9+api.getTeamProvider().getTeams().size();r++){
-				int index =r-9;
-				Team t=api.getTeamProvider().getTeams().get(index);
-				ItemStack TeamStack=InventoryUtils.createColorItem(Material.BANNER,TeamManager.getColorOfShortColor(t.getColor()).toString()+t.getChar()+" "+TeamManager.getNameOfShortColor(t.getColor()),1, t.getColor());
-				ItemMeta itm=TeamStack.getItemMeta();
-				itm.setLore(t.getTeamItemLore());
-				TeamStack.setItemMeta(itm);
-				inv.setItem(r,TeamStack);
-			}
+
+            for (int r = 9; r < 9 + api.getTeamProvider().getTeams().size(); r++) {
+                int index = r - 9;
+                Team t = api.getTeamProvider().getTeams().get(index);
+                ItemStack TeamStack = InventoryUtils.createColorItem(Material.BANNER, TeamManager.getColorOfShortColor(t.getColor()).toString() + t.getChar() + " " + TeamManager.getNameOfShortColor(t.getColor()), 1, t.getColor());
+                ItemMeta itm = TeamStack.getItemMeta();
+                itm.setLore(t.getTeamItemLore());
+                TeamStack.setItemMeta(itm);
+                inv.setItem(r, TeamStack);
+            }
+
 			break;
 		case 10://Team Config
 			inv=Bukkit.createInventory(null, 27, "§dTeam Configuration");
-			inv.setItem(11, InventoryUtils.getItem(Material.WOOL, "§bNombre de joueur par équipe: §4"+api.getTeamProvider().getNumberOfMemberPerTeam(),Arrays.asList(InventoryHandler.ClickTypoAdd+"1",InventoryHandler.ClickTypoRemove+"1")));
-			inv.setItem(15, InventoryUtils.getItem(Material.PAPER, "§bNombre d'équipes: §a"+api.getTeamProvider().getTeamNumber(), Arrays.asList(InventoryHandler.ClickTypoAdd+"1",InventoryHandler.ClickTypoRemove+"1")));
-			inv.setItem(22, InventoryUtils.getItem(Material.ARROW, "§7Retour", Collections.singletonList("§rRetour au menu de configuration")));
-			break;
+            inv.setItem(11, InventoryUtils.getItem(Material.WOOL, "§bNombre de joueur par équipe: §4" + api.getTeamProvider().getNumberOfMemberPerTeam(), Arrays.asList(InventoryHandler.ClickTypoAdd + "1", InventoryHandler.ClickTypoRemove + "1")));
+            inv.setItem(15, InventoryUtils.getItem(Material.PAPER, "§bNombre d'équipes: §a" + api.getTeamProvider().getTeamNumber(), Arrays.asList(InventoryHandler.ClickTypoAdd + "1", InventoryHandler.ClickTypoRemove + "1")));
+            inv.setItem(22, InventoryUtils.getItem(Material.ARROW, "§7Retour", Collections.singletonList("§rRetour au menu de configuration")));
+            break;
 		case 11://StuffConfig
 			inv=Bukkit.createInventory(null, 27, "§dStuff");
 			inv.setItem(12, InventoryUtils.getItem(Material.CHEST, "§bSauvegarder le stuff", Main.SplitCorrectlyString("§rSauvegarde votre stuff actuel comme stuff de départ pour tout les joueurs", 25, "§r")));

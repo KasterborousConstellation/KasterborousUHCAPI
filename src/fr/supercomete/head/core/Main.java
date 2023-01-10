@@ -163,9 +163,7 @@ public class Main extends JavaPlugin {
         getCommand("tpin").setExecutor(new TpInCommand(this));
         getCommand("timeleft").setExecutor(new TimeLeftCommand(this));
         getCommand("ti").setExecutor(new TeamInventory());
-
         getServer().getMessenger().registerOutgoingPluginChannel(this, "BungeeCord");
-
         scoreboardmanager score = new scoreboardmanager(this);
 		score.ChangeScoreboard();
 		new InventoryHandler(this);

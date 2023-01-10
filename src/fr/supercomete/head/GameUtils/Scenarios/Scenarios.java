@@ -1,18 +1,18 @@
 package fr.supercomete.head.GameUtils.Scenarios;
-import fr.supercomete.commands.TeamInventory;
+
 import fr.supercomete.enums.Gstate;
-import fr.supercomete.head.GameUtils.Command.KasterborousCommand;
+
+
+
 import fr.supercomete.head.GameUtils.GameMode.ModeHandler.KtbsAPI;
 import fr.supercomete.head.GameUtils.GameMode.ModeModifier.TeamMode;
 import fr.supercomete.head.GameUtils.Team;
 import fr.supercomete.head.GameUtils.TeamManager;
 import fr.supercomete.head.GameUtils.Time.Timer;
 import fr.supercomete.head.core.KasterborousRunnable;
-import fr.supercomete.head.core.Main;
+
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
-
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 

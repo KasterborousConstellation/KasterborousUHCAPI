@@ -3,7 +3,6 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.*;
 import java.util.concurrent.CopyOnWriteArrayList;
 
-import com.sun.istack.internal.NotNull;
 import fr.supercomete.head.API.*;
 import fr.supercomete.head.Exception.AlreadyRegisterdScenario;
 import fr.supercomete.head.Exception.AlreadyRegisteredConfigurable;
@@ -47,5 +46,7 @@ public class KtbsAPI {
     public FightProvider getFightProvider(){
         return provider;
     }
-    public TeamProvider getTeamProvider(){return provider;}
+    public TeamProvider getTeamProvider(){
+        return provider;
+    }
 }
