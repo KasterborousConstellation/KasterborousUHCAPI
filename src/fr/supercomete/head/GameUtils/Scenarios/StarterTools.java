@@ -19,7 +19,7 @@ public class StarterTools implements KasterborousScenario{
         if(inventory==null){
             inventory= Bukkit.createInventory(null,54);
         }
-        if(stacks.length==0){
+        if(stacks[0]==null){
             final ItemStack pickaxe = new ItemStack(Material.IRON_PICKAXE);
             ItemMeta meta = pickaxe.getItemMeta();
             meta.addEnchant(Enchantment.DIG_SPEED,3,true);
@@ -44,6 +44,7 @@ public class StarterTools implements KasterborousScenario{
         inventory.remove(stacks[0]);
         inventory.remove(stacks[1]);
         inventory.remove(stacks[2]);
+        PlayerUtility.saveStuff(inventory);
         return KasterborousScenario.super.onDisable();
     }
 

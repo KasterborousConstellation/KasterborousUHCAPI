@@ -371,7 +371,7 @@ public class KtbsProvider implements TeamProvider,PotionEffectProvider,FightProv
 
     @Override
     public boolean IsScenarioActivated(String name) {
-        for(KasterborousScenario ks : registered_scenarios){
+        for(KasterborousScenario ks : Main.currentGame.getScenarios()){
             if(ks.getName().equals(name)){
                 return true;
             }
@@ -381,7 +381,7 @@ public class KtbsProvider implements TeamProvider,PotionEffectProvider,FightProv
 
     @Override
     public @Nullable KasterborousScenario getActivatedScenario(String name) {
-        for(KasterborousScenario ks : registered_scenarios){
+        for(KasterborousScenario ks : Main.currentGame.getScenarios()){
             if(ks.getName().equals(name)){
                 return ks;
             }

@@ -56,6 +56,9 @@ public enum Scenarios implements KasterborousScenario {
 
         @Override
         public void onGameLaunch(KtbsAPI api) {
+            if(!api.getScenariosProvider().IsScenarioActivated(TeamInventory.getName())){
+                return;
+            }
             fr.supercomete.commands.TeamInventory.inventoryHashMap.clear();
             for(Team team : api.getTeamProvider().getTeams()){
                 fr.supercomete.commands.TeamInventory.inventoryHashMap.put(

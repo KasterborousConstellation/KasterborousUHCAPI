@@ -54,6 +54,9 @@ public class MonsterHunter implements KasterborousScenario {
 
             @Override
             public void onGameLaunch(KtbsAPI api) {
+                if(!api.getScenariosProvider().IsScenarioActivated(getName())){
+                    return;
+                }
                 objectives.clear();
                 for(Team team : Bukkit.getServicesManager().load(KtbsAPI.class).getTeamProvider().getTeams()){
                     objectives.put(team.getTeam_id(), new Objective(team.getMaxPlayerAmount()));
@@ -62,11 +65,17 @@ public class MonsterHunter implements KasterborousScenario {
 
             @Override
             public void onGameEnd(KtbsAPI api) {
+                if(!api.getScenariosProvider().IsScenarioActivated(getName())){
+                    return;
+                }
                 objectives.clear();
             }
             int tick =0;
             @Override
             public void onTick(Gstate gstate, KtbsAPI api) {
+                if(!api.getScenariosProvider().IsScenarioActivated(getName())){
+                    return;
+                }
                 tick=(tick+1)%20;
                 if(tick==0){
                     for(final Team team : Bukkit.getServicesManager().load(KtbsAPI.class).getTeamProvider().getTeams()){

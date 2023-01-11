@@ -265,7 +265,7 @@ public class Main extends JavaPlugin {
         return (host!=null && host.equals(player))||(KTBSNetwork_Connected&&PlayerAccountManager.getPlayerAccount(player).hasRank(Rank.Admin));
     }
 	public static boolean IsHost(Player player) {
-		return (host!=null && host.equals(player.getUniqueId()))||(KTBSNetwork_Connected&&PlayerAccountManager.getPlayerAccount(player).hasRank(Rank.Admin));
+		return (host!=null && host.equals(player.getUniqueId()))||(KTBSNetwork_Connected&&PlayerAccountManager.getPlayerAccount(player.getName()).hasRank(Rank.Admin));
 	}
 	public static boolean IsCohost(Player player) {
 		return cohost.contains(player.getUniqueId());
