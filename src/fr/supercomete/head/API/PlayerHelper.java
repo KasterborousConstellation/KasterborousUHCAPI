@@ -11,7 +11,8 @@ public interface PlayerHelper {
     void sendActionBarMessage(Player player,String message);
     @Nullable Player getTargetedPlayer(Player player,int range);
     Offline_Player getOfflinePlayer(Player player);
-    Offline_Player getOfflinePlayer(String name);
     Offline_Player getOfflinePlayer(UUID uuid);
     ArrayList<Offline_Player> getOfflinePlayers();
+    boolean IsPlayerInGame(UUID uuid);
+    boolean IsPlayerAlive(UUID uuid);
 }

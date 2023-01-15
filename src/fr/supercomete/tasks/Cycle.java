@@ -1,5 +1,6 @@
 package fr.supercomete.tasks;
 import java.util.ArrayList;
+import java.util.Objects;
 import java.util.UUID;
 
 import fr.supercomete.head.GameUtils.Events.GameEvents.Event;
@@ -8,6 +9,7 @@ import fr.supercomete.head.GameUtils.GameConfigurable.Configurable;
 import fr.supercomete.head.GameUtils.GameMode.ModeHandler.KtbsAPI;
 import fr.supercomete.head.GameUtils.GameMode.ModeHandler.MapHandler;
 import fr.supercomete.head.GameUtils.GameMode.Modes.Mode;
+import fr.supercomete.head.GameUtils.Scenarios.KasterborousScenario;
 import fr.supercomete.head.GameUtils.Time.TimeUtility;
 import fr.supercomete.head.core.KasterborousRunnable;
 import fr.supercomete.head.role.Triggers.*;
@@ -59,12 +61,33 @@ public class Cycle extends BukkitRunnable{
                 for(KasterborousRunnable runnable : api.getKTBSRunnableProvider().getRunnables()){
                     runnable.onGameLaunch(api);
                 }
+                for(KasterborousScenario scenario : api.getScenariosProvider().getRegisteredScenarios()){
+                    if(api.getScenariosProvider().IsScenarioActivated(scenario.getName())){
+                        if(scenario.getAttachedRunnable()!=null){
+                            for(KasterborousRunnable runnable: scenario.getAttachedRunnable()){
+                                runnable.onGameLaunch(api);
+                            }
+                        }
+
+                    }
+                }
             }
             if ((time == game.getTimer(Timer.BorderTime).getData() || main.isForcebordure()) && !hasBordureForced) {
                 hasBordureForced = true;
                 Bukkit.broadcastMessage(Main.UHCTypo + "La bordure est en mouvement");
                 for(KasterborousRunnable runnable : api.getKTBSRunnableProvider().getRunnables()){
                     runnable.onTimer(Timer.BorderTime);
+                }
+
+                for(KasterborousScenario scenario : api.getScenariosProvider().getRegisteredScenarios()){
+                    if(api.getScenariosProvider().IsScenarioActivated(scenario.getName())){
+                        if(scenario.getAttachedRunnable()!=null){
+                            for(KasterborousRunnable runnable: scenario.getAttachedRunnable()){
+                                runnable.onTimer(Timer.BorderTime);
+                            }
+                        }
+
+                    }
                 }
             }
             if (!game.isGameState(Gstate.Waiting) && !game.isGameState(Gstate.Starting) && time > 0) {
@@ -93,6 +116,17 @@ public class Cycle extends BukkitRunnable{
                         for(KasterborousRunnable runnable : api.getKTBSRunnableProvider().getRunnables()){
                             runnable.onTick(game.getGamestate(),api);
                         }
+                        for(KasterborousScenario scenario : api.getScenariosProvider().getRegisteredScenarios()){
+                            if(api.getScenariosProvider().IsScenarioActivated(scenario.getName())){
+                                if(scenario.getAttachedRunnable()!=null){
+                                    for(KasterborousRunnable runnable: scenario.getAttachedRunnable()){
+                                        runnable.onTick(game.getGamestate(),api);
+                                    }
+                                }
+
+                            }
+                        }
+
                         if (RoleHandler.getRoleOf(player) != null) {
                             Role role = RoleHandler.getRoleOf(player);
                             if (role instanceof Trigger_WhileAnyTime) {
@@ -156,6 +190,16 @@ public class Cycle extends BukkitRunnable{
                 for(KasterborousRunnable runnable : api.getKTBSRunnableProvider().getRunnables()){
                     runnable.onTimer(Timer.PvPTime);
                 }
+                for(KasterborousScenario scenario : api.getScenariosProvider().getRegisteredScenarios()){
+                    if(api.getScenariosProvider().IsScenarioActivated(scenario.getName())){
+                        if(scenario.getAttachedRunnable()!=null){
+                            for(KasterborousRunnable runnable: scenario.getAttachedRunnable()){
+                                runnable.onTimer(Timer.PvPTime);
+                            }
+                        }
+
+                    }
+                }
                 MapHandler.getMap().getPlayWorld().setPVP(true);
                 Bukkit.broadcastMessage(Main.UHCTypo + "§6Le PVP est activé");
                 if (game.getScenarios().contains(Scenarios.FinalHeal)) Main.finalheal();
@@ -208,6 +252,16 @@ public class Cycle extends BukkitRunnable{
                 }
                 for(KasterborousRunnable runnable : api.getKTBSRunnableProvider().getRunnables()){
                     runnable.onTimer(Timer.RoleTime);
+                }
+                for(KasterborousScenario scenario : api.getScenariosProvider().getRegisteredScenarios()){
+                    if(api.getScenariosProvider().IsScenarioActivated(scenario.getName())){
+                        if(scenario.getAttachedRunnable()!=null){
+                            for(KasterborousRunnable runnable: scenario.getAttachedRunnable()){
+                                runnable.onTimer(Timer.RoleTime);
+                            }
+                        }
+
+                    }
                 }
                 for (Player player : Bukkit.getOnlinePlayers()) {
                     mode.onRoleTime(player);
@@ -264,6 +318,15 @@ public class Cycle extends BukkitRunnable{
             }
             for(KasterborousRunnable runnable : api.getKTBSRunnableProvider().getRunnables()){
                 runnable.onGameEnd(api);
+            }
+            for(KasterborousScenario scenario : api.getScenariosProvider().getRegisteredScenarios()){
+                if(api.getScenariosProvider().IsScenarioActivated(scenario.getName())){
+                    if(scenario.getAttachedRunnable()!=null){
+                        for(KasterborousRunnable runnable: scenario.getAttachedRunnable()){
+                            runnable.onGameEnd(api);
+                        }
+                    }
+                }
             }
             cancel();
         }

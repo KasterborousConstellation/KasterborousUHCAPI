@@ -14,15 +14,19 @@ import fr.supercomete.head.GameUtils.GameMode.Modes.Mode;
 import fr.supercomete.head.GameUtils.Scenarios.KasterborousScenario;
 import fr.supercomete.head.GameUtils.Team;
 import fr.supercomete.head.GameUtils.TeamManager;
+import fr.supercomete.head.PlayerUtils.BonusHandler;
 import fr.supercomete.head.PlayerUtils.EffectHandler;
 import fr.supercomete.head.PlayerUtils.KTBSEffect;
 import fr.supercomete.head.core.KasterborousRunnable;
 import fr.supercomete.head.core.Main;
+import fr.supercomete.head.role.Bonus.Bonus;
+import fr.supercomete.head.role.Bonus.BonusType;
 import fr.supercomete.head.role.KasterBorousCamp;
 import fr.supercomete.head.role.Role;
 import fr.supercomete.head.role.RoleHandler;
 import fr.supercomete.head.structure.StructureHandler;
 import fr.supercomete.head.world.BiomeGenerator;
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.craftbukkit.v1_8_R3.CraftServer;
 import org.bukkit.entity.Player;
@@ -118,6 +122,8 @@ public class KtbsProvider implements TeamProvider,PotionEffectProvider,FightProv
         update();
         return Main.structurehandler;
     }
+
+
 
     @Override
     public MapHandler.Map getMap() {
@@ -450,6 +456,30 @@ public class KtbsProvider implements TeamProvider,PotionEffectProvider,FightProv
             }
         }
         return potions;
+    }
+
+    @Override
+    public void addBonus(Player player, Bonus bonus) {
+        update();
+        BonusHandler.addBonus(player,bonus);
+    }
+
+    @Override
+    public int getBonus(Player player, BonusType type) {
+        update();
+        return BonusHandler.getTotalOfBonus(player,type);
+    }
+
+    @Override
+    public void addBonus(UUID uuid, Bonus bonus) {
+        update();
+        BonusHandler.addBonus(uuid,bonus);
+    }
+
+    @Override
+    public int getBonus(UUID uuid, BonusType type) {
+        update();
+        return BonusHandler.getTotalOfBonus(uuid,type);
     }
 
     @Override

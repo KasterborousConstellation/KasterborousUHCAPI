@@ -7,12 +7,14 @@ import fr.supercomete.head.core.Main;
 public class DeathCause {
 	private String deathCause="§7PVE";
 	private int time;
+    private String killer;
 	private EnvironnementalCause addCause;
 	public DeathCause() {
 		time = Main.currentGame.getTime();
 	}
 	public DeathCause(Player killer,EnvironnementalCause addCause) {
 		super();
+        this.killer=killer.getName();
 		if(killer!=null)deathCause="§7Tué par "+killer.getName();
 		deathCause+=" §a("+addCause.getCause()+")";
 		time = Main.currentGame.getTime();
@@ -32,6 +34,12 @@ public class DeathCause {
 	public boolean IsPve() {
 		return deathCause=="§cPVE";
 	}
+    public boolean IsPlayer(){
+        return killer !=null;
+    }
+    public String getKillerName(){
+        return killer;
+    }
 
     public enum EnvironnementalCause {
 	    PVE("PVE"),

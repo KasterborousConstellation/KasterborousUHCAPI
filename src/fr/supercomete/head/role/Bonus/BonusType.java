@@ -1,15 +1,20 @@
 package fr.supercomete.head.role.Bonus;
 public enum BonusType {
-	Force("Force"),
-	Speed("Vitesse"),
-	NoFall("NoFall"),
-	Heart("Coeurs Bonus")
+	Force("Force","§c"),
+	Speed("Vitesse","§b"),
+	NoFall("NoFall","§ba"),
+	Heart("Coeurs Bonus","§d")
 	;
 	private final String name;
-	BonusType(String name){
-		this.name=name;
+    private final String color;
+	BonusType(String name,String color){
+		this.color=color;
+        this.name=name;
 	}
 	public String getName() {
 		return name;
 	}
+    public String getColor(){
+        return color;
+    }
 }

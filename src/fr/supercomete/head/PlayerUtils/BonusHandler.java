@@ -70,18 +70,21 @@ public class BonusHandler {
             hash.put(uuid,new ArrayList<>(Collections.singletonList(bonus)));
         }
     }
-    public static int getTotalOfBonus(Player player, BonusType type){
-        if(!hash.containsKey(player.getUniqueId())){
+    public static int getTotalOfBonus(UUID player, BonusType type){
+        if(!hash.containsKey(player)){
             return 0;
         }else{
             int count = 0;
-            for(Bonus bonus : hash.get(player.getUniqueId())){
+            for(Bonus bonus : hash.get(player)){
                 if(bonus.getType().equals(type)){
                     count+=bonus.getLevel();
                 }
             }
             return count;
         }
+    }
+    public static int getTotalOfBonus(Player player, BonusType type){
+        return getTotalOfBonus(player.getUniqueId(),type);
     }
 
 }

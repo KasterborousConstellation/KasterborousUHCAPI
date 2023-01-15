@@ -15,4 +15,5 @@ public interface GameProvider {
     BiomeGenerator getBiomeGenerator();
     Map<UUID ,Integer> getDiamondLimit();
     StructureHandler getStructureHandler();
+
 }

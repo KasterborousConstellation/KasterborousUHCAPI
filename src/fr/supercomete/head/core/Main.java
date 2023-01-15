@@ -92,8 +92,19 @@ public class Main extends JavaPlugin {
     public static boolean KTBSNetwork_Connected;
     @Override
     public void onDisable(){
-        for(final KasterborousRunnable run: Bukkit.getServicesManager().load(KtbsAPI.class).getKTBSRunnableProvider().getRunnables()){
+        KtbsAPI api = Bukkit.getServicesManager().load(KtbsAPI.class);
+        for(final KasterborousRunnable run: api.getKTBSRunnableProvider().getRunnables()){
             run.onAPIStop(Bukkit.getServicesManager().load(KtbsAPI.class));
+        }
+        for(KasterborousScenario scenario : api.getScenariosProvider().getRegisteredScenarios()){
+            if(api.getScenariosProvider().IsScenarioActivated(scenario.getName())){
+                if(scenario.getAttachedRunnable()!=null){
+                    for(KasterborousRunnable runnable: scenario.getAttachedRunnable()){
+                        runnable.onAPIStop(api);
+                    }
+                }
+
+            }
         }
     }
 	@SuppressWarnings("deprecation")
@@ -196,15 +207,20 @@ public class Main extends JavaPlugin {
         new BukkitRunnable(){
             @Override
             public void run() {
-                //Enregistre les KtbsRunnables des scenarios
-                for(KasterborousScenario scenario : api.getScenariosProvider().getRegisteredScenarios()){
-                    if(scenario.getAttachedRunnable()!=null){
-                        api.getKTBSRunnableProvider().RegisterRunnable(new ArrayList<>(scenario.getAttachedRunnable()));
-                    }
-                }
+
                 //Indique le lancement de l'api
                 for(final KasterborousRunnable run: api.getKTBSRunnableProvider().getRunnables()){
                     run.onAPILaunch(api);
+                }
+                for(KasterborousScenario scenario : api.getScenariosProvider().getRegisteredScenarios()){
+                    if(api.getScenariosProvider().IsScenarioActivated(scenario.getName())){
+                        if(scenario.getAttachedRunnable()!=null){
+                            for(KasterborousRunnable runnable: scenario.getAttachedRunnable()){
+                                runnable.onAPILaunch(api);
+                            }
+                        }
+
+                    }
                 }
                 //Verifie les erreurs du systeme KTBS network
 
