@@ -1,4 +1,5 @@
 package fr.supercomete.head.PlayerUtils;
+import fr.supercomete.enums.Gstate;
 import fr.supercomete.head.core.Main;
 import org.bukkit.Bukkit;
 
@@ -55,6 +56,11 @@ public class EffectHandler {
         new BukkitRunnable() {
             @Override
             public void run() {
+                if(Main.currentGame.getGamestate()== Gstate.Waiting){
+                    if(effects.size()>0){
+                        effects.clear();
+                    }
+                }
                 for (Map.Entry<UUID, CopyOnWriteArrayList<KTBSEffect>> entry : effects.entrySet()) {
                     final UUID uuid = entry.getKey();
                     final Player player = Bukkit.getPlayer(uuid);
@@ -84,7 +90,6 @@ public class EffectHandler {
                         }
                     }
                     effects.put(uuid, list);
-
                 }
             }
         }.runTaskTimer(

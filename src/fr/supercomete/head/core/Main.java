@@ -69,13 +69,12 @@ import fr.supercomete.tasks.GAutostart;
 public class Main extends JavaPlugin {
 	public final static String UHCTypo = "§aEchosia"+"§7 » ";
 	public final static String ScoreBoardUHCTypo = ChatColor.GREEN+"Echosia ";
-	public Location spawn = new Location(Bukkit.getWorld("world"), getConfig().getInt("serverapi.spawn.x"),getConfig().getInt("serverapi.spawn.y"),getConfig().getInt("serverapi.spawn.z"));
 	private final String ServerId = getConfig().getString("serverapi.serverconfig.ServerId");
 	private final String DiscordLink = getConfig().getString("serverapi.serverconfig.DiscordLink");
-	private boolean nodamage = true;
-	private boolean forcedpvp = false;
-	private boolean forcebordure = false;
-	private boolean forcerole = false;
+	private static boolean nodamage = true;
+	private static boolean forcedpvp = false;
+	private static boolean forcebordure = false;
+	private static boolean forcerole = false;
 	public static ArrayList<UUID> playerlist = new ArrayList<>();
 	public int Selected = 0;
 	public static Game currentGame;
@@ -90,6 +89,7 @@ public class Main extends JavaPlugin {
 	public static Cycle currentCycle=null;
     public static Main INSTANCE;
     public static boolean KTBSNetwork_Connected;
+    public static Location spawn;
     @Override
     public void onDisable(){
         KtbsAPI api = Bukkit.getServicesManager().load(KtbsAPI.class);
@@ -110,6 +110,8 @@ public class Main extends JavaPlugin {
 	@SuppressWarnings("deprecation")
 	@Override
 	public void onEnable() {
+        INSTANCE=this;
+        spawn= new Location(Bukkit.getWorld("world"), INSTANCE.getConfig().getInt("serverapi.spawn.x"),INSTANCE.getConfig().getInt("serverapi.spawn.y"),INSTANCE.getConfig().getInt("serverapi.spawn.z"));
         /*
         Initialisation du network KTBS
          */
@@ -123,7 +125,6 @@ public class Main extends JavaPlugin {
         }
         KtbsAPI api = new KtbsAPI();
         Bukkit.getServicesManager().register(KtbsAPI.class,api,this, ServicePriority.Lowest);
-        INSTANCE=this;
 		generator = new BiomeGenerator();
 		structurehandler= new StructureHandler(this);
 		new ScoreBoardManager(this);
@@ -144,7 +145,7 @@ public class Main extends JavaPlugin {
 		api.getModeProvider().registerMode(uhcclassic);
 		Bukkit.broadcastMessage("§dVersion: 0.9.1 Build("+Compiledate.getDate()+"/"+(Compiledate.getMonth()+1)+") §1Beta-Ouverte");
 		currentGame=new Game((new Null_Mode()).getName(),this);
-		Bukkit.getServer().getScheduler().scheduleSyncRepeatingTask(this, new Lag(), 100L, 1L);// LagO'meter
+		Bukkit.getServer().getScheduler().scheduleSyncRepeatingTask(this, new Lag(), 200L, 1L);// LagO'meter
 		spawn = new Location(Bukkit.getWorld("world"), getConfig().getInt("serverapi.spawn.x"),
 				getConfig().getInt("serverapi.spawn.y"), getConfig().getInt("serverapi.spawn.z"));
 		loadconfig();
@@ -369,7 +370,7 @@ public class Main extends JavaPlugin {
 			player.sendMessage(UHCTypo + "§cIl y a déjà une partie en cours");
 		}
 	}
-	public void StopGame(Player player) {
+	public static void StopGame(Player player) {
 
 		if (player != null) {
 			if (Main.currentGame.getGamestate() == Gstate.Waiting) {
@@ -384,19 +385,19 @@ public class Main extends JavaPlugin {
         ScoreBoardManager.reset();
 		Main.currentGame.getFullinv().clear();
 		RoleHandler.setHistoric(null);
-		this.nodamage = true;
+		nodamage = true;
 		Main.currentGame.setGamestate(Gstate.Waiting);
 		Main.currentGame.setGenmode(GenerationMode.None);
 		RoleHandler.setIsRoleGenerated(false);
 		RoleHandler.setRoleList(new HashMap<UUID, Role>());
-        if (this.forcebordure) {
-            this.forcebordure = false;
+        if (forcebordure) {
+            forcebordure = false;
         }
-        if (this.forcedpvp) {
-            this.forcedpvp = false;
+        if (forcedpvp) {
+            forcedpvp = false;
         }
-        if(this.forcerole) {
-            this.forcerole = false;
+        if(forcerole) {
+            forcerole = false;
         }
         allplayereffectclear();
 
@@ -419,7 +420,7 @@ public class Main extends JavaPlugin {
                 }
                 MapHandler.setMapToNull();
             }
-        }.runTaskLater(this,21);
+        }.runTaskLater(INSTANCE,15);
         new BukkitRunnable(){
             @Override
             public void run() {
@@ -430,7 +431,7 @@ public class Main extends JavaPlugin {
                     }
                 }
             }
-        }.runTaskLater(this,22);
+        }.runTaskLater(INSTANCE,22);
 	}
 	public Location getLoc() {
 		return spawn;

@@ -10,6 +10,7 @@ public class DeathCause {
     private String killer;
 	private EnvironnementalCause addCause;
 	public DeathCause() {
+        killer="";
 		time = Main.currentGame.getTime();
 	}
 	public DeathCause(Player killer,EnvironnementalCause addCause) {

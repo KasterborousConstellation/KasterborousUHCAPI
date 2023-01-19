@@ -1,6 +1,7 @@
 package fr.supercomete.head.Listeners;
 
 import java.util.UUID;
+import java.util.logging.Level;
 
 import fr.supercomete.head.GameUtils.Events.PlayerEvents.PlayerEventHandler;
 import fr.supercomete.head.GameUtils.Events.PlayerEvents.PlayerEvents;
@@ -15,6 +16,7 @@ import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.Sound;
+import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Projectile;
@@ -99,12 +101,15 @@ class EntityDamageListeners implements Listener {
                 }
             }
         }
+
         float strengthrate = Main.currentGame.getDataFrom(Configurable.LIST.ForcePercent);
         float resistancerate = Main.currentGame.getDataFrom(Configurable.LIST.ResistancePercent);
         if (e.getCause().equals(DamageCause.ENTITY_ATTACK)) {
             final EntityDamageByEntityEvent f = (EntityDamageByEntityEvent) e;
             if (f.getDamager() instanceof Player ) {
-                Player damager = (Player) f.getDamager();
+                Bukkit.getLogger().log(Level.INFO,"Pre-Calculation: "+e.getDamage());
+                final Player damager = (Player) f.getDamager();
+                int sharp_level = damager.getItemInHand().getEnchantmentLevel(Enchantment.DAMAGE_ALL);
                 // Thanks to package com.yahoo.brettbutcher98.PotionFix;
                 // For the strengthfix
                 int rolebonus = 0;
@@ -113,6 +118,7 @@ class EntityDamageListeners implements Listener {
                     Role role = RoleHandler.getRoleOf(damager);
                     rolebonus= role.getPowerOfBonus(BonusType.Force);
                 }
+
                 if (damager.hasPotionEffect(PotionEffectType.INCREASE_DAMAGE)) {
                     float amplifier = 1;
                     for (final PotionEffect effect : damager.getActivePotionEffects()) {
@@ -121,12 +127,20 @@ class EntityDamageListeners implements Listener {
                         }
                     }
                     double total = rolebonus+base_bonus;
-                    e.setDamage((e.getDamage() / (1 + 1.299999952316284F * amplifier)) * ((100.0f + total+(strengthrate * amplifier)) / 100.0f));
+                    e.setDamage(e.getDamage()-1.25*sharp_level);
+                    e.setDamage((e.getDamage() / (1 + 1.299999952316284F * amplifier)));
+                    e.setDamage(e.getDamage()+1.25*sharp_level);
+                    e.setDamage(e.getDamage()* ((100.0f + total+(strengthrate * amplifier)) / 100.0f));
                 }else{
                     e.setDamage(e.getDamage() * ((double)100+rolebonus+base_bonus)/100.0);
                 }
                 if (f.getEntity() instanceof Player) {
                     final Player player = (Player) e.getEntity();
+                    rolebonus = 0;
+                    base_bonus=BonusHandler.getTotalOfBonus(player,BonusType.Damage_Resistance);
+                    if(RoleHandler.IsRoleGenerated()){
+                        rolebonus = RoleHandler.getRoleOf(player).getPowerOfBonus(BonusType.Damage_Resistance);
+                    }
                     if (player.hasPotionEffect(PotionEffectType.DAMAGE_RESISTANCE)) {
                         float amplifier = 1;
                         for (final PotionEffect effect : player.getActivePotionEffects()) {
@@ -134,13 +148,17 @@ class EntityDamageListeners implements Listener {
                                 amplifier = effect.getAmplifier() + 1;
                             }
                         }
-                        if (resistancerate * amplifier >= 100) {
+                        if ((resistancerate * amplifier)+rolebonus+base_bonus>= 100) {
                             e.setCancelled(true);
 
                         }
-                        e.setDamage(e.getDamage() * (100 - (resistancerate * amplifier)) / 80.0);
+                        e.setDamage((e.getDamage()/(1.0f-0.2f*amplifier)) * ((100.0f - (rolebonus+base_bonus+(resistancerate * amplifier)))/ 100.0f));
+                    }else{
+                        e.setDamage(e.getDamage()*(100.0f-(base_bonus+rolebonus))/100.0f);
                     }
                 }
+                Bukkit.getLogger().log(Level.INFO,"Post-Calculation: "+e.getDamage());
+                Bukkit.getLogger().log(Level.INFO,"Post-Calculation: "+e.getFinalDamage());
                 if (f.getEntity() instanceof Player) {
                     boolean cancel = false;
                     Role role = RoleHandler.getRoleOf(damager);
@@ -157,7 +175,7 @@ class EntityDamageListeners implements Listener {
                         e.setCancelled(true);
                         return;
                     }
-                    FightHandler.Fight(new Fight(((Player)f.getEntity()).getUniqueId(),damager.getUniqueId()));
+                    FightHandler.Fight(new Fight((f.getEntity()).getUniqueId(),damager.getUniqueId()));
                 }
             }
             final Entity damagerit = f.getDamager();
@@ -313,15 +331,13 @@ class EntityDamageListeners implements Listener {
                     }
                 }
                 if (Main.currentGame.getMode() instanceof CampMode) {
+                    HistoricData data = RoleHandler.getHistoric().getEntry(player.getUniqueId());
                     if (damager != null) {
-                        HistoricData data = RoleHandler.getHistoric().getEntry(player.getUniqueId());
                         data.setCause(new DeathCause (damager,advancedCause));
-                        RoleHandler.getHistoric().setEntry(player.getUniqueId(), data);
                     } else {
-                        HistoricData data = RoleHandler.getHistoric().getEntry(player.getUniqueId());
                         data.setCause(new DeathCause());
-                        RoleHandler.getHistoric().setEntry(player.getUniqueId(), data);
                     }
+                    RoleHandler.getHistoric().setEntry(player.getUniqueId(), data);
                 }
 
             }

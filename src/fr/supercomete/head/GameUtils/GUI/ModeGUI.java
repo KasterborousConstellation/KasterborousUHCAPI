@@ -19,7 +19,7 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.SkullMeta;
-
+import fr.supercomete.head.core.Main;
 import fr.supercomete.enums.Gstate;
 import fr.supercomete.head.GameUtils.Game;
 import fr.supercomete.head.GameUtils.GameMode.ModeHandler.KtbsAPI;
@@ -30,7 +30,7 @@ import fr.supercomete.head.GameUtils.GameMode.Modes.Null_Mode;
 import fr.supercomete.head.Inventory.InventoryHandler;
 import fr.supercomete.head.Inventory.InventoryUtils;
 import fr.supercomete.head.PlayerUtils.PlayerUtility;
-import fr.supercomete.head.core.Main;
+
 
 public class ModeGUI extends GUI {
     private static KtbsAPI api = Bukkit.getServicesManager().load(KtbsAPI.class);
@@ -38,7 +38,6 @@ public class ModeGUI extends GUI {
 	private Inventory inv;
 	private final Mode m;
 	private final Player player;
-	private final Main main=Main.INSTANCE;
 	public ModeGUI(Mode mode, Main main) {
 		this.m=mode;
 		this.player=null;
@@ -140,7 +139,7 @@ public class ModeGUI extends GUI {
                                 return;
                             }
                         }
-                        Main.currentGame = new Game(chosenMode.getName(), main);
+                        Main.currentGame = new Game(chosenMode.getName(), Main.INSTANCE);
                         TeamManager.setupTeams();
                         new ModeGUI(api.getModeProvider().getRegisteredModes().get(currentSlot + 1), mode.player).open();
                         for(Player p : Bukkit.getOnlinePlayers()) {
@@ -160,24 +159,24 @@ public class ModeGUI extends GUI {
 						}else player.sendMessage(Main.UHCTypo+"§cImpossible d'acceder à la génération pendant la partie");
 						break;
 					case 48:
-						main.StartGame(player);
+                        Main.INSTANCE.StartGame(player);
 						break;
 					case 26:
 						InventoryHandler.openinventory(player,3);
 						break;
 					case 50:
-						main.StopGame(player);
+						Main.StopGame(player);
 						break;
 					case 10:
 						InventoryHandler.openinventory(player, 12);
 						break;
 					case 18:
-						main.Selected= 0;
+                        Main.INSTANCE.Selected= 0;
 						InventoryHandler.openinventory(player, 7);
 						break;
 					case 45:
 						if (Main.currentGame.isGameState(Gstate.Waiting)) {
-							Main.currentGame = new Game((new Null_Mode()).getName(),main);
+							Main.currentGame = new Game((new Null_Mode()).getName(),Main.INSTANCE);
 							new ModeGUI(new Null_Mode(), mode.player).open();
                         } else
 							player.sendMessage(Main.UHCTypo

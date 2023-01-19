@@ -214,12 +214,20 @@ public class KtbsProvider implements TeamProvider,PotionEffectProvider,FightProv
 
     @Override
     public UUID getWhoHaveRole(Class<?> clz) {
+        update();
         return RoleHandler.getWhoHaveRole(clz);
     }
 
     @Override
     public String FormalizedWhoHaveRole(Class<?> clz) {
+        update();
         return RoleHandler.FormalizedGetWhoHaveRole(clz);
+    }
+
+    @Override
+    public boolean isRoleGenerated() {
+        update();
+        return RoleHandler.IsRoleGenerated();
     }
 
     @Override

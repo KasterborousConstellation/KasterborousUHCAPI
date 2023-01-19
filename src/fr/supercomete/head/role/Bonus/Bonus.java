@@ -16,6 +16,8 @@ public class Bonus {
                 return "§dCoeurs Bonus §5+" + (double)getLevel()/2.0 + "§d♥";
             case NoFall :
                 return "§aNoFall";
+            case Damage_Resistance:
+                return "§7Résistance §r"+getLevel()+"%";
         }
         return null;
     }

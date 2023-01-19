@@ -20,4 +20,5 @@ public interface RoleProvider {
     void setCompoHiden(boolean hide);
     UUID getWhoHaveRole(Class<?> clz);
     String FormalizedWhoHaveRole(Class<?> clz);
+    boolean isRoleGenerated();
 }

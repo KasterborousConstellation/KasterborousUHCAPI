@@ -6,7 +6,7 @@ public class Lag implements Runnable{
 	public static long LAST_TICK= 0L;
 
 	public static double getTPS(){
-		return getTPS(100);
+		return getTPS(200);
 	}
 
 	public static double getTPS(int ticks){

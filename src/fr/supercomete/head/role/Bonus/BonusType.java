@@ -3,7 +3,8 @@ public enum BonusType {
 	Force("Force","§c"),
 	Speed("Vitesse","§b"),
 	NoFall("NoFall","§ba"),
-	Heart("Coeurs Bonus","§d")
+	Heart("Coeurs Bonus","§d"),
+    Damage_Resistance("Résistance","§7")
 	;
 	private final String name;
     private final String color;
