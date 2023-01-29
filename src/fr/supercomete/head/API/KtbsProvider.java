@@ -229,6 +229,12 @@ public class KtbsProvider implements TeamProvider,PotionEffectProvider,FightProv
         update();
         return RoleHandler.IsRoleGenerated();
     }
+    @SuppressWarnings("unchecked")
+    @Override
+    public HashMap<UUID, Role> getRoleMap() {
+        update();
+        return (HashMap<UUID, Role>) RoleHandler.getRoleList().clone();
+    }
 
     @Override
     public boolean isModeRegistered(Mode mode) {

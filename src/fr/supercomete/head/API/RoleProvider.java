@@ -5,6 +5,7 @@ import fr.supercomete.head.role.KasterBorousCamp;
 import fr.supercomete.head.role.Role;
 import org.bukkit.entity.Player;
 
+import java.util.HashMap;
 import java.util.UUID;
 import java.util.concurrent.CopyOnWriteArrayList;
 
@@ -21,4 +22,5 @@ public interface RoleProvider {
     UUID getWhoHaveRole(Class<?> clz);
     String FormalizedWhoHaveRole(Class<?> clz);
     boolean isRoleGenerated();
+    HashMap<UUID,Role> getRoleMap();
 }

@@ -45,4 +45,7 @@ public class KtbsAPI {
     public TeamProvider getTeamProvider(){
         return provider;
     }
+    public CoordinateHelper getCoordinateHelper(){
+        return helper;
+    }
 }
