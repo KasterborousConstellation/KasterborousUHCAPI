@@ -107,7 +107,6 @@ class EntityDamageListeners implements Listener {
         if (e.getCause().equals(DamageCause.ENTITY_ATTACK)) {
             final EntityDamageByEntityEvent f = (EntityDamageByEntityEvent) e;
             if (f.getDamager() instanceof Player ) {
-                Bukkit.getLogger().log(Level.INFO,"Pre-Calculation: "+e.getDamage());
                 final Player damager = (Player) f.getDamager();
                 int sharp_level = damager.getItemInHand().getEnchantmentLevel(Enchantment.DAMAGE_ALL);
                 // Thanks to package com.yahoo.brettbutcher98.PotionFix;
@@ -157,8 +156,6 @@ class EntityDamageListeners implements Listener {
                         e.setDamage(e.getDamage()*(100.0f-(base_bonus+rolebonus))/100.0f);
                     }
                 }
-                Bukkit.getLogger().log(Level.INFO,"Post-Calculation: "+e.getDamage());
-                Bukkit.getLogger().log(Level.INFO,"Post-Calculation: "+e.getFinalDamage());
                 if (f.getEntity() instanceof Player) {
                     boolean cancel = false;
                     Role role = RoleHandler.getRoleOf(damager);

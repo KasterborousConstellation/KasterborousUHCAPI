@@ -110,6 +110,7 @@ public class Main extends JavaPlugin {
 	@SuppressWarnings("deprecation")
 	@Override
 	public void onEnable() {
+        Bukkit.getServer().setWhitelist(true);
         INSTANCE=this;
         spawn= new Location(Bukkit.getWorld("world"), INSTANCE.getConfig().getInt("serverapi.spawn.x"),INSTANCE.getConfig().getInt("serverapi.spawn.y"),INSTANCE.getConfig().getInt("serverapi.spawn.z"));
         /*

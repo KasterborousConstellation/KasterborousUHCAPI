@@ -3,6 +3,7 @@ package fr.supercomete.datamanager.FileManager;
 import java.io.*;
 import java.nio.charset.StandardCharsets;
 import java.util.stream.Collectors;
+import java.util.zip.GZIPInputStream;
 
 public class Fileutils {
 	public static void createFile(File file) throws IOException{
@@ -25,8 +26,7 @@ public class Fileutils {
     public static String readFileFromResources(Class<?> claz, String fileName) throws IOException {
         ClassLoader classLoader = claz.getClassLoader();
         try (InputStream inputStream = classLoader.getResourceAsStream(fileName)) {
-            return new BufferedReader(new InputStreamReader(inputStream, StandardCharsets.UTF_8))
-                    .lines().collect(Collectors.joining("\n"));
+            return new BufferedReader(new InputStreamReader(inputStream, StandardCharsets.UTF_8)).lines().collect(Collectors.joining("\n"));
         }
     }
 	public static String loadContent(File file) {

@@ -30,13 +30,13 @@ public class Game {
 	private Gstate gamestate = Gstate.Waiting;
 	private int maxNumberOfplayer = 0;
 	private String GameName = "UHC #" + new Random().nextInt(10000);
-	private double FirstBorder = 600;
+	private double FirstBorder = 2000;
 	private double CurrentBorder = FirstBorder;
-	private double FinalBorder = 200;
+	private double FinalBorder = 350;
 	private double BorderSpeed = 4;
 	private int Time = 0;
 	private int Episode = 0;
-	private int Groupe = 6;
+	private int Groupe = 5;
 	private ArrayList<WatchTime> timelist = new ArrayList<>();
 	private ArrayList<KasterborousScenario> scenarios = new ArrayList<>();
 	private HashMap<String, Integer> roleCompoMap = new HashMap<>();
@@ -54,6 +54,7 @@ public class Game {
     public boolean IsDisabledEnchant=true;
     public boolean IsDisabledAnvil=true;
 	public void init(Main main) {
+        Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(),"");
 		getArmorhash().clear();
 		getArmorhash().put(Material.DIAMOND_HELMET, true);
 		getArmorhash().put(Material.DIAMOND_CHESTPLATE, true);

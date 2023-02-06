@@ -28,7 +28,7 @@ public class RoleHandler {
 	private static boolean IsRoleGenerated;
 	private static HashMap<UUID, Role> RoleList=new HashMap<UUID, Role>();
 	private static Historic historic;
-    private static Random r = new Random();
+    private static final Random r = new Random();
 	public static void GiveRole(){
         r.setSeed(System.currentTimeMillis());
 		ArrayList<UUID> uu=new ArrayList<UUID>();
@@ -149,7 +149,7 @@ public class RoleHandler {
 		if (RoleHandler.IsRoleGenerated()) {
 			if (RoleHandler.IsHiddenRoleNCompo) {
 				Bukkit.broadcastMessage("§7-----------------------------");
-				Bukkit.broadcastMessage(Main.UHCTypo + "§6" + player.getUsername() + "§7 est mort. Il était §7"
+				Bukkit.broadcastMessage("§6" + player.getUsername() + "§7 est mort. Il était §7"
 						+ org.bukkit.ChatColor.MAGIC + "kkkkkkkkkkkk");
 				Bukkit.broadcastMessage("§7-----------------------------");
 			} else {
@@ -160,14 +160,14 @@ public class RoleHandler {
 					}
 				}
 				Bukkit.broadcastMessage("§7-----------------------------");
-				Bukkit.broadcastMessage(Main.UHCTypo + "§6" + player.getUsername() + "§7 est mort. Il était "
+				Bukkit.broadcastMessage("§6" + player.getUsername() + "§7 est mort. Il était "
 						+ RoleHandler.getRoleOf(player.getPlayer()).getCamp().getColor()
 						+ RoleHandler.getRoleOf(player.getPlayer()).getName()+addDisplay);
 				Bukkit.broadcastMessage("§7-----------------------------");
 			}
 		} else {
 			Bukkit.broadcastMessage("§7-----------------------------");
-			Bukkit.broadcastMessage(Main.UHCTypo + "§6" + player.getUsername()+ " §7est mort sans aucun rôle");
+			Bukkit.broadcastMessage("§6" + player.getUsername()+ " §7est mort sans aucun rôle");
 			Bukkit.broadcastMessage("§7-----------------------------");
 		}
 	}
@@ -232,13 +232,6 @@ public class RoleHandler {
 		for(String string: role.getMoreInfo()){
 		    arr.add("  §7"+string);
         }
-		/*if(role instanceof DWRole && ((DWRole) role).getTardiskeys().size()>0) {
-			String clef = "";
-			for(TardisKey key : ((DWRole)data.getRole()).getTardiskeys()) {
-				clef += "§b"+key.getKeytype().getName()+": "+key.getBonus().getBonusToString()+" ";
-			}
-			arr.add("§dClef: "+ clef);
-		}*/
 		arr.add(((data.getCause()==null)?"§aEn vie":data.getCause().getDeathCause()+" §a("+TimeUtility.transform(data.getCause().getTime(), "§a", "§a", "§a")+")"));
 		return arr;
 	}

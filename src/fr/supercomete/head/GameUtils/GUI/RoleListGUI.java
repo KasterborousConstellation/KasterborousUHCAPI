@@ -45,7 +45,7 @@ public class RoleListGUI extends GUI{
         ArrayList<KasterBorousCamp> primitives = new ArrayList<>();
         for(Class<?> claz : preformated){
             try{
-                Method method = claz.getMethod("getCamp",null);
+                Method method = claz.getMethod("getDefaultCamp",null);
                 Role role = (Role) claz.getConstructors()[0].newInstance(UUID.randomUUID());
                 KasterBorousCamp camp =(KasterBorousCamp) method.invoke(role);
                 if(!primitives.contains(camp)){
@@ -105,8 +105,8 @@ public class RoleListGUI extends GUI{
 				e.setCancelled(true);
 				int slot = e.getSlot();
 				CampMode mode =(CampMode) Main.currentGame.getMode();
-				if(slot<primitives.size()) {
-					gui.openType= primitives.get(slot).getName();
+				if(slot<gui.primitives.size()) {
+					gui.openType= gui.primitives.get(slot).getName();
 					gui.open();
 				}
 			}

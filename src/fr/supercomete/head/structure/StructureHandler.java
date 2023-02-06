@@ -17,7 +17,11 @@ public class StructureHandler {
 	}
 	public void write(Structure structure) {
 		final File file = new File(structurefile,structure.getStructurename()+".struct");
-		final String jsoncontent = Main.manager.serializeStructure(structure);
+        String jsoncontent = Main.manager.serializeStructure(structure);
+        jsoncontent = jsoncontent.replace("null","#");
+        jsoncontent =jsoncontent.replace("material","!");
+        jsoncontent =jsoncontent.replace("data","?");
+        jsoncontent = jsoncontent.replace("\n","");
 		if(!file.exists()) {
 			try {
 				Fileutils.createFile(file);
@@ -30,12 +34,15 @@ public class StructureHandler {
 	public Structure extractStructure(Class<?>pluginClass,String name) {
         Bukkit.getLogger().log(Level.FINE,"Loading: "+name+".struct");
         try {
-            final Structure structure = Main.manager.deserializeStructure(Fileutils.readFileFromResources(pluginClass,name+".struct"));
+            String json = Fileutils.readFileFromResources(pluginClass,name+".struct");
+            json =json.replace("#","null");
+            json =json.replace("!","material");
+            json =json.replace("?","data");
+            final Structure structure = Main.manager.deserializeStructure(json);
             return structure;
         }catch (IOException e) {
             e.printStackTrace();
             return null;
         }
 	}
-
 }
