@@ -77,7 +77,7 @@ public class Helper implements PlayerHelper,CoordinateHelper{
 
     @Override
     public double Distance(Player player1, Player player2) {
-        return player1.getWorld().equals(player2.getWorld())?player1.getLocation().distance(player2.getLocation()):0;
+        return player1.getWorld().equals(player2.getWorld())?player1.getLocation().distance(player2.getLocation()):Double.MAX_VALUE;
     }
 
     @Override

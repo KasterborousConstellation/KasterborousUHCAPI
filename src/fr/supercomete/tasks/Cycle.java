@@ -1,5 +1,6 @@
 package fr.supercomete.tasks;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Objects;
 import java.util.UUID;
 
@@ -229,6 +230,8 @@ public class Cycle extends BukkitRunnable{
             if (time % 5 == 0 && time > 20) {
                 if (!(Main.devmode)) {
                     if (mode.WinCondition()) {
+                        RoleHandler.setRoleList(new HashMap<>());
+                        RoleHandler.getHistoric().draw();
                         main.StopGame(null);
                         for (Player player : Bukkit.getOnlinePlayers()) {
                             mode.onEndingTime(player);
