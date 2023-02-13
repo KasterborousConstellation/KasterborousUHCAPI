@@ -40,7 +40,6 @@ public class MapHandler {
         public World getPlayWorld(){
             return currentWorld;
         }
-
         public World getStructureWorld() {
             return structureWorld;
         }

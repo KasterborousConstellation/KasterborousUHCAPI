@@ -71,7 +71,6 @@ public class Main extends JavaPlugin {
 	public final static String ScoreBoardUHCTypo = ChatColor.GREEN+"Echosia ";
 	private final String ServerId = getConfig().getString("serverapi.serverconfig.ServerId");
 	private final String DiscordLink = getConfig().getString("serverapi.serverconfig.DiscordLink");
-	private static boolean nodamage = true;
 	private static boolean forcedpvp = false;
 	private static boolean forcebordure = false;
 	private static boolean forcerole = false;
@@ -386,7 +385,6 @@ public class Main extends JavaPlugin {
         ScoreBoardManager.reset();
 		Main.currentGame.getFullinv().clear();
 		RoleHandler.setHistoric(null);
-		nodamage = true;
 		Main.currentGame.setGamestate(Gstate.Waiting);
 		Main.currentGame.setGenmode(GenerationMode.None);
 		RoleHandler.setIsRoleGenerated(false);
@@ -464,9 +462,6 @@ public class Main extends JavaPlugin {
 					pl.removePotionEffect(effect.getType());
 				}
 		}
-	}
-	public boolean isNodamage(boolean bol) {
-		return nodamage == bol;
 	}
 	public static ArrayList<UUID>  getPlayerlist() {
 		return playerlist;

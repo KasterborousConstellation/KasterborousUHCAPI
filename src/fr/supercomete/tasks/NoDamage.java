@@ -13,9 +13,8 @@ public class NoDamage extends BukkitRunnable{
     private ArrayList<UUID>nodamage;
 	int timer = 20;
 	public NoDamage(int time,ArrayList<UUID>nodamage) {
-        for(UUID uuid:nodamage){
-            Main.currentGame.getNodamagePlayerList().addAll(nodamage);
-        }
+        Main.currentGame.getNodamagePlayerList().addAll(nodamage);
+        this.nodamage=nodamage;
 		timer=time;
 	}
 	@Override
@@ -40,9 +39,11 @@ public class NoDamage extends BukkitRunnable{
                     Bukkit.getPlayer(player).sendMessage(Main.UHCTypo + "Fin de l'invincibilité");
                 }
 			}
+            ArrayList<UUID> uuids = Main.currentGame.getNodamagePlayerList();
             for(UUID uuid:nodamage){
-                Main.currentGame.getNodamagePlayerList().removeAll(nodamage);
+                uuids.remove(uuid);
             }
+            Main.currentGame.setNodamagePlayerList(uuids);
 			cancel();
 		}
 	}

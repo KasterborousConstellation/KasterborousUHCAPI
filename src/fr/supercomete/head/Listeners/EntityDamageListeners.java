@@ -62,9 +62,7 @@ class EntityDamageListeners implements Listener {
     public void PlayerDeathEvent(EntityDamageEvent e) {
         if (e.getEntity() instanceof Player) {
             final Player player = (Player) e.getEntity();
-            if (Main.currentGame.getNodamagePlayerList().contains(player.getUniqueId())
-                    || Main.currentGame.getGamestate() == Gstate.Waiting
-                    || Main.currentGame.getGamestate() == Gstate.Starting) {
+            if (Main.currentGame.getNodamagePlayerList().contains(player.getUniqueId()) || Main.currentGame.getGamestate() == Gstate.Waiting || Main.currentGame.getGamestate() == Gstate.Starting) {
                 e.setCancelled(true);
                 return;
             }
