@@ -48,16 +48,12 @@ public class MapHandler {
             return random.nextInt((int)(Main.currentGame.getCurrentBorder()/2-(Main.currentGame.getCurrentBorder())/4));
         }
         public void PlayerRandomTPMap(Player player) {
-            ArrayList<UUID> uu = new ArrayList<UUID>();
-            uu.add(player.getUniqueId());
-            Main.currentGame.setNodamagePlayerList(uu);
             player.teleport(new Location(currentWorld,getRandomCoordinateInPlayWorld(),150,getRandomCoordinateInPlayWorld()));
         }
         public void PlayerRandomTPMap(Player player,int nodamageTime) {
             ArrayList<UUID> uu = new ArrayList<UUID>();
             uu.add(player.getUniqueId());
-            Main.currentGame.setNodamagePlayerList(uu);
-            NoDamage nodamage = new NoDamage(Main.INSTANCE, nodamageTime);
+            NoDamage nodamage = new NoDamage(nodamageTime,uu);
             nodamage.runTaskTimer(Main.INSTANCE, 0, 20L);
             player.teleport(new Location(currentWorld,getRandomCoordinateInPlayWorld(),150,getRandomCoordinateInPlayWorld()));
         }

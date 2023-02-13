@@ -34,7 +34,7 @@ public class Gstart extends BukkitRunnable{
 			Main.currentGame.setGamestate(Gstate.Playing);
 			Cycle cycle = new Cycle(this.main);
 			cycle.runTaskTimer(this.main, 0, 20L);
-			NoDamage nodamage= new NoDamage(main, Main.currentGame.getTimer(Timer.InvincibilityTime).getData());
+			NoDamage nodamage= new NoDamage(Main.currentGame.getTimer(Timer.InvincibilityTime).getData(),Main.getPlayerlist());
 			nodamage.runTaskTimer(main, 0, 20L);
 			for(Location loc:location){
 				double locx=loc.getX();

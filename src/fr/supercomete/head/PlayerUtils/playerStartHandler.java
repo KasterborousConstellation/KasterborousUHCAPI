@@ -22,7 +22,6 @@ public class playerStartHandler{
 			if(pl.getGameMode()!=GameMode.SPECTATOR)Main.getPlayerlist().add(pl.getUniqueId());
 		}
 		for(UUID uu:Main.getPlayerlist())TeamManager.CompletingTeam(uu);
-		Main.currentGame.setNodamagePlayerList(Main.getPlayerlist());
 		PlayerTPTask task = new PlayerTPTask(main,llist);
 		task.runTaskTimer(main, 0, 10L);
 	}

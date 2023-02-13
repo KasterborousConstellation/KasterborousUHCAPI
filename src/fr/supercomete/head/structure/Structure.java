@@ -37,7 +37,7 @@ public class Structure {
 	}
 	public Location getPositionRelativeToLocation(int[] place) {
 		final Location loc = this.getLocation();
-		loc.add(((double)place[0])+0.5,((double) place[1])-10,((double) place[2])+0.5);
+		loc.add(((double)place[0])+0.5,(place[1]),((double) place[2])+0.5);
 		return loc;
 	}
 	public String getStructurename() {

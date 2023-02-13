@@ -468,12 +468,6 @@ public class Main extends JavaPlugin {
 	public boolean isNodamage(boolean bol) {
 		return nodamage == bol;
 	}
-	public boolean getNodamage() {
-		return nodamage;
-	}
-	public void setNodamage(boolean nodamage) {
-		this.nodamage = nodamage;
-	}
 	public static ArrayList<UUID>  getPlayerlist() {
 		return playerlist;
 	}

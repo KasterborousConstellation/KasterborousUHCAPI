@@ -13,7 +13,7 @@ public class EventsHandler {
     register Default events
      */
     public static void init(){
-        register(new Exposed(60,120,10));
+        register(new Exposed(60*60,70*60,5));
     }
     /*
     Use this method to register a new event.

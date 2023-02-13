@@ -1,19 +1,28 @@
 serverapi:
   serverconfig:
+    #Quand le devmode est activé, la condition de victoire est désactivée.  devmode:false/true
     devmode: false
+    #Indique le code discord affiché dans le tab.
     DiscordLink: "xxxxx"
+    #Indique l'ip du serveur, dans le tab et dans le scoreboard
     ServerId: "xxxx.xxxx"
+  #Toutes les coordonnées doivent être entières. Pas de chiffre à virgule.
+  #
+  #Coordonnée du spawn
   spawn:
     x: 0
     y: 41
     z: 0
+  #Coordonnée de la salle des règles.
   ruleroom:
     x: 0
     y: 41
     z: 0
+  #Coordonnée de la boite à host.
   hostbox:
     x: 0
     y: 41
     z: 0
+  #Ne pas modifié.
   stuff:
     actualconfig: ""
