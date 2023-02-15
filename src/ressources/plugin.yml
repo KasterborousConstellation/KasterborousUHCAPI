@@ -1,5 +1,5 @@
 name: KasterborousUHC
-version: 0.8.9
+version: 1.0
 author: Supercomete
 main: fr.supercomete.head.core.Main
 commands:

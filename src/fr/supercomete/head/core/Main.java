@@ -7,7 +7,11 @@ import java.net.URL;
 import java.util.*;
 import java.util.jar.JarFile;
 import java.util.logging.Level;
+import java.util.logging.Logger;
 import java.util.zip.ZipEntry;
+
+import com.sun.scenario.Settings;
+import fr.supercomete.autoupdater.UpdateChecker;
 import fr.supercomete.commands.*;
 import fr.supercomete.head.Exception.KTBSNetworkFailure;
 import fr.supercomete.head.GameUtils.Events.GameEvents.EventsHandler;
@@ -109,6 +113,20 @@ public class Main extends JavaPlugin {
 	@SuppressWarnings("deprecation")
 	@Override
 	public void onEnable() {
+        /*
+        Update checker init
+         */
+        UpdateChecker.getLasterVersion(version ->{
+        if (this.getDescription().getVersion().equalsIgnoreCase(version)) {
+            Bukkit.getLogger().log(Level.FINE,("Kasterborous UHC est à jour!"));
+        } else {
+            Bukkit.getLogger().log(Level.INFO,  "*********************************************************************");
+            Bukkit.getLogger().log(Level.WARNING,("Kasterborous UHC is outdated!"));
+            Bukkit.getLogger().log(Level.WARNING,("Nouvelle version: " + version));
+            Bukkit.getLogger().log(Level.WARNING,("Version actuelle: " + this.getDescription().getVersion()));
+            Bukkit.getLogger().log(Level.WARNING,("Mise à jour nécessaire: " + UpdateChecker.PLUGIN_URL));
+            Bukkit.getLogger().log(Level.FINE,  "*********************************************************************");			}
+        });
         Bukkit.getServer().setWhitelist(true);
         INSTANCE=this;
         spawn= new Location(Bukkit.getWorld("world"), INSTANCE.getConfig().getInt("serverapi.spawn.x"),INSTANCE.getConfig().getInt("serverapi.spawn.y"),INSTANCE.getConfig().getInt("serverapi.spawn.z"));
