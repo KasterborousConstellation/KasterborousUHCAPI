@@ -16,7 +16,7 @@ public class ScoreBoardManager {
 	}
 	public static HashMap<UUID, SimpleScoreboard> boards = new HashMap<>();
 	public static void init(Player player) {
-		SimpleScoreboard ss = new SimpleScoreboard("§1»§aEchosia§1«");
+		SimpleScoreboard ss = new SimpleScoreboard("§1»§a"+Main.INSTANCE.getConfig().getString("serverapi.serverconfig.servername")+"§1«");
 		int max = generateScoreboard(player).size();
 		for(int i =0;i < max;i++)
 		    ss.add(generateScoreboard(player).get(i), max-i);

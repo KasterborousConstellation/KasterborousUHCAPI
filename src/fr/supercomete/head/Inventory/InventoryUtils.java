@@ -12,6 +12,7 @@ import org.bukkit.World;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.PlayerInventory;
 import org.bukkit.inventory.meta.ItemMeta;
 import net.md_5.bungee.api.chat.ComponentBuilder;
 import net.md_5.bungee.api.chat.HoverEvent;
@@ -44,6 +45,21 @@ public class InventoryUtils {
             if (it.getType() == Material.AIR|| NbtTagHandler.hasUUIDTAG(it))
                 continue;
             w.dropItemNaturally(loc, it);
+        }
+        if(inv instanceof PlayerInventory){
+            PlayerInventory e = (PlayerInventory) inv;
+            if(e.getHelmet()!=null){
+                w.dropItemNaturally(loc,e.getHelmet());
+            }
+            if(e.getChestplate()!=null){
+                w.dropItemNaturally(loc,e.getChestplate());
+            }
+            if(e.getLeggings()!=null){
+                w.dropItemNaturally(loc,e.getLeggings());
+            }
+            if(e.getBoots()!=null){
+                w.dropItemNaturally(loc,e.getBoots());
+            }
         }
     }
 	public static ItemStack getItem(Material material, String customName, List<String> CustomLore) {

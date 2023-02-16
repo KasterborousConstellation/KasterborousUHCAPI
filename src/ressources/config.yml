@@ -1,11 +1,15 @@
 serverapi:
   serverconfig:
-    #Quand le devmode est activé, la condition de victoire est désactivée.  devmode:false/true
+    #Quand le devmode est activé, la condition de victoire est désactivée.  devmode: false/true
     devmode: false
     #Indique le code discord affiché dans le tab.
     DiscordLink: "xxxxx"
     #Indique l'ip du serveur, dans le tab et dans le scoreboard
     ServerId: "xxxx.xxxx"
+    #Indique le nom du serveur
+    servername: "SERVER"
+    #Active la whitelist par défaut. whitelist: false/true
+    whitelist: false
   #Toutes les coordonnées doivent être entières. Pas de chiffre à virgule.
   #
   #Coordonnée du spawn

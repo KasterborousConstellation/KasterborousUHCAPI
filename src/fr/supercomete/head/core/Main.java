@@ -7,10 +7,7 @@ import java.net.URL;
 import java.util.*;
 import java.util.jar.JarFile;
 import java.util.logging.Level;
-import java.util.logging.Logger;
 import java.util.zip.ZipEntry;
-
-import com.sun.scenario.Settings;
 import fr.supercomete.autoupdater.UpdateChecker;
 import fr.supercomete.commands.*;
 import fr.supercomete.head.Exception.KTBSNetworkFailure;
@@ -71,8 +68,8 @@ import fr.supercomete.head.world.ScoreBoard.ScoreBoardManager;
 import fr.supercomete.tasks.GAutostart;
 
 public class Main extends JavaPlugin {
-	public final static String UHCTypo = "§aEchosia"+"§7 » ";
-	public final static String ScoreBoardUHCTypo = ChatColor.GREEN+"Echosia ";
+	public final static String UHCTypo = "§a[§6UHC§a]"+"§7 » ";
+	public final static String ScoreBoardUHCTypo = ChatColor.GREEN+"§a[§6UHC§a] ";
 	private final String ServerId = getConfig().getString("serverapi.serverconfig.ServerId");
 	private final String DiscordLink = getConfig().getString("serverapi.serverconfig.DiscordLink");
 	private static boolean forcedpvp = false;
@@ -93,6 +90,7 @@ public class Main extends JavaPlugin {
     public static Main INSTANCE;
     public static boolean KTBSNetwork_Connected;
     public static Location spawn;
+    public static ArrayList<String> messages = new ArrayList<>();
     @Override
     public void onDisable(){
         KtbsAPI api = Bukkit.getServicesManager().load(KtbsAPI.class);
@@ -113,23 +111,7 @@ public class Main extends JavaPlugin {
 	@SuppressWarnings("deprecation")
 	@Override
 	public void onEnable() {
-        /*
-        Update checker init
-         */
-        UpdateChecker.getLasterVersion(version ->{
-        if (this.getDescription().getVersion().equalsIgnoreCase(version)) {
-            Bukkit.getLogger().log(Level.FINE,("Kasterborous UHC est à jour!"));
-        } else {
-            Bukkit.getLogger().log(Level.INFO,  "*********************************************************************");
-            Bukkit.getLogger().log(Level.WARNING,("Kasterborous UHC is outdated!"));
-            Bukkit.getLogger().log(Level.WARNING,("Nouvelle version: " + version));
-            Bukkit.getLogger().log(Level.WARNING,("Version actuelle: " + this.getDescription().getVersion()));
-            Bukkit.getLogger().log(Level.WARNING,("Mise à jour nécessaire: " + UpdateChecker.PLUGIN_URL));
-            Bukkit.getLogger().log(Level.FINE,  "*********************************************************************");			}
-        });
-        Bukkit.getServer().setWhitelist(true);
         INSTANCE=this;
-        spawn= new Location(Bukkit.getWorld("world"), INSTANCE.getConfig().getInt("serverapi.spawn.x"),INSTANCE.getConfig().getInt("serverapi.spawn.y"),INSTANCE.getConfig().getInt("serverapi.spawn.z"));
         /*
         Initialisation du network KTBS
          */
@@ -137,10 +119,33 @@ public class Main extends JavaPlugin {
             Server server = ServerManager.getCurrentPluginServer();
             Bukkit.broadcastMessage("§6KTBS_Network : §aConnected");
             KTBSNetwork_Connected=true;
-        }catch (Exception e){
+        }catch(NoClassDefFoundError e){
             Bukkit.broadcastMessage("§6KTBS_Network: §cDisconnected");
             KTBSNetwork_Connected=false;
         }
+        /*
+        Update checker init
+         */
+        UpdateChecker.getLasterVersion(version ->{
+        if (this.getDescription().getVersion().equalsIgnoreCase(version)) {
+            Bukkit.getLogger().log(Level.INFO,("Kasterborous UHC est à jour! Version: "+this.getDescription().getVersion()));
+        } else {
+            messages.add("§a*********************************************************************");
+            messages.add("Kasterborous UHC est obsolete!");
+            messages.add("Nouvelle version: " + version);
+            messages.add("Version actuelle: " + this.getDescription().getVersion());
+            messages.add("Mise à jour nécessaire: " + UpdateChecker.PLUGIN_URL);
+            messages.add("§a*********************************************************************");
+            Bukkit.getLogger().log(Level.WARNING,"*********************************************************************");
+            Bukkit.getLogger().log(Level.WARNING,"Kasterborous UHC is outdated!");
+            Bukkit.getLogger().log(Level.WARNING,"Nouvelle version: " + version);
+            Bukkit.getLogger().log(Level.WARNING,"Version actuelle: " + this.getDescription().getVersion());
+            Bukkit.getLogger().log(Level.WARNING,"Mise à jour nécessaire: " + UpdateChecker.PLUGIN_URL);
+            Bukkit.getLogger().log(Level.WARNING,"*********************************************************************");
+        }
+        });
+        Bukkit.getServer().setWhitelist(getConfig().getBoolean("serverapi.serverconfig.whitelist"));
+        spawn= new Location(Bukkit.getWorld("world"), INSTANCE.getConfig().getInt("serverapi.spawn.x"),INSTANCE.getConfig().getInt("serverapi.spawn.y"),INSTANCE.getConfig().getInt("serverapi.spawn.z"));
         KtbsAPI api = new KtbsAPI();
         Bukkit.getServicesManager().register(KtbsAPI.class,api,this, ServicePriority.Lowest);
 		generator = new BiomeGenerator();
@@ -297,10 +302,18 @@ public class Main extends JavaPlugin {
         bypass.removeIf(uu -> !(Main.IsHost(uu) || Main.IsCohost(uu)));
     }
     public static boolean IsHost(UUID player) {
-        return (host!=null && host.equals(player))||(KTBSNetwork_Connected&&PlayerAccountManager.getPlayerAccount(player).hasRank(Rank.Admin));
+        if(KTBSNetwork_Connected){
+            return (host!=null && host.equals(player) ||PlayerAccountManager.getPlayerAccount(player).hasRank(Rank.Admin));
+        }else {
+            return (host!=null && host.equals(player));
+        }
     }
 	public static boolean IsHost(Player player) {
-		return (host!=null && host.equals(player.getUniqueId()))||(KTBSNetwork_Connected&&PlayerAccountManager.getPlayerAccount(player.getName()).hasRank(Rank.Admin));
+        if(KTBSNetwork_Connected){
+            return (host!=null && host.equals(player.getUniqueId())) ||PlayerAccountManager.getPlayerAccount(player.getName()).hasRank(Rank.Admin);
+        }else {
+            return (host!=null && host.equals(player.getUniqueId()));
+        }
 	}
 	public static boolean IsCohost(Player player) {
 		return cohost.contains(player.getUniqueId());
@@ -314,15 +327,6 @@ public class Main extends JavaPlugin {
 	}
 	public static String getCheckMark(boolean bool) {
 		return bool?"§a✔":"§c✖";
-	}
-	public boolean loadServerProtocol() {
-		try {
-			@SuppressWarnings("unused")
-			Server server = ServerManager.getCurrentPluginServer();
-			return true;
-		}catch (Exception e) {
-			return false;
-		}
 	}
 
 	public void StartGame(Player player) {

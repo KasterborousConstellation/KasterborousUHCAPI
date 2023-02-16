@@ -12,7 +12,6 @@ public class ListenersRegisterer {
 	public static boolean Register(PluginManager pm,Main main) {
 		try {
 			//Gui Listeners
-
 			pm.registerEvents(new ModeGUI(new Null_Mode(), main), main);
 
 			pm.registerEvents(new SeeInvGUI(main),main);
@@ -37,7 +36,7 @@ public class ListenersRegisterer {
 			pm.registerEvents(new BlockBreakListener(main), main);
 			pm.registerEvents(new InteractEventListener(), main);
 			pm.registerEvents(new EntityDamageListeners(main), main);
-			pm.registerEvents(new JoinListener(main), main);
+			pm.registerEvents(new JoinListener(), main);
             pm.registerEvents(new RoleModeGUI(), main);
 			pm.registerEvents(new OnQuitListener(), main);
 			pm.registerEvents(new PlayerInteractEntityListener(), main);

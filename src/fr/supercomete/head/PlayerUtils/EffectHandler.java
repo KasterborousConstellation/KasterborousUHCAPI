@@ -18,16 +18,18 @@ public class EffectHandler {
         if (effects.containsKey(player.getUniqueId())) {
             CopyOnWriteArrayList<KTBSEffect> l = effects.get(player.getUniqueId());
             boolean found = false;
+            ArrayList<KTBSEffect>copy = new ArrayList<>(l);
             for(KTBSEffect iterate : l){
                 if(iterate.type==effect.type){
                     if(iterate.level<=effect.level){
-                        l.remove(iterate);
-                        l.add(effect);
+                        copy.remove(iterate);
+                        copy.add(effect);
                         found=true;
                         break;
                     }
                 }
             }
+            l= new CopyOnWriteArrayList<>(copy);
             if(!found){
                 l.add(effect);
             }

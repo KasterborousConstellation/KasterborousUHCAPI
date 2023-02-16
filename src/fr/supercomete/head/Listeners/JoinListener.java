@@ -24,20 +24,22 @@ import fr.supercomete.head.world.worldgenerator;
 import org.bukkit.scheduler.BukkitRunnable;
 
 final class JoinListener implements Listener {
-    private Main main;
-    JoinListener(Main main){
-        this.main=main;
-    }
+
     @EventHandler
     public void onJoin(PlayerJoinEvent e) {
         Player player = e.getPlayer();
+        if(player.isOp()){
+            for(String string : Main.messages){
+                player.sendMessage(string);
+            }
+        }
         if (Main.host == null) {
             Main.host = player.getUniqueId();
             player.setOp(true);
         }
         if (Main.currentGame.isGameState(Gstate.Waiting)) {
             player.setGameMode(GameMode.ADVENTURE);
-            player.teleport(main.spawn);
+            player.teleport(Main.spawn);
             PacketPlayOutEntityTeleport packet = new PacketPlayOutEntityTeleport(((CraftPlayer) player).getHandle());
             new BukkitRunnable() {
                 @Override

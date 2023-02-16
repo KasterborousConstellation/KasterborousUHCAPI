@@ -5,6 +5,7 @@ import fr.supercomete.head.GameUtils.GameMode.Modes.Null_Mode;
 import fr.supercomete.head.GameUtils.Time.TimeUtility;
 import fr.supercomete.head.GameUtils.Time.Timer;
 import fr.supercomete.head.GameUtils.Time.TimerType;
+import fr.supercomete.head.PlayerUtils.EffectHandler;
 import fr.supercomete.head.PlayerUtils.KTBSEffect;
 import fr.supercomete.head.core.Main;
 import org.bukkit.Bukkit;
@@ -12,6 +13,8 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+import org.bukkit.potion.PotionEffectType;
+import org.bukkit.scheduler.BukkitRunnable;
 
 public class TimeLeftCommand implements CommandExecutor {
 	@SuppressWarnings("unused")
@@ -27,7 +30,7 @@ public class TimeLeftCommand implements CommandExecutor {
 		        return false;
             }
             if(cmd.getName().equalsIgnoreCase("timeleft") ) {
-				player.sendMessage("§1------------------------");
+                player.sendMessage("§1------------------------");
 				for(final Timer timer: Timer.values()){
 				    if(timer.getType().equals(TimerType.TimeDependent)&&timer.getCompatibility().IsCompatible(Main.currentGame.getMode())){
 				        int amount = Main.currentGame.getTimer(timer).getData()-Main.currentGame.getTime();
