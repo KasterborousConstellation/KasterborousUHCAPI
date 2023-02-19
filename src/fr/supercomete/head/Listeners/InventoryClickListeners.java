@@ -159,13 +159,12 @@ final class InventoryClickListeners implements Listener{
 	public void OnCraft(InventoryClickEvent event) {
 		if (event.getClickedInventory() == null)
 			return;
-		if (event.getClickedInventory().getType() == InventoryType.WORKBENCH
-				&& event.getWhoClicked() instanceof Player) {
+		if (event.getClickedInventory().getType() == InventoryType.WORKBENCH && event.getWhoClicked() instanceof Player) {
 			if (event.getClickedInventory() instanceof CraftingInventory) {
 //				final Player player = (Player) event.getWhoClicked();
 				CraftingInventory inv = (CraftingInventory) event.getClickedInventory();
 				ItemStack result = inv.getItem(0);
-				if(result.getType().equals(Material.DIAMOND_LEGGINGS) && Configurable.ExtractBool(Configurable.LIST.DiamondLeggings)){
+				if(result!=null&&result.getType().equals(Material.DIAMOND_LEGGINGS) && Configurable.ExtractBool(Configurable.LIST.DiamondLeggings)){
                     event.setCancelled(true);
                     event.getWhoClicked().sendMessage(Main.UHCTypo+"§cCet item est désactivé.");
                 }

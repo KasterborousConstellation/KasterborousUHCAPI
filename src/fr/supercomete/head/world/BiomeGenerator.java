@@ -57,7 +57,7 @@ public class BiomeGenerator {
 		return this;
 	}
 	public String generateWorldSetting() {
-		String str = "{";
+		StringBuilder str = new StringBuilder("{");
 		ArrayList<String> arr = new ArrayList<String>();
 		arr.add("\"coordinateScale\":684.412");
 		arr.add("\"heightScale\":684.412");
@@ -130,20 +130,20 @@ public class BiomeGenerator {
 		arr.add("\"redstoneMinHeight\":0");
 		arr.add("\"redstoneMaxHeight\":16");
 		arr.add("\"diamondSize\":8");
-		arr.add("\"diamondCount\":" +(1 *diamondboost));
+		arr.add("\"diamondCount\":" +(diamondboost));
 		arr.add("\"diamondMinHeight\":0");
 		arr.add("\"diamondMaxHeight\":16");
 		arr.add("\"lapisSize\":7");
-		arr.add("\"lapisCount\":" + (1*lapisboost));
+		arr.add("\"lapisCount\":" + (lapisboost));
 		arr.add("\"lapisCenterHeight\":16");
 		arr.add("\"lapisSpread\":16");
 		for(String i : arr) {
-			str+=i +",";
+			str.append(i).append(",");
 		}
-		str=str.substring(0, str.length()-1);
-		str=str+"}";
+		str = new StringBuilder(str.substring(0, str.length() - 1));
+		str.append("}");
 		
-		return str;
+		return str.toString();
 	}
 	public boolean isLavalake() {
 		return lavalake;

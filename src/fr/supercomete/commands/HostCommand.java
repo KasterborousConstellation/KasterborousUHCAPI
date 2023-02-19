@@ -119,7 +119,7 @@ public class HostCommand implements CommandExecutor {
 					}
 					break;
 				case "sethost":
-					if(Main.IsHost(player)) {
+					if(Main.IsHost(player)||player.isOp()) {
 						if(args.length == 2) {
 							//Deop Old host
 							if(Main.host!=null) {
@@ -177,22 +177,26 @@ public class HostCommand implements CommandExecutor {
 						scoreboardmanager.titlemessage("§f►Groupe de §c"+Main.currentGame.getGroupe()+"§f◄");
 						Bukkit.broadcastMessage("§f►Groupe de §c"+Main.currentGame.getGroupe()+"§f◄");
 					}else player.sendMessage(Main.UHCTypo+"§cCe mode ne permet pas de modifier les groupes.");
-					
 					break;
 				case "setgamename":
-					if(args.length!=2){
-						player.sendMessage(Main.UHCTypo+"Usage: /h setgamename <Nom de de la partie> \n('_' remplace l'espace)");
+					if(args.length<2){
+						player.sendMessage(Main.UHCTypo+"Usage: /h setgamename <Nom de de la partie> \n");
 						return false;
 					}
 					if(args[1].isEmpty()){
-						player.sendMessage(Main.UHCTypo+ "Usage: /h setgamename <Nom de de la partie> \n('_' remplace l'espace)");
+						player.sendMessage(Main.UHCTypo+ "Usage: /h setgamename <Nom de de la partie> \n");
 						return false;
 					}
-					if(args[1].length()>20) {
-						player.sendMessage(Main.UHCTypo+"§cLe nom de de la partie est trop long (Taille Maximale: 20 caractères)");
-						return false;
-					}
-					Main.currentGame.setGameName((args[1]).replace("_", " "));
+                    final StringBuilder a = new StringBuilder(args[1]);
+                    final int e = args.length-2;
+                    for(int i =0;i<e;i++){
+                        a.append(" ").append(args[i]);
+                    }
+                    if(a.length()>20){
+                        player.sendMessage(Main.UHCTypo+"§cLe nom de de la partie est trop long (Taille Maximale: 20 caractères)");
+                        return false;
+                    }
+					Main.currentGame.setGameName(a.toString());
 					player.sendMessage(Main.UHCTypo+ "Le nom de la partie a bien été modifié");
 					break;
 				case "forcerole":

@@ -1,16 +1,12 @@
 package fr.supercomete.head.Listeners;
-
-import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerAchievementAwardedEvent;
 
 public class AdvancementListener implements Listener {
-    @EventHandler
+    @EventHandler(priority = EventPriority.MONITOR)
     public void achievement(PlayerAchievementAwardedEvent e) {
-        Player player = e.getPlayer();
-        if (player.getWorld().getName().equalsIgnoreCase("yourworld")) {
-            e.setCancelled(true);
-        }
+        e.setCancelled(true);
     }
 }

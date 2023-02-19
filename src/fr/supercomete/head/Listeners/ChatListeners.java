@@ -1,4 +1,5 @@
 package fr.supercomete.head.Listeners;
+import fr.supercomete.head.PlayerUtils.PlayerUtility;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -11,6 +12,7 @@ import fr.supercomete.head.GameUtils.Time.Timer;
 import fr.supercomete.head.core.Main;
 import fr.supercomete.tasks.Cycle;
 final class ChatListeners implements Listener{
+
 	@EventHandler(priority = EventPriority.LOWEST)
 	public void onChatMessage(AsyncPlayerChatEvent event) {
 		final Player sender = event.getPlayer();
@@ -31,7 +33,9 @@ final class ChatListeners implements Listener{
 					//Envoie correctement le message au autres mort
 					event.setCancelled(true);
 					for(final Player player :Bukkit.getOnlinePlayers()) {
-						player.sendMessage("§7[Mort] " +sender.getName()+" §7 "+event.getMessage());
+                        if(Main.getPlayerlist().contains(player.getUniqueId())){
+                            player.sendMessage("§7[Mort] " +sender.getName()+" §7 "+event.getMessage());
+                        }
 					}
 				}
 			}else {

@@ -12,7 +12,6 @@ public final class TeamManager {
     public static ArrayList<Team> teamlist = new ArrayList<>();
 	static char[] ListOfChar= {'❤','♦','♠','♣'};
 	public static void createTeams(int numberofteam) {
-
 		teamlist.clear();
 		boolean bol= !(Main.currentGame.getMode() instanceof UHCClassic);
 		int total=numberofteam;

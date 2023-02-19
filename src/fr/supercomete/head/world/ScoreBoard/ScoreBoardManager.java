@@ -3,6 +3,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.UUID;
 
+import fr.supercomete.head.GameUtils.GameMode.ModeModifier.Groupable;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
@@ -54,7 +55,9 @@ public class ScoreBoardManager {
 		list.add("§c» " + p + "Host " + t + "» " + s + ((Main.host!=null&& Bukkit.getPlayer(Main.host)!=null)?Bukkit.getPlayer(Main.host).getName():"§cUnknown"));
 		list.add("§c» " + p + "Mode " + t + "» " + s+ Main.currentGame.getMode().getName());
 		list.add("§c» " + p + "Kills " + t + "» " + s + ((Main.currentGame.getKillList().get(player.getUniqueId())==null)?"Aucun":Main.currentGame.getKillList().get(player.getUniqueId())));
-		list.add("§c» " + p + "Groupe " + t + "» " + s + Main.currentGame.getGroupe());
+		if(Main.currentGame.getMode()instanceof Groupable){
+            list.add("§c» " + p + "Groupe " + t + "» " + s + Main.currentGame.getGroupe());
+        }
 		list.add("§r§r");
 		list.add("§c» " + p + "Temps " + t + "» " + s+ Main.transformScoreBoardType(Main.currentGame.getTime(), s.toString(), s.toString()));
 		list.add("§c» " + p + "Bordure " + t + "» " + s + "±"+((int) (Main.currentGame.getFirstBorder()/2)));

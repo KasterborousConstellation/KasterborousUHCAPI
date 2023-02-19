@@ -24,6 +24,7 @@ public class KasterborousCommand extends BukkitCommand implements PluginIdentifi
 
             @Override
             public boolean execute(Player sender, String[] args) {
+                sender.sendMessage(Main.UHCTypo+"§6Menu d'aide pour la commande §b/"+getName());
                 for (SubCommand subCommand : subCommands) {
                     sender.sendMessage(  "§b/" + getName() + " " + subCommand.subCommand() + " §f" + subCommand.subCommandDescription());
                 }

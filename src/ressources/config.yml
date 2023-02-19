@@ -10,6 +10,8 @@ serverapi:
     servername: "SERVER"
     #Active la whitelist par défaut. whitelist: false/true
     whitelist: false
+    #Indique le liens vers lequel renvoie la commande /docs
+    doc_url: "google.com"
   #Toutes les coordonnées doivent être entières. Pas de chiffre à virgule.
   #
   #Coordonnée du spawn

@@ -144,10 +144,20 @@ public class Main extends JavaPlugin {
             Bukkit.getLogger().log(Level.WARNING,"*********************************************************************");
         }
         });
+        /*
+        Whitelist Config
+         */
         Bukkit.getServer().setWhitelist(getConfig().getBoolean("serverapi.serverconfig.whitelist"));
+        /*
+        Spawn Config
+         */
         spawn= new Location(Bukkit.getWorld("world"), INSTANCE.getConfig().getInt("serverapi.spawn.x"),INSTANCE.getConfig().getInt("serverapi.spawn.y"),INSTANCE.getConfig().getInt("serverapi.spawn.z"));
+        /*
+        API init
+         */
         KtbsAPI api = new KtbsAPI();
         Bukkit.getServicesManager().register(KtbsAPI.class,api,this, ServicePriority.Lowest);
+
 		generator = new BiomeGenerator();
 		structurehandler= new StructureHandler(this);
 		new ScoreBoardManager(this);
@@ -377,6 +387,7 @@ public class Main extends JavaPlugin {
             MapHandler.getMap().getPlayWorld().setGameRuleValue("doMobSpawning", "true");
             MapHandler.getMap().getPlayWorld().setGameRuleValue("doDaylightCycle", "false");
             MapHandler.getMap().getPlayWorld().setGameRuleValue("keepinventory", "true");
+            MapHandler.getMap().getPlayWorld().setGameRuleValue("announceAdvancements","false");
             MapHandler.getMap().getPlayWorld().setDifficulty(Difficulty.HARD);
 			GAutostart start = new GAutostart(this);
             MapHandler.getMap().getPlayWorld().setPVP(false);

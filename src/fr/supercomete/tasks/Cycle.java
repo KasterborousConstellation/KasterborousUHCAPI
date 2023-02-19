@@ -9,6 +9,7 @@ import fr.supercomete.head.GameUtils.Game;
 import fr.supercomete.head.GameUtils.GameConfigurable.Configurable;
 import fr.supercomete.head.GameUtils.GameMode.ModeHandler.KtbsAPI;
 import fr.supercomete.head.GameUtils.GameMode.ModeHandler.MapHandler;
+import fr.supercomete.head.GameUtils.GameMode.ModeModifier.TeamMode;
 import fr.supercomete.head.GameUtils.GameMode.Modes.Mode;
 import fr.supercomete.head.GameUtils.Scenarios.KasterborousScenario;
 import fr.supercomete.head.GameUtils.Time.TimeUtility;
@@ -31,9 +32,7 @@ import fr.supercomete.head.role.Role;
 import fr.supercomete.head.role.RoleHandler;
 
 public class Cycle extends BukkitRunnable{
-	private final Main main;
-	public Cycle(Main main) {
-		this.main=main;
+	public Cycle() {
 		hasPvpForced= false;
 		hasBordureForced=false;
 		hasForceRole=false;
@@ -73,7 +72,7 @@ public class Cycle extends BukkitRunnable{
                     }
                 }
             }
-            if ((time == game.getTimer(Timer.BorderTime).getData() || main.isForcebordure()) && !hasBordureForced) {
+            if ((time == game.getTimer(Timer.BorderTime).getData() || Main.INSTANCE.isForcebordure()) && !hasBordureForced) {
                 hasBordureForced = true;
                 Bukkit.broadcastMessage(Main.UHCTypo + "La bordure est en mouvement");
                 for(KasterborousRunnable runnable : api.getKTBSRunnableProvider().getRunnables()){
@@ -186,7 +185,7 @@ public class Cycle extends BukkitRunnable{
             /*
             PvP time implementation
              */
-            if ((time == game.getTimer(Timer.PvPTime).getData() || main.isForcedpvp()) && !hasPvpForced) {
+            if ((time == game.getTimer(Timer.PvPTime).getData() || Main.INSTANCE.isForcedpvp()) && !hasPvpForced) {
                 hasPvpForced = true;
                 for(KasterborousRunnable runnable : api.getKTBSRunnableProvider().getRunnables()){
                     runnable.onTimer(Timer.PvPTime);
@@ -230,9 +229,11 @@ public class Cycle extends BukkitRunnable{
             if (time % 5 == 0 && time > 20) {
                 if (!(Main.devmode)) {
                     if (mode.WinCondition()) {
-                        RoleHandler.setRoleList(new HashMap<>());
-                        RoleHandler.getHistoric().draw();
-                        main.StopGame(null);
+                        if(mode instanceof CampMode){
+                            RoleHandler.setRoleList(new HashMap<>());
+                            RoleHandler.getHistoric().draw();
+                        }
+                        Main.StopGame(null);
                         for (Player player : Bukkit.getOnlinePlayers()) {
                             mode.onEndingTime(player);
                         }
@@ -248,7 +249,7 @@ public class Cycle extends BukkitRunnable{
             /*
             Implementation of Role Time && forcing role
              */
-            if (mode instanceof CampMode && (time == game.getTimer(Timer.RoleTime).getData() || main.isForceRole()) && !hasForceRole) {
+            if (mode instanceof CampMode && (time == game.getTimer(Timer.RoleTime).getData() || Main.INSTANCE.isForceRole()) && !hasForceRole) {
                 hasForceRole = true;
                 if (mode instanceof CampMode) {
                     RoleHandler.GiveRole();
@@ -314,7 +315,7 @@ public class Cycle extends BukkitRunnable{
             timer++;
             time++;
         }
-        if (main.getGenmode() == GenerationMode.None || game.isGameState(Gstate.Waiting)||Main.currentCycle!=this) {
+        if (Main.INSTANCE.getGenmode() == GenerationMode.None || game.isGameState(Gstate.Waiting)||Main.currentCycle!=this) {
             game.setGamestate(Gstate.Waiting);
             for (Player player : Bukkit.getOnlinePlayers()) {
                 mode.onEndingTime(player);

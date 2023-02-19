@@ -32,7 +32,7 @@ public class Gstart extends BukkitRunnable{
 			if(!Main.currentGame.isGameState(Gstate.Starting))cancel();
 			Bukkit.broadcastMessage(Main.UHCTypo+"§rDébut de la partie");
 			Main.currentGame.setGamestate(Gstate.Playing);
-			Cycle cycle = new Cycle(this.main);
+			Cycle cycle = new Cycle();
 			cycle.runTaskTimer(this.main, 0, 20L);
 			NoDamage nodamage= new NoDamage(Main.currentGame.getTimer(Timer.InvincibilityTime).getData(),Main.getPlayerlist());
 			nodamage.runTaskTimer(main, 0, 20L);

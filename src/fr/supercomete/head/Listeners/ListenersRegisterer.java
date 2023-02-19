@@ -27,6 +27,7 @@ public class ListenersRegisterer {
             pm.registerEvents(new ScenarioGUI(),main);
             pm.registerEvents(new GenerationGUI(),main);
 			//Listeners
+            pm.registerEvents(new WorldLoadEvents(),main);
 			pm.registerEvents(new FurnaceBurnListener(main), main);
 			pm.registerEvents(new EntityDeathListener(), main);
 			pm.registerEvents(new ChatListeners(), main);

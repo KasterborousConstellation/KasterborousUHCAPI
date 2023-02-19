@@ -17,7 +17,7 @@ public class docCommand implements CommandExecutor {
 		if(sender instanceof Player){
 		    Player player =(Player)sender;
             if(cmd.getName().equalsIgnoreCase("doc") ||cmd.getName().equalsIgnoreCase("docs") ||cmd.getName().equalsIgnoreCase("liens")) {
-				Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "tellraw "+player.getName()+" {\"text\":\"§bGoogle Document Cliquer ici <-----\",\"clickEvent\":{\"action\":\"open_url\",\"value\":\"https://echosia.gitbook.io/echosia/doctor-who-uhc/roles/camp-du-docteur/clara-oswald\"},\"hoverEvent\":{\"action\":\"show_text\",\"contents\":[{\"text\":\"Google Doc\"}]}}");
+				Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "tellraw "+player.getName()+" {\"text\":\"§1>§aDocument§1<\",\"clickEvent\":{\"action\":\"open_url\",\"value\":\""+Main.INSTANCE.getConfig().getString("serverapi.serverconfig.doc_url")+"\"},\"hoverEvent\":{\"action\":\"show_text\",\"contents\":[{\"text\":\"Google Doc\"}]}}");
 
 				return true;
 			}
