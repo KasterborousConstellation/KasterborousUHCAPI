@@ -18,7 +18,7 @@ public class RulesCommand implements CommandExecutor{
 		if(sender instanceof Player){
 			Player player = (Player)sender;
 			if(!(Main.currentGame.getMode()instanceof Null_Mode))
-			InventoryHandler.openinventory(player,5);
+			    InventoryHandler.openinventory(player,5);
 		}
 		return false;
 	}

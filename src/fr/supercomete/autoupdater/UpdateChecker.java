@@ -18,7 +18,7 @@ public class UpdateChecker {
                if (scanner.hasNext()) {
                    consumer.accept(scanner.next());
                }
-           }catch (IOException e){
+           }catch(IOException e){
                Main.INSTANCE.getLogger().info("Cannot look for updates: "+e.getMessage());
            }
         });

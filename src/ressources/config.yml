@@ -12,6 +12,8 @@ serverapi:
     whitelist: false
     #Indique le liens vers lequel renvoie la commande /docs
     doc_url: "google.com"
+    #Indique si un joueur qui est op peut changer l'host même si il ne l'est pas lui même.
+    op_host_bypass: false
   #Toutes les coordonnées doivent être entières. Pas de chiffre à virgule.
   #
   #Coordonnée du spawn
@@ -29,6 +31,6 @@ serverapi:
     x: 0
     y: 41
     z: 0
-  #Ne pas modifié.
+  #Ne pas modifier.
   stuff:
     actualconfig: ""

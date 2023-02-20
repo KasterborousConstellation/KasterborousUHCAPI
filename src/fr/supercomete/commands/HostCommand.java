@@ -119,13 +119,13 @@ public class HostCommand implements CommandExecutor {
 					}
 					break;
 				case "sethost":
-					if(Main.IsHost(player)||player.isOp()) {
+					if(Main.IsHost(player)||(player.isOp()&&Main.INSTANCE.getConfig().getBoolean("serverapi.serverconfig.op_host_bypass"))) {
 						if(args.length == 2) {
 							//Deop Old host
 							if(Main.host!=null) {
 								Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "/deop "+ PlayerUtility.getNameByUUID(Main.host));
 							}
-							
+
 							final Player target= Bukkit.getPlayer(args[1]);
 							if(target==null) {
 								player.sendMessage(Main.UHCTypo+"§c Ce joueur n'est pas connecté");
