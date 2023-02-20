@@ -29,7 +29,7 @@ public class generatorcycle extends BukkitRunnable{
 	public void run(){
 		if(iteration==0){
 			start= System.nanoTime();
-			totaliteration=4*(rad/16*rad/16)+(4*rad/16)+27;
+			totaliteration=4.0*(rad/16.0*rad/16.0)+(4.0*rad/16.0)+27.0;
 			x=-rad;
 			z=-rad;
 			main.setGenmode(GenerationMode.Generating);
@@ -68,10 +68,10 @@ public class generatorcycle extends BukkitRunnable{
 		double placingterm=100/((double)(precision));
 		int place = (int) (percent/placingterm)+1;
 		array.set(place,"§c");
-		String str="";
+		StringBuilder str= new StringBuilder();
 		for(String sl:array){
-			str=str+sl;
+			str.append(sl);
 		}
-		return str;
+		return str.toString();
 	}
 }

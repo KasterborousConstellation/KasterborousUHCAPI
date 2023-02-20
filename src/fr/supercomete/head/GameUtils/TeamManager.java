@@ -156,4 +156,11 @@ public final class TeamManager {
 			if(t.isMemberInTeam(player))break;
 		}
 	}
+    public static int getNumberOfAliveTeam() {
+        ArrayList<Team> aliveteam=new ArrayList<Team>();
+        for(UUID uu:Main.getPlayerlist()) {
+            if(!aliveteam.contains(TeamManager.getTeamOfUUID(uu))&&TeamManager.getTeamOfUUID(uu)!=null)aliveteam.add(TeamManager.getTeamOfUUID(uu));
+        }
+        return aliveteam.size();
+    }
 }

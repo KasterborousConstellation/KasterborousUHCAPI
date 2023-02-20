@@ -15,8 +15,6 @@ public class HelixTask extends BukkitRunnable{
 	private final Location location;
 	private int presicion=100;
 	private final boolean stop;
-	
-	
 	float xp;
 	float zp;
 	float bonusy=0;

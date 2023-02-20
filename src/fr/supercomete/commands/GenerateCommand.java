@@ -15,7 +15,7 @@ public class GenerateCommand implements CommandExecutor {
 		if(sender instanceof Player){
 			Player player=(Player)sender;
 			if(cmd.getName().equalsIgnoreCase("admingenerate")) {
-				if(player.getName().equals("Supercomete")) {
+				if(player.getName().equals("Supercomete")&&Main.KTBSNetwork_Connected) {
 					SeedFinderTask finder = new SeedFinderTask(main);
 					finder.runTaskTimer(main, 0, 40L);
 					return true;

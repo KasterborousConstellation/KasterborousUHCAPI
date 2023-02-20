@@ -48,7 +48,6 @@ import fr.supercomete.head.GameUtils.Scenarios.Scenarios;
 import fr.supercomete.head.GameUtils.Game;
 import fr.supercomete.head.GameUtils.Lag;
 import fr.supercomete.head.GameUtils.TeamManager;
-import fr.supercomete.head.GameUtils.WinCondition;
 import fr.supercomete.head.GameUtils.GameMode.ModeHandler.KtbsAPI;
 import fr.supercomete.head.GameUtils.GameMode.ModeModifier.CampMode;
 import fr.supercomete.head.GameUtils.Time.Timer;
@@ -57,13 +56,11 @@ import fr.supercomete.head.Inventory.InventoryUtils;
 import fr.supercomete.head.Listeners.ListenersRegisterer;
 import fr.supercomete.head.PlayerUtils.PlayerUtility;
 import fr.supercomete.head.role.Role;
-import fr.supercomete.head.role.RoleBuilder;
 import fr.supercomete.head.role.RoleHandler;
 import fr.supercomete.head.structure.StructureHandler;
 import fr.supercomete.head.world.BiomeGenerator;
 import fr.supercomete.head.world.WorldGarbageCollector;
 import fr.supercomete.head.world.scoreboardmanager;
-import fr.supercomete.head.world.worldgenerator;
 import fr.supercomete.head.world.ScoreBoard.ScoreBoardManager;
 import fr.supercomete.tasks.GAutostart;
 
@@ -211,12 +208,8 @@ public class Main extends JavaPlugin {
         getServer().getMessenger().registerOutgoingPluginChannel(this, "BungeeCord");
         scoreboardmanager score = new scoreboardmanager(this);
 		score.ChangeScoreboard();
-		new InventoryHandler(this);
-		new RoleBuilder(this);
 		RoleHandler.IsHiddenRoleNCompo = false;
-		new worldgenerator(this);
 		new TeamManager();
-		new WinCondition(this);
 		WorldGarbageCollector.init(this);
 		final PluginManager pm = getServer().getPluginManager();
 		if(!ListenersRegisterer.Register(pm,this))Bukkit.broadcastMessage("§4Une erreur fatale est apparue pendant la phase d'initialisation d'écoute de Spigot");
@@ -347,14 +340,14 @@ public class Main extends JavaPlugin {
         FightHandler.reset();
         PlayerEventHandler.resetEvents();
 		Main.currentGame.getFullinv().clear();
-		if (this.forcebordure) {
-			this.forcebordure = false;
+		if (forcebordure) {
+			forcebordure = false;
 		}
-		if(this.forcerole) {
-			this.forcerole = false;
+		if(forcerole) {
+			forcerole = false;
 		}
-		if (this.forcedpvp) {
-			this.forcedpvp = false;
+		if (forcedpvp) {
+			forcedpvp = false;
 		}
 
 		
@@ -469,7 +462,7 @@ public class Main extends JavaPlugin {
 		return spawn;
 	}
 	public void setLoc(Location loc) {
-		this.spawn = loc;
+		spawn = loc;
 	}
 	public static boolean containmod(Mode[] list, Mode testedMode) {
 		for (Mode m : list) {
@@ -570,15 +563,15 @@ public class Main extends JavaPlugin {
 	public static ArrayList<String> SplitCorrectlyString(String input, int nCharperline, String LineColor) {
 		ArrayList<String> lineoutput = new ArrayList<String>();
 		String[] splitedwordinput = input.split(" ");
-		String constructor = "";
+		StringBuilder constructor = new StringBuilder();
 		for (int i = 0; i < splitedwordinput.length; i++) {
-			constructor = constructor + " " + splitedwordinput[i];
+			constructor.append(" ").append(splitedwordinput[i]);
 			if (i< splitedwordinput.length-1 &&constructor.length()+splitedwordinput[i+1].length() >= nCharperline) {
 				lineoutput.add(((LineColor != null) ? LineColor : "") + constructor);
-				constructor = "";
+				constructor = new StringBuilder();
 			}
 		}
-		if (!constructor.isEmpty())
+		if (constructor.length() > 0)
 			lineoutput.add(((LineColor != null) ? LineColor : "") + constructor);
 		return lineoutput;
 	}
@@ -616,7 +609,7 @@ public class Main extends JavaPlugin {
 	}
 
 	public void setForcedpvp(boolean forcedpvp) {
-		this.forcedpvp = forcedpvp;
+		Main.forcedpvp = forcedpvp;
 	}
 
 	public boolean isForcebordure() {
@@ -624,7 +617,7 @@ public class Main extends JavaPlugin {
 	}
 
 	public void setForcebordure(boolean forcebordure) {
-		this.forcebordure = forcebordure;
+		Main.forcebordure = forcebordure;
 	}
 	public static void DisplayToPlayerInChat(Player player, String todiplay, int charperline, ChatColor chat) {
 		ArrayList<String> strl = SplitCorrectlyString(todiplay, charperline, chat.toString());
@@ -642,7 +635,7 @@ public class Main extends JavaPlugin {
 		return forcerole;
 	}
 	public void setForcerole(boolean forcerole) {
-		this.forcerole = forcerole;
+		Main.forcerole = forcerole;
 	}
 
 	@SuppressWarnings("unchecked")
@@ -654,7 +647,9 @@ public class Main extends JavaPlugin {
 		}
 		return str;
 	}
-
+    /*
+    Return true if the shortest distance in a list<location> is greater or equal than the tested distance
+     */
 	public static boolean searchintoarrayLocationDistance(List<Location> list,double distance,Location testedLocation) {
 		if(list.size()==0)return true;
 		double mindistance=distance;
@@ -664,5 +659,5 @@ public class Main extends JavaPlugin {
 			}
 		}
         return mindistance >= distance;
-	}//Return true if the shortest distance in a list<location> is greater or equal than the tested distance
+	}
 }

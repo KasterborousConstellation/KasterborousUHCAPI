@@ -1,11 +1,8 @@
 package fr.supercomete.head.GameUtils.Events.GameEvents;
-
 import fr.supercomete.head.GameUtils.Events.GameEvents.GameEventException.OutOfBoundGameEventChance;
 import fr.supercomete.head.GameUtils.Scenarios.Compatibility;
 import fr.supercomete.head.core.Main;
-
 import java.util.Random;
-
 public abstract class Event {
     private final Compatibility compatibility;
     private int executionTime;

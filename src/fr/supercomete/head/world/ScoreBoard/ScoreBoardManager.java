@@ -49,7 +49,7 @@ public class ScoreBoardManager {
 		ChatColor t = scheme.getTertiary();
 		list.add(ChatColor.BOLD+"§7§7------------------");
 		final String number = (Main.currentGame.getMaxNumberOfplayer()==0)?"":p+"("+s+Main.countnumberofplayer()+t+"/"+s+Main.currentGame.getMaxNumberOfplayer()+p+")";
-		list.add(Main.currentGame.getColorScheme().getPrimary() + Main.currentGame.getGameName());
+		list.add(p + Main.currentGame.getGameName());
 		list.add(number);
 		list.add("§r");
 		list.add("§c» " + p + "Host " + t + "» " + s + ((Main.host!=null&& Bukkit.getPlayer(Main.host)!=null)?Bukkit.getPlayer(Main.host).getName():"§cUnknown"));

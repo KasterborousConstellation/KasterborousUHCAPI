@@ -1,6 +1,6 @@
 package fr.supercomete.head.GameUtils.Time;
 import fr.supercomete.head.core.Main;
-public class BoundedWatchTime extends WatchTime{
+public final class BoundedWatchTime extends WatchTime{
 	private final Timer bound;
 	public BoundedWatchTime(Timer id,Timer bound) {
 		super(id);

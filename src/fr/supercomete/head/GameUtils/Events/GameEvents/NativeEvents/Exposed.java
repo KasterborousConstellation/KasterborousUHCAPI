@@ -31,9 +31,9 @@ public class Exposed extends Event {
     public void onExecutionTime() {
         if(RoleHandler.IsRoleGenerated()){
             Random random = new Random();
-            int ind = random.nextInt(RoleHandler.getRoleList().size());
-            UUID uuid = (UUID) RoleHandler.getRoleList().keySet().toArray()[ind];
-            int max_iteration=50;
+            final int ind = random.nextInt(RoleHandler.getRoleList().size());
+            final UUID uuid = (UUID) RoleHandler.getRoleList().keySet().toArray()[ind];
+            final int max_iteration=50;
             final Role role = (Role) RoleHandler.getRoleList().values().toArray()[ind];
             map.put(role.getCamp(),new ArrayList<>(Collections.singletonList(role)));
             ArrayList<Role> list = new ArrayList<>(RoleHandler.getRoleList().values());

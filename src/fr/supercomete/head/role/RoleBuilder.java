@@ -4,11 +4,6 @@ import java.util.UUID;
 
 import fr.supercomete.head.core.Main;
 public class RoleBuilder {
-	@SuppressWarnings("unused")
-	private static Main main;
-	public RoleBuilder(Main main) {
-		RoleBuilder.main=main;
-	}
 	public static Role Build(Class<?> claz,UUID owner) {
 		try {
 			return (Role) claz.getConstructors()[0].newInstance(owner);

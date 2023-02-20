@@ -17,7 +17,9 @@ public final class WhiteListHandler{
 		for(Player player:Bukkit.getServer().getOnlinePlayers()){
 			if(!Bukkit.getWhitelistedPlayers().contains(player)){
 				player.setWhitelisted(true);
-				if(t==true)output.sendMessage(Main.UHCTypo+"Le joueur §e"+player.getName()+"§7 a été ajouté à la whitelist");
+				if(t){
+                    output.sendMessage(Main.UHCTypo+"Le joueur §e"+player.getName()+"§7 a été ajouté à la whitelist");
+                }
 			}
 		}
 		Bukkit.reloadWhitelist(); //reload whitelist

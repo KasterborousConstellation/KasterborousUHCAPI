@@ -23,10 +23,7 @@ import fr.supercomete.head.core.Main;
 import fr.supercomete.head.structure.Structure;
 import net.md_5.bungee.api.ChatColor;
 public class InventoryHandler {
-	private static Main main;
-	public InventoryHandler(Main main) {
-		InventoryHandler.main=main;
-	}
+
 	public final static String ClickTypoAdd="§aClique droit pour ajouter ";
 	public final static String ClickTypoRemove="§cClique gauche pour retirer ";
 	public final static String ClickTypoMassAdd="§aShift Clique droit pour ajouter ";
@@ -114,13 +111,13 @@ public class InventoryHandler {
 				inv.setItem(53-e,InventoryUtils.createColorItem(Material.STAINED_GLASS_PANE, " ", 1, (short) 11));
 			}
 			/////////////////////////////////////////////////////////////////////////////////////////////////////
-			for(Timer t:main.getCompatibleTimer()){
+			for(Timer t:Main.INSTANCE.getCompatibleTimer()){
 			    if(t.getType()== TimerType.TimeDependent &&(Main.currentGame.getTimer(t).getData() - Main.currentGame.getTime()) >0){
-                    inv.setItem(i, InventoryUtils.getItem(Material.PAPER,main.generateNameTimer(t),null));
+                    inv.setItem(i, InventoryUtils.getItem(Material.PAPER,Main.INSTANCE.generateNameTimer(t),null));
                     i++;
                 }
                 if(t.getType()== TimerType.Literal){
-                    inv.setItem(i, InventoryUtils.getItem(Material.PAPER,main.generateNameTimer(t),null));
+                    inv.setItem(i, InventoryUtils.getItem(Material.PAPER,Main.INSTANCE.generateNameTimer(t),null));
                     i++;
                 }
 			}
@@ -128,12 +125,12 @@ public class InventoryHandler {
 			inv.setItem(10, InventoryUtils.getItem(Material.STONE_BUTTON, "§r-10m", null));
 			inv.setItem(11, InventoryUtils.getItem(Material.STONE_BUTTON, "§r-1m", null));
 			inv.setItem(12, InventoryUtils.getItem(Material.STONE_BUTTON, "§r-10s", null));
-			inv.setItem(13, InventoryUtils.getItem(Material.PAPER, "§r"+main.generateNameTimer(main.getCompatibleTimer().get(main.Selected)), null));
+			inv.setItem(13, InventoryUtils.getItem(Material.PAPER, "§r"+Main.INSTANCE.generateNameTimer(Main.INSTANCE.getCompatibleTimer().get(Main.INSTANCE.Selected)), null));
 			inv.setItem(14, InventoryUtils.getItem(Material.STONE_BUTTON, "§r+10s", null));
 			inv.setItem(15, InventoryUtils.getItem(Material.STONE_BUTTON, "§r+1m", null));
 			inv.setItem(16, InventoryUtils.getItem(Material.STONE_BUTTON, "§r+10m", null));
 			inv.setItem(17, InventoryUtils.getItem(Material.STONE_BUTTON, "§r+60m", null));
-			inv.getItem(18+main.Selected).setType(Material.COMPASS);
+			inv.getItem(18+Main.INSTANCE.Selected).setType(Material.COMPASS);
 			inv.setItem(49, InventoryUtils.getItem(Material.ARROW, "§7Retour", Collections.singletonList("§rRetour au menu de configuration")));
 			break;
 		case 8://Border GUI;

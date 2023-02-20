@@ -21,16 +21,12 @@ import fr.supercomete.head.structure.Structure;
 import fr.supercomete.tasks.generatorcycle;
 
 public class worldgenerator {
-	private static Main main;
-	public worldgenerator(Main main) {
-		worldgenerator.main = main;
-	}
 	static UUID worlduuid;
 	public static void generateworld() {
         MapHandler.reset();
 		worlduuid = UUID.randomUUID();
 		for (Player player : Bukkit.getOnlinePlayers()) {
-			player.teleport(main.spawn);
+			player.teleport(Main.spawn);
 			player.setGameMode(GameMode.ADVENTURE);
 		}
         assert MapHandler.getMap()!=null;
@@ -73,12 +69,12 @@ public class worldgenerator {
 				Bukkit.broadcastMessage("§bGénération du monde terminée");
 				
 			}
-		}.runTaskLater(main, 50L);
+		}.runTaskLater(Main.INSTANCE, 50L);
 	}
 	public static void pregen() {
         assert MapHandler.getMap()!=null;
 		Bukkit.broadcastMessage("§dPré-génération du monde");
-		final generatorcycle cycle = new generatorcycle((int) (Main.currentGame.getFirstBorder() / 2), MapHandler.getMap().getPlayWorld(),main);
-		cycle.runTaskTimer(main, 0, 1L);
+		final generatorcycle cycle = new generatorcycle((int) (Main.currentGame.getFirstBorder() / 2), MapHandler.getMap().getPlayWorld(),Main.INSTANCE);
+		cycle.runTaskTimer(Main.INSTANCE, 0, 1L);
 	}
 }

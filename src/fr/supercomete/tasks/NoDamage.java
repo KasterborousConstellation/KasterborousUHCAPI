@@ -12,6 +12,10 @@ import fr.supercomete.head.core.Main;
 public class NoDamage extends BukkitRunnable{
     private ArrayList<UUID>nodamage;
 	int timer = 20;
+    public NoDamage(ArrayList<UUID>nodamage) {
+        Main.currentGame.getNodamagePlayerList().addAll(nodamage);
+        this.nodamage=nodamage;
+    }
 	public NoDamage(int time,ArrayList<UUID>nodamage) {
         Main.currentGame.getNodamagePlayerList().addAll(nodamage);
         this.nodamage=nodamage;

@@ -1,7 +1,5 @@
 package fr.supercomete.head.GameUtils.Enchants;
-
 import org.bukkit.Material;
-
 public enum EnchantType {
     Iron(Material.IRON_INGOT,"Fer"),
     Diamond(Material.DIAMOND,"Diamant"),

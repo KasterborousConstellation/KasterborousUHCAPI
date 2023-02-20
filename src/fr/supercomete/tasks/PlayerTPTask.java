@@ -32,7 +32,7 @@ public class PlayerTPTask extends BukkitRunnable {
 			Gstart start = new Gstart(this.main, arrll);
 			start.runTaskTimer(this.main, 0, 20L);
 			BorderTask border = new BorderTask(main);
-			border.runTaskTimer(main, 0, 1L);  
+			border.runTaskTimer(main, 0, 1L);
 			int id = this.getTaskId();
 			Bukkit.getScheduler().cancelTask(id);
 		} else {

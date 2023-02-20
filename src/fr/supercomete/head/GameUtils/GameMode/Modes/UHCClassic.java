@@ -2,24 +2,20 @@
 package fr.supercomete.head.GameUtils.GameMode.Modes;
 
 import java.util.Arrays;
-import java.util.UUID;
 
 import fr.supercomete.head.GameUtils.GameConfigurable.Bound;
 import fr.supercomete.head.Inventory.InventoryUtils;
 import org.bukkit.Bukkit;
-import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 
 import fr.supercomete.head.GameUtils.Team;
 import fr.supercomete.head.GameUtils.TeamManager;
-import fr.supercomete.head.GameUtils.WinCondition;
 import fr.supercomete.head.GameUtils.GameMode.ModeModifier.TeamMode;
 import fr.supercomete.head.PlayerUtils.Offline_Player;
 import fr.supercomete.head.core.Main;
 import fr.supercomete.head.world.scoreboardmanager;
-import org.bukkit.scheduler.BukkitRunnable;
 
 public class UHCClassic extends Mode implements TeamMode{
 
@@ -123,7 +119,7 @@ public class UHCClassic extends Mode implements TeamMode{
 	}
 	@Override
 	public boolean WinCondition() {
-        if(WinCondition.getNumberOfAliveTeam()==1) {
+        if(TeamManager.getNumberOfAliveTeam()==1) {
             Team winner= TeamManager.getTeamOfUUID(Main.getPlayerlist().get(0));
             scoreboardmanager.titlemessage("Victoire de l'équipe "+TeamManager.getColorOfShortColor(winner.getColor())+winner.getChar()+TeamManager.getNameOfShortColor(winner.getColor()));
 				return true;
