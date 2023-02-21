@@ -1,6 +1,4 @@
 package fr.supercomete.head.Inventory;
-// Comment the line below in if you use compatre
-//import com.GitHub.johnnyjayjay.compatre.NmsDependent;
 import net.minecraft.server.v1_8_R3.MojangsonParser;
 import net.minecraft.server.v1_8_R3.NBTTagCompound;
 import org.bukkit.Bukkit;

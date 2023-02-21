@@ -62,9 +62,7 @@ public class scoreboardmanager {
 							player.teleport(new Location(player.getWorld(), player.getLocation().getX(), 150, player.getLocation().getZ()));
 						}
 					}
-					if(player.getOpenInventory().getTitle().equals("§dTimers")){
-					    main.updateTimerInventory(player);
-                    }
+
 					ScoreBoardManager.update(player);
 					SetallScoreboard(player);
                     int count =20;

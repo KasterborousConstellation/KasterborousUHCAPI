@@ -1,24 +1,17 @@
 package fr.supercomete.head.Inventory;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
-import fr.supercomete.head.GameUtils.Enchants.EnchantHandler;
-import fr.supercomete.head.GameUtils.Enchants.EnchantType;
+
 import fr.supercomete.head.GameUtils.GameMode.ModeHandler.KtbsAPI;
-import fr.supercomete.head.GameUtils.Scenarios.KasterborousScenario;
-import fr.supercomete.head.GameUtils.Time.TimerType;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
-import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
-import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import fr.supercomete.enums.Gstate;
 import fr.supercomete.head.GameUtils.Team;
 import fr.supercomete.head.GameUtils.TeamManager;
-import fr.supercomete.head.GameUtils.Time.Timer;
 import fr.supercomete.head.core.Main;
 import fr.supercomete.head.structure.Structure;
 import net.md_5.bungee.api.ChatColor;
@@ -33,106 +26,6 @@ public class InventoryHandler {
 		Inventory inv;
         final KtbsAPI api= Bukkit.getServicesManager().load(KtbsAPI.class);
 		switch(id) {
-		case 3://Slots GUI
-			inv=Bukkit.createInventory(null, 27,"§dSlots");
-			inv.setItem(0,  InventoryUtils.createColorItem(Material.STAINED_GLASS_PANE, " ", 1, (short)6));
-			inv.setItem(8,  InventoryUtils.createColorItem(Material.STAINED_GLASS_PANE, " ", 1, (short)6));
-			inv.setItem(26, InventoryUtils.createColorItem(Material.STAINED_GLASS_PANE, " ", 1, (short)6));
-			inv.setItem(18, InventoryUtils.createColorItem(Material.STAINED_GLASS_PANE, " ", 1, (short)6));
-			inv.setItem(11, InventoryUtils.getItem(Material.STONE_BUTTON, "§r-10 Slots", null));
-			inv.setItem(12, InventoryUtils.getItem(Material.STONE_BUTTON, "§r-1 Slots", null));
-			String name=(Main.currentGame.getMaxNumberOfplayer()==0)?"§rSlots:§a Illimité":"§rSlots:§a "+ Main.currentGame.getMaxNumberOfplayer();
-			inv.setItem(13, InventoryUtils.getItem(Material.PAPER,name, null));
-			inv.setItem(14, InventoryUtils.getItem(Material.STONE_BUTTON, "§r+1 Slots", null));
-			inv.setItem(15, InventoryUtils.getItem(Material.STONE_BUTTON, "§r+10 Slots", null));
-			inv.setItem(22, InventoryUtils.getItem(Material.ARROW, "§7Retour", Collections.singletonList("§rRetour au menu de configuration")));
-			break;
-		case 5://Rules GUI
-			inv=Bukkit.createInventory(null, 54,"§dRules");
-			inv.setItem(0, InventoryUtils.createColorItem(Material.STAINED_GLASS_PANE, " ", 1, (short)6));
-			inv.setItem(8, InventoryUtils.createColorItem(Material.STAINED_GLASS_PANE, " ", 1, (short)6));
-			inv.setItem(53, InventoryUtils.createColorItem(Material.STAINED_GLASS_PANE, " ", 1, (short)6));
-			inv.setItem(45, InventoryUtils.createColorItem(Material.STAINED_GLASS_PANE, " ", 1, (short)6));
-			inv.setItem(9, InventoryUtils.createColorItem(Material.STAINED_GLASS_PANE, " ", 1, (short)2));
-			inv.setItem(1, InventoryUtils.createColorItem(Material.STAINED_GLASS_PANE, " ", 1, (short)2));
-			inv.setItem(7, InventoryUtils.createColorItem(Material.STAINED_GLASS_PANE, " ", 1, (short)2));
-			inv.setItem(17, InventoryUtils.createColorItem(Material.STAINED_GLASS_PANE, " ", 1, (short)2));
-			inv.setItem(46, InventoryUtils.createColorItem(Material.STAINED_GLASS_PANE, " ", 1, (short)2));
-			inv.setItem(36, InventoryUtils.createColorItem(Material.STAINED_GLASS_PANE, " ", 1, (short)2));
-			inv.setItem(52, InventoryUtils.createColorItem(Material.STAINED_GLASS_PANE, " ", 1, (short)2));
-			inv.setItem(44, InventoryUtils.createColorItem(Material.STAINED_GLASS_PANE, " ", 1, (short)2));
-			inv.setItem(47, InventoryUtils.createColorItem(Material.STAINED_GLASS_PANE, " ", 1, (short)2));
-			inv.setItem(2, InventoryUtils.createColorItem(Material.STAINED_GLASS_PANE, " ", 1, (short)2));
-			inv.setItem(6, InventoryUtils.createColorItem(Material.STAINED_GLASS_PANE, " ", 1, (short)2));
-			inv.setItem(51, InventoryUtils.createColorItem(Material.STAINED_GLASS_PANE, " ", 1, (short)2));
-			inv.setItem(22, InventoryUtils.getItem(Material.BOOKSHELF, "§bScénarios", null));
-			inv.setItem(20, InventoryUtils.getItem(Material.PAPER, "§bRegles avancées", null));
-			inv.setItem(24, InventoryUtils.getItem(Material.DIAMOND_CHESTPLATE, "§bEnchants", Arrays.asList(
-                    EnchantHandler.generateLine(Enchantment.DAMAGE_ALL, EnchantType.Iron),
-                    EnchantHandler.generateLine(Enchantment.DAMAGE_ALL, EnchantType.Diamond),
-			        EnchantHandler.generateLine(Enchantment.PROTECTION_ENVIRONMENTAL, EnchantType.Iron),
-                    EnchantHandler.generateLine(Enchantment.PROTECTION_ENVIRONMENTAL, EnchantType.Diamond),
-                    EnchantHandler.generateLine(Enchantment.KNOCKBACK, EnchantType.ALL),
-                    EnchantHandler.generateLine(Enchantment.ARROW_KNOCKBACK, EnchantType.Bow)
-            )));
-			break;
-		case 6://Active Scénarios GUI
-			inv=Bukkit.createInventory(null, 54,"§dScénarios Actif");
-			for(int i=0;i<9;i++){
-				inv.setItem(i,InventoryUtils.createColorItem(Material.STAINED_GLASS_PANE, " ", 1, (short) 2));
-			}
-			for(int i=0;i<9;i++){
-				inv.setItem(53-i,InventoryUtils.createColorItem(Material.STAINED_GLASS_PANE, " ", 1, (short) 2));
-			}
-			for(int i=0 ;i<Main.currentGame.getScenarios().size();i++){
-				KasterborousScenario sc=Main.currentGame.getScenarios().get(i);
-				ArrayList<String>Lines=new ArrayList<String>();
-				String compatibility=(sc.getCompatiblity().IsCompatible(Main.currentGame.getMode()))?"§a✔":"§c✖";
-				Lines.add(compatibility+"§r§7Compatible");
-				ItemStack item = InventoryUtils.getItem(sc.getMat(),"§b"+sc.getName(),Lines);
-				if(Main.currentGame.getScenarios().contains(sc)){
-					item.addUnsafeEnchantment(Enchantment.SILK_TOUCH, 1);
-					ItemMeta ime=item.getItemMeta();
-					ime.addItemFlags(ItemFlag.HIDE_ENCHANTS);
-					item.setItemMeta(ime);
-				}
-				inv.setItem(i+9, item);
-			}
-			inv.setItem(49, InventoryUtils.getItem(Material.ARROW, "§7Retour", Collections.singletonList("§rRetour au règles")));
-			break;
-		case 7://Timers
-			inv=Bukkit.createInventory(null, 54,"§dTimers");
-			int i=18;
-			/////////////////////////////////////////////////////////////////////////////////////////////////////
-			for(int e=0;e<9;e++){
-				inv.setItem(e,InventoryUtils.createColorItem(Material.STAINED_GLASS_PANE, " ", 1, (short) 11));
-			}
-			for(int e=0;e<9;e++){
-				inv.setItem(53-e,InventoryUtils.createColorItem(Material.STAINED_GLASS_PANE, " ", 1, (short) 11));
-			}
-			/////////////////////////////////////////////////////////////////////////////////////////////////////
-			for(Timer t:Main.INSTANCE.getCompatibleTimer()){
-			    if(t.getType()== TimerType.TimeDependent &&(Main.currentGame.getTimer(t).getData() - Main.currentGame.getTime()) >0){
-                    inv.setItem(i, InventoryUtils.getItem(Material.PAPER,Main.INSTANCE.generateNameTimer(t),null));
-                    i++;
-                }
-                if(t.getType()== TimerType.Literal){
-                    inv.setItem(i, InventoryUtils.getItem(Material.PAPER,Main.INSTANCE.generateNameTimer(t),null));
-                    i++;
-                }
-			}
-			inv.setItem(9, InventoryUtils.getItem(Material.STONE_BUTTON, "§r-60m", null));
-			inv.setItem(10, InventoryUtils.getItem(Material.STONE_BUTTON, "§r-10m", null));
-			inv.setItem(11, InventoryUtils.getItem(Material.STONE_BUTTON, "§r-1m", null));
-			inv.setItem(12, InventoryUtils.getItem(Material.STONE_BUTTON, "§r-10s", null));
-			inv.setItem(13, InventoryUtils.getItem(Material.PAPER, "§r"+Main.INSTANCE.generateNameTimer(Main.INSTANCE.getCompatibleTimer().get(Main.INSTANCE.Selected)), null));
-			inv.setItem(14, InventoryUtils.getItem(Material.STONE_BUTTON, "§r+10s", null));
-			inv.setItem(15, InventoryUtils.getItem(Material.STONE_BUTTON, "§r+1m", null));
-			inv.setItem(16, InventoryUtils.getItem(Material.STONE_BUTTON, "§r+10m", null));
-			inv.setItem(17, InventoryUtils.getItem(Material.STONE_BUTTON, "§r+60m", null));
-			inv.getItem(18+Main.INSTANCE.Selected).setType(Material.COMPASS);
-			inv.setItem(49, InventoryUtils.getItem(Material.ARROW, "§7Retour", Collections.singletonList("§rRetour au menu de configuration")));
-			break;
 		case 8://Border GUI;
 			inv=Bukkit.createInventory(null, 27,"§dBordure");
 			inv.setItem(0,  InventoryUtils.createColorItem(Material.STAINED_GLASS_PANE, " ", 1, (short)6));

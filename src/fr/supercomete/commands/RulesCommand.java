@@ -1,4 +1,5 @@
 package fr.supercomete.commands;
+import fr.supercomete.head.Inventory.GUI.RuleGUI;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -18,7 +19,7 @@ public class RulesCommand implements CommandExecutor{
 		if(sender instanceof Player){
 			Player player = (Player)sender;
 			if(!(Main.currentGame.getMode()instanceof Null_Mode))
-			    InventoryHandler.openinventory(player,5);
+			    new RuleGUI(player).open();
 		}
 		return false;
 	}

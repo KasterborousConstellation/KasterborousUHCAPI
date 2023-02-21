@@ -251,7 +251,7 @@ class EntityDamageListeners implements Listener {
                 if (Configurable.ExtractBool(Configurable.LIST.ReviveBeforePvp)) {
                     if (Main.currentGame.getMode() instanceof CampMode) {
                         if (!RoleHandler.IsRoleGenerated()) {
-                            Bukkit.broadcastMessage(Main.UHCTypo+"Le joueur +§4" + player.getName()+ "§7 a été revive.");
+                            Bukkit.broadcastMessage(Main.UHCTypo+"Le joueur §4" + player.getName()+ "§7 a été revive.");
                             player.setHealth(player.getMaxHealth());
                             assert MapHandler.getMap() != null;
                             MapHandler.getMap().PlayerRandomTPMap(player,12);

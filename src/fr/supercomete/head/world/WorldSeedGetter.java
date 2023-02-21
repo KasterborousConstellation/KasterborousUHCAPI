@@ -64,7 +64,7 @@ public class WorldSeedGetter {
             return content.split("L,").length;
         }else{
             final File MainFile = Main.INSTANCE.getDataFolder().getParentFile().getParentFile();
-            final File seedFile = new File(MainFile,"Seeds");
+            final File seedFile = new File(MainFile,"seeds");
             if(!seedFile.exists() ||!seedFile.isDirectory()){
                 try {
                     throw new KTBSOfflineFailure("THIS IS A KTBS OFFLINE FAULT. THE SEED DIRECTORY IS NECESSARY IN OFFLINE MODE. PLEASE CONSIDER ADDING IT.");

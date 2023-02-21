@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 import fr.supercomete.head.GameUtils.Time.TimeUtility;
+import fr.supercomete.head.Inventory.GUI.RuleGUI;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -108,7 +109,7 @@ public class AdvancedRulesGUI extends GUI{
 				e.setCancelled(true);
 				int slot = e.getSlot();
 				if(slot == 49) {
-					InventoryHandler.openinventory(gui.player, 5);
+					new RuleGUI(gui.player).open();
 				}
 			}
 		}

@@ -12,10 +12,10 @@ import fr.supercomete.head.GameUtils.GUI.EnchantLimitGUI;
 import fr.supercomete.head.GameUtils.GameConfigurable.Configurable;
 import fr.supercomete.head.GameUtils.GameMode.ModeHandler.MapHandler;
 import fr.supercomete.head.GameUtils.GameMode.ModeModifier.TeamMode;
-import fr.supercomete.head.GameUtils.Scenarios.KasterborousScenario;
 import fr.supercomete.head.GameUtils.Time.TimeUtility;
 import fr.supercomete.head.GameUtils.Time.TimerType;
 import fr.supercomete.head.GameUtils.Time.WatchTime;
+import fr.supercomete.head.Inventory.GUI.RuleGUI;
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
 import org.bukkit.Location;
@@ -32,28 +32,18 @@ import org.bukkit.inventory.AnvilInventory;
 import org.bukkit.inventory.CraftingInventory;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.ItemMeta;
-import org.bukkit.scheduler.BukkitRunnable;
-
-import fr.supercomete.enums.BiomeGeneration;
-import fr.supercomete.enums.GenerationMode;
-import fr.supercomete.enums.Gstate;
 import fr.supercomete.head.GameUtils.Team;
 import fr.supercomete.head.GameUtils.TeamManager;
 import fr.supercomete.head.GameUtils.WhiteListHandler;
 import fr.supercomete.head.GameUtils.GUI.AdvancedRulesGUI;
 import fr.supercomete.head.GameUtils.GUI.ModeGUI;
-import fr.supercomete.head.GameUtils.GameMode.ModeHandler.KtbsAPI;
 import fr.supercomete.head.GameUtils.Time.Timer;
 import fr.supercomete.head.Inventory.InventoryHandler;
 import fr.supercomete.head.Inventory.InventoryUtils;
 import fr.supercomete.head.PlayerUtils.PlayerUtility;
 import fr.supercomete.head.core.Main;
 import fr.supercomete.head.structure.Structure;
-import fr.supercomete.head.world.WorldSeedGetter;
-import fr.supercomete.head.world.worldgenerator;
 import net.md_5.bungee.api.ChatColor;
-
 final class InventoryClickListeners implements Listener{
 	private final Main main;
 	public InventoryClickListeners(Main main) {
@@ -185,115 +175,6 @@ final class InventoryClickListeners implements Listener{
 			event.setCancelled(true);
 			switch (currentSlot) {
 			default:
-				break;
-			}
-			break;
-		case "§dSlots":
-			event.setCancelled(true);
-			switch (currentSlot) {
-			case 11:
-				if (Main.currentGame.getMaxNumberOfplayer() >= 10) {
-					Main.currentGame.setMaxNumberOfplayer(Main.currentGame.getMaxNumberOfplayer() - 10);
-					main.updateSlotsInventory(player);
-				}
-				break;
-			case 12:
-				if (Main.currentGame.getMaxNumberOfplayer() >= 1) {
-					Main.currentGame.setMaxNumberOfplayer(Main.currentGame.getMaxNumberOfplayer() - 1);
-					main.updateSlotsInventory(player);
-				}
-				break;
-			case 14:
-				Main.currentGame.setMaxNumberOfplayer(Main.currentGame.getMaxNumberOfplayer() + 1);
-				main.updateSlotsInventory(player);
-				break;
-			case 15:
-				Main.currentGame.setMaxNumberOfplayer(Main.currentGame.getMaxNumberOfplayer() + 10);
-				main.updateSlotsInventory(player);
-				break;
-			case 22:
-				new ModeGUI(Main.currentGame.getMode(), player).open();
-				break;
-			default:
-				break;
-			}
-			break;
-
-		case "§dRules":
-			event.setCancelled(true);
-			switch (currentSlot) {
-			case 22:
-				InventoryHandler.openinventory(player, 6);
-				break;
-			case 24:
-				new EnchantLimitGUI(player,false).open();
-				break;
-			case 20:
-				new AdvancedRulesGUI(player).open();
-                default:
-				break;
-			}
-			break;
-		case "§dScénarios Actif":
-            case "§dEnchants":
-                event.setCancelled(true);
-			switch (currentSlot) {
-			case 49:
-				InventoryHandler.openinventory(player, 5);
-				break;
-			default:
-				break;
-			}
-			break;
-		case "§dTimers":
-			event.setCancelled(true);
-			switch (currentSlot) {
-			case 49:
-				new ModeGUI(Main.currentGame.getMode(), player).open();
-				break;
-			case 9:
-			case 10:
-			case 11:
-			case 12:
-			case 13:
-			case 14:
-			case 15:
-			case 16:
-			case 17:
-				int[] add = { -3600, -600, -60, -10, 0, 10, 60, 600, 3600 };
-				final ArrayList<Timer> timerlist =main.getCompatibleTimer();
-				int addNow = add[currentSlot-9];
-				ArrayList<Timer> drawnTimer = new ArrayList<>();
-				for(Timer t: main.getCompatibleTimer()){
-				    if(t.getType()== TimerType.TimeDependent && (Main.currentGame.getTimer(t).getData()-Main.currentGame.getTime())>0){
-				        drawnTimer.add(t);
-                    }
-				    if(t.getType()== TimerType.Literal){
-                        drawnTimer.add(t);
-                    }
-                }
-				WatchTime selectedTimer = Main.currentGame.getTimer(drawnTimer.get(main.Selected));
-				if(selectedTimer.getId().getType() == TimerType.Literal||selectedTimer.getData()-Main.currentGame.getTime()+ addNow >0){
-                    selectedTimer.add(addNow);
-                    main.updateTimerInventory(player);
-                    player.sendMessage(drawnTimer.get(main.Selected).getName()+": "+ TimeUtility.transform(selectedTimer.getData(), "§d", "§d", "§d"));
-                }
-
-				break;
-			default:
-                ArrayList<Timer> timers = new ArrayList<>();
-                for(Timer t: main.getCompatibleTimer()){
-                    if(t.getType()== TimerType.TimeDependent && (Main.currentGame.getTimer(t).getData()-Main.currentGame.getTime())>0){
-                        timers.add(t);
-                    }
-                    if(t.getType()== TimerType.Literal){
-                        timers.add(t);
-                    }
-                }
-				if (currentSlot >= 18 && currentSlot < (18 + timers.size())) {
-					main.Selected = currentSlot - 18;
-					main.updateTimerInventory(player);
-				}
 				break;
 			}
 			break;

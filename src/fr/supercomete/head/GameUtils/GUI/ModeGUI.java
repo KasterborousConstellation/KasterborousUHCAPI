@@ -9,6 +9,8 @@ import fr.supercomete.ServerExchangeProtocol.File.PlayerAccountManager;
 import fr.supercomete.ServerExchangeProtocol.Rank.Rank;
 import fr.supercomete.head.GameUtils.GameMode.ModeModifier.Permission;
 import fr.supercomete.head.GameUtils.TeamManager;
+import fr.supercomete.head.Inventory.GUI.SlotGUI;
+import fr.supercomete.head.Inventory.GUI.TimerGUI;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -162,7 +164,7 @@ public class ModeGUI extends GUI {
                         Main.INSTANCE.StartGame(player);
 						break;
 					case 26:
-						InventoryHandler.openinventory(player,3);
+						new SlotGUI(player).open();
 						break;
 					case 50:
 						Main.StopGame(player);
@@ -171,8 +173,7 @@ public class ModeGUI extends GUI {
 						InventoryHandler.openinventory(player, 12);
 						break;
 					case 18:
-                        Main.INSTANCE.Selected= 0;
-						InventoryHandler.openinventory(player, 7);
+						new TimerGUI(player).open();
 						break;
 					case 45:
 						if (Main.currentGame.isGameState(Gstate.Waiting)) {

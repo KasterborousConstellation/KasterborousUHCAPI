@@ -12,7 +12,7 @@ import org.bukkit.entity.Player;
 import java.util.*;
 
 public class BonusHandler {
-    private static HashMap<UUID, ArrayList<Bonus>>hash = new HashMap<>();
+    private static final HashMap<UUID, ArrayList<Bonus>>hash = new HashMap<>();
     public static void init(){
         Bukkit.getServicesManager().load(KtbsAPI.class).getKTBSRunnableProvider().RegisterRunnable(new ArrayList<>(Arrays.asList(
                 new KasterborousRunnable(){

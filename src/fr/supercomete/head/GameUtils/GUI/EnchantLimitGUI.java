@@ -3,6 +3,7 @@ package fr.supercomete.head.GameUtils.GUI;
 import fr.supercomete.head.GameUtils.Enchants.EnchantHandler;
 import fr.supercomete.head.GameUtils.Enchants.EnchantLimit;
 import fr.supercomete.head.GameUtils.Enchants.EnchantType;
+import fr.supercomete.head.Inventory.GUI.RuleGUI;
 import fr.supercomete.head.Inventory.InventoryHandler;
 import fr.supercomete.head.Inventory.InventoryUtils;
 import fr.supercomete.head.core.Main;
@@ -102,7 +103,7 @@ public class EnchantLimitGUI extends GUI{
 
                 }else{
 				    if(currentSlot==49){
-				        InventoryHandler.openinventory(gui.player,5);
+				        new RuleGUI(gui.player).open();
                     }
                 }
                 if(currentSlot>=0&&currentSlot<EnchantType.values().length){

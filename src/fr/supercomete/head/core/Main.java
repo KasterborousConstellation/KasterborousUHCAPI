@@ -23,6 +23,8 @@ import fr.supercomete.head.GameUtils.Scenarios.MonsterHunter;
 import fr.supercomete.head.GameUtils.Scenarios.StarterTools;
 import fr.supercomete.head.GameUtils.Time.TimeUtility;
 import fr.supercomete.head.GameUtils.Time.TimerType;
+import fr.supercomete.head.Inventory.InventoryManager;
+import fr.supercomete.head.Inventory.inventoryapi.Inventoryapi;
 import fr.supercomete.head.PlayerUtils.BonusHandler;
 import fr.supercomete.head.PlayerUtils.EffectHandler;
 import fr.supercomete.tasks.Cycle;
@@ -73,7 +75,6 @@ public class Main extends JavaPlugin {
 	private static boolean forcebordure = false;
 	private static boolean forcerole = false;
 	public static ArrayList<UUID> playerlist = new ArrayList<>();
-	public int Selected = 0;
 	public static Game currentGame;
 	public static boolean devmode;
 	public static Map<UUID, Integer> diamondmap = new HashMap<>();
@@ -141,6 +142,10 @@ public class Main extends JavaPlugin {
             Bukkit.getLogger().log(Level.WARNING,"*********************************************************************");
         }
         });
+        /*
+        Load KTBSInventoryAPI
+         */
+        Inventoryapi.init(this);
         /*
         Whitelist Config
          */
@@ -231,6 +236,7 @@ public class Main extends JavaPlugin {
 			Bukkit.broadcastMessage("§eDevMode: §aOn");
 		}
         EventsHandler.init();
+        InventoryManager.init();
         new BukkitRunnable(){
             @Override
             public void run() {
@@ -520,25 +526,7 @@ public class Main extends JavaPlugin {
 		}
 		return compatible;
 	}
-	public void updateTimerInventory(Player player) {
-		int i = 18;
-        for(int e = 18;e<45;e++){
-            player.getOpenInventory().setItem(e,null);
-        }
-		for(Timer t:getCompatibleTimer()){
-            if(t.getType()== TimerType.TimeDependent &&(Main.currentGame.getTimer(t).getData() - Main.currentGame.getTime()) >0){
-                player.getOpenInventory().setItem(i, InventoryUtils.getItem(Material.PAPER,generateNameTimer(t),null));
-                i++;
-            }
-            if(t.getType()== TimerType.Literal){
-                player.getOpenInventory().setItem(i, InventoryUtils.getItem(Material.PAPER,generateNameTimer(t),null));
-                i++;
-            }
-        }
-		player.getOpenInventory().setItem(13, InventoryUtils.getItem(Material.PAPER,
-				"§r" + this.generateNameTimer(this.getCompatibleTimer().get(this.Selected)), null));
-		player.getOpenInventory().getItem(18 + this.Selected).setType(Material.COMPASS);
-	}
+
 	public void updateTeamsInventory(final Player player) {
 		player.getOpenInventory().setItem(11, InventoryUtils.getItem(Material.WOOL, "§bNombre de joueur par équipe: §4"+TeamManager.NumberOfPlayerPerTeam,Arrays.asList(InventoryHandler.ClickTypoAdd+"1",InventoryHandler.ClickTypoRemove+"1")));
 		player.getOpenInventory()
