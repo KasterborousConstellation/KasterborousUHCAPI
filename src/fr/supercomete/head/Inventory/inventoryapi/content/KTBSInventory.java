@@ -6,10 +6,13 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.scheduler.BukkitRunnable;
 import java.util.logging.Level;
 public abstract class KTBSInventory{
-    private final String name;
+    private String name;
     protected abstract boolean denyDoubleClick();
     private final Player holder;
     private final int size;
+    public void setName(String name){
+        this.name=name;
+    }
     public String getName(){
         return KTBSInventoryListener.decode+name;
     }

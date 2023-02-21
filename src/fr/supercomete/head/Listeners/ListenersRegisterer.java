@@ -14,15 +14,10 @@ public class ListenersRegisterer {
 			//Gui Listeners
 			pm.registerEvents(new ModeGUI(new Null_Mode(), main), main);
 
-			pm.registerEvents(new SeeInvGUI(main),main);
-
-			pm.registerEvents(new ConfigurableGUI(main), main);
-			pm.registerEvents(new AdvancedRulesGUI(main), main);
 			pm.registerEvents(new RoleListGUI(main), main);
 
 			pm.registerEvents(new RoleGUI(main), main);
 			pm.registerEvents(new FullGUI(main), main);
-			pm.registerEvents(new EnchantLimitGUI(main),main);
 			pm.registerEvents(new EventGUI(main),main);
             pm.registerEvents(new ScenarioGUI(),main);
             pm.registerEvents(new GenerationGUI(),main);

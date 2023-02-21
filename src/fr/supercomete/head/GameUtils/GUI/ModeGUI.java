@@ -1,14 +1,14 @@
 package fr.supercomete.head.GameUtils.GUI;
 
-import java.util.Arrays;
 import java.util.Collections;
-import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 import fr.supercomete.ServerExchangeProtocol.File.PlayerAccountManager;
 import fr.supercomete.ServerExchangeProtocol.Rank.Rank;
 import fr.supercomete.head.GameUtils.GameMode.ModeModifier.Permission;
 import fr.supercomete.head.GameUtils.TeamManager;
+import fr.supercomete.head.Inventory.GUI.ConfigurableGUI;
+import fr.supercomete.head.Inventory.GUI.EnchantLimitGUI;
 import fr.supercomete.head.Inventory.GUI.SlotGUI;
 import fr.supercomete.head.Inventory.GUI.TimerGUI;
 import org.bukkit.Bukkit;

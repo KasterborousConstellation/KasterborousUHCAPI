@@ -1,10 +1,12 @@
-package fr.supercomete.head.GameUtils.GUI;
+package fr.supercomete.head.Inventory.GUI;
 
 import java.util.ArrayList;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 import fr.supercomete.head.GameUtils.Time.TimeUtility;
 import fr.supercomete.head.Inventory.GUI.RuleGUI;
+import fr.supercomete.head.Inventory.inventoryapi.content.KTBSAction;
+import fr.supercomete.head.Inventory.inventoryapi.content.KTBSInventory;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -19,20 +21,14 @@ import fr.supercomete.head.GameUtils.GameConfigurable.Configurable;
 import fr.supercomete.head.Inventory.InventoryHandler;
 import fr.supercomete.head.Inventory.InventoryUtils;
 import fr.supercomete.head.core.Main;
-public class AdvancedRulesGUI extends GUI{
-	private static final CopyOnWriteArrayList<AdvancedRulesGUI> allGui = new CopyOnWriteArrayList<AdvancedRulesGUI>();
-	private Inventory inv;
-	private Player player;
-	public AdvancedRulesGUI(Main main){
-		this.player=null;
-	}
-	public AdvancedRulesGUI(Player player) {
-		this.player=player;
-		if (player != null)
-			allGui.add(this);
-	}
-	protected Inventory generateinv() {
-		Inventory tmp = Bukkit.createInventory(null, 54,"Advanced Rules");
+public class AdvancedRulesGUI extends KTBSInventory {
+
+    public AdvancedRulesGUI(Player player) {
+        super("Advanced Rules", 54, player);
+    }
+
+    @Override
+	protected Inventory generateinventory(Inventory tmp) {
 		for(int i = 0;i<9;i++) {
 			tmp.setItem(i, InventoryUtils.createColorItem(Material.STAINED_GLASS_PANE, " ", 1, (short)10));
 		}
@@ -98,30 +94,23 @@ public class AdvancedRulesGUI extends GUI{
 		tmp.setItem(40, InventoryUtils.getItem(Main.currentGame.getMode().getMaterial(),"§b"+Main.currentGame.getMode().getName(), arr));
 		return tmp;
 	}
-	public void open() {
-		this.inv = generateinv();
-		player.openInventory(inv);
-	}
-	@EventHandler
-	public void onInventoryClick(InventoryClickEvent e) {
-		for (AdvancedRulesGUI gui:allGui) {
-			if (e.getInventory().equals(gui.inv)) {
-				e.setCancelled(true);
-				int slot = e.getSlot();
-				if(slot == 49) {
-					new RuleGUI(gui.player).open();
-				}
-			}
-		}
-	}
-	// Optimization --> Forget GUI that have been closed >|<
-	@EventHandler
-	public void onInventoryClose(InventoryCloseEvent e) {
-		for (AdvancedRulesGUI gui : allGui) {
-			if (e.getInventory().equals(gui.inv)) {
-				allGui.remove(gui);
-			}
-		}
-	}
+
+    @Override
+    protected boolean onClick(Player holder, int slot, KTBSAction action) {
+        if(slot == 49) {
+            new RuleGUI(holder).open();
+        }
+        return true;
+    }
+
+    @Override
+    protected boolean onClose(Player holder) {
+        return false;
+    }
+
+    @Override
+    protected boolean denyDoubleClick() {
+        return true;
+    }
 }
 

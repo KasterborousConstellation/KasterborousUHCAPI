@@ -1,6 +1,7 @@
 package fr.supercomete.head.GameUtils.GUI;
 import java.util.concurrent.CopyOnWriteArrayList;
 
+import fr.supercomete.head.Inventory.GUI.SeeInvGUI;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -81,7 +82,7 @@ public class RoleGUI extends GUI{
 					gui.open();
 					break;
 				case 14:
-					new SeeInvGUI(gui.player, gui.target, false).open();
+					new SeeInvGUI(gui.player, gui.target).open();
 					break;
 				default:
 					

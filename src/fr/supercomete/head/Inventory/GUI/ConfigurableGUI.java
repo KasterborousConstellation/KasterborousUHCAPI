@@ -1,48 +1,34 @@
-package fr.supercomete.head.GameUtils.GUI;
-import java.lang.reflect.Type;
+package fr.supercomete.head.Inventory.GUI;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
-import java.util.concurrent.CopyOnWriteArrayList;
 
-import fr.supercomete.head.GameUtils.GameMode.Modes.Mode;
-import org.bukkit.Bukkit;
+import fr.supercomete.head.GameUtils.GUI.ModeGUI;
+import fr.supercomete.head.Inventory.inventoryapi.content.KTBSAction;
+import fr.supercomete.head.Inventory.inventoryapi.content.KTBSInventory;
 import org.bukkit.Material;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
-import org.bukkit.event.EventHandler;
-import org.bukkit.event.inventory.ClickType;
-import org.bukkit.event.inventory.InventoryClickEvent;
-import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
-
 import fr.supercomete.head.GameUtils.GameConfigurable.BindingType;
 import fr.supercomete.head.GameUtils.GameConfigurable.Configurable;
 import fr.supercomete.head.GameUtils.GameConfigurable.ModeBinding;
 import fr.supercomete.head.GameUtils.GameConfigurable.TypeBinding;
 import fr.supercomete.head.Inventory.InventoryUtils;
 import fr.supercomete.head.core.Main;
-public class ConfigurableGUI extends GUI{
-	private static final CopyOnWriteArrayList<ConfigurableGUI> allGui = new CopyOnWriteArrayList<ConfigurableGUI>();
-	private Inventory inv;
-	private Player player;
+public class ConfigurableGUI extends KTBSInventory {
 	private String openType;
-	public ConfigurableGUI(Main main) {
-		this.player=null;
-	}
-	public ConfigurableGUI(Player player,String openType) {
-		this.player=null;
-		this.player=player;
-		this.openType=openType;
-		if (player != null)
-			allGui.add(this);
-	}
-	protected Inventory generateinv() {
-		Inventory tmp = Bukkit.createInventory(null, 54,"Configurable "+openType);
+
+    public ConfigurableGUI(Player player,String openType) {
+        super("Configurables", 54, player);
+        this.openType=openType;
+    }
+
+    @Override
+	protected Inventory generateinventory(Inventory tmp) {
 		List<String> arr = Collections.singletonList("§aCliquez ici pour configurer");
 		if(openType.equals("Principale")) {
 			for(int i = 0;i<9;i++) {
@@ -100,69 +86,63 @@ public class ConfigurableGUI extends GUI{
 		}
 		return tmp;
 	}
-	public void open() {
-		this.inv = generateinv();
-		player.openInventory(inv);
-	}
-	@EventHandler
-	public void onInventoryClick(InventoryClickEvent e) {
-		for (ConfigurableGUI gui:allGui) {
-			if (e.getInventory().equals(gui.inv)) {
-				e.setCancelled(true);
-				int slot = e.getSlot();
-				if(gui.openType=="Principale" && slot >=9 && slot<= 9+BindingType.values().length ){
-					int index = (slot-9);
-					gui.openType=BindingType.values()[index].getName();
-					gui.open();
-				}else {
-					if(gui.openType=="Principale"){
-						if(slot==49) {
-							new ModeGUI(Main.currentGame.getMode(),gui.player).open();
-							return;
-						}
-						if(slot==40) {
-							gui.openType=Main.currentGame.getMode().getName();
-							gui.open();
-							return;
-						}
-					
-					}else {
-						if(slot==49) {
-							gui.openType="Principale";
-							gui.open();
-							return;
-						}
-						ClickType currentClick = e.getClick();
-						ArrayList<Configurable> configurables = new ArrayList<>();
-						for(Configurable config : Main.currentGame.getConfigList()) {
-							if(config.getId().getBind() instanceof TypeBinding) {
-                                TypeBinding bind =(TypeBinding) config.getId().getBind();
-                                if(bind.getBinding()==gui.openType) {
-									configurables.add(config);
-								}
-							}else if(config.getId().getBind() instanceof ModeBinding) {
-                                ModeBinding mode=(ModeBinding)config.getId().getBind();
-                                if(mode.getBinding()==gui.openType) {
-									configurables.add(config);
-								}
-							}
-						}
-						if(slot >=9 && slot< 9+ configurables.size()) {
-							int index = slot - 9;
-							Configurable config = configurables.get(index);
-							config.update(currentClick);
-							gui.open();
-							return;
-						}
-					}
-					
-				}
-			}
-		}
-	}
-	// Optimization --> Forget GUI that have been closed >|<
-	@EventHandler
-	public void onInventoryClose(InventoryCloseEvent e) {
-        allGui.removeIf(gui -> e.getInventory().equals(gui.inv));
-	}
+
+    @Override
+    protected boolean onClick(Player holder, int slot, KTBSAction action) {
+        if(openType=="Principale" && slot >=9 && slot<= 9+BindingType.values().length ){
+            int index = (slot-9);
+            openType=BindingType.values()[index].getName();
+            refresh();
+        }else {
+            if(openType=="Principale"){
+                if(slot==49) {
+                    new ModeGUI(Main.currentGame.getMode(),holder).open();
+                    return true;
+                }
+                if(slot==40) {
+                    openType=Main.currentGame.getMode().getName();
+                    refresh();
+                }
+
+            }else {
+                if(slot==49) {
+                    openType="Principale";
+                    refresh();
+                }
+                ArrayList<Configurable> configurables = new ArrayList<>();
+                for(Configurable config : Main.currentGame.getConfigList()) {
+                    if(config.getId().getBind() instanceof TypeBinding) {
+                        TypeBinding bind =(TypeBinding) config.getId().getBind();
+                        if(bind.getBinding()==openType) {
+                            configurables.add(config);
+                        }
+                    }else if(config.getId().getBind() instanceof ModeBinding) {
+                        ModeBinding mode=(ModeBinding)config.getId().getBind();
+                        if(mode.getBinding()==openType) {
+                            configurables.add(config);
+                        }
+                    }
+                }
+                if(slot >=9 && slot< 9+ configurables.size()) {
+                    int index = slot - 9;
+                    Configurable config = configurables.get(index);
+                    config.update(action.getClick());
+                    refresh();
+                    return true;
+                }
+            }
+
+        }
+        return true;
+    }
+
+    @Override
+    protected boolean onClose(Player holder) {
+        return false;
+    }
+
+    @Override
+    protected boolean denyDoubleClick() {
+        return true;
+    }
 }

@@ -9,7 +9,9 @@ public final class KTBSAction {
         this.action=action;
 
     }
-
+    public ClickType getClick(){
+        return type;
+    }
     public boolean ShiftedClicked(){
         return type.isShiftClick();
     }

@@ -2,9 +2,6 @@ package fr.supercomete.head.Inventory.GUI;
 
 import fr.supercomete.head.GameUtils.Enchants.EnchantHandler;
 import fr.supercomete.head.GameUtils.Enchants.EnchantType;
-import fr.supercomete.head.GameUtils.GUI.AdvancedRulesGUI;
-import fr.supercomete.head.GameUtils.GUI.EnchantLimitGUI;
-import fr.supercomete.head.Inventory.InventoryHandler;
 import fr.supercomete.head.Inventory.InventoryUtils;
 import fr.supercomete.head.Inventory.inventoryapi.content.KTBSAction;
 import fr.supercomete.head.Inventory.inventoryapi.content.KTBSInventory;
