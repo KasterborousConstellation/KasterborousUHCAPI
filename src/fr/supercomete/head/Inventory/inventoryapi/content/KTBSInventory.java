@@ -13,6 +13,9 @@ public abstract class KTBSInventory{
     public void setName(String name){
         this.name=name;
     }
+    public Player getHolder(){
+        return holder;
+    }
     public String getName(){
         return KTBSInventoryListener.decode+name;
     }

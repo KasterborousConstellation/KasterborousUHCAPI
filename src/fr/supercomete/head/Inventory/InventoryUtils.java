@@ -19,6 +19,11 @@ import net.md_5.bungee.api.chat.HoverEvent;
 import net.md_5.bungee.api.chat.HoverEvent.Action;
 import net.md_5.bungee.api.chat.TextComponent;
 public class InventoryUtils {
+    public final static String ClickTypoAdd="§aClique droit pour ajouter ";
+    public final static String ClickTypoRemove="§cClique gauche pour retirer ";
+    public final static String ClickTypoMassAdd="§aShift Clique droit pour ajouter ";
+    public final static String ClickTypoMassRemove="§cShift Clique gauche pour retirer ";
+    public final static String ClickBool="§aClique droit pour Activer/Désactiver";
 	public static ArrayList<Material> AllHastyItem() {
 		ArrayList<Material> AllHastyItem = new ArrayList<Material>();
 		AllHastyItem.add(Material.DIAMOND_AXE);

@@ -2,7 +2,6 @@ package fr.supercomete.head.GameUtils.GUI;
 import fr.supercomete.head.GameUtils.Events.GameEvents.Event;
 import fr.supercomete.head.GameUtils.Events.GameEvents.EventsHandler;
 import fr.supercomete.head.GameUtils.Time.TimeUtility;
-import fr.supercomete.head.Inventory.InventoryHandler;
 import fr.supercomete.head.Inventory.InventoryUtils;
 import fr.supercomete.head.core.Main;
 import org.bukkit.Bukkit;
@@ -14,7 +13,6 @@ import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.inventory.Inventory;
 
-import java.sql.Time;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.concurrent.CopyOnWriteArrayList;
@@ -66,10 +64,10 @@ public class EventGUI extends GUI{
                 if(event.IsCompatible()){
                     ArrayList<String> description = Main.SplitCorrectlyString(event.getDescription(),40,"§7");
                     description.add("§f"+ TimeUtility.transform(event.getMin(),((this.mode==EventGUIMode.MinTime)?"§a":"§f")) +"-"+ TimeUtility.transform(event.getMax(),((this.mode==EventGUIMode.MaxTime)?"§a":"§f")));
-                    description.add(InventoryHandler.ClickTypoAdd+"1");
-                    description.add(InventoryHandler.ClickTypoMassAdd+"5");
-                    description.add(InventoryHandler.ClickTypoRemove+"1");
-                    description.add(InventoryHandler.ClickTypoMassRemove+"5");
+                    description.add(InventoryUtils.ClickTypoAdd+"1");
+                    description.add(InventoryUtils.ClickTypoMassAdd+"5");
+                    description.add(InventoryUtils.ClickTypoRemove+"1");
+                    description.add(InventoryUtils.ClickTypoMassRemove+"5");
                     tmp.setItem(9+x,InventoryUtils.getItem(Material.REDSTONE,"§r"+event.getName()+" "+((this.mode==EventGUIMode.Event)?"§a":"§f")+event.getChance()+"%",description));
                     x++;
                 }

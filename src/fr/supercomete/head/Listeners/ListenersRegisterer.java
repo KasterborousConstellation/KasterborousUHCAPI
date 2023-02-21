@@ -17,7 +17,6 @@ public class ListenersRegisterer {
 			pm.registerEvents(new RoleListGUI(main), main);
 
 			pm.registerEvents(new RoleGUI(main), main);
-			pm.registerEvents(new FullGUI(main), main);
 			pm.registerEvents(new EventGUI(main),main);
             pm.registerEvents(new ScenarioGUI(),main);
             pm.registerEvents(new GenerationGUI(),main);

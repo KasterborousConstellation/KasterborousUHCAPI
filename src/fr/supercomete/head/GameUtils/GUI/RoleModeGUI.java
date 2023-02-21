@@ -4,7 +4,6 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.*;
 import java.util.concurrent.CopyOnWriteArrayList;
-import java.util.logging.Level;
 
 import fr.supercomete.head.role.KasterBorousCamp;
 import org.bukkit.Bukkit;
@@ -22,7 +21,6 @@ import fr.supercomete.head.GameUtils.TeamManager;
 import fr.supercomete.head.GameUtils.GameMode.ModeHandler.KtbsAPI;
 import fr.supercomete.head.GameUtils.GameMode.ModeModifier.CampMode;
 import fr.supercomete.head.GameUtils.GameMode.Modes.Mode;
-import fr.supercomete.head.Inventory.InventoryHandler;
 import fr.supercomete.head.Inventory.InventoryUtils;
 import fr.supercomete.head.core.Main;
 import fr.supercomete.head.role.Role;
@@ -107,9 +105,9 @@ public class RoleModeGUI extends GUI {
 			Role rt = api.getRoleProvider().getRoleByClass(r);
 			List<String> strl = (rt.AskIfUnique())
 					? Arrays.asList("§3Camp: " + rt.getDefaultCamp().getColor() + rt.getDefaultCamp().getName(),
-							InventoryHandler.ClickBool)
+							InventoryUtils.ClickBool)
 					: Arrays.asList("§3Camp: " + rt.getDefaultCamp().getColor() + rt.getDefaultCamp().getName(),
-							InventoryHandler.ClickTypoAdd + "1", InventoryHandler.ClickTypoRemove + "1");
+                    InventoryUtils.ClickTypoAdd + "1", InventoryUtils.ClickTypoRemove + "1");
 			final ItemStack it =InventoryUtils.createSkullItem(rt.AskHeadTag(),
 					rt.getDefaultCamp().getColor() + rt.getName() + " " + ((rt.AskIfUnique())
 							? (Main.currentGame.hasClassInRoleCompoMap(r) ? "§aOn" : "§cOff")
@@ -143,8 +141,6 @@ public class RoleModeGUI extends GUI {
 				switch (currentslot) {
 				case 49:
 					new ModeGUI((Mode)role.m, role.player).open();
-//					InventoryHandler.openinventory(role.player, KtbsAPI.getModeByIntRepresentation(Main.currentGame.getEmode()).getGUInumber());
-//					allGui.REMOVE(ROLE);
 					break;
 				default:
 					if (currentslot < role.primitives.size()) {

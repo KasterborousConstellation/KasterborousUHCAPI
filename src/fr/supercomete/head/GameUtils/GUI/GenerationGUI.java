@@ -3,7 +3,7 @@ package fr.supercomete.head.GameUtils.GUI;
 import fr.supercomete.enums.BiomeGeneration;
 import fr.supercomete.enums.GenerationMode;
 import fr.supercomete.enums.Gstate;
-import fr.supercomete.head.Inventory.InventoryHandler;
+import fr.supercomete.head.Inventory.GUI.WorldsGUI;
 import fr.supercomete.head.Inventory.InventoryUtils;
 import fr.supercomete.head.core.Main;
 import fr.supercomete.head.world.WorldSeedGetter;
@@ -40,12 +40,12 @@ public class GenerationGUI extends GUI{
     protected Inventory generateinv() {
         Inventory tmp = Bukkit.createInventory(null, 54,"§dGénération");
         tmp.setItem(33, InventoryUtils.createColorItem(Material.STAINED_GLASS, "§bCréer le monde et prégénerer", 1, (short)3));
-        tmp.setItem(9, InventoryUtils.getItem(Material.COAL_ORE, "§fMultiplicateur de Charbon §a"+ Main.generator.getCoalboost(), Arrays.asList(InventoryHandler.ClickTypoAdd+"1",InventoryHandler.ClickTypoRemove+"1")));
-        tmp.setItem(18, InventoryUtils.getItem(Material.IRON_ORE, "§fMultiplicateur de Fer §a"+Main.generator.getIronboost(), Arrays.asList(InventoryHandler.ClickTypoAdd+"1",InventoryHandler.ClickTypoRemove+"1")));
-        tmp.setItem(27, InventoryUtils.getItem(Material.LAPIS_ORE, "§fMultiplicateur de Lapis §a"+Main.generator.getLapisboost(), Arrays.asList(InventoryHandler.ClickTypoAdd+"1",InventoryHandler.ClickTypoRemove+"1")));
-        tmp.setItem(36, InventoryUtils.getItem(Material.GOLD_ORE, "§fMultiplicateur d'or §a"+Main.generator.getGoldboost(), Arrays.asList(InventoryHandler.ClickTypoAdd+"1",InventoryHandler.ClickTypoRemove+"1")));
-        tmp.setItem(10, InventoryUtils.getItem(Material.DIAMOND_ORE, "§fMultiplicateur de diamant §a"+Main.generator.getDiamondboost(), Arrays.asList(InventoryHandler.ClickTypoAdd+"1",InventoryHandler.ClickTypoRemove+"1")));
-        tmp.setItem(19, InventoryUtils.getItem(Material.LAVA_BUCKET, "§4Lac de lave en surface: "+Main.TranslateBoolean(Main.generator.getLavaLake()), Arrays.asList("§7Defini si les lacs de lave se générent en surface",InventoryHandler.ClickBool)));
+        tmp.setItem(9, InventoryUtils.getItem(Material.COAL_ORE, "§fMultiplicateur de Charbon §a"+ Main.generator.getCoalboost(), Arrays.asList(InventoryUtils.ClickTypoAdd+"1",InventoryUtils.ClickTypoRemove+"1")));
+        tmp.setItem(18, InventoryUtils.getItem(Material.IRON_ORE, "§fMultiplicateur de Fer §a"+Main.generator.getIronboost(), Arrays.asList(InventoryUtils.ClickTypoAdd+"1",InventoryUtils.ClickTypoRemove+"1")));
+        tmp.setItem(27, InventoryUtils.getItem(Material.LAPIS_ORE, "§fMultiplicateur de Lapis §a"+Main.generator.getLapisboost(), Arrays.asList(InventoryUtils.ClickTypoAdd+"1",InventoryUtils.ClickTypoRemove+"1")));
+        tmp.setItem(36, InventoryUtils.getItem(Material.GOLD_ORE, "§fMultiplicateur d'or §a"+Main.generator.getGoldboost(), Arrays.asList(InventoryUtils.ClickTypoAdd+"1",InventoryUtils.ClickTypoRemove+"1")));
+        tmp.setItem(10, InventoryUtils.getItem(Material.DIAMOND_ORE, "§fMultiplicateur de diamant §a"+Main.generator.getDiamondboost(), Arrays.asList(InventoryUtils.ClickTypoAdd+"1",InventoryUtils.ClickTypoRemove+"1")));
+        tmp.setItem(19, InventoryUtils.getItem(Material.LAVA_BUCKET, "§4Lac de lave en surface: "+Main.TranslateBoolean(Main.generator.getLavaLake()), Arrays.asList("§7Defini si les lacs de lave se générent en surface",InventoryUtils.ClickBool)));
         tmp.setItem(29, InventoryUtils.createColorItem(Material.STAINED_GLASS, "§bCréer le monde", 1, (short)14));
         tmp.setItem(31, InventoryUtils.createColorItem(Material.STAINED_GLASS, "§bPrégénerer le monde", 1, (short)5));
         tmp.setItem(13, InventoryUtils.getItem(Material.IRON_DOOR, "§dMondes", Collections.singletonList("§bCliquer ici pour pouvoir changer de monde")));
@@ -198,7 +198,7 @@ public class GenerationGUI extends GUI{
                         break;
                     case 13:
                         if(Main.currentGame.getGenmode()==GenerationMode.Done ||Main.currentGame.getGenmode()==GenerationMode.WorldCreatedOnly) {
-                            InventoryHandler.openinventory(player, 22);
+                            new WorldsGUI(player).open();
                         }else {
                             player.sendMessage("§cCette action est impossible");
                         }

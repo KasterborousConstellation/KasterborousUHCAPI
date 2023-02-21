@@ -7,10 +7,7 @@ import fr.supercomete.ServerExchangeProtocol.File.PlayerAccountManager;
 import fr.supercomete.ServerExchangeProtocol.Rank.Rank;
 import fr.supercomete.head.GameUtils.GameMode.ModeModifier.Permission;
 import fr.supercomete.head.GameUtils.TeamManager;
-import fr.supercomete.head.Inventory.GUI.ConfigurableGUI;
-import fr.supercomete.head.Inventory.GUI.EnchantLimitGUI;
-import fr.supercomete.head.Inventory.GUI.SlotGUI;
-import fr.supercomete.head.Inventory.GUI.TimerGUI;
+import fr.supercomete.head.Inventory.GUI.*;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -29,7 +26,6 @@ import fr.supercomete.head.GameUtils.GameMode.ModeModifier.CampMode;
 import fr.supercomete.head.GameUtils.GameMode.ModeModifier.TeamMode;
 import fr.supercomete.head.GameUtils.GameMode.Modes.Mode;
 import fr.supercomete.head.GameUtils.GameMode.Modes.Null_Mode;
-import fr.supercomete.head.Inventory.InventoryHandler;
 import fr.supercomete.head.Inventory.InventoryUtils;
 import fr.supercomete.head.PlayerUtils.PlayerUtility;
 
@@ -127,7 +123,6 @@ public class ModeGUI extends GUI {
 				int currentSlot= e.getSlot();
 				if(mode.m instanceof Null_Mode) {
 					e.setCancelled(true);
-
 					if (!Main.currentGame.isGameState(Gstate.Waiting)) {
 						player.sendMessage(Main.UHCTypo + "§cVous ne pouvez pas changer de mode de jeux pendant une partie");
 						return;
@@ -170,7 +165,7 @@ public class ModeGUI extends GUI {
 						Main.StopGame(player);
 						break;
 					case 10:
-						InventoryHandler.openinventory(player, 12);
+						new WhitelistGUI(player).open();
 						break;
 					case 18:
 						new TimerGUI(player).open();
@@ -187,10 +182,10 @@ public class ModeGUI extends GUI {
 						new ScenarioGUI(player).open();
 						break;
 					case 27:
-						InventoryHandler.openinventory(player, 8);
+						new BorderGUI(player).open();
 						break;
 					case 43:
-						InventoryHandler.openinventory(player, 11);
+						new StuffConfigGUI(player).open();
 						break;
 					case 16:
 						new EnchantLimitGUI(player,true).open();
@@ -203,7 +198,7 @@ public class ModeGUI extends GUI {
 							new RoleModeGUI(api.getGameProvider().getCurrentGame().getMode(),player).open(0);
 						}else if(mode.m instanceof TeamMode) {
                             if(Main.currentGame.getGamestate()==Gstate.Waiting){
-                                InventoryHandler.openinventory(mode.player, 10);
+                                new TeamConfig(player).open();
                             }else player.sendMessage(Main.UHCTypo+"§cLes équipes ne peuvent pas être modifiés pendant la partie.");
 						}
 						break;

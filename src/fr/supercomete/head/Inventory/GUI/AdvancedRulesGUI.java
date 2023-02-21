@@ -1,24 +1,17 @@
 package fr.supercomete.head.Inventory.GUI;
 
 import java.util.ArrayList;
-import java.util.concurrent.CopyOnWriteArrayList;
 
 import fr.supercomete.head.GameUtils.Time.TimeUtility;
-import fr.supercomete.head.Inventory.GUI.RuleGUI;
 import fr.supercomete.head.Inventory.inventoryapi.content.KTBSAction;
 import fr.supercomete.head.Inventory.inventoryapi.content.KTBSInventory;
-import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
-import org.bukkit.event.EventHandler;
-import org.bukkit.event.inventory.InventoryClickEvent;
-import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 
 import fr.supercomete.head.GameUtils.GameConfigurable.BindingType;
 import fr.supercomete.head.GameUtils.GameConfigurable.Configurable;
-import fr.supercomete.head.Inventory.InventoryHandler;
 import fr.supercomete.head.Inventory.InventoryUtils;
 import fr.supercomete.head.core.Main;
 public class AdvancedRulesGUI extends KTBSInventory {

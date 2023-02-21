@@ -2,12 +2,12 @@ package fr.supercomete.head.GameUtils.GameConfigurable;
 import java.util.ArrayList;
 
 import fr.supercomete.head.GameUtils.Time.TimeUtility;
+import fr.supercomete.head.Inventory.InventoryUtils;
 import org.bukkit.Material;
 import org.bukkit.event.inventory.ClickType;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
-import fr.supercomete.head.Inventory.InventoryHandler;
 import fr.supercomete.head.core.Main;
 public final class Configurable {
     public static boolean ExtractBool(int i) {
@@ -32,36 +32,36 @@ public final class Configurable {
         ArrayList<String> lore = Main.SplitCorrectlyString(id.getDescription(), 50, "§7");
         switch (type) {
             case Percentage:
-                lore.add(InventoryHandler.ClickTypoAdd + id.getRule().getAdd() + "%");
+                lore.add(InventoryUtils.ClickTypoAdd + id.getRule().getAdd() + "%");
                 if (id.getRule().isMass()) {
-                    lore.add(InventoryHandler.ClickTypoMassAdd + id.getRule().getMassadd() + "%");
+                    lore.add(InventoryUtils.ClickTypoMassAdd + id.getRule().getMassadd() + "%");
                 }
-                lore.add(InventoryHandler.ClickTypoRemove + id.getRule().getAdd() + "%");
+                lore.add(InventoryUtils.ClickTypoRemove + id.getRule().getAdd() + "%");
                 if (id.getRule().isMass()) {
-                    lore.add(InventoryHandler.ClickTypoMassRemove + id.getRule().getMassadd() + "%");
+                    lore.add(InventoryUtils.ClickTypoMassRemove + id.getRule().getMassadd() + "%");
                 }
                 break;
             case Bool:
                 lore.add("§aClick pour activer/désactiver");
                 break;
             case Integer:
-                lore.add(InventoryHandler.ClickTypoAdd + id.getRule().getAdd());
+                lore.add(InventoryUtils.ClickTypoAdd + id.getRule().getAdd());
                 if (id.getRule().isMass()) {
-                    lore.add(InventoryHandler.ClickTypoMassAdd + id.getRule().getMassadd());
+                    lore.add(InventoryUtils.ClickTypoMassAdd + id.getRule().getMassadd());
                 }
-                lore.add(InventoryHandler.ClickTypoRemove + id.getRule().getAdd());
+                lore.add(InventoryUtils.ClickTypoRemove + id.getRule().getAdd());
                 if (id.getRule().isMass()) {
-                    lore.add(InventoryHandler.ClickTypoMassRemove + id.getRule().getMassadd());
+                    lore.add(InventoryUtils.ClickTypoMassRemove + id.getRule().getMassadd());
                 }
                 break;
             case Timer:
-                lore.add(InventoryHandler.ClickTypoAdd + TimeUtility.transform(id.getRule().getAdd(), "§a", "§a", "§a"));
+                lore.add(InventoryUtils.ClickTypoAdd + TimeUtility.transform(id.getRule().getAdd(), "§a", "§a", "§a"));
                 if (id.getRule().isMass()) {
-                    lore.add(InventoryHandler.ClickTypoMassAdd + TimeUtility.transform(id.getRule().getMassadd(), "§a", "§a", "§a"));
+                    lore.add(InventoryUtils.ClickTypoMassAdd + TimeUtility.transform(id.getRule().getMassadd(), "§a", "§a", "§a"));
                 }
-                lore.add(InventoryHandler.ClickTypoRemove + TimeUtility.transform(id.getRule().getAdd(), "§c", "§c", "§c"));
+                lore.add(InventoryUtils.ClickTypoRemove + TimeUtility.transform(id.getRule().getAdd(), "§c", "§c", "§c"));
                 if (id.getRule().isMass()) {
-                    lore.add(InventoryHandler.ClickTypoMassRemove + TimeUtility.transform(id.getRule().getMassadd(), "§c", "§c", "§c"));
+                    lore.add(InventoryUtils.ClickTypoMassRemove + TimeUtility.transform(id.getRule().getMassadd(), "§c", "§c", "§c"));
                 }
                 break;
             default:

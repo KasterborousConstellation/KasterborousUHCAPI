@@ -4,7 +4,7 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-import fr.supercomete.head.GameUtils.GUI.FullGUI;
+import fr.supercomete.head.Inventory.GUI.FullGUI;
 import fr.supercomete.head.core.Main;
 public class FullInvCommand implements CommandExecutor {
 	@SuppressWarnings("unused")

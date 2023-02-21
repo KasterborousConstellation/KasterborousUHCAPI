@@ -4,27 +4,19 @@ import fr.supercomete.head.GameUtils.Enchants.EnchantHandler;
 import fr.supercomete.head.GameUtils.Enchants.EnchantLimit;
 import fr.supercomete.head.GameUtils.Enchants.EnchantType;
 import fr.supercomete.head.GameUtils.GUI.ModeGUI;
-import fr.supercomete.head.Inventory.GUI.RuleGUI;
-import fr.supercomete.head.Inventory.InventoryHandler;
 import fr.supercomete.head.Inventory.InventoryUtils;
 import fr.supercomete.head.Inventory.inventoryapi.content.KTBSAction;
 import fr.supercomete.head.Inventory.inventoryapi.content.KTBSInventory;
 import fr.supercomete.head.core.Main;
-import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
-import org.bukkit.event.EventHandler;
-import org.bukkit.event.inventory.ClickType;
-import org.bukkit.event.inventory.InventoryClickEvent;
-import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 
 import java.util.*;
-import java.util.concurrent.CopyOnWriteArrayList;
 
 public class EnchantLimitGUI extends KTBSInventory {
-	private boolean modifiable=false;
+	private final boolean modifiable;
 	private EnchantType type=EnchantType.Iron;
 	public EnchantLimitGUI(Player player,boolean modifiable) {
 		super("§6Limite d'enchantement",54,player);
@@ -52,15 +44,15 @@ public class EnchantLimitGUI extends KTBSInventory {
 		e=9;
 
 		for(EnchantLimit enchantLimit: EnchantHandler.getLimite(type)){
-            List<String> stringlist =(!modifiable)?null:Arrays.asList("§fMax: "+enchantLimit.getEnchant().getMaxLevel(),InventoryHandler.ClickTypoAdd+"1",InventoryHandler.ClickTypoRemove+"1");
+            List<String> stringlist =(!modifiable)?null:Arrays.asList("§fMax: "+enchantLimit.getEnchant().getMaxLevel(),InventoryUtils.ClickTypoAdd+"1",InventoryUtils.ClickTypoRemove+"1");
             ItemStack stack = InventoryUtils.getItem(Material.ENCHANTED_BOOK,"§f"+enchantLimit.getEnchantname()+" "+enchantLimit.getMax(), stringlist);
             stack.setAmount(enchantLimit.getMax());
             tmp.setItem(e,stack);
 		    e++;
         }
-		tmp.setItem(48,InventoryUtils.getItem(Material.ANVIL,"§bEmpêcher la fusion: "+Main.getCheckMark(Main.currentGame.IsDisabledAnvil), Collections.singletonList(InventoryHandler.ClickBool)));
+		tmp.setItem(48,InventoryUtils.getItem(Material.ANVIL,"§bEmpêcher la fusion: "+Main.getCheckMark(Main.currentGame.IsDisabledAnvil), Collections.singletonList(InventoryUtils.ClickBool)));
         tmp.setItem(49,InventoryUtils.getItem(Material.ARROW,"§7Retour",Collections.singletonList("§7Cliquer ici pour revenir en arrière")));
-        tmp.setItem(50,InventoryUtils.getItem(Material.ENCHANTMENT_TABLE,"§bEmpêcher l'enchant: "+Main.getCheckMark(Main.currentGame.IsDisabledEnchant), Collections.singletonList(InventoryHandler.ClickBool)));
+        tmp.setItem(50,InventoryUtils.getItem(Material.ENCHANTMENT_TABLE,"§bEmpêcher l'enchant: "+Main.getCheckMark(Main.currentGame.IsDisabledEnchant), Collections.singletonList(InventoryUtils.ClickBool)));
 		return tmp;
 	}
 

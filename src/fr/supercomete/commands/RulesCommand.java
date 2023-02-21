@@ -6,7 +6,6 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 import fr.supercomete.head.GameUtils.GameMode.Modes.Null_Mode;
-import fr.supercomete.head.Inventory.InventoryHandler;
 import fr.supercomete.head.core.Main;
 @SuppressWarnings("unused")
 public class RulesCommand implements CommandExecutor{

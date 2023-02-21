@@ -1,11 +1,11 @@
 package fr.supercomete.commands;
 
+import fr.supercomete.head.Inventory.GUI.TeamGUI;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import fr.supercomete.enums.Gstate;
-import fr.supercomete.head.Inventory.InventoryHandler;
 import fr.supercomete.head.core.Main;
 
 public class TeamCommand implements CommandExecutor {
@@ -25,7 +25,7 @@ public class TeamCommand implements CommandExecutor {
 					player.sendMessage(Main.UHCTypo + "Les équipes ne peuvent pas être changés pendant la partie");
 					return false;
 				}
-				InventoryHandler.openinventory(player, 9);
+				new TeamGUI(player).open();
 				return false;
 			}
 		}

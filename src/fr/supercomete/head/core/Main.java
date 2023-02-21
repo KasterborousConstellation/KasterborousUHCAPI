@@ -53,7 +53,6 @@ import fr.supercomete.head.GameUtils.TeamManager;
 import fr.supercomete.head.GameUtils.GameMode.ModeHandler.KtbsAPI;
 import fr.supercomete.head.GameUtils.GameMode.ModeModifier.CampMode;
 import fr.supercomete.head.GameUtils.Time.Timer;
-import fr.supercomete.head.Inventory.InventoryHandler;
 import fr.supercomete.head.Inventory.InventoryUtils;
 import fr.supercomete.head.Listeners.ListenersRegisterer;
 import fr.supercomete.head.PlayerUtils.PlayerUtility;
@@ -464,12 +463,6 @@ public class Main extends JavaPlugin {
             }
         }.runTaskLater(INSTANCE,22);
 	}
-	public Location getLoc() {
-		return spawn;
-	}
-	public void setLoc(Location loc) {
-		spawn = loc;
-	}
 	public static boolean containmod(Mode[] list, Mode testedMode) {
 		for (Mode m : list) {
 			if(m.getClass().equals(testedMode.getClass()))return true;
@@ -481,11 +474,6 @@ public class Main extends JavaPlugin {
 	}
 	public void removeScenarios(KasterborousScenario sc) {
 		Main.currentGame.getScenarios().remove(sc);
-	}
-	public void updateSlotsInventory(Player player) {
-		String name = (Main.currentGame.getMaxNumberOfplayer() == 0) ? "§rSlots:§a Illimité" 
-				: "§rSlots:§a " + Main.currentGame.getMaxNumberOfplayer();
-		player.getOpenInventory().setItem(13, InventoryUtils.getItem(Material.PAPER, name, null));
 	}
 	public static void allplayereffectclear() {
 		for (Player pl : Bukkit.getOnlinePlayers()) {
@@ -525,14 +513,6 @@ public class Main extends JavaPlugin {
 				compatible.add(t);
 		}
 		return compatible;
-	}
-
-	public void updateTeamsInventory(final Player player) {
-		player.getOpenInventory().setItem(11, InventoryUtils.getItem(Material.WOOL, "§bNombre de joueur par équipe: §4"+TeamManager.NumberOfPlayerPerTeam,Arrays.asList(InventoryHandler.ClickTypoAdd+"1",InventoryHandler.ClickTypoRemove+"1")));
-		player.getOpenInventory()
-				.setItem(15, InventoryUtils.getItem(Material.PAPER,
-						"§bNombre d'équipes: §a" + TeamManager.TeamNumber,
-						Arrays.asList(InventoryHandler.ClickTypoAdd + "1", InventoryHandler.ClickTypoRemove + "1")));
 	}
 	public String generateNameTimer(Timer t) {
 		return "§r" + t.getName() + " §c" + TimeUtility.transform((t.getType()==TimerType.TimeDependent)?Main.currentGame.getTimer(t).getData()-Main.currentGame.getTime():Main.currentGame.getTimer(t).getData(), "§5", "§5", "§d");
@@ -577,12 +557,7 @@ public class Main extends JavaPlugin {
 		}
 		Bukkit.broadcastMessage(UHCTypo + "§6Final§cHeal");
 	}
-	public void updateWhiteListInventory(Player player) {
-		short color = (short) ((Bukkit.hasWhitelist()) ? 5 : 14);
-		String booleans = (Bukkit.hasWhitelist()) ? "§aOn" : "§cOff";
-		player.getOpenInventory().setItem(13,
-				InventoryUtils.createColorItem(Material.WOOL, "§bWhiteList: " + booleans, 1, color));
-	}
+
 	public static String TranslateBoolean(boolean b) {
 		return (b) ? "§aOn" : "§cOff";
 	}

@@ -1,11 +1,9 @@
 package fr.supercomete.head.Listeners;
 
-import java.util.*;
 
-
+import fr.supercomete.head.Inventory.GUI.TeleportGUI;
 import fr.supercomete.head.role.Role;
 import fr.supercomete.head.role.Triggers.Trigger_OnInteractWithUUIDItem;
-import org.bukkit.Bukkit;
 
 import org.bukkit.Material;
 
@@ -23,8 +21,6 @@ import org.bukkit.inventory.ItemStack;
 import fr.supercomete.enums.Gstate;
 import fr.supercomete.head.GameUtils.Scenarios.Scenarios;
 import fr.supercomete.head.GameUtils.GameConfigurable.Configurable;
-import fr.supercomete.head.Inventory.InventoryHandler;
-import fr.supercomete.head.PlayerUtils.PlayerUtility;
 import fr.supercomete.head.core.Main;
 
 import fr.supercomete.head.role.RoleHandler;
@@ -55,7 +51,7 @@ final class InteractEventListener implements Listener {
             }
         }
         if (NbtTagHandler.hasAnyTAG(currentItem, "RoomTp")) {
-            InventoryHandler.openinventory(player, 20);
+            new TeleportGUI(player).open();
         }
         if (currentItem.getType() == Material.BANNER
                 && Main.currentGame.getGamestate() == Gstate.Waiting
