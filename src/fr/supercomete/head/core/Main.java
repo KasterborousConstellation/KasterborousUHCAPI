@@ -17,10 +17,12 @@ import fr.supercomete.head.GameUtils.Fights.FightHandler;
 import fr.supercomete.head.GameUtils.GameConfigurable.Configurable;
 import fr.supercomete.head.GameUtils.GameMode.ModeHandler.MapHandler;
 import fr.supercomete.head.GameUtils.GameMode.ModeModifier.Permission;
+import fr.supercomete.head.GameUtils.GameMode.ModeModifier.TeamMode;
 import fr.supercomete.head.GameUtils.GameMode.Modes.*;
 import fr.supercomete.head.GameUtils.Scenarios.KasterborousScenario;
 import fr.supercomete.head.GameUtils.Scenarios.MonsterHunter;
 import fr.supercomete.head.GameUtils.Scenarios.StarterTools;
+import fr.supercomete.head.GameUtils.Team;
 import fr.supercomete.head.GameUtils.Time.TimeUtility;
 import fr.supercomete.head.GameUtils.Time.TimerType;
 import fr.supercomete.head.Inventory.InventoryManager;
@@ -239,7 +241,6 @@ public class Main extends JavaPlugin {
         new BukkitRunnable(){
             @Override
             public void run() {
-
                 //Indique le lancement de l'api
                 for(final KasterborousRunnable run: api.getKTBSRunnableProvider().getRunnables()){
                     run.onAPILaunch(api);
@@ -338,24 +339,33 @@ public class Main extends JavaPlugin {
 	}
 
 	public void StartGame(Player player) {
+        FightHandler.reset();
+        PlayerEventHandler.resetEvents();
+        Main.currentGame.getFullinv().clear();
+        if (forcebordure) {
+            forcebordure = false;
+        }
+        if(forcerole) {
+            forcerole = false;
+        }
+        if (forcedpvp) {
+            forcedpvp = false;
+        }
 		if (this.getGenmode().equals(GenerationMode.Generating)) {
 			player.sendMessage(UHCTypo + "§cLa génération de la carte est déjà en cours");
 			return;
 		}
-        FightHandler.reset();
-        PlayerEventHandler.resetEvents();
-		Main.currentGame.getFullinv().clear();
-		if (forcebordure) {
-			forcebordure = false;
-		}
-		if(forcerole) {
-			forcerole = false;
-		}
-		if (forcedpvp) {
-			forcedpvp = false;
-		}
-
-		
+        if(Main.currentGame.getMode()instanceof TeamMode){
+            final int i =countnumberofplayer();
+            int e = 0;
+            for(Team team : TeamManager.teamlist){
+                e+= team.getMaxPlayerAmount();
+            }
+            if(e<i){
+                player.sendMessage(Main.UHCTypo+"Tous les joueurs ne pourront pas avoir une équipe. Veuillez ajouter de nouvelles équipes ou augmenter le nombre de place dans celles-ci");
+                return;
+            }
+        }
 		if (CountIntegerValue(currentGame.getRoleCompoMap()) < countnumberofplayer() && Main.currentGame.getMode() instanceof CampMode) {
 			player.sendMessage(UHCTypo + "§cIl n'y a pas assez de rôles pour commencer la partie  "
 					+ currentGame.getRoleCompoMap().size() + "/" + countnumberofplayer() + "(Minimum)");

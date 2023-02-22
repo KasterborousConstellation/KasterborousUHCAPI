@@ -1,5 +1,7 @@
 package fr.supercomete.head.Inventory.GUI;
 
+import fr.supercomete.enums.GenerationMode;
+import fr.supercomete.enums.Gstate;
 import fr.supercomete.head.GameUtils.GUI.ModeGUI;
 import fr.supercomete.head.Inventory.InventoryUtils;
 import fr.supercomete.head.Inventory.inventoryapi.content.KTBSAction;
@@ -29,7 +31,16 @@ public class BorderGUI extends KTBSInventory {
         inv.setItem(8,  InventoryUtils.createColorItem(Material.STAINED_GLASS_PANE, " ", 1, (short)6));
         inv.setItem(26, InventoryUtils.createColorItem(Material.STAINED_GLASS_PANE, " ", 1, (short)6));
         inv.setItem(18, InventoryUtils.createColorItem(Material.STAINED_GLASS_PANE, " ", 1, (short)6));
-        inv.setItem(12, InventoryUtils.getItem(Material.BARRIER, ChatColor.BOLD+"§bBordure Initale§r: §a"+ Main.currentGame.getFirstBorder(), Arrays.asList("",InventoryUtils.ClickTypoAdd+"10",InventoryUtils.ClickTypoMassAdd+"100",InventoryUtils.ClickTypoRemove+"10",InventoryUtils.ClickTypoMassRemove+"100")));
+        String a = "";
+        if(Main.currentGame.getGenmode()!= GenerationMode.None){
+            if(Main.currentGame.getGenmode()==GenerationMode.Done&&Main.currentGame.getGamestate()!= Gstate.Waiting){
+                a= "§c⚠Il est impossible de modifier la bordure initiale lorsque la partie est lancée";
+            }else{
+                a = "§c⚠Modifier la bordure aura pour effet d'annuler la génération de la carte.";
+            }
+
+        }
+        inv.setItem(12, InventoryUtils.getItem(Material.BARRIER, ChatColor.BOLD+"§bBordure Initale§r: §a"+ Main.currentGame.getFirstBorder(), Arrays.asList(a,InventoryUtils.ClickTypoAdd+"10",InventoryUtils.ClickTypoMassAdd+"100",InventoryUtils.ClickTypoRemove+"10",InventoryUtils.ClickTypoMassRemove+"100")));
         inv.setItem(13, InventoryUtils.getItem(Material.FEATHER, ChatColor.BOLD+"§bVitesse de la bordure§r: §a"+Math.round(Main.currentGame.getBorderSpeed())+"bps", Arrays.asList("",InventoryUtils.ClickTypoAdd+"0.1",InventoryUtils.ClickTypoMassAdd+"0.5",InventoryUtils.ClickTypoRemove+"0.1",InventoryUtils.ClickTypoMassRemove+"0.5")));
         inv.setItem(14, InventoryUtils.getItem(Material.IRON_FENCE, ChatColor.BOLD+"§bBordure Finale§r: §a"+Main.currentGame.getFinalBorder(), Arrays.asList("",InventoryUtils.ClickTypoAdd+"10",InventoryUtils.ClickTypoMassAdd+"100",InventoryUtils.ClickTypoRemove+"10",InventoryUtils.ClickTypoMassRemove+"100")));
         inv.setItem(22, InventoryUtils.getItem(Material.ARROW, "§7Retour", Collections.singletonList("§rRetour au menu de configuration")));
@@ -43,23 +54,27 @@ public class BorderGUI extends KTBSInventory {
                 new ModeGUI(Main.currentGame.getMode(), holder).open();
                 break;
             case 12:
+                if(Main.currentGame.isGameState(Gstate.Waiting)){
+                    if(Main.currentGame.getGenmode()!=GenerationMode.None){
+                        holder.sendMessage(Main.UHCTypo+"§cLa génération de la carte doit être refaite.");
+                        Main.currentGame.setGenmode(GenerationMode.None);
+                    }
+                }else{
+                    holder.sendMessage(Main.UHCTypo+"§cImpossible la partie a déjà commencé.");
+                    break;
+                }
                 if (action.ShiftedClicked() && action.IsRightClick())
                     Main.currentGame.setCurrentBorder(Main.currentGame.getCurrentBorder() + 100);
                 if (action.IsRightClick() && !action.ShiftedClicked())
                     Main.currentGame.setCurrentBorder(Main.currentGame.getCurrentBorder() + 10);
-                if (action.IsLeftClick() && action.ShiftedClicked()
-                        && Main.currentGame.getCurrentBorder() - 100 >= 600
-                        && Main.currentGame.getCurrentBorder() - 100 >= Main.currentGame.getFinalBorder())
+                if (action.IsLeftClick() && action.ShiftedClicked() && Main.currentGame.getCurrentBorder() - 100 >= 600 && Main.currentGame.getCurrentBorder() - 100 >= Main.currentGame.getFinalBorder()){
                     Main.currentGame.setCurrentBorder(Main.currentGame.getCurrentBorder() - 100);
-                if (action.IsLeftClick() && (!action.ShiftedClicked())
-                        && Main.currentGame.getCurrentBorder() - 10 >= 600
-                        && Main.currentGame.getCurrentBorder() - 10 >= Main.currentGame.getFinalBorder())
+                }
+                if (action.IsLeftClick() && (!action.ShiftedClicked()) && Main.currentGame.getCurrentBorder() - 10 >= 600 && Main.currentGame.getCurrentBorder() - 10 >= Main.currentGame.getFinalBorder()) {
                     Main.currentGame.setCurrentBorder(Main.currentGame.getCurrentBorder() - 10);
-                holder.getOpenInventory().setItem(12, InventoryUtils.getItem(Material.BARRIER,
-                        ChatColor.BOLD + "§bBordure Initale§r: §a" + Main.currentGame.getCurrentBorder(),
-                        Arrays.asList("", InventoryUtils.ClickTypoAdd + "10",
-                                InventoryUtils.ClickTypoMassAdd + "100", InventoryUtils.ClickTypoRemove + "10",
-                                InventoryUtils.ClickTypoMassRemove + "100")));
+                }
+
+                holder.getOpenInventory().setItem(12, InventoryUtils.getItem(Material.BARRIER,ChatColor.BOLD + "§bBordure Initale§r: §a" + Main.currentGame.getCurrentBorder(), Arrays.asList("", InventoryUtils.ClickTypoAdd + "10", InventoryUtils.ClickTypoMassAdd + "100", InventoryUtils.ClickTypoRemove + "10", InventoryUtils.ClickTypoMassRemove + "100")));
                 break;
             case 13:
                 if (action.ShiftedClicked() && action.IsRightClick())

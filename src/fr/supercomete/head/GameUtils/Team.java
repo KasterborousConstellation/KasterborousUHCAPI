@@ -35,6 +35,9 @@ public class Team {
 		this.members = members;
 	}
 	public void addMembers(UUID member) {
+        for (Team t : TeamManager.teamlist)
+            if (t.isMemberInTeam(member))
+                t.removeMember(member);// Remove The player if the player have join another
 		if(this.members.contains(member)) {
 			System.out.println("Error "+member+" is already in the Team");
 		}

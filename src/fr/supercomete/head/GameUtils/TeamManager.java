@@ -13,7 +13,6 @@ public final class TeamManager {
 	static char[] ListOfChar= {'❤','♦','♠','♣'};
 	public static void createTeams(int numberofteam) {
 		teamlist.clear();
-		boolean bol= !(Main.currentGame.getMode() instanceof UHCClassic);
 		int total=numberofteam;
 		for(int r=0;r<numberofteam/9+1;r++){
 			int n=total;
@@ -27,7 +26,7 @@ public final class TeamManager {
 			if(n>16)n=16;
 		for(int i=0;i<n;i++) {
 			if(i==6||i==8||i==15||i==0||i==3||i==13||i==7)continue;
-			Team t= new Team(ListOfChar[r]+getNameOfShortColor((short)i), new ArrayList<UUID>(), "", "", (short)i, ListOfChar[r], NumberOfPlayerPerTeam,bol);
+			Team t= new Team(ListOfChar[r]+getNameOfShortColor((short)i), new ArrayList<>(), "", "", (short)i, ListOfChar[r], NumberOfPlayerPerTeam,false);
 			teamlist.add(t);
 		}
 		total-= Math.min(n, 9);
@@ -110,7 +109,9 @@ public final class TeamManager {
 		case 1:
 			return"Orange";
 		case 2:
-			return"Error";
+            case 15:
+            case 12:
+                return"Error";
 		case 3:
 			return"Bleue claire";
 		case 4:
@@ -129,15 +130,11 @@ public final class TeamManager {
 			return"Violette";
 		case 11:
 			return"Bleue";
-		case 12:
-			return"Error";
-		case 13:
+            case 13:
 			return"Verte";
 		case 14:
 			return"Rouge";
-		case 15:
-			return"Error";
-		default:
+            default:
 			return"Out of bound";
 		}
 	}

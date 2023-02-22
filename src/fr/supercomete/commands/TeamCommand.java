@@ -1,5 +1,6 @@
 package fr.supercomete.commands;
 
+import fr.supercomete.head.GameUtils.GameMode.ModeModifier.TeamMode;
 import fr.supercomete.head.Inventory.GUI.TeamGUI;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -25,7 +26,9 @@ public class TeamCommand implements CommandExecutor {
 					player.sendMessage(Main.UHCTypo + "Les équipes ne peuvent pas être changés pendant la partie");
 					return false;
 				}
-				new TeamGUI(player).open();
+				if(Main.currentGame.getMode()instanceof TeamMode){
+                    new TeamGUI(player).open();
+                }
 				return false;
 			}
 		}

@@ -54,7 +54,6 @@ public class Game {
     public boolean IsDisabledEnchant=true;
     public boolean IsDisabledAnvil=true;
 	public void init(Main main) {
-        Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(),"");
 		getArmorhash().clear();
 		getArmorhash().put(Material.DIAMOND_HELMET, true);
 		getArmorhash().put(Material.DIAMOND_CHESTPLATE, true);

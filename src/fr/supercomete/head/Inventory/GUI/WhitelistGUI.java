@@ -52,6 +52,7 @@ public class WhitelistGUI extends KTBSInventory {
                 break;
             case 13:
                 Bukkit.setWhitelist(!Bukkit.hasWhitelist());
+                refresh();
                 break;
             case 14:
                 WhiteListHandler.addAllOnlinePlayerToWhiteList(holder, true);
@@ -63,6 +64,7 @@ public class WhitelistGUI extends KTBSInventory {
             default:
                 break;
         }
+
         return true;
     }
 

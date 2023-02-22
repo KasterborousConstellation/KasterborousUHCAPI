@@ -190,7 +190,7 @@ public class HostCommand implements CommandExecutor {
                     final StringBuilder a = new StringBuilder(args[1]);
                     final int e = args.length-2;
                     for(int i =0;i<e;i++){
-                        a.append(" ").append(args[i]);
+                        a.append(" ").append(args[i+2]);
                     }
                     if(a.length()>20){
                         player.sendMessage(Main.UHCTypo+"§cLe nom de de la partie est trop long (Taille Maximale: 20 caractères)");

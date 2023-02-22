@@ -1,7 +1,5 @@
 package fr.supercomete.enums;
 import javax.annotation.Nullable;
-
-
 import org.bukkit.Material;
 import org.bukkit.block.Biome;
 import org.bukkit.inventory.ItemStack;

@@ -1,5 +1,5 @@
 package fr.supercomete.head.GameUtils.Events.GameEvents;
-import fr.supercomete.head.GameUtils.Events.GameEvents.GameEventException.OutOfBoundGameEventChance;
+import fr.supercomete.head.GameUtils.Events.GameEvents.GameEventException.OutOfBoundLuck;
 import fr.supercomete.head.GameUtils.Scenarios.Compatibility;
 import fr.supercomete.head.core.Main;
 import java.util.Random;
@@ -14,7 +14,7 @@ public abstract class Event {
     public Event(final Compatibility compatibility,final int min,final int max,int chance){
         if(chance<0||chance>100){
             try{
-                throw new OutOfBoundGameEventChance();
+                throw new OutOfBoundLuck();
             }catch (Exception e){
                 e.printStackTrace();
                 chance = 100;

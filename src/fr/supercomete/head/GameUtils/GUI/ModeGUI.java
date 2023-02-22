@@ -44,7 +44,6 @@ public class ModeGUI extends GUI {
 		this.m = mode;
 		this.player = player;
 		this.inv = generateinv();
-		
 		if (player != null)
 			allGui.add(this);
 	}
@@ -78,7 +77,7 @@ public class ModeGUI extends GUI {
 			SkullMeta im2=(SkullMeta)it2.getItemMeta();
 			it2.setDurability((short)3);
 			im2.setOwner(this.player.getName());
-			if(Main.currentGame.getMode()instanceof TeamMode)im2.setLore(Collections.singletonList("§cImcompatible si les équipes sont activées"));
+			if(Main.currentGame.getMode()instanceof TeamMode)im2.setLore(Collections.singletonList("§c⚠Automatique car les équipes sont activées"));
 			im2.setDisplayName("§rSlots");
 			it2.setItemMeta(im2);
 			tmp.setItem(26, it2);
