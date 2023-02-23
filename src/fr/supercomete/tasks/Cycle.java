@@ -44,7 +44,7 @@ public class Cycle extends BukkitRunnable{
 	public static boolean hasForceRole=false;
     public Mode mode = Main.currentGame.getMode();
     public Game game = Main.currentGame;
-    private KtbsAPI api = Bukkit.getServicesManager().load(KtbsAPI.class);
+    private final KtbsAPI api = Bukkit.getServicesManager().load(KtbsAPI.class);
 	//AnnoncedTimes 
 	private final int[] annonced=new int[] {10*60,5*60,3*60,60,30,10,5,4,3,2,1};
 	@Override

@@ -83,7 +83,7 @@ public final class Configurable {
             case Percentage:
                 return "§a" + data + "%";
             default:
-                return "PAUL TU AS OUBLIER";
+                return "SUPERCOMETE FORGOT";
         }
     }
 

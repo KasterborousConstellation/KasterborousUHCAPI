@@ -6,6 +6,7 @@ import fr.supercomete.head.Exception.UnregisteredModeException;
 import fr.supercomete.head.GameUtils.Fights.Fight;
 import fr.supercomete.head.GameUtils.Fights.FightHandler;
 import fr.supercomete.head.GameUtils.Game;
+import fr.supercomete.head.GameUtils.GameConfigurable.Configurable;
 import fr.supercomete.head.GameUtils.GameConfigurable.KasterBorousConfigurable;
 import fr.supercomete.head.GameUtils.GameMode.ModeHandler.MapHandler;
 import fr.supercomete.head.GameUtils.GameMode.ModeModifier.Command;
@@ -334,6 +335,56 @@ public class KtbsProvider implements TeamProvider,PotionEffectProvider,FightProv
         }
         configurables.addAll(configurable);
     }
+
+    @Override
+    public int getDataFrom(KasterBorousConfigurable configurable) {
+        update();
+        return Main.currentGame.getDataFrom(configurable);
+    }
+
+    @Override
+    public boolean getBooleanDataFrom(KasterBorousConfigurable configurable) {
+        update();
+        return Configurable.ExtractBool(configurable);
+    }
+
+    @Override
+    public boolean translateDataToBoolean(int data) {
+        update();
+        return Configurable.ExtractBool(data);
+    }
+
+    @Override
+    public int getDataFrom(String name) {
+        update();
+        for(Configurable config:Main.currentGame.getConfigList()){
+            if(config.getId().getName().equalsIgnoreCase(name)){
+                return config.getData();
+            }
+        }
+        return 0;
+    }
+
+    @Override
+    public void setDataOf(KasterBorousConfigurable kasterBorousConfigurable,int data) {
+        update();
+        for(Configurable config:Main.currentGame.getConfigList()){
+            if(config.getId().equals(kasterBorousConfigurable)){
+                config.setData(data);
+            }
+        }
+    }
+
+    @Override
+    public void setDataOf(String name,int data) {
+        update();
+        for(Configurable config:Main.currentGame.getConfigList()){
+            if(config.getId().getName().equals(name)){
+                config.setData(data);
+            }
+        }
+    }
+
     private static final ArrayList<KasterborousRunnable> runnables = new ArrayList<>();
 
     @Override

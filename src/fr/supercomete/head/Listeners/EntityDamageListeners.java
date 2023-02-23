@@ -173,8 +173,6 @@ class EntityDamageListeners implements Listener {
                     FightHandler.Fight(new Fight((f.getEntity()).getUniqueId(),damager.getUniqueId()));
                 }
             }
-            final Entity damagerit = f.getDamager();
-            final Entity damaged = f.getEntity();
 
         } else if (e.getCause().equals(DamageCause.PROJECTILE)) {
             if (e.getEntity() instanceof Player) {
