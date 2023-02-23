@@ -370,7 +370,9 @@ public class KtbsProvider implements TeamProvider,PotionEffectProvider,FightProv
         update();
         for(Configurable config:Main.currentGame.getConfigList()){
             if(config.getId().equals(kasterBorousConfigurable)){
-                config.setData(data);
+                if(config.getId().getBound().Inbound(data)){
+                    config.setData(data);
+                }
             }
         }
     }
@@ -380,7 +382,9 @@ public class KtbsProvider implements TeamProvider,PotionEffectProvider,FightProv
         update();
         for(Configurable config:Main.currentGame.getConfigList()){
             if(config.getId().getName().equals(name)){
-                config.setData(data);
+                if(config.getId().getBound().Inbound(data)){
+                    config.setData(data);
+                }
             }
         }
     }
