@@ -4,7 +4,7 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-import fr.supercomete.head.GameUtils.GUI.RoleListGUI;
+import fr.supercomete.head.Inventory.GUI.RoleListGUI;
 import fr.supercomete.head.GameUtils.GameMode.ModeModifier.CampMode;
 import fr.supercomete.head.core.Main;
 import fr.supercomete.head.role.RoleHandler;

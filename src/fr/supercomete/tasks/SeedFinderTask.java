@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.Random;
 
+import fr.supercomete.head.world.worldgenerator;
 import org.bukkit.Bukkit;
 import org.bukkit.World;
 import org.bukkit.WorldCreator;
@@ -17,23 +18,23 @@ import fr.supercomete.head.world.BiomeGenerator;
 import fr.supercomete.head.world.WorldVerifier;
 
 public class SeedFinderTask extends BukkitRunnable {
-	@SuppressWarnings("unused")
-	private final Main main;
 	File file;
-	public SeedFinderTask(Main main) {
-		this.main=main;
-		file = new File("/var/games/minecraft/Library/Seeds/",search+"");
+	public SeedFinderTask() {
+
+		file = new File(worldgenerator.file,search+"");
 	}
 	World currentPlayWorld;
 	
 	BiomeGeneration search = Main.generator.getBiome();
 	@Override
 	public void run() {
+        if(!BiomeGenerator.generation){
+            cancel();
+        }
 		Bukkit.broadcastMessage("§b[§aWorldGenerator§b]§a Début d'une nouvelle recherche pour le biome: §b"+search);
 		
 		BiomeGenerator biomegen = new BiomeGenerator();
 		biomegen.setBiome(search);
-		//.seed(seedlist[new Random().nextInt((seedlist.length-1))]);
 		WorldCreator creaWorld =new WorldCreator("/"+new Random().nextInt(1000)+"/");
 		creaWorld.type(WorldType.CUSTOMIZED);
 		creaWorld.generatorSettings(biomegen.generateWorldSetting());
@@ -56,5 +57,6 @@ public class SeedFinderTask extends BukkitRunnable {
 		}else {
 			Bukkit.broadcastMessage("§b[§aWorldGenerator§b]§c Cette Seed n'est pas conforme");
 		}
+
 	}
 }

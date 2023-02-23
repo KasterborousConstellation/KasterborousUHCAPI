@@ -2,6 +2,7 @@ package fr.supercomete.head.world;
 import java.util.ArrayList;
 import fr.supercomete.enums.BiomeGeneration;
 public class BiomeGenerator {
+    public static boolean generation =false;
 	private int 
 			diamondboost=1,
 			goldboost=1,

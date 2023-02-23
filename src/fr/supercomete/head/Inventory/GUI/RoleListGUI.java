@@ -1,4 +1,4 @@
-package fr.supercomete.head.GameUtils.GUI;
+package fr.supercomete.head.Inventory.GUI;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
@@ -8,6 +8,8 @@ import java.util.UUID;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 import fr.supercomete.head.GameUtils.GameMode.ModeHandler.KtbsAPI;
+import fr.supercomete.head.Inventory.inventoryapi.content.KTBSAction;
+import fr.supercomete.head.Inventory.inventoryapi.content.KTBSInventory;
 import fr.supercomete.head.role.KasterBorousCamp;
 import fr.supercomete.head.role.Role;
 import org.bukkit.Bukkit;
@@ -28,19 +30,11 @@ import fr.supercomete.head.GameUtils.GameMode.ModeModifier.CampMode;
 import fr.supercomete.head.Inventory.InventoryUtils;
 import fr.supercomete.head.core.Main;
 import fr.supercomete.head.role.RoleHandler;
-public class RoleListGUI extends GUI{
-	private static final CopyOnWriteArrayList<RoleListGUI> allGui = new CopyOnWriteArrayList<RoleListGUI>();
-	private Inventory inv;
-	private Player player;
+public class RoleListGUI extends KTBSInventory {
 	private String openType;
     ArrayList<KasterBorousCamp>primitives;
-	public RoleListGUI(Main main) {
-		this.player=null;
-	}
 	public RoleListGUI(Player player,String openType) {
-		this.player=player;
-		if (player != null)
-			allGui.add(this);
+        super("Roles",54,player);
         CopyOnWriteArrayList<Class<?>> preformated = Bukkit.getServicesManager().load(KtbsAPI.class).getModeProvider().getMode(Main.currentGame.getMode().getClass()).getRegisteredrole();
         ArrayList<KasterBorousCamp> primitives = new ArrayList<>();
         for(Class<?> claz : preformated){
@@ -60,9 +54,15 @@ public class RoleListGUI extends GUI{
             this.openType=primitives.get(0).getName();
         }
 	}
-	
-	protected Inventory generateinv() {
-		Inventory tmp = Bukkit.createInventory(null, 54,"Roles "+openType);
+
+    @Override
+    protected boolean denyDoubleClick() {
+        return false;
+    }
+
+    @Override
+	protected Inventory generateinventory(Inventory tmp) {
+
 		for(int i = 0 ; i < 9 ; i++) {
 			tmp.setItem(i, InventoryUtils.createColorItem(Material.STAINED_GLASS_PANE, " ", 1, (short)0));
 		}
@@ -94,31 +94,19 @@ public class RoleListGUI extends GUI{
 		}
 		return tmp;
 	}
-	public void open() {
-		this.inv = generateinv();
-		player.openInventory(inv);
-	}
-	@EventHandler
-	public void onInventoryClick(InventoryClickEvent e) {
-		for (RoleListGUI gui:allGui) {
-			if (e.getInventory().equals(gui.inv)) {
-				e.setCancelled(true);
-				int slot = e.getSlot();
-				CampMode mode =(CampMode) Main.currentGame.getMode();
-				if(slot<gui.primitives.size()) {
-					gui.openType= gui.primitives.get(slot).getName();
-					gui.open();
-				}
-			}
-		}
-	}
-	// Optimization --> Forget GUI that have been closed >|<
-	@EventHandler
-	public void onInventoryClose(InventoryCloseEvent e) {
-		for (RoleListGUI gui : allGui) {
-			if (e.getInventory().equals(gui.inv)) {
-				allGui.remove(gui);
-			}
-		}
-	}
+
+    @Override
+    protected boolean onClick(Player holder, int slot, KTBSAction action) {
+        CampMode mode =(CampMode) Main.currentGame.getMode();
+        if(slot<primitives.size()) {
+            openType= primitives.get(slot).getName();
+            refresh();
+        }
+        return true;
+    }
+
+    @Override
+    protected boolean onClose(Player holder) {
+        return false;
+    }
 }

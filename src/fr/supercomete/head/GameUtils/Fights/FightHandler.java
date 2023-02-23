@@ -1,16 +1,11 @@
 package fr.supercomete.head.GameUtils.Fights;
-
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
-
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.UUID;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 public class FightHandler {
     public static CopyOnWriteArrayList<Fight> currentFight = new CopyOnWriteArrayList<>();
-    public static HashMap<UUID,Boolean>hasFight= new HashMap<>();
+
     public static void Fight(final Fight fight){
         if(fight.getFirst().equals(fight.getSecond()))return;
         if(hasSameFight(fight)){

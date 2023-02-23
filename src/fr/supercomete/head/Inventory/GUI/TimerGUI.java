@@ -1,6 +1,5 @@
 package fr.supercomete.head.Inventory.GUI;
 
-import fr.supercomete.head.GameUtils.GUI.ModeGUI;
 import fr.supercomete.head.GameUtils.Time.TimeUtility;
 import fr.supercomete.head.GameUtils.Time.Timer;
 import fr.supercomete.head.GameUtils.Time.TimerType;
@@ -9,7 +8,6 @@ import fr.supercomete.head.Inventory.InventoryUtils;
 import fr.supercomete.head.Inventory.inventoryapi.content.KTBSAction;
 import fr.supercomete.head.Inventory.inventoryapi.content.KTBSInventory;
 import fr.supercomete.head.core.Main;
-import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;

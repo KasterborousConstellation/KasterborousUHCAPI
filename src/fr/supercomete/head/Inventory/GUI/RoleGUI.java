@@ -1,7 +1,9 @@
-package fr.supercomete.head.GameUtils.GUI;
+package fr.supercomete.head.Inventory.GUI;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 import fr.supercomete.head.Inventory.GUI.SeeInvGUI;
+import fr.supercomete.head.Inventory.inventoryapi.content.KTBSAction;
+import fr.supercomete.head.Inventory.inventoryapi.content.KTBSInventory;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -17,23 +19,20 @@ import fr.supercomete.head.GameUtils.GameMode.ModeModifier.CampMode;
 import fr.supercomete.head.Inventory.InventoryUtils;
 import fr.supercomete.head.core.Main;
 import fr.supercomete.head.role.RoleHandler;
-public class RoleGUI extends GUI{
-	private static final CopyOnWriteArrayList<RoleGUI> allGui = new CopyOnWriteArrayList<RoleGUI>();
-	private Inventory inv;
-	private Player target;
-	private Player player;
-	public RoleGUI( Main main) {
-		this.player=null;
-	}
+public class RoleGUI extends KTBSInventory {
+	private final Player target;
 	public RoleGUI(Player player,Player target) {
-		this.player=null;
-		this.player=player;
-		this.target=target;
-		if (player != null)
-			allGui.add(this);
+        super("Spec",27,player);
+        this.target=target;
 	}
-	protected Inventory generateinv() {
-		Inventory tmp = Bukkit.createInventory(null, 27,"Spec");
+
+    @Override
+    protected boolean denyDoubleClick() {
+        return true;
+    }
+
+    @Override
+	protected Inventory generateinventory(Inventory tmp) {
 		for(int i=0;i<9;i++) {
 			tmp.setItem(i, InventoryUtils.getItem(Material.STAINED_GLASS_PANE, " ", null));
 		}
@@ -61,43 +60,31 @@ public class RoleGUI extends GUI{
 		
 		return tmp;
 	}
-	public void open() {
-		this.inv = generateinv();
-		player.openInventory(inv);
-	}
-	@EventHandler
-	public void onInventoryClick(InventoryClickEvent e) {
-		for (RoleGUI gui:allGui) {
-			if (e.getInventory().equals(gui.inv)) {
-				e.setCancelled(true);
-				final int currentSlot = e.getSlot();
-//				final ClickType action = e.getClick();
-				if(!gui.target.isOnline()) {
-					gui.player.closeInventory();
-					gui.player.sendMessage(Main.UHCTypo+"§cLe joueur n'est plus connecté");
-					return;
-				}
-				switch (currentSlot) {
-				case 13:
-					gui.open();
-					break;
-				case 14:
-					new SeeInvGUI(gui.player, gui.target).open();
-					break;
-				default:
-					
-					break;
-				}
-			}
-		}
-	}
-	// Optimization --> Forget GUI that have been closed >|<
-	@EventHandler
-	public void onInventoryClose(InventoryCloseEvent e) {
-		for (RoleGUI gui : allGui) {
-			if (e.getInventory().equals(gui.inv)) {
-				allGui.remove(gui);
-			}
-		}
-	}
+
+    @Override
+    protected boolean onClick(Player holder, int slot, KTBSAction action) {
+        if(!target.isOnline()) {
+            holder.closeInventory();
+            holder.sendMessage(Main.UHCTypo+"§cLe joueur n'est plus connecté");
+            return true;
+        }
+        switch (slot) {
+            case 13:
+                refresh();
+                break;
+            case 14:
+                new SeeInvGUI(holder, target).open();
+                break;
+            default:
+
+                break;
+        }
+        return false;
+    }
+
+    @Override
+    protected boolean onClose(Player holder) {
+        return false;
+    }
+
 }

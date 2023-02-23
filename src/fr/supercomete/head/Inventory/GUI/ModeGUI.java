@@ -1,19 +1,17 @@
-package fr.supercomete.head.GameUtils.GUI;
+package fr.supercomete.head.Inventory.GUI;
 
 import java.util.Collections;
-import java.util.concurrent.CopyOnWriteArrayList;
 
 import fr.supercomete.ServerExchangeProtocol.File.PlayerAccountManager;
 import fr.supercomete.ServerExchangeProtocol.Rank.Rank;
 import fr.supercomete.head.GameUtils.GameMode.ModeModifier.Permission;
 import fr.supercomete.head.GameUtils.TeamManager;
-import fr.supercomete.head.Inventory.GUI.*;
+import fr.supercomete.head.Inventory.inventoryapi.content.KTBSAction;
+import fr.supercomete.head.Inventory.inventoryapi.content.KTBSInventory;
+import fr.supercomete.head.Inventory.inventoryapi.content.KTBSInventoryListener;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
-import org.bukkit.event.EventHandler;
-import org.bukkit.event.inventory.InventoryClickEvent;
-import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
@@ -30,28 +28,21 @@ import fr.supercomete.head.Inventory.InventoryUtils;
 import fr.supercomete.head.PlayerUtils.PlayerUtility;
 
 
-public class ModeGUI extends GUI {
-    private static KtbsAPI api = Bukkit.getServicesManager().load(KtbsAPI.class);
-	private static final CopyOnWriteArrayList<ModeGUI> allGui = new CopyOnWriteArrayList<ModeGUI>();
-	private Inventory inv;
-	private final Mode m;
-	private final Player player;
-	public ModeGUI(Mode mode, Main main) {
-		this.m=mode;
-		this.player=null;
-	}
+public class ModeGUI extends KTBSInventory {
+    private static final KtbsAPI api = Bukkit.getServicesManager().load(KtbsAPI.class);
+	private Mode m;
 	public ModeGUI(Mode mode, Player player) {
+        super("§dMenu Principal",54,player);
 		this.m = mode;
-		this.player = player;
-		this.inv = generateinv();
-		if (player != null)
-			allGui.add(this);
 	}
 
-	protected Inventory generateinv(){
-		Inventory tmp = Bukkit.createInventory(null, 54,m.getName());
+    @Override
+    protected boolean denyDoubleClick() {
+        return false;
+    }
+    @Override
+    protected Inventory generateinventory(Inventory tmp){
 		if(m instanceof Null_Mode) {
-			tmp=Bukkit.createInventory(null, 54,"§dChoix du mode de jeux");
 			for(int i=1;i<api.getModeProvider().getRegisteredModes().size();i++){
 				tmp.setItem(i-1, InventoryUtils.getItem(api.getModeProvider().getRegisteredModes().get(i).getMaterial(),"§r§b"+api.getModeProvider().getRegisteredModes().get(i).getName(),api.getModeProvider().getRegisteredModes().get(i).getDescription()));
 			}
@@ -76,7 +67,7 @@ public class ModeGUI extends GUI {
 			ItemStack it2=new ItemStack(Material.SKULL_ITEM);
 			SkullMeta im2=(SkullMeta)it2.getItemMeta();
 			it2.setDurability((short)3);
-			im2.setOwner(this.player.getName());
+			im2.setOwner(getHolder().getName());
 			if(Main.currentGame.getMode()instanceof TeamMode)im2.setLore(Collections.singletonList("§c⚠Automatique car les équipes sont activées"));
 			im2.setDisplayName("§rSlots");
 			it2.setItemMeta(im2);
@@ -109,113 +100,96 @@ public class ModeGUI extends GUI {
 		return tmp;
 	}
 
-	public void open() {
-		this.inv = generateinv();
-		player.openInventory(inv);
-	}
-	@EventHandler
-	public void onInventoryClick(InventoryClickEvent e) {
-		for (ModeGUI mode : allGui) {
-			if (e.getInventory().equals(mode.inv)) {
-				e.setCancelled(true);
-				Player player = mode.player;
-				int currentSlot= e.getSlot();
-				if(mode.m instanceof Null_Mode) {
-					e.setCancelled(true);
-					if (!Main.currentGame.isGameState(Gstate.Waiting)) {
-						player.sendMessage(Main.UHCTypo + "§cVous ne pouvez pas changer de mode de jeux pendant une partie");
-						return;
-					}
-                    if (currentSlot < api.getModeProvider().getRegisteredModes().size() - 1) {
-                        Mode chosenMode = api.getModeProvider().getRegisteredModes().get(currentSlot + 1);
-                        if (chosenMode instanceof Permission) {
-                            final Permission perm = (Permission) chosenMode;
-                            Rank rank = perm.getPermission();
-                            if (!PlayerAccountManager.getPlayerAccount(mode.player).hasRank(rank)) {
-                                return;
-                            }
-                        }
-                        Main.currentGame = new Game(chosenMode.getName(), Main.INSTANCE);
-                        TeamManager.setupTeams();
-                        new ModeGUI(api.getModeProvider().getRegisteredModes().get(currentSlot + 1), mode.player).open();
-                        for(Player p : Bukkit.getOnlinePlayers()) {
-                            PlayerUtility.GiveHotBarStuff(p);
-                        }
+    @Override
+    protected boolean onClick(Player holder, int slot, KTBSAction action) {
+        if(m instanceof Null_Mode) {
+            if (!Main.currentGame.isGameState(Gstate.Waiting)) {
+                holder.sendMessage(Main.UHCTypo + "§cVous ne pouvez pas changer de mode de jeux pendant une partie");
+                return true;
+            }
+            if (slot < api.getModeProvider().getRegisteredModes().size() - 1) {
+                Mode chosenMode = api.getModeProvider().getRegisteredModes().get(slot + 1);
+                if (chosenMode instanceof Permission) {
+                    final Permission perm = (Permission) chosenMode;
+                    Rank rank = perm.getPermission();
+                    if (!PlayerAccountManager.getPlayerAccount(holder).hasRank(rank)) {
+                        return true;
+                    }
+                }
+                Main.currentGame = new Game(chosenMode.getName(), Main.INSTANCE);
+                TeamManager.setupTeams();
+                m=api.getModeProvider().getRegisteredModes().get(slot + 1);
+                for(Player p : Bukkit.getOnlinePlayers()) {
+                    PlayerUtility.GiveHotBarStuff(p);
+                }
+                refresh();
+            }
+        }else{
+            switch (slot) {
+                case 4:
+                    new EventGUI(holder).open();
+                    break;
+                case 3:
+                    if(Main.currentGame.getGamestate().equals(Gstate.Waiting)) {
+                        new GenerationGUI(holder).open();
+                    }else holder.sendMessage(Main.UHCTypo+"§cImpossible d'acceder à la génération pendant la partie");
+                    break;
+                case 48:
+                    Main.INSTANCE.StartGame(holder);
+                    break;
+                case 26:
+                    new SlotGUI(holder).open();
+                    break;
+                case 50:
+                    Main.StopGame(holder);
+                    break;
+                case 10:
+                    new WhitelistGUI(holder).open();
+                    break;
+                case 18:
+                    new TimerGUI(holder).open();
+                    break;
+                case 45:
+                    if (Main.currentGame.isGameState(Gstate.Waiting)) {
+                        Main.currentGame = new Game((new Null_Mode()).getName(),Main.INSTANCE);
+                        m=new Null_Mode();
+                        refresh();
+                    } else
+                        holder.sendMessage(Main.UHCTypo + "§cErreur avant de changer de mode de jeux, veuillez mettre fin à la partie");
+                    break;
+                case 37:
+                    new ScenarioGUI(holder).open();
+                    break;
+                case 27:
+                    new BorderGUI(holder).open();
+                    break;
+                case 43:
+                    new StuffConfigGUI(holder).open();
+                    break;
+                case 16:
+                    new EnchantLimitGUI(holder,true).open();
+                    break;
+                case 5:
+                    new ConfigurableGUI(holder,"Principale").open();
+                    break;
+                case 35:
+                    if(m instanceof CampMode) {
+                        new RoleModeGUI(api.getGameProvider().getCurrentGame().getMode(),holder).open();
+                    }else if(m instanceof TeamMode) {
+                        if(Main.currentGame.getGamestate()==Gstate.Waiting){
+                            new TeamConfig(holder).open();
+                        }else holder.sendMessage(Main.UHCTypo+"§cLes équipes ne peuvent pas être modifiés pendant la partie.");
                     }
                     break;
-				}else{
-					e.setCancelled(true);
-					switch (currentSlot) {
-                        case 4:
-                            new EventGUI(player).open();
-                            break;
-					case 3:
-						if(Main.currentGame.getGamestate().equals(Gstate.Waiting)) {
-							new GenerationGUI(player).open();
-						}else player.sendMessage(Main.UHCTypo+"§cImpossible d'acceder à la génération pendant la partie");
-						break;
-					case 48:
-                        Main.INSTANCE.StartGame(player);
-						break;
-					case 26:
-						new SlotGUI(player).open();
-						break;
-					case 50:
-						Main.StopGame(player);
-						break;
-					case 10:
-						new WhitelistGUI(player).open();
-						break;
-					case 18:
-						new TimerGUI(player).open();
-						break;
-					case 45:
-						if (Main.currentGame.isGameState(Gstate.Waiting)) {
-							Main.currentGame = new Game((new Null_Mode()).getName(),Main.INSTANCE);
-							new ModeGUI(new Null_Mode(), mode.player).open();
-                        } else
-							player.sendMessage(Main.UHCTypo
-									+ "§cErreur avant de changer de mode de jeux, veuillez mettre fin à la partie");
-						break;
-					case 37:
-						new ScenarioGUI(player).open();
-						break;
-					case 27:
-						new BorderGUI(player).open();
-						break;
-					case 43:
-						new StuffConfigGUI(player).open();
-						break;
-					case 16:
-						new EnchantLimitGUI(player,true).open();
-						break;
-					case 5:
-						new ConfigurableGUI(player,"Principale").open();
-						break;
-					case 35:
-						if(mode.m instanceof CampMode) {
-							new RoleModeGUI(api.getGameProvider().getCurrentGame().getMode(),player).open(0);
-						}else if(mode.m instanceof TeamMode) {
-                            if(Main.currentGame.getGamestate()==Gstate.Waiting){
-                                new TeamConfig(player).open();
-                            }else player.sendMessage(Main.UHCTypo+"§cLes équipes ne peuvent pas être modifiés pendant la partie.");
-						}
-						break;
-					default:
-						break;
-					}
-					break;
-				}
-			}
-		}
-	}
-	// Optimization --> Forget GUI that have been closed >|<
-	@EventHandler
-	public void onInventoryClose(InventoryCloseEvent e) {
-		for (ModeGUI gui : allGui) {
-			if (e.getInventory().equals(gui.inv)) {
-				allGui.remove(gui);
-			}
-		}
-	}
+                default:
+                    break;
+            }
+        }
+        return true;
+    }
+
+    @Override
+    protected boolean onClose(Player holder) {
+        return false;
+    }
 }

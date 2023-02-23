@@ -9,7 +9,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerInteractEntityEvent;
 
 import fr.supercomete.head.GameUtils.Scenarios.Scenarios;
-import fr.supercomete.head.GameUtils.GUI.RoleGUI;
+import fr.supercomete.head.Inventory.GUI.RoleGUI;
 import fr.supercomete.head.core.Main;
 
 final class PlayerInteractEntityListener implements Listener {

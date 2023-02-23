@@ -25,8 +25,6 @@ commands:
     description: "Permet d’obtenir le lien du document d’un mode de jeu"
   liens:
     description: "Permet d’obtenir le lien du document d’un mode de jeu"
-  admingenerate:
-    description: "Commande utilisable que par les administrateurs"
   blacklistseed:
     description: "Commande utilisable que par les administrateurs"
   blseed:

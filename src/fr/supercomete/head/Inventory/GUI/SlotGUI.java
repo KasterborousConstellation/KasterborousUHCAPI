@@ -1,6 +1,5 @@
 package fr.supercomete.head.Inventory.GUI;
 
-import fr.supercomete.head.GameUtils.GUI.ModeGUI;
 import fr.supercomete.head.Inventory.InventoryUtils;
 import fr.supercomete.head.Inventory.inventoryapi.content.KTBSAction;
 import fr.supercomete.head.Inventory.inventoryapi.content.KTBSInventory;

@@ -17,6 +17,7 @@ import org.bukkit.craftbukkit.libs.jline.internal.Nullable;
 import org.bukkit.craftbukkit.v1_8_R3.entity.CraftPlayer;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
+import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
@@ -82,8 +83,7 @@ public class PlayerUtility{
 		try {
 			return InventoryToBase64.fromBase64(main.getConfig().getString("serverapi.stuff.actualconfig"));
 		} catch (IOException e){
-			e.printStackTrace();
-			return null;
+			return Bukkit.createInventory(null, InventoryType.PLAYER);
 		}
 	}
 	public static void GiveHotBarStuff(Player player) {

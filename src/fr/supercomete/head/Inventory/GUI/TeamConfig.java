@@ -1,6 +1,5 @@
 package fr.supercomete.head.Inventory.GUI;
 
-import fr.supercomete.head.GameUtils.GUI.ModeGUI;
 import fr.supercomete.head.GameUtils.GameMode.ModeHandler.KtbsAPI;
 import fr.supercomete.head.GameUtils.GameMode.ModeModifier.TeamMode;
 import fr.supercomete.head.GameUtils.TeamManager;

@@ -1,4 +1,4 @@
-package fr.supercomete.head.GameUtils.GUI;
+package fr.supercomete.head.Inventory.GUI;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -7,6 +7,9 @@ import java.util.concurrent.CopyOnWriteArrayList;
 import fr.supercomete.head.GameUtils.GameMode.ModeHandler.KtbsAPI;
 import fr.supercomete.head.GameUtils.Scenarios.KasterborousScenario;
 
+import fr.supercomete.head.Inventory.GUI.ModeGUI;
+import fr.supercomete.head.Inventory.inventoryapi.content.KTBSAction;
+import fr.supercomete.head.Inventory.inventoryapi.content.KTBSInventory;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.enchantments.Enchantment;
@@ -22,20 +25,11 @@ import fr.supercomete.head.Inventory.InventoryUtils;
 import fr.supercomete.head.core.Main;
 import org.bukkit.inventory.meta.ItemMeta;
 
-public class ScenarioGUI extends GUI{
+public class ScenarioGUI extends KTBSInventory {
     private static KtbsAPI api = Bukkit.getServicesManager().load(KtbsAPI.class);
-    private static final CopyOnWriteArrayList<ScenarioGUI> allGui = new CopyOnWriteArrayList<ScenarioGUI>();
     private int page=0;
-    private Inventory inv;
-    private Player player;
-    public ScenarioGUI() {
-
-    }
     public ScenarioGUI(Player player) {
-        this.player=null;
-        this.player=player;
-        if (player != null)
-            allGui.add(this);
+        super("§aScénarios",54,player);
     }
     private ArrayList<KasterborousScenario> getScenarios(int page){
         final ArrayList<KasterborousScenario> list = new ArrayList<>();
@@ -44,9 +38,8 @@ public class ScenarioGUI extends GUI{
         }
         return list;
     }
-    protected Inventory generateinv() {
-        Inventory tmp = Bukkit.createInventory(null, 54,"§aScénarios");
-        tmp=Bukkit.createInventory(null, 54,"§dScenarios");
+    @Override
+    protected Inventory generateinventory(Inventory tmp) {
         for(int i=0;i<9;i++) {
             tmp.setItem(i, InventoryUtils.createColorItem(Material.STAINED_GLASS_PANE, " ", 1, (short) 2));
         }
@@ -79,62 +72,55 @@ public class ScenarioGUI extends GUI{
         tmp.setItem(49,InventoryUtils.getItem(Material.ARROW, "§7Retour", Collections.singletonList("§rRetour au menu de configuration")));
         return tmp;
     }
-    public void open() {
-        this.inv = generateinv();
-        player.openInventory(inv);
+
+    @Override
+    protected boolean denyDoubleClick() {
+        return true;
     }
-    @EventHandler
-    public void onInventoryClick(InventoryClickEvent e) {
-        for (ScenarioGUI gui:allGui) {
-            if (e.getInventory().equals(gui.inv)) {
-                e.setCancelled(true);
-                int slot = e.getSlot();
-                switch (slot) {
-                    case 49:
-                        new ModeGUI(Main.currentGame.getMode(), gui.player).open();
-                        break;
-                    case 53:
-                        gui.page++;
-                        gui.open();
-                        break;
-                    case 45:
-                        if(gui.page>0) {
-                            gui.page--;
-                            gui.open();
-                        }
-                        break;
-                    default:
-                        final int clicked_slot_index= slot -9;
-                        final int index = 36 * gui.page + clicked_slot_index;
-                        if (index >= 0 && index < api.getScenariosProvider().getRegisteredScenarios().size()) {
-                            KasterborousScenario scenarios= api.getScenariosProvider().getRegisteredScenarios().get(index);
-                            if (Main.currentGame.getScenarios().contains(scenarios)) {
-                                if(scenarios.onDisable()){
-                                    Main.INSTANCE.removeScenarios(scenarios);
-                                    Bukkit.broadcastMessage("§cDésactivation du scénario: §b"+scenarios.getName());
-                                }
-                            } else {
-                                if (scenarios.getCompatiblity().IsCompatible(Main.currentGame.getMode()))
-                                    if(scenarios.onEnable()){
-                                        Main.INSTANCE.addScenarios(scenarios);
-                                        Bukkit.broadcastMessage("§aActivation du scénario: §b"+scenarios.getName());
-                                    }
-                                else gui.player.sendMessage(Main.UHCTypo + "§CScénario imcompatible");
-                            }
-                            gui.open();
-                        }
-                        break;
+
+    @Override
+    protected boolean onClick(Player holder, int slot, KTBSAction action) {
+        switch (slot) {
+            case 49:
+                new ModeGUI(Main.currentGame.getMode(), holder).open();
+                break;
+            case 53:
+                page++;
+                refresh();
+                break;
+            case 45:
+                if(page>0) {
+                    page--;
+                    refresh();
                 }
-            }
+                break;
+            default:
+                final int clicked_slot_index= slot -9;
+                final int index = 36 * page + clicked_slot_index;
+                if (index >= 0 && index < api.getScenariosProvider().getRegisteredScenarios().size()) {
+                    KasterborousScenario scenarios= api.getScenariosProvider().getRegisteredScenarios().get(index);
+                    if (Main.currentGame.getScenarios().contains(scenarios)) {
+                        if(scenarios.onDisable()){
+                            Main.INSTANCE.removeScenarios(scenarios);
+                            Bukkit.broadcastMessage("§cDésactivation du scénario: §b"+scenarios.getName());
+                        }
+                    } else {
+                        if (scenarios.getCompatiblity().IsCompatible(Main.currentGame.getMode()))
+                            if(scenarios.onEnable()){
+                                Main.INSTANCE.addScenarios(scenarios);
+                                Bukkit.broadcastMessage("§aActivation du scénario: §b"+scenarios.getName());
+                            }
+                            else holder.sendMessage(Main.UHCTypo + "§CScénario imcompatible");
+                    }
+                    refresh();
+                }
+                break;
         }
+        return true;
     }
-    // Optimization --> Forget GUI that have been closed >|<
-    @EventHandler
-    public void onInventoryClose(InventoryCloseEvent e) {
-        for (ScenarioGUI gui : allGui) {
-            if (e.getInventory().equals(gui.inv)) {
-                allGui.remove(gui);
-            }
-        }
+
+    @Override
+    protected boolean onClose(Player holder) {
+        return false;
     }
 }

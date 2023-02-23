@@ -3,7 +3,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import fr.supercomete.head.GameUtils.GUI.ModeGUI;
 import fr.supercomete.head.Inventory.inventoryapi.content.KTBSAction;
 import fr.supercomete.head.Inventory.inventoryapi.content.KTBSInventory;
 import org.bukkit.Material;

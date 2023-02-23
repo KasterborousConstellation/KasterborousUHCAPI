@@ -10,20 +10,16 @@ import java.util.logging.Level;
 import java.util.zip.ZipEntry;
 import fr.supercomete.autoupdater.UpdateChecker;
 import fr.supercomete.commands.*;
-import fr.supercomete.head.API.ConfigurableProvider;
 import fr.supercomete.head.Exception.KTBSNetworkFailure;
 import fr.supercomete.head.GameUtils.Events.GameEvents.EventsHandler;
 import fr.supercomete.head.GameUtils.Events.PlayerEvents.PlayerEventHandler;
 import fr.supercomete.head.GameUtils.Fights.FightHandler;
-import fr.supercomete.head.GameUtils.GameConfigurable.Binding;
 import fr.supercomete.head.GameUtils.GameConfigurable.Configurable;
 import fr.supercomete.head.GameUtils.GameMode.ModeHandler.MapHandler;
 import fr.supercomete.head.GameUtils.GameMode.ModeModifier.Permission;
 import fr.supercomete.head.GameUtils.GameMode.ModeModifier.TeamMode;
 import fr.supercomete.head.GameUtils.GameMode.Modes.*;
-import fr.supercomete.head.GameUtils.Scenarios.KasterborousScenario;
-import fr.supercomete.head.GameUtils.Scenarios.MonsterHunter;
-import fr.supercomete.head.GameUtils.Scenarios.StarterTools;
+import fr.supercomete.head.GameUtils.Scenarios.*;
 import fr.supercomete.head.GameUtils.Team;
 import fr.supercomete.head.GameUtils.Time.TimeUtility;
 import fr.supercomete.head.GameUtils.Time.TimerType;
@@ -31,6 +27,7 @@ import fr.supercomete.head.Inventory.InventoryManager;
 import fr.supercomete.head.Inventory.inventoryapi.Inventoryapi;
 import fr.supercomete.head.PlayerUtils.BonusHandler;
 import fr.supercomete.head.PlayerUtils.EffectHandler;
+import fr.supercomete.head.world.worldgenerator;
 import fr.supercomete.tasks.Cycle;
 import org.bukkit.*;
 import org.bukkit.entity.Player;
@@ -50,7 +47,6 @@ import fr.supercomete.ServerExchangeProtocol.Server.ServerManager;
 import fr.supercomete.datamanager.FileManager.ProfileSerializationManager;
 import fr.supercomete.enums.GenerationMode;
 import fr.supercomete.enums.Gstate;
-import fr.supercomete.head.GameUtils.Scenarios.Scenarios;
 import fr.supercomete.head.GameUtils.Game;
 import fr.supercomete.head.GameUtils.Lag;
 import fr.supercomete.head.GameUtils.TeamManager;
@@ -123,6 +119,7 @@ public class Main extends JavaPlugin {
             Bukkit.broadcastMessage("§6KTBS_Network: §cDisconnected");
             KTBSNetwork_Connected=false;
         }
+        worldgenerator.init();
         /*
         Update checker init
          */
@@ -180,7 +177,7 @@ public class Main extends JavaPlugin {
 		api.getModeProvider().registerMode(new Null_Mode());
 		UHCClassic uhcclassic = new UHCClassic();	
 		api.getModeProvider().registerMode(uhcclassic);
-		Bukkit.broadcastMessage("§dVersion: 0.9.1 Build("+Compiledate.getDate()+"/"+(Compiledate.getMonth()+1)+") §1Beta-Ouverte");
+		Bukkit.broadcastMessage("§dVersion: 1.3 Build("+Compiledate.getDate()+"/"+(Compiledate.getMonth()+1)+") §cSNAPSHOT");
 		currentGame=new Game((new Null_Mode()).getName(),this);
 		Bukkit.getServer().getScheduler().scheduleSyncRepeatingTask(this, new Lag(), 200L, 1L);// LagO'meter
 		spawn = new Location(Bukkit.getWorld("world"), getConfig().getInt("serverapi.spawn.x"),
@@ -200,7 +197,6 @@ public class Main extends JavaPlugin {
 		getCommand("doc").setExecutor(new docCommand(this));
 		getCommand("docs").setExecutor(new docCommand(this));
 		getCommand("liens").setExecutor(new docCommand(this));
-		getCommand("admingenerate").setExecutor(new GenerateCommand(this));
 		getCommand("blseed").setExecutor(new BlackSeedCommand(this));
 		getCommand("blacklistseed").setExecutor(new BlackSeedCommand(this));
 		getCommand("Rolelist").setExecutor(new RolelistCommand(this));
@@ -351,6 +347,10 @@ public class Main extends JavaPlugin {
         }
         if (forcedpvp) {
             forcedpvp = false;
+        }
+        if(BiomeGenerator.generation){
+            player.sendMessage(UHCTypo+"§aDésactivez la génération de nouvelles graines avant de lancer une partie.");
+            return;
         }
 		if (this.getGenmode().equals(GenerationMode.Generating)) {
 			player.sendMessage(UHCTypo + "§cLa génération de la carte est déjà en cours");

@@ -1,11 +1,10 @@
 package fr.supercomete.commands;
 import fr.supercomete.head.GameUtils.GameMode.ModeHandler.MapHandler;
+import fr.supercomete.head.world.worldgenerator;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
-import fr.supercomete.ServerExchangeProtocol.File.PlayerAccountManager;
-import fr.supercomete.ServerExchangeProtocol.Rank.Rank;
 import fr.supercomete.datamanager.FileManager.Fileutils;
 import fr.supercomete.head.core.Main;
 import java.io.File;
@@ -20,14 +19,10 @@ public class BlackSeedCommand implements CommandExecutor {
 		if(sender instanceof Player){
             Player player=(Player)sender;
             if(cmd.getName().equalsIgnoreCase("blacklistseed") ||cmd.getName().equalsIgnoreCase("blseed")) {
-                if(!Main.KTBSNetwork_Connected){
-                    player.sendMessage("§cCette commande est désactivée lorsque le réseau KTBS est hors ligne.");
-                    return true;
-                }
-				if(PlayerAccountManager.getPlayerAccount(player).hasRank(Rank.Admin)) {
+				if(Main.IsHost(player)) {
                     assert MapHandler.getMap() != null;
                     if(player.getWorld().equals(MapHandler.getMap().getPlayWorld())) {
-						final File file = new File("/var/games/minecraft/Library/Seeds/",""+Main.generator.getBiome());
+						final File file = new File(worldgenerator.file,""+Main.generator.getBiome());
 						final String content = Fileutils.loadContent(file);
 						final String[] mod = content.split(MapHandler.getMap().getPlayWorld().getSeed()+"L,");
 						StringBuilder end = new StringBuilder();

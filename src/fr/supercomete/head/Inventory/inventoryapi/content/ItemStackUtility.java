@@ -19,7 +19,7 @@ public class ItemStackUtility {
         return stacks;
     }
     public static ItemStack createColoredItem(Material material,short data,String name,List<String> description){
-        return createColoredItem(material,0,data,name,description);
+        return createColoredItem(material,1,data,name,description);
     }
     public static ItemStack createItem(Material material,int amount,String name,List<String> description, ItemFlag... flags){
         return createColoredItem(material,amount, (short) 0,name,description,flags);
@@ -28,6 +28,6 @@ public class ItemStackUtility {
         return createColoredItem(material,amount, (short) 0,name,description);
     }
     public static ItemStack createItem(Material material,String name,List<String> description){
-        return createColoredItem(material,0, (short) 0,name,description);
+        return createColoredItem(material,1, (short) 0,name,description);
     }
 }
