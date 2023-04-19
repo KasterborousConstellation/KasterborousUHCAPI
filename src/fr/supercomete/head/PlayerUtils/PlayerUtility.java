@@ -111,10 +111,10 @@ public class PlayerUtility{
 	public static Player getTarget(Player player,int range){
 		Player target;
 		List<Entity> nearbyE = player.getNearbyEntities(range, range, range);
-		ArrayList<Player> livingE = new ArrayList<Player>();
+		ArrayList<Player> Players = new ArrayList<>();
 		for (Entity e : nearbyE) {
 			if (e instanceof Player) {
-				livingE.add((Player) e);
+                Players.add((Player) e);
 			}
 		}
 		target=null;
@@ -123,20 +123,20 @@ public class PlayerUtility{
 		Location loc;
 		int bx, by, bz;
 		double ex, ey, ez;
-		// loop through player's line of sight
+		// Regarde a travers la ligne de vision du joueur
 		while (bItr.hasNext()) {
 			block = bItr.next();
 			bx = block.getX();
 			by = block.getY();
 			bz = block.getZ();
-			// check for entities near this block in the line of sight
-			for (Player e : livingE) {
+			// Verifie les joueurs près du bloc de la ligne de vue
+			for (Player e : Players) {
 				loc = e.getLocation();
 				ex = loc.getX();
 				ey = loc.getY();
 				ez = loc.getZ();
 				if ((bx - .75 <= ex && ex <= bx + 1.75) && (bz - .75 <= ez && ez <= bz + 1.75)&& (by - 1 <= ey && ey <= by + 2.5)) {
-					// entity is close enough, set target and stop
+					// Si le joueurs est assez proche alors on initialise la variable target et on sort de la boucle
 					target=e;
 					break;
 				}

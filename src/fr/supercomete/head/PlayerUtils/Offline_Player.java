@@ -1,17 +1,13 @@
 package fr.supercomete.head.PlayerUtils;
-
-import java.io.IOException;
 import java.util.UUID;
-
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
-import org.bukkit.inventory.Inventory;
-
-import fr.supercomete.head.Inventory.InventoryToBase64;
 import fr.supercomete.head.core.Main;
+import org.bukkit.inventory.PlayerInventory;
+
 public class Offline_Player {
 	private UUID player;
-	private String Serializedinventory;
+	private PlayerInventory inventory;
 	private Location location;
 	private long lastdeconnexion;
 	private String username;
@@ -29,18 +25,11 @@ public class Offline_Player {
 	public void setPlayer(UUID player) {
 		this.player = player;
 	}
-	public Inventory getInventory() {
-		try {
-			return InventoryToBase64.fromBase64(Serializedinventory);
-		} catch (IOException e){
-			e.printStackTrace();
-			return null;
-		}
+	public PlayerInventory getInventory() {
+		return inventory;
 	}
-	public void setInventory(Inventory inventory) {
-		String r = "";
-		r= InventoryToBase64.toBase64(inventory);
-		this.Serializedinventory =r;
+	public void setInventory(PlayerInventory inventory) {
+		this.inventory = inventory;
 	}
 	public Location getLocation() {
 		return location;

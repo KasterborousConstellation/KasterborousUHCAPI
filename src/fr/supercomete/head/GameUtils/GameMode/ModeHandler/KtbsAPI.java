@@ -11,8 +11,8 @@ public class KtbsAPI {
         provider= new KtbsProvider();
         helper= new Helper();
     }
-    public PlayerHelper getPlayerHelper(){
-        return helper;
+    public PlayerProvider getPlayerHelper(){
+        return provider;
     }
     public PotionEffectProvider getPotionEffectProvider(){
         return provider;

@@ -308,8 +308,9 @@ class EntityDamageListeners implements Listener {
                     delayed.runTaskTimer(main, 0, 20L);
                 } else {
                     player.getWorld().playSound(player.getLocation(), Sound.WITHER_SPAWN, 20, 0);
-                    mode.OnKillMethod(deathLocation, player, damager);
                     mode.ModeDefaultOnDeath(player,damager,player.getLocation());
+                    mode.OnKillMethod(deathLocation, player, damager);
+                    player.getInventory().clear();
                 }
                 if(damager==null){
                     PlayerEventHandler.Event("Suicide",player,player.getLocation());

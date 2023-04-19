@@ -82,7 +82,7 @@ public class scoreboardmanager {
                     int bonusheart = BonusHandler.getTotalOfBonus(player,BonusType.Heart);
                     player.setMaxHealth(count+bonusheart);
 					for(final Fight fight: FightHandler.currentFight){
-					    fight.update(FightHandler.currentFight);
+					    FightHandler.update(fight,FightHandler.currentFight);
                     }
 					double tps = Lag.getTPS() * 100;
 					tps = Math.round(tps);

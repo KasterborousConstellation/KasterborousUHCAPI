@@ -5,6 +5,8 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
 
+import fr.supercomete.head.GameUtils.GameMode.ModeHandler.KtbsAPI;
+import org.bukkit.Bukkit;
 import org.bukkit.inventory.ItemStack;
 
 import fr.supercomete.head.core.Main;
@@ -16,6 +18,7 @@ import fr.supercomete.head.role.RoleState.RoleStateTypes;
 
 
 public abstract class Role{
+    protected KtbsAPI api;
 	private UUID owner;
 	private KasterBorousCamp camp;
 	private ArrayList<Bonus> bonus = new ArrayList<>();
@@ -23,6 +26,7 @@ public abstract class Role{
 	public Role(UUID owner){
 		this.setCamp(getDefaultCamp());
 		this.setOwner(owner);
+        api = Bukkit.getServicesManager().load(KtbsAPI.class);
 	}
     public RoleDisplayAddon getAddon(){
         return null;

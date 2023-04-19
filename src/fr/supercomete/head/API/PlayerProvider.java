@@ -5,7 +5,7 @@ import org.bukkit.inventory.Inventory;
 import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.UUID;
-public interface PlayerHelper {
+public interface PlayerProvider {
     Inventory getStartInventory();
     String getNameFromUUID(UUID uuid);
     void sendActionBarMessage(Player player,String message);

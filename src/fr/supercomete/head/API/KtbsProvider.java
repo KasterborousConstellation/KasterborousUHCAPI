@@ -15,9 +15,7 @@ import fr.supercomete.head.GameUtils.GameMode.Modes.Mode;
 import fr.supercomete.head.GameUtils.Scenarios.KasterborousScenario;
 import fr.supercomete.head.GameUtils.Team;
 import fr.supercomete.head.GameUtils.TeamManager;
-import fr.supercomete.head.PlayerUtils.BonusHandler;
-import fr.supercomete.head.PlayerUtils.EffectHandler;
-import fr.supercomete.head.PlayerUtils.KTBSEffect;
+import fr.supercomete.head.PlayerUtils.*;
 import fr.supercomete.head.core.KasterborousRunnable;
 import fr.supercomete.head.core.Main;
 import fr.supercomete.head.role.Bonus.Bonus;
@@ -31,12 +29,13 @@ import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.craftbukkit.v1_8_R3.CraftServer;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.Inventory;
 import org.bukkit.potion.PotionEffect;
 import javax.annotation.Nullable;
 import java.lang.reflect.InvocationTargetException;
 import java.util.*;
 import java.util.concurrent.CopyOnWriteArrayList;
-public class KtbsProvider implements TeamProvider,PotionEffectProvider,FightProvider,HostProvider,GameProvider,MapProvider,RoleProvider,ModeProvider,ConfigurableProvider,KTBSRunnableProvider,ScenariosProvider{
+public class KtbsProvider implements PlayerProvider,TeamProvider,PotionEffectProvider,FightProvider,HostProvider,GameProvider,MapProvider,RoleProvider,ModeProvider,ConfigurableProvider,KTBSRunnableProvider,ScenariosProvider{
     private int call = 0;
     private void update(){
         call++;
@@ -642,5 +641,66 @@ public class KtbsProvider implements TeamProvider,PotionEffectProvider,FightProv
         }
         update();
         return TeamManager.NumberOfPlayerPerTeam;
+    }
+    @Override
+    public Inventory getStartInventory() {
+        return PlayerUtility.getInventory();
+    }
+
+    @Override
+    public String getNameFromUUID(UUID uuid) {
+        return PlayerUtility.getNameByUUID(uuid);
+    }
+
+    @Override
+    public void sendActionBarMessage(Player player, String message) {
+        PlayerUtility.sendActionbar(player,message);
+    }
+
+    @org.jetbrains.annotations.Nullable
+    @Override
+    public Player getTargetedPlayer(Player player, int range) {
+        return PlayerUtility.getTarget(player,range);
+    }
+
+    @Override
+    public Offline_Player getOfflinePlayer(Player player) {
+        update();
+        return Main.currentGame.getOffline_Player(player);
+    }
+
+    @Override
+    public Offline_Player getOfflinePlayer(UUID uuid) {
+        update();
+        return (Main.currentGame.getOffline_Player(uuid)==null)?
+                new Offline_Player(Bukkit.getPlayer(uuid))
+                :
+                Main.currentGame.getOffline_Player(uuid)
+                ;
+    }
+
+    @Override
+    public ArrayList<Offline_Player> getOfflinePlayers() {
+        update();
+        return Main.currentGame.getOfflinelist();
+    }
+
+    @Override
+    public boolean IsPlayerInGame(UUID uuid){
+        update();
+        if(Bukkit.getPlayer(uuid)==null){
+            return false;
+        }
+        Player player =Bukkit.getPlayer(uuid);
+        if(!player.isOnline()){
+            return false;
+        }
+        return Main.getPlayerlist().contains(uuid);
+    }
+
+    @Override
+    public boolean IsPlayerAlive(UUID uuid) {
+        update();
+        return Main.getPlayerlist().contains(uuid);
     }
 }
