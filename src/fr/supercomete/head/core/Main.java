@@ -8,6 +8,7 @@ import java.util.*;
 import java.util.jar.JarFile;
 import java.util.logging.Level;
 import java.util.zip.ZipEntry;
+
 import fr.supercomete.autoupdater.UpdateChecker;
 import fr.supercomete.commands.*;
 import fr.supercomete.head.Exception.KTBSNetworkFailure;
@@ -16,7 +17,6 @@ import fr.supercomete.head.GameUtils.Events.PlayerEvents.PlayerEventHandler;
 import fr.supercomete.head.GameUtils.Fights.FightHandler;
 import fr.supercomete.head.GameUtils.GameConfigurable.Configurable;
 import fr.supercomete.head.GameUtils.GameMode.ModeHandler.MapHandler;
-import fr.supercomete.head.GameUtils.GameMode.ModeModifier.Permission;
 import fr.supercomete.head.GameUtils.GameMode.ModeModifier.TeamMode;
 import fr.supercomete.head.GameUtils.GameMode.Modes.*;
 import fr.supercomete.head.GameUtils.Scenarios.*;
@@ -40,10 +40,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import org.bukkit.scheduler.BukkitRunnable;
-import fr.supercomete.ServerExchangeProtocol.File.PlayerAccountManager;
-import fr.supercomete.ServerExchangeProtocol.Rank.Rank;
-import fr.supercomete.ServerExchangeProtocol.Server.Server;
-import fr.supercomete.ServerExchangeProtocol.Server.ServerManager;
+
 import fr.supercomete.datamanager.FileManager.ProfileSerializationManager;
 import fr.supercomete.enums.GenerationMode;
 import fr.supercomete.enums.Gstate;
@@ -84,7 +81,6 @@ public class Main extends JavaPlugin {
 	public static ArrayList<UUID>bypass = new ArrayList<>();
 	public static Cycle currentCycle=null;
     public static Main INSTANCE;
-    public static boolean KTBSNetwork_Connected;
     public static Location spawn;
     public static ArrayList<String> messages = new ArrayList<>();
     @Override
@@ -111,14 +107,6 @@ public class Main extends JavaPlugin {
         /*
         Initialisation du network KTBS
          */
-        try{
-            Server server = ServerManager.getCurrentPluginServer();
-            Bukkit.broadcastMessage("§6KTBS_Network : §aConnected");
-            KTBSNetwork_Connected=true;
-        }catch(NoClassDefFoundError e){
-            Bukkit.broadcastMessage("§6KTBS_Network: §cDisconnected");
-            KTBSNetwork_Connected=false;
-        }
         worldgenerator.init();
         /*
         Update checker init
@@ -252,21 +240,6 @@ public class Main extends JavaPlugin {
 
                     }
                 }
-                //Verifie les erreurs du systeme KTBS network
-
-                for(Mode mode : Bukkit.getServicesManager().load(KtbsAPI.class).getModeProvider().getRegisteredModes()){
-                    if(mode instanceof Permission && !KTBSNetwork_Connected){
-                        try {
-                            throw new KTBSNetworkFailure();
-                        } catch (KTBSNetworkFailure e) {
-                            e.printStackTrace();
-                            Bukkit.getLogger().log(Level.WARNING,"THIS IS A KASTERBOROUS SYSTEM FAULT.\n" +
-                                    "IF YOU SEE THAT MESSAGE: A MODE REQUIRING A CONNECTION TO KASTERBOROUS NETWORK HAS BEEN LOADED UNSUCESSFULLY \n" +
-                                    "IF YOU SHOULD BE CONNECTED TO KTBS_NETWORK, PLEASE CONTACT SUPERCOMETE. OTHERWISE, REMOVE THIS MODE.");
-                            Bukkit.getServer().shutdown();
-                        }
-                    }
-                }
             }
         }.runTaskLater(this,30L);
 	}
@@ -308,18 +281,10 @@ public class Main extends JavaPlugin {
         bypass.removeIf(uu -> !(Main.IsHost(uu) || Main.IsCohost(uu)));
     }
     public static boolean IsHost(UUID player) {
-        if(KTBSNetwork_Connected){
-            return (host!=null && host.equals(player) ||PlayerAccountManager.getPlayerAccount(player).hasRank(Rank.Admin));
-        }else {
-            return (host!=null && host.equals(player));
-        }
+       return host!=null && host.equals(player);
     }
 	public static boolean IsHost(Player player) {
-        if(KTBSNetwork_Connected){
-            return (host!=null && host.equals(player.getUniqueId())) ||PlayerAccountManager.getPlayerAccount(player.getName()).hasRank(Rank.Admin);
-        }else {
-            return (host!=null && host.equals(player.getUniqueId()));
-        }
+        return host!=null && host.equals(player.getUniqueId());
 	}
 	public static boolean IsCohost(Player player) {
 		return cohost.contains(player.getUniqueId());

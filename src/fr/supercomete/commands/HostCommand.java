@@ -6,9 +6,6 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
-
-import fr.supercomete.ServerExchangeProtocol.File.PlayerAccountManager;
-import fr.supercomete.ServerExchangeProtocol.Rank.Rank;
 import fr.supercomete.enums.Gstate;
 import fr.supercomete.head.GameUtils.GameMode.ModeModifier.Groupable;
 import fr.supercomete.head.PlayerUtils.Offline_Player;
@@ -31,7 +28,7 @@ public class HostCommand implements CommandExecutor {
 					player.sendMessage(Main.UHCTypo+"Commande inconnue /h help pour plus d'information");
 					return false;
 				}
-				if(!Main.IsHost(player) && !Main.IsCohost(player) &&!Main.KTBSNetwork_Connected&&!PlayerAccountManager.getPlayerAccount(player).hasRank(Rank.Admin)) {
+				if(!Main.IsHost(player) && !Main.IsCohost(player)) {
 					player.sendMessage(Main.UHCTypo+"§cVous n'avez pas le droit d'utiliser cette commande.");
 					return false;
 				}

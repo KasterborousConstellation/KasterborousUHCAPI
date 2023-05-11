@@ -1,14 +1,9 @@
 package fr.supercomete.head.Inventory.GUI;
 
 import java.util.Collections;
-
-import fr.supercomete.ServerExchangeProtocol.File.PlayerAccountManager;
-import fr.supercomete.ServerExchangeProtocol.Rank.Rank;
-import fr.supercomete.head.GameUtils.GameMode.ModeModifier.Permission;
 import fr.supercomete.head.GameUtils.TeamManager;
 import fr.supercomete.head.Inventory.inventoryapi.content.KTBSAction;
 import fr.supercomete.head.Inventory.inventoryapi.content.KTBSInventory;
-import fr.supercomete.head.Inventory.inventoryapi.content.KTBSInventoryListener;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -109,13 +104,6 @@ public class ModeGUI extends KTBSInventory {
             }
             if (slot < api.getModeProvider().getRegisteredModes().size() - 1) {
                 Mode chosenMode = api.getModeProvider().getRegisteredModes().get(slot + 1);
-                if (chosenMode instanceof Permission) {
-                    final Permission perm = (Permission) chosenMode;
-                    Rank rank = perm.getPermission();
-                    if (!PlayerAccountManager.getPlayerAccount(holder).hasRank(rank)) {
-                        return true;
-                    }
-                }
                 Main.currentGame = new Game(chosenMode.getName(), Main.INSTANCE);
                 TeamManager.setupTeams();
                 m=api.getModeProvider().getRegisteredModes().get(slot + 1);
