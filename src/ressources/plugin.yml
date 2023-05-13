@@ -1,5 +1,5 @@
 name: KasterborousUHC
-version: 1.4
+version: 1.4.0
 author: Supercomete
 main: fr.supercomete.head.core.Main
 commands:
@@ -47,3 +47,5 @@ commands:
     description: "Permet de savoir les timers de la game"
   ti:
     description: "Utile pour le scénarios Team-Inventory"
+  stuffconfirm:
+    description: "Utile pour confirmer ma modification d'un inventaire."

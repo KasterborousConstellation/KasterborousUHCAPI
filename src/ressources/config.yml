@@ -31,6 +31,20 @@ serverapi:
     x: 0
     y: 41
     z: 0
-  #Ne pas modifier.
-  stuff:
-    actualconfig: ""
+  permissions:
+    #Voici les configurations pour les permissions de l'host et des cohosts
+    #Pour mettre toute les permissions: "all"
+    #Permissions disponible:
+    # Allow_bypass: permet au joueur de se bypass
+    # Allow_config: permet au joueur de changer la configuration de la partie avec la commande /menu
+    # Allow_hsay: permet au joueur d'envoyer des messages en tant qu'hote de la partie
+    # Allow_add_whitelist: permet au joueur d'ajouter d'autres joueurs à la whitelist
+    # Allow_koff: permet au joueur de tuer un joueur hors-ligne
+    # Allow_groups_message: permet au joueur d'envoyer l'avertissement de groupe
+    # Allow_change_game_name: permet au joueur de changer le nom de la partie
+    # Allow_force: permet au joueur de forcer les timers: role, bordure, pvp
+    # Allow_finalheal: permet au joueur d'effectuer un finalheal
+    # See_helpop: permet au joueur de voir les messages de helpop
+    host: "all"
+    cohost: [Allow_config,Allow_hsay,Allow_groups_message,Allow_add_whitelist,Allow_finalheal,See_helpop]
+    #Si il y a une erreur dans l'écriture des permissions. Les permissions de l'hôte et des cohosts seront au maximum.

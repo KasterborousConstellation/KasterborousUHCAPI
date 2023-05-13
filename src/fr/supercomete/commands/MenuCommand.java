@@ -1,5 +1,8 @@
 package fr.supercomete.commands;
 
+import fr.supercomete.head.GameUtils.GameMode.ModeHandler.KtbsAPI;
+import fr.supercomete.head.permissions.Permissions;
+import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -19,7 +22,8 @@ public class MenuCommand implements CommandExecutor {
 		if(sender instanceof Player) {
 			Player player = (Player)sender;
 			if(cmd.getName().equalsIgnoreCase("menu")) {
-				if(!Main.IsHost(player)){
+                KtbsAPI api = Bukkit.getServicesManager().load(KtbsAPI.class);
+                if(!api.getPermissionProvider().IsAllowed(player, Permissions.Allow_config)){
 					player.sendMessage(Main.UHCTypo+"§7» §cVous n'avez pas la permission d'utiliser cette commande.");
 					return false;
 				}else{

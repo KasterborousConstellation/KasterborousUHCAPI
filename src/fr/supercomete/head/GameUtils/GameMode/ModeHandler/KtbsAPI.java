@@ -11,6 +11,7 @@ public class KtbsAPI {
         provider= new KtbsProvider();
         helper= new Helper();
     }
+    public PermissionProvider getPermissionProvider(){return provider;}
     public PlayerProvider getPlayerHelper(){
         return provider;
     }

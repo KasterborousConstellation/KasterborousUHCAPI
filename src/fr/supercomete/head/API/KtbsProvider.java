@@ -15,9 +15,12 @@ import fr.supercomete.head.GameUtils.GameMode.Modes.Mode;
 import fr.supercomete.head.GameUtils.Scenarios.KasterborousScenario;
 import fr.supercomete.head.GameUtils.Team;
 import fr.supercomete.head.GameUtils.TeamManager;
+import fr.supercomete.head.Inventory.InventoryManager;
 import fr.supercomete.head.PlayerUtils.*;
 import fr.supercomete.head.core.KasterborousRunnable;
 import fr.supercomete.head.core.Main;
+import fr.supercomete.head.permissions.PermissionManager;
+import fr.supercomete.head.permissions.Permissions;
 import fr.supercomete.head.role.Bonus.Bonus;
 import fr.supercomete.head.role.Bonus.BonusType;
 import fr.supercomete.head.role.KasterBorousCamp;
@@ -32,10 +35,16 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.potion.PotionEffect;
 import javax.annotation.Nullable;
+import java.io.CharArrayReader;
 import java.lang.reflect.InvocationTargetException;
 import java.util.*;
 import java.util.concurrent.CopyOnWriteArrayList;
-public class KtbsProvider implements PlayerProvider,TeamProvider,PotionEffectProvider,FightProvider,HostProvider,GameProvider,MapProvider,RoleProvider,ModeProvider,ConfigurableProvider,KTBSRunnableProvider,ScenariosProvider{
+public class KtbsProvider implements
+        PlayerProvider,TeamProvider,PotionEffectProvider,
+        FightProvider,HostProvider,GameProvider,MapProvider,
+        RoleProvider,ModeProvider,ConfigurableProvider,
+        KTBSRunnableProvider,ScenariosProvider,PermissionProvider
+{
     private int call = 0;
     private void update(){
         call++;
@@ -702,5 +711,76 @@ public class KtbsProvider implements PlayerProvider,TeamProvider,PotionEffectPro
     public boolean IsPlayerAlive(UUID uuid) {
         update();
         return Main.getPlayerlist().contains(uuid);
+    }
+
+    @Override
+    public ArrayList<UUID> getAllowedPlayers(Permissions permission) {
+        update();
+        ArrayList<UUID> array = new ArrayList<>();
+        for(Map.Entry<UUID,ArrayList<Permissions>> entry : PermissionManager.getPerms().entrySet()){
+            for(Permissions perm : entry.getValue()){
+                if(perm==permission){
+                    array.add(entry.getKey());
+                }
+            }
+        }
+        return array;
+    }
+
+    @Override
+    public void retrievePermission(Player player, Permissions permission) {
+       retrievePermission(player.getUniqueId(),permission);
+    }
+
+    @Override
+    public boolean IsAllowed(Player player, Permissions permission) {
+        return IsAllowed(player.getUniqueId(),permission);
+    }
+
+    @Override
+    public void givePermission(Player player, Permissions permission) {
+        givePermission(player.getUniqueId(),permission);
+    }
+
+    @Override
+    public void retrievePermission(UUID uuid, Permissions permission) {
+        update();
+        PermissionManager.getPerms().get(uuid).removeIf(perm -> perm==permission);
+    }
+
+    @Override
+    public boolean IsAllowed(UUID uuid, Permissions permission) {
+        update();
+        return PermissionManager.getPerms().containsKey(uuid) && (PermissionManager.getPerms().get(uuid).contains(permission));
+    }
+
+    @Override
+    public void givePermission(UUID uuid, Permissions permission) {
+        update();
+        if(!PermissionManager.getPerms().containsKey(uuid)){
+            PermissionManager.getPerms().put(uuid,new ArrayList<>(Collections.singletonList(permission)));
+            return;
+        }
+        if(!PermissionManager.getPerms().get(uuid).contains(permission)){
+            PermissionManager.getPerms().get(uuid).add(permission);
+        }
+    }
+
+    @Override
+    public void sendDenyPermissionMessage(Player player) {
+        update();
+        PermissionManager.sendDenyPermission(player);
+    }
+
+    @Override
+    public ArrayList<Permissions> getHostPermissions() {
+        update();
+        return PermissionManager.host_perms;
+    }
+
+    @Override
+    public ArrayList<Permissions> getCoHostPermissions() {
+        update();
+        return PermissionManager.cohost_perms;
     }
 }

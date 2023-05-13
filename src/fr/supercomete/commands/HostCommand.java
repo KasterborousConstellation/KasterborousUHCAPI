@@ -1,6 +1,9 @@
 package fr.supercomete.commands;
 
+import fr.supercomete.head.GameUtils.GameMode.ModeHandler.KtbsAPI;
 import fr.supercomete.head.PlayerUtils.PlayerUtility;
+import fr.supercomete.head.permissions.PermissionManager;
+import fr.supercomete.head.permissions.Permissions;
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -19,17 +22,18 @@ public class HostCommand implements CommandExecutor {
 	public HostCommand(Main main) {
 		this.main=main;
 	}
+    final KtbsAPI api = Bukkit.getServicesManager().load(KtbsAPI.class);
 	@Override
 	public boolean onCommand(CommandSender sender, Command cmd, String arg2, String[] args) {
 		if(sender instanceof Player) {
 			final Player player = (Player)sender;
 			if(cmd.getName().equalsIgnoreCase("h")){
-				if(args.length==0) {
+                if(args.length==0) {
 					player.sendMessage(Main.UHCTypo+"Commande inconnue /h help pour plus d'information");
 					return false;
 				}
 				if(!Main.IsHost(player) && !Main.IsCohost(player)) {
-					player.sendMessage(Main.UHCTypo+"§cVous n'avez pas le droit d'utiliser cette commande.");
+                    PermissionManager.sendDenyPermission(player);
 					return false;
 				}
 				switch(args[0]) {
@@ -60,6 +64,10 @@ public class HostCommand implements CommandExecutor {
                         }
                         break;
 				case "say":
+                    if(!api.getPermissionProvider().IsAllowed(player, Permissions.Allow_hsay)){
+                        PermissionManager.sendDenyPermission(player);
+                        return true;
+                    }
 					if(args.length>=2) {
 						String str = "";
 						for(int i =1;i<args.length;i++) {
@@ -104,6 +112,7 @@ public class HostCommand implements CommandExecutor {
 							}
 							if(Main.cohost.size()<4) {
 								Main.cohost.add(target.getUniqueId());
+                                PermissionManager.getPerms().put(target.getUniqueId(),PermissionManager.cohost_perms);
                                 Main.updateBypass();
 							}else {
 								player.sendMessage(Main.UHCTypo+"§cIl y a trop de cohost dans la partie.");
@@ -118,11 +127,11 @@ public class HostCommand implements CommandExecutor {
 				case "sethost":
 					if(Main.IsHost(player)||(player.isOp()&&Main.INSTANCE.getConfig().getBoolean("serverapi.serverconfig.op_host_bypass"))) {
 						if(args.length == 2) {
-							//Deop Old host
+							//Deop Old host and remove perms
 							if(Main.host!=null) {
 								Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "/deop "+ PlayerUtility.getNameByUUID(Main.host));
-							}
-
+							    PermissionManager.getPerms().remove(Main.host);
+                            }
 							final Player target= Bukkit.getPlayer(args[1]);
 							if(target==null) {
 								player.sendMessage(Main.UHCTypo+"§c Ce joueur n'est pas connecté");
@@ -130,7 +139,9 @@ public class HostCommand implements CommandExecutor {
 							}
 							target.setOp(true);
 							Main.cohost.remove(target.getUniqueId());
+                            PermissionManager.getPerms().remove(target.getUniqueId());
 							Main.host = target.getUniqueId();
+                            PermissionManager.getPerms().put(Main.host,PermissionManager.host_perms);
 						    Main.updateBypass();
 						}else {
 							player.sendMessage(Main.UHCTypo+"§cUsage: /h sethost <Joueur>");
@@ -140,6 +151,10 @@ public class HostCommand implements CommandExecutor {
 					}
 					break;
 				case "koff":
+                    if(!api.getPermissionProvider().IsAllowed(player, Permissions.Allow_koff)){
+                        PermissionManager.sendDenyPermission(player);
+                        return true;
+                    }
 					if(args.length!=2) {
 						player.sendMessage(Main.UHCTypo+"Usage: /h koff <Joueur>");
 						return false;
@@ -155,12 +170,20 @@ public class HostCommand implements CommandExecutor {
 					player.sendMessage(Main.UHCTypo+"§cCe joueur ne fait pas partie des joueurs hors-ligne");
 					return false;
 				case "groupe":
+                    if(!api.getPermissionProvider().IsAllowed(player, Permissions.Allow_groups_message)){
+                        PermissionManager.sendDenyPermission(player);
+                        return true;
+                    }
 					if(Main.currentGame.getMode()instanceof Groupable) {
 						scoreboardmanager.titlemessage("§f►Groupe de §c"+Main.currentGame.getGroupe()+"§f◄");
 						Bukkit.broadcastMessage("§f►Groupe de §c"+Main.currentGame.getGroupe()+"§f◄");
 					}else player.sendMessage(Main.UHCTypo+"§cCe mode ne permet pas de modifier les groupes.");
 					break;
 				case "setgroupe":
+                    if(!api.getPermissionProvider().IsAllowed(player, Permissions.Allow_setgroup)){
+                        PermissionManager.sendDenyPermission(player);
+                        return true;
+                    }
 					if(Main.currentGame.getMode()instanceof Groupable) {
 						if(args.length!=2){
 							player.sendMessage(Main.UHCTypo+"Usage: /h setgroupe <Taille>");
@@ -176,6 +199,10 @@ public class HostCommand implements CommandExecutor {
 					}else player.sendMessage(Main.UHCTypo+"§cCe mode ne permet pas de modifier les groupes.");
 					break;
 				case "setgamename":
+                    if(!api.getPermissionProvider().IsAllowed(player, Permissions.Allow_change_game_name)){
+                        PermissionManager.sendDenyPermission(player);
+                        return true;
+                    }
 					if(args.length<2){
 						player.sendMessage(Main.UHCTypo+"Usage: /h setgamename <Nom de de la partie> \n");
 						return false;
@@ -197,6 +224,10 @@ public class HostCommand implements CommandExecutor {
 					player.sendMessage(Main.UHCTypo+ "Le nom de la partie a bien été modifié");
 					break;
 				case "forcerole":
+                    if(!api.getPermissionProvider().IsAllowed(player, Permissions.Allow_force)){
+                        PermissionManager.sendDenyPermission(player);
+                        return true;
+                    }
 					if(Main.currentGame.isGameState(Gstate.Waiting)||Main.currentGame.isGameState(Gstate.Starting)||Main.currentGame.isGameState(Gstate.Playing)) {
 						player.sendMessage(Main.UHCTypo+"§cLa partie n'a pas commencé");
 						return false;
@@ -205,6 +236,10 @@ public class HostCommand implements CommandExecutor {
 					}
 					break;
 				case "forcepvp":
+                    if(!api.getPermissionProvider().IsAllowed(player, Permissions.Allow_force)){
+                        PermissionManager.sendDenyPermission(player);
+                        return true;
+                    }
 					if(Main.currentGame.isGameState(Gstate.Waiting)||Main.currentGame.isGameState(Gstate.Starting)||Main.currentGame.isGameState(Gstate.Playing)) {
 						player.sendMessage(Main.UHCTypo+"§cLa partie n'a pas commencé");
 						return false;
@@ -213,6 +248,10 @@ public class HostCommand implements CommandExecutor {
 					}
 					break;
 				case "forcebordure":
+                    if(!api.getPermissionProvider().IsAllowed(player, Permissions.Allow_force)){
+                        PermissionManager.sendDenyPermission(player);
+                        return true;
+                    }
 					if(Main.currentGame.isGameState(Gstate.Waiting)||Main.currentGame.isGameState(Gstate.Starting)||Main.currentGame.isGameState(Gstate.Playing)) {
 						player.sendMessage(Main.UHCTypo+"§cLa partie n'a pas commencé");
 						return false;
@@ -221,9 +260,17 @@ public class HostCommand implements CommandExecutor {
 					}
 					break;
 				case "fh":
+                    if(!api.getPermissionProvider().IsAllowed(player, Permissions.Allow_finalheal)){
+                        PermissionManager.sendDenyPermission(player);
+                        return true;
+                    }
 					Main.finalheal();
 					break;
 				case "whadd":
+                    if(!api.getPermissionProvider().IsAllowed(player, Permissions.Allow_add_whitelist)){
+                        PermissionManager.sendDenyPermission(player);
+                        return true;
+                    }
 					if(args.length==1){
 						player.sendMessage(Main.UHCTypo+"Usage: /h whadd <Joueur>");
 						return false;

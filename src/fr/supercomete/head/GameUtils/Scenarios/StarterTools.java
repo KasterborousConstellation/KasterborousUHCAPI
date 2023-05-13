@@ -1,4 +1,6 @@
-package fr.supercomete.head.GameUtils.Scenarios;
+/*package fr.supercomete.head.GameUtils.Scenarios;
+import fr.supercomete.head.GameUtils.Scenarios.Compatibility;
+import fr.supercomete.head.GameUtils.Scenarios.KasterborousScenario;
 import fr.supercomete.head.PlayerUtils.PlayerUtility;
 import fr.supercomete.head.core.KasterborousRunnable;
 import org.bukkit.Bukkit;
@@ -11,7 +13,7 @@ import org.bukkit.inventory.meta.ItemMeta;
 import javax.annotation.Nullable;
 import java.util.List;
 
-public class StarterTools implements KasterborousScenario{
+public class StarterTools implements KasterborousScenario {
     ItemStack[] stacks = new ItemStack[3];
     @Override
     public boolean onEnable() {
@@ -69,3 +71,4 @@ public class StarterTools implements KasterborousScenario{
         return null;
     }
 }
+*/

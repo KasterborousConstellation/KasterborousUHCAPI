@@ -2,6 +2,7 @@ package fr.supercomete.head.PlayerUtils;
 
 import fr.supercomete.head.GameUtils.GameMode.ModeModifier.TeamMode;
 import fr.supercomete.head.GameUtils.GameMode.Modes.UHCClassic;
+import fr.supercomete.head.Inventory.InventoryManager;
 import fr.supercomete.head.Inventory.InventoryToBase64;
 import fr.supercomete.head.Inventory.InventoryUtils;
 import fr.supercomete.head.core.Main;
@@ -39,31 +40,20 @@ public class PlayerUtility{
 		PlayerUtility.main = main;
 	}
 	public static void giveStuff(ArrayList<UUID> playerlist){
-		try {
-			Inventory inv=InventoryToBase64.fromBase64(main.getConfig().getString("serverapi.stuff.actualconfig"));
-			ItemStack[]it=inv.getContents();
-			for(UUID uu: playerlist){
-				Player pl = Bukkit.getPlayer(uu);
-				for(int i=0;i<it.length;i++){
-					pl.getInventory().setItem(i, it[i]);
-				}
-                new BukkitRunnable(){
-                    @Override
-                    public void run() {
-                        pl.updateInventory();
-                    }
-                }.runTaskLater(Main.INSTANCE,0L);
-			}
-		}catch(IOException e){e.printStackTrace();}
-	}
-    public static void saveStuff(Inventory inv) {
-        String s= "";
-        s =InventoryToBase64.toBase64(inv);
-        main.getConfig().set("serverapi.stuff.actualconfig", s);
-        main.saveConfig();
-    }
-	public static void saveStuff(Player player) {
-		saveStuff(player.getInventory());
+        final Inventory inv=getInventory();
+        final ItemStack[]it=inv.getContents();
+        for(final UUID uu: playerlist){
+            final Player pl = Bukkit.getPlayer(uu);
+            for(int i=0;i<it.length;i++){
+                pl.getInventory().setItem(i, it[i]);
+            }
+            new BukkitRunnable(){
+                @Override
+                public void run() {
+                    pl.updateInventory();
+                }
+            }.runTaskLater(Main.INSTANCE,0L);
+        }
 	}
 	public static String getNameByUUID(UUID target){
         String ally="";
@@ -79,13 +69,14 @@ public class PlayerUtility{
         }
 	    return ally;
     }
-	public static Inventory getInventory() {
-		try {
-			return InventoryToBase64.fromBase64(main.getConfig().getString("serverapi.stuff.actualconfig"));
-		} catch (IOException e){
-			return Bukkit.createInventory(null, InventoryType.PLAYER);
-		}
-	}
+    public static Inventory getInventory() {
+        Inventory selected = InventoryManager.getSelectedInventory();
+        if(selected==null){
+            return Bukkit.createInventory(null,9);
+        }else{
+            return selected;
+        }
+    }
 	public static void GiveHotBarStuff(Player player) {
 		if(player==null)return;
 		if(Main.IsHost(player)) {

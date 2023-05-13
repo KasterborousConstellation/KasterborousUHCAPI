@@ -27,6 +27,9 @@ import fr.supercomete.head.Inventory.InventoryManager;
 import fr.supercomete.head.Inventory.inventoryapi.Inventoryapi;
 import fr.supercomete.head.PlayerUtils.BonusHandler;
 import fr.supercomete.head.PlayerUtils.EffectHandler;
+import fr.supercomete.head.permissions.MalformedPermissionException;
+import fr.supercomete.head.permissions.PermissionManager;
+import fr.supercomete.head.permissions.Permissions;
 import fr.supercomete.head.world.worldgenerator;
 import fr.supercomete.tasks.Cycle;
 import org.bukkit.*;
@@ -83,9 +86,10 @@ public class Main extends JavaPlugin {
     public static Main INSTANCE;
     public static Location spawn;
     public static ArrayList<String> messages = new ArrayList<>();
+    private static  KtbsAPI api;
     @Override
     public void onDisable(){
-        KtbsAPI api = Bukkit.getServicesManager().load(KtbsAPI.class);
+
         for(final KasterborousRunnable run: api.getKTBSRunnableProvider().getRunnables()){
             run.onAPIStop(Bukkit.getServicesManager().load(KtbsAPI.class));
         }
@@ -99,6 +103,7 @@ public class Main extends JavaPlugin {
 
             }
         }
+
     }
 	@SuppressWarnings("deprecation")
 	@Override
@@ -144,9 +149,12 @@ public class Main extends JavaPlugin {
         /*
         API init
          */
-        KtbsAPI api = new KtbsAPI();
-        Bukkit.getServicesManager().register(KtbsAPI.class,api,this, ServicePriority.Lowest);
+        Bukkit.getServicesManager().register(KtbsAPI.class,new KtbsAPI(),this, ServicePriority.Lowest);
+        api = Bukkit.getServicesManager().load(KtbsAPI.class);
 
+        /*
+        BiomeGenerator && strutureHandler
+         */
 		generator = new BiomeGenerator();
 		structurehandler= new StructureHandler(this);
 		new ScoreBoardManager(this);
@@ -157,7 +165,7 @@ public class Main extends JavaPlugin {
         for(final Scenarios scenarios: Scenarios.values()){
             api.getScenariosProvider().RegisterScenarios(scenarios);
         }
-        api.getScenariosProvider().RegisterScenarios(new StarterTools());
+        //api.getScenariosProvider().RegisterScenarios(new StarterTools());
         api.getScenariosProvider().RegisterScenarios(new MonsterHunter());
         for(final Configurable.LIST conf : Configurable.LIST.values()){
             api.getConfigurableProvider().RegisterConfigurable(conf);
@@ -193,6 +201,7 @@ public class Main extends JavaPlugin {
 		getCommand("helpop").setExecutor(new HelpopCommand(this));
 		getCommand("disperse").setExecutor(new DisperseCommand(this));
         getCommand("bypass").setExecutor(new BypassCommand(this));
+        getCommand("stuffconfirm").setExecutor(new stuffconfirm(this));
         getCommand("tpin").setExecutor(new TpInCommand(this));
         getCommand("timeleft").setExecutor(new TimeLeftCommand(this));
         getCommand("ti").setExecutor(new TeamInventory());
@@ -223,6 +232,12 @@ public class Main extends JavaPlugin {
 		}
         EventsHandler.init();
         InventoryManager.init();
+        try {
+            PermissionManager.init();
+        } catch (MalformedPermissionException e) {
+            e.printStackTrace();
+            PermissionManager.host_perms= PermissionManager.allPerms();
+        }
         new BukkitRunnable(){
             @Override
             public void run() {
@@ -278,7 +293,7 @@ public class Main extends JavaPlugin {
         return d;
     }
     public static void updateBypass(){
-        bypass.removeIf(uu -> !(Main.IsHost(uu) || Main.IsCohost(uu)));
+        bypass.removeIf(uu -> !(api.getPermissionProvider().IsAllowed(uu, Permissions.Allow_bypass)));
     }
     public static boolean IsHost(UUID player) {
        return host!=null && host.equals(player);

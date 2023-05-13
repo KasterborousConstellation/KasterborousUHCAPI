@@ -1,6 +1,8 @@
 package fr.supercomete.commands;
 import java.util.ArrayList;
 
+import fr.supercomete.head.GameUtils.GameMode.ModeHandler.KtbsAPI;
+import fr.supercomete.head.permissions.Permissions;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
@@ -15,6 +17,7 @@ public class HelpopCommand implements CommandExecutor {
 	public HelpopCommand(Main main) {
 		this.main=main;
 	}
+    final KtbsAPI api = Bukkit.getServicesManager().load(KtbsAPI.class);
 	@Override
 	public boolean onCommand(CommandSender sender, Command cmd, String msg, String[] args) {
 		if(sender instanceof Player){
@@ -30,7 +33,7 @@ public class HelpopCommand implements CommandExecutor {
 				}
 				ArrayList<Player>reciever = new ArrayList<>();
 				for(final Player it : Bukkit.getOnlinePlayers()) {
-					if(Main.IsHost(it)||Main.IsCohost(it))reciever.add(it);
+					if(api.getPermissionProvider().IsAllowed(it, Permissions.See_helpop))reciever.add(it);
 				}
 				for(final Player it : reciever) {
 					it.sendMessage(Main.UHCTypo+"Un joueur vient de demander de l'aide.");

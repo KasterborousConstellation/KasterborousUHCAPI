@@ -1,6 +1,7 @@
 package fr.supercomete.head.Listeners;
 
 import fr.supercomete.head.GameUtils.GameMode.ModeHandler.MapHandler;
+import fr.supercomete.head.permissions.PermissionManager;
 import net.minecraft.server.v1_8_R3.Entity;
 import net.minecraft.server.v1_8_R3.PacketPlayOutEntityTeleport;
 import org.bukkit.Bukkit;
@@ -35,6 +36,7 @@ final class JoinListener implements Listener {
         }
         if (Main.host == null) {
             Main.host = player.getUniqueId();
+            PermissionManager.getPerms().put(Main.host,PermissionManager.host_perms);
             player.setOp(true);
         }
         if (Main.currentGame.isGameState(Gstate.Waiting)) {
