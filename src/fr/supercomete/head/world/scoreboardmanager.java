@@ -19,7 +19,7 @@ import org.bukkit.potion.PotionEffectType;
 import org.bukkit.scoreboard.*;
 import fr.supercomete.enums.Gstate;
 import fr.supercomete.head.GameUtils.Scenarios.Scenarios;
-import fr.supercomete.head.GameUtils.ColorScheme;
+import fr.supercomete.head.GameUtils.schemes.ColorScheme;
 import fr.supercomete.head.GameUtils.Lag;
 import fr.supercomete.head.GameUtils.TeamManager;
 import fr.supercomete.head.GameUtils.GameMode.ModeHandler.KtbsAPI;

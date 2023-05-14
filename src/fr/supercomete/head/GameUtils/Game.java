@@ -8,8 +8,8 @@ import fr.supercomete.head.GameUtils.Events.GameEvents.Event;
 import fr.supercomete.head.GameUtils.Events.PlayerEvents.PlayerEvent;
 import fr.supercomete.head.GameUtils.GameConfigurable.KasterBorousConfigurable;
 import fr.supercomete.head.GameUtils.Scenarios.KasterborousScenario;
+import fr.supercomete.head.GameUtils.schemes.ColorScheme;
 import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
@@ -45,7 +45,7 @@ public class Game {
 	private ArrayList<UUID> nodamagePlayerList = new ArrayList<>();
 	private ArrayList<Offline_Player> offlinelist = new ArrayList<>();
 	private HashMap<Material, Boolean> armorhash = new HashMap<>();
-	private ColorScheme colorScheme =new ColorScheme(ChatColor.GREEN, ChatColor.AQUA, ChatColor.GRAY);
+
 	private HashMap<UUID, ArrayList<ItemStack>> fullinv= new HashMap<>();
 	private GenerationMode genmode = GenerationMode.None;
 	private ArrayList<PlayerEvent> events = new ArrayList<>();
@@ -296,11 +296,7 @@ public class Game {
 	}
 
 	public ColorScheme getColorScheme() {
-		return colorScheme;
-	}
-
-	public void setColorScheme(ColorScheme colorScheme) {
-		this.colorScheme = colorScheme;
+		return getMode().getScheme();
 	}
 
 	public ArrayList<Offline_Player> getOfflinelist() {
