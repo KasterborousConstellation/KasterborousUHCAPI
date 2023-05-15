@@ -2,8 +2,8 @@ package fr.supercomete.head.GameUtils;
 import java.util.*;
 import java.util.Map.Entry;
 
-import fr.supercomete.head.GameUtils.Enchants.EnchantHandler;
 import fr.supercomete.head.GameUtils.Enchants.EnchantLimit;
+import fr.supercomete.head.GameUtils.Enchants.EnchantType;
 import fr.supercomete.head.GameUtils.Events.GameEvents.Event;
 import fr.supercomete.head.GameUtils.Events.PlayerEvents.PlayerEvent;
 import fr.supercomete.head.GameUtils.GameConfigurable.KasterBorousConfigurable;
@@ -11,6 +11,7 @@ import fr.supercomete.head.GameUtils.Scenarios.KasterborousScenario;
 import fr.supercomete.head.GameUtils.schemes.ColorScheme;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
+import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import fr.supercomete.enums.GenerationMode;
@@ -76,7 +77,44 @@ public class Game {
 		new BukkitRunnable(){
             @Override
             public void run() {
-                EnchantHandler.init();
+                ArrayList<EnchantLimit>limites= new ArrayList<>();
+                limites.add(new EnchantLimit("Sharpness", Enchantment.DAMAGE_ALL, EnchantType.Iron,4));
+                limites.add(new EnchantLimit("Sharpness",Enchantment.DAMAGE_ALL,EnchantType.Diamond,3));
+                limites.add(new EnchantLimit("Protection",Enchantment.PROTECTION_ENVIRONMENTAL,EnchantType.Diamond,2));
+                limites.add(new EnchantLimit("Protection",Enchantment.PROTECTION_ENVIRONMENTAL,EnchantType.Iron,3));
+                limites.add(new EnchantLimit("Thorns",Enchantment.THORNS,EnchantType.Iron,0));
+                limites.add(new EnchantLimit("Thorns",Enchantment.THORNS,EnchantType.Diamond,0));
+                limites.add(new EnchantLimit("Smite",Enchantment.DAMAGE_UNDEAD,EnchantType.Iron,4));
+                limites.add(new EnchantLimit("Smite",Enchantment.DAMAGE_UNDEAD,EnchantType.Diamond,4));
+                limites.add(new EnchantLimit("Bane of Arthropods",Enchantment.DAMAGE_ARTHROPODS,EnchantType.Iron,4));
+                limites.add(new EnchantLimit("Bane of Arthropods",Enchantment.DAMAGE_ARTHROPODS,EnchantType.Diamond,4));
+                limites.add(new EnchantLimit("Fire Protection",Enchantment.PROTECTION_FIRE,EnchantType.Diamond,4));
+                limites.add(new EnchantLimit("Fire Protection",Enchantment.PROTECTION_FIRE,EnchantType.Iron,4));
+                limites.add(new EnchantLimit("Blast Protection",Enchantment.PROTECTION_EXPLOSIONS,EnchantType.Diamond,4));
+                limites.add(new EnchantLimit("Blast Protection",Enchantment.PROTECTION_EXPLOSIONS,EnchantType.Iron,4));
+                limites.add(new EnchantLimit("Projectile Protection",Enchantment.PROTECTION_PROJECTILE,EnchantType.Iron,4));
+                limites.add(new EnchantLimit("Projectile Protection",Enchantment.PROTECTION_PROJECTILE,EnchantType.Diamond,4));
+
+
+                limites.add(new EnchantLimit("Power",Enchantment.ARROW_DAMAGE,EnchantType.Bow,3));
+                limites.add(new EnchantLimit("Punch",Enchantment.ARROW_KNOCKBACK,EnchantType.Bow,0));
+                limites.add(new EnchantLimit("Flame",Enchantment.ARROW_FIRE,EnchantType.Bow,0));
+                limites.add(new EnchantLimit("Infinity",Enchantment.ARROW_INFINITE,EnchantType.Bow,0));
+
+                limites.add(new EnchantLimit("Luck of the sea",Enchantment.LUCK,EnchantType.Rod,3));
+                limites.add(new EnchantLimit("Lure",Enchantment.LURE,EnchantType.Rod,3));
+
+                limites.add(new EnchantLimit("Efficiency",Enchantment.DIG_SPEED,EnchantType.ALL,5));
+                limites.add(new EnchantLimit("Unbreaking",Enchantment.DURABILITY,EnchantType.ALL,3));
+                limites.add(new EnchantLimit("Fortune",Enchantment.LOOT_BONUS_BLOCKS,EnchantType.ALL,2));
+                limites.add(new EnchantLimit("Looting",Enchantment.LOOT_BONUS_MOBS,EnchantType.ALL,2));
+                limites.add(new EnchantLimit("Knockback",Enchantment.KNOCKBACK,EnchantType.ALL,1));
+                limites.add(new EnchantLimit("Fire Aspect",Enchantment.FIRE_ASPECT,EnchantType.ALL,0));
+                limites.add(new EnchantLimit("Feather Falling",Enchantment.PROTECTION_FALL,EnchantType.ALL,4));
+                limites.add(new EnchantLimit("Depth Strider",Enchantment.DEPTH_STRIDER,EnchantType.ALL,0));
+                limites.add(new EnchantLimit("Respiration",Enchantment.OXYGEN,EnchantType.ALL,3));
+                limites.add(new EnchantLimit("Aqua Affinity",Enchantment.WATER_WORKER,EnchantType.ALL,1));
+                Main.currentGame.setLimites(limites);
             }
         }.runTaskLater(main,1);
 	}
@@ -106,6 +144,15 @@ public class Game {
 			}
 		}
 	}
+    public ArrayList<EnchantLimit> getLimite(EnchantType enchantType) {
+        ArrayList<EnchantLimit>types = new ArrayList<>();
+        for(EnchantLimit enchantLimit:getLimites()){
+            if(enchantLimit.getType().equals(enchantType)){
+                types.add(enchantLimit);
+            }
+        }
+        return types;
+    }
 	public boolean hasOfflinePlayer(Player player) {
 		for (Offline_Player off : offlinelist) {
 			if (off.getPlayer().equals(player.getUniqueId()))

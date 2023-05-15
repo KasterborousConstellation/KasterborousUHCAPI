@@ -2,9 +2,9 @@ package fr.supercomete.head.Listeners;
 
 import java.util.Map;
 
-import fr.supercomete.head.GameUtils.Enchants.EnchantHandler;
 import fr.supercomete.head.GameUtils.Enchants.EnchantLimit;
 import fr.supercomete.head.GameUtils.Enchants.EnchantType;
+import fr.supercomete.head.GameUtils.Game;
 import fr.supercomete.head.GameUtils.GameConfigurable.Configurable;
 import org.bukkit.Material;
 import org.bukkit.enchantments.Enchantment;
@@ -19,10 +19,8 @@ import org.bukkit.inventory.ItemStack;
 import fr.supercomete.head.core.Main;
 
 final class InventoryClickListeners implements Listener{
-	private final Main main;
-	public InventoryClickListeners(Main main) {
-		this.main=main;
-	}
+
+    private final Game game = Main.currentGame;
     private enum ObjectType{
         Null,Iron,Diams,Bow,Rod;
     }
@@ -63,7 +61,7 @@ final class InventoryClickListeners implements Listener{
                     }
                     boolean hasIllegalEnchant = false;
                     if (type == ObjectType.Bow) {
-                        for (final EnchantLimit limit : EnchantHandler.getLimite(EnchantType.Bow)) {
+                        for (final EnchantLimit limit : game.getLimite(EnchantType.Bow)) {
                             if (ContainEnchant(limit.getEnchant(), map)) {
                                 int lvl = getEnchantmentLevel(limit.getEnchant(), map);
 
@@ -73,7 +71,7 @@ final class InventoryClickListeners implements Listener{
                             }
                         }
                     } else if (type == ObjectType.Iron) {
-                        for (final EnchantLimit limit : EnchantHandler.getLimite(EnchantType.Iron)) {
+                        for (final EnchantLimit limit : game.getLimite(EnchantType.Iron)) {
                             if (ContainEnchant(limit.getEnchant(), map)) {
                                 int lvl = getEnchantmentLevel(limit.getEnchant(), map);
                                 if (lvl > limit.getMax()) {
@@ -82,7 +80,7 @@ final class InventoryClickListeners implements Listener{
                             }
                         }
                     } else if (type == ObjectType.Diams) {
-                        for (final EnchantLimit limit : EnchantHandler.getLimite(EnchantType.Diamond)) {
+                        for (final EnchantLimit limit : game.getLimite(EnchantType.Diamond)) {
                             if (ContainEnchant(limit.getEnchant(), map)) {
                                 int lvl = getEnchantmentLevel(limit.getEnchant(), map);
                                 if (lvl > limit.getMax()) {
@@ -91,7 +89,7 @@ final class InventoryClickListeners implements Listener{
                             }
                         }
                     } else if (type == ObjectType.Rod) {
-                        for (final EnchantLimit limit : EnchantHandler.getLimite(EnchantType.Rod)) {
+                        for (final EnchantLimit limit : game.getLimite(EnchantType.Rod)) {
                             if (ContainEnchant(limit.getEnchant(), map)) {
                                 int lvl = getEnchantmentLevel(limit.getEnchant(), map);
                                 if (lvl > limit.getMax()) {
@@ -101,7 +99,7 @@ final class InventoryClickListeners implements Listener{
                         }
                     }
                     if (type == ObjectType.Iron || type == ObjectType.Diams) {
-                        for (final EnchantLimit limit : EnchantHandler.getLimite(EnchantType.ALL)) {
+                        for (final EnchantLimit limit : game.getLimite(EnchantType.ALL)) {
                             if (ContainEnchant(limit.getEnchant(), map)) {
                                 int lvl = getEnchantmentLevel(limit.getEnchant(), map);
                                 if (lvl > limit.getMax()) {

@@ -19,8 +19,6 @@ public class HelixTask extends BukkitRunnable{
 	float zp;
 	float bonusy=0;
 //	private int ticktimer=0;
-	
-	
 	int i = 0;
 	public HelixTask(Location location,int radius,boolean stop) {
 		this.location=location;
@@ -49,18 +47,9 @@ public class HelixTask extends BukkitRunnable{
 				
 				bloc.setData((byte)color);
 			}
-			
-			
-			
 			i++;
-			
 		}
 		radius=radius -1.5;
 		if(radius<=0)cancel();
-		
-			
-		
-		
 	}
-
 }

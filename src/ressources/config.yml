@@ -15,7 +15,6 @@ serverapi:
     #Indique si un joueur qui est op peut changer l'host même si il ne l'est pas lui même.
     op_host_bypass: false
   #Toutes les coordonnées doivent être entières. Pas de chiffre à virgule.
-  #
   #Coordonnée du spawn
   spawn:
     x: 0

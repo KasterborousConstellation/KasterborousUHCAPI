@@ -1,10 +1,12 @@
 package fr.supercomete.head.Inventory.GUI;
 
-import fr.supercomete.head.GameUtils.Enchants.EnchantHandler;
+import fr.supercomete.head.GameUtils.Enchants.EnchantLimit;
 import fr.supercomete.head.GameUtils.Enchants.EnchantType;
 import fr.supercomete.head.Inventory.InventoryUtils;
 import fr.supercomete.head.Inventory.inventoryapi.content.KTBSAction;
 import fr.supercomete.head.Inventory.inventoryapi.content.KTBSInventory;
+import fr.supercomete.head.core.Main;
+import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
@@ -21,7 +23,19 @@ public class RuleGUI extends KTBSInventory {
     protected boolean denyDoubleClick() {
         return false;
     }
-
+    private EnchantLimit getEnchanLimit(Enchantment enchantment,EnchantType type){
+        for(EnchantLimit enchantLimit: Main.currentGame.getLimites()){
+            if(enchantLimit.getEnchant().equals(enchantment)&&enchantLimit.getType().equals(type)){
+                return enchantLimit;
+            }
+        }
+        return null;
+    }
+    private String generateLine(Enchantment ench,EnchantType type){
+        final EnchantLimit limit = getEnchanLimit(ench,type);
+        if(limit==null)return "";
+        return ChatColor.GRAY+limit.getEnchantname()+ChatColor.DARK_GRAY+" ("+limit.getType().getName()+"): §f"+limit.getMax();
+    }
     @Override
     protected Inventory generateinventory(Inventory inv) {
         inv.setItem(0, InventoryUtils.createColorItem(Material.STAINED_GLASS_PANE, " ", 1, (short)6));
@@ -43,12 +57,12 @@ public class RuleGUI extends KTBSInventory {
         inv.setItem(22, InventoryUtils.getItem(Material.BOOKSHELF, "§bScénarios", null));
         inv.setItem(20, InventoryUtils.getItem(Material.PAPER, "§bRegles avancées", null));
         inv.setItem(24, InventoryUtils.getItem(Material.DIAMOND_CHESTPLATE, "§bEnchants", Arrays.asList(
-                EnchantHandler.generateLine(Enchantment.DAMAGE_ALL, EnchantType.Iron),
-                EnchantHandler.generateLine(Enchantment.DAMAGE_ALL, EnchantType.Diamond),
-                EnchantHandler.generateLine(Enchantment.PROTECTION_ENVIRONMENTAL, EnchantType.Iron),
-                EnchantHandler.generateLine(Enchantment.PROTECTION_ENVIRONMENTAL, EnchantType.Diamond),
-                EnchantHandler.generateLine(Enchantment.KNOCKBACK, EnchantType.ALL),
-                EnchantHandler.generateLine(Enchantment.ARROW_KNOCKBACK, EnchantType.Bow)
+                generateLine(Enchantment.DAMAGE_ALL, EnchantType.Iron),
+                generateLine(Enchantment.DAMAGE_ALL, EnchantType.Diamond),
+                generateLine(Enchantment.PROTECTION_ENVIRONMENTAL, EnchantType.Iron),
+                generateLine(Enchantment.PROTECTION_ENVIRONMENTAL, EnchantType.Diamond),
+                generateLine(Enchantment.KNOCKBACK, EnchantType.ALL),
+                generateLine(Enchantment.ARROW_KNOCKBACK, EnchantType.Bow)
         )));
         return inv;
     }

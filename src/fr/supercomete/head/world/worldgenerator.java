@@ -31,14 +31,6 @@ public class worldgenerator {
 	static UUID worlduuid;
     public static final File file = new File(Main.INSTANCE.getDataFolder(),"seeds");
     public static void init(){
-        if(!file.exists()){
-            file.mkdir();
-            try {
-                Fileutils.createFile(file);
-            } catch (IOException e) {
-                throw new RuntimeException(e);
-            }
-        }
         try {
             for(BiomeGeneration biomeGeneration:BiomeGeneration.values()){
                 String name = ""+biomeGeneration;

@@ -11,7 +11,6 @@ import java.util.zip.ZipEntry;
 
 import fr.supercomete.autoupdater.UpdateChecker;
 import fr.supercomete.commands.*;
-import fr.supercomete.head.Exception.KTBSNetworkFailure;
 import fr.supercomete.head.GameUtils.Events.GameEvents.EventsHandler;
 import fr.supercomete.head.GameUtils.Events.PlayerEvents.PlayerEventHandler;
 import fr.supercomete.head.GameUtils.Fights.FightHandler;
@@ -318,16 +317,10 @@ public class Main extends JavaPlugin {
 	public void StartGame(Player player) {
         FightHandler.reset();
         PlayerEventHandler.resetEvents();
-        Main.currentGame.getFullinv().clear();
-        if (forcebordure) {
-            forcebordure = false;
-        }
-        if(forcerole) {
-            forcerole = false;
-        }
-        if (forcedpvp) {
-            forcedpvp = false;
-        }
+        currentGame.getFullinv().clear();
+        forcebordure = false;
+        forcerole = false;
+        forcedpvp = false;
         if(BiomeGenerator.generation){
             player.sendMessage(UHCTypo+"§aDésactivez la génération de nouvelles graines avant de lancer une partie.");
             return;
@@ -336,7 +329,7 @@ public class Main extends JavaPlugin {
 			player.sendMessage(UHCTypo + "§cLa génération de la carte est déjà en cours");
 			return;
 		}
-        if(Main.currentGame.getMode()instanceof TeamMode){
+        if(currentGame.getMode()instanceof TeamMode){
             final int i =countnumberofplayer();
             int e = 0;
             for(Team team : TeamManager.teamlist){
@@ -347,7 +340,7 @@ public class Main extends JavaPlugin {
                 return;
             }
         }
-		if (CountIntegerValue(currentGame.getRoleCompoMap()) < countnumberofplayer() && Main.currentGame.getMode() instanceof CampMode) {
+		if (CountIntegerValue(currentGame.getRoleCompoMap()) < countnumberofplayer() && currentGame.getMode() instanceof CampMode) {
 			player.sendMessage(UHCTypo + "§cIl n'y a pas assez de rôles pour commencer la partie  "
 					+ currentGame.getRoleCompoMap().size() + "/" + countnumberofplayer() + "(Minimum)");
 			return;
@@ -378,7 +371,7 @@ public class Main extends JavaPlugin {
             MapHandler.getMap().getPlayWorld().setGameRuleValue("keepinventory", "true");
             MapHandler.getMap().getPlayWorld().setGameRuleValue("announceAdvancements","false");
             MapHandler.getMap().getPlayWorld().setDifficulty(Difficulty.HARD);
-			GAutostart start = new GAutostart(this);
+			GAutostart start = new GAutostart();
             MapHandler.getMap().getPlayWorld().setPVP(false);
 			start.runTaskTimer(this, 0, 20);
 			
@@ -411,18 +404,11 @@ public class Main extends JavaPlugin {
 		Main.currentGame.setGenmode(GenerationMode.None);
 		RoleHandler.setIsRoleGenerated(false);
 		RoleHandler.setRoleList(new HashMap<UUID, Role>());
-        if (forcebordure) {
-            forcebordure = false;
-        }
-        if (forcedpvp) {
-            forcedpvp = false;
-        }
-        if(forcerole) {
-            forcerole = false;
-        }
+        forcebordure = false;
+        forcedpvp = false;
+        forcerole = false;
         allplayereffectclear();
-
-        Main.currentGame.setTime(0);
+        currentGame.setTime(0);
         Bukkit.getWorld("world").setDifficulty(Difficulty.PEACEFUL);
 		new BukkitRunnable(){
             @Override
@@ -521,7 +507,7 @@ public class Main extends JavaPlugin {
 
 	public static ArrayList<String> SplitCorrectlyString(String input, int nCharperline, String LineColor) {
 		ArrayList<String> lineoutput = new ArrayList<String>();
-		String[] splitedwordinput = input.split(" ");
+		final String[] splitedwordinput = input.split(" ");
 		StringBuilder constructor = new StringBuilder();
 		for (int i = 0; i < splitedwordinput.length; i++) {
 			constructor.append(" ").append(splitedwordinput[i]);

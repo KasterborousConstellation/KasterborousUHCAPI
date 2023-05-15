@@ -1,8 +1,8 @@
 package fr.supercomete.head.Inventory.GUI;
 
-import fr.supercomete.head.GameUtils.Enchants.EnchantHandler;
 import fr.supercomete.head.GameUtils.Enchants.EnchantLimit;
 import fr.supercomete.head.GameUtils.Enchants.EnchantType;
+import fr.supercomete.head.GameUtils.Game;
 import fr.supercomete.head.Inventory.InventoryUtils;
 import fr.supercomete.head.Inventory.inventoryapi.content.KTBSAction;
 import fr.supercomete.head.Inventory.inventoryapi.content.KTBSInventory;
@@ -17,6 +17,7 @@ import java.util.*;
 public class EnchantLimitGUI extends KTBSInventory {
 	private final boolean modifiable;
 	private EnchantType type=EnchantType.Iron;
+    final Game game = Main.currentGame;
 	public EnchantLimitGUI(Player player,boolean modifiable) {
 		super("§6Limite d'enchantement",54,player);
         this.modifiable=modifiable;
@@ -29,6 +30,7 @@ public class EnchantLimitGUI extends KTBSInventory {
     }
 
     protected Inventory generateinventory(Inventory tmp) {
+
 		for(int i=0;i<9;i++) {
 			tmp.setItem(i, InventoryUtils.getItem(Material.STAINED_GLASS_PANE, " ", null));
 		}
@@ -42,7 +44,7 @@ public class EnchantLimitGUI extends KTBSInventory {
         }
 		e=9;
 
-		for(EnchantLimit enchantLimit: EnchantHandler.getLimite(type)){
+		for(EnchantLimit enchantLimit: game.getLimite(type)){
             List<String> stringlist =(!modifiable)?null:Arrays.asList("§fMax: "+enchantLimit.getEnchant().getMaxLevel(),InventoryUtils.ClickTypoAdd+"1",InventoryUtils.ClickTypoRemove+"1");
             ItemStack stack = InventoryUtils.getItem(Material.ENCHANTED_BOOK,"§f"+enchantLimit.getEnchantname()+" "+enchantLimit.getMax(), stringlist);
             stack.setAmount(enchantLimit.getMax());
@@ -71,9 +73,9 @@ public class EnchantLimitGUI extends KTBSInventory {
                     refresh();
                     break;
                 default :
-                    if(slot>8 && slot<9+EnchantHandler.getLimite(type).size()){
-                        final EnchantLimit enchantLimit = EnchantHandler.getLimite(type).get(slot-9);
-                        int i = EnchantHandler.getIndexOf(enchantLimit);
+                    if(slot>8 && slot<9+game.getLimite(type).size()){
+                        final EnchantLimit enchantLimit = game.getLimite(type).get(slot-9);
+                        int i = getIndexOf(enchantLimit);
                         if(action.IsLeftClick()){
                             enchantLimit.setMax(Math.max(0,enchantLimit.getMax()-1));
                         }else if(action.IsRightClick()){
@@ -101,5 +103,14 @@ public class EnchantLimitGUI extends KTBSInventory {
     protected boolean onClose(Player holder) {
         return false;
     }
-
+    public static int getIndexOf(EnchantLimit enchantLimit){
+        int i =0;
+        for(EnchantLimit enchantLimit1:Main.currentGame.getLimites()){
+            if(enchantLimit.equals(enchantLimit1)){
+                return i;
+            }
+            i++;
+        }
+        return -1;
+    }
 }

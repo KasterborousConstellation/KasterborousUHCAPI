@@ -10,7 +10,7 @@ public class ListenersRegisterer {
 			pm.registerEvents(new EntityDeathListener(), main);
 			pm.registerEvents(new ChatListeners(), main);
 			pm.registerEvents(new DropListener(), main);
-			pm.registerEvents(new InventoryClickListeners(main), main);
+			pm.registerEvents(new InventoryClickListeners(), main);
 			pm.registerEvents(new LoginListener(), main);
 			pm.registerEvents(new BlockBreakListener(main), main);
 			pm.registerEvents(new InteractEventListener(), main);

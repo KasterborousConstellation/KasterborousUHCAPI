@@ -8,16 +8,13 @@ import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
-import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
 import org.bukkit.scheduler.BukkitRunnable;
-
 import fr.supercomete.enums.Gstate;
 import fr.supercomete.head.GameUtils.Time.Timer;
 import fr.supercomete.head.PlayerUtils.PlayerUtility;
 import fr.supercomete.head.core.Main;
-import fr.supercomete.head.world.worldgenerator;
 public class Gstart extends BukkitRunnable{
 	private int timer =10;
 	private final Main main;
@@ -86,7 +83,7 @@ public class Gstart extends BukkitRunnable{
             }.runTaskLater(Main.INSTANCE,2L);
 			cancel();
 		}
-		if(timer==1 || timer ==2 || timer ==3|| timer ==4|| timer ==5|| timer ==10)Bukkit.broadcastMessage(Main.UHCTypo+"§rDébut de la partie dans §c"+timer);
+		if((timer>0&&timer <=5)|| timer ==10)Bukkit.broadcastMessage(Main.UHCTypo+"§rDébut de la partie dans §c"+timer);
 		timer--;
 	}
 }

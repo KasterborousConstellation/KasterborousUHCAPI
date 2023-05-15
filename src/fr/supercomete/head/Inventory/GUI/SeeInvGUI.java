@@ -29,7 +29,7 @@ public class SeeInvGUI extends KTBSInventory {
 		for(int r=45;r<54;r++) {
 			tmp.setItem(r, InventoryUtils.createColorItem(Material.STAINED_GLASS_PANE, " ", 1, (short)3));
 		}
-		for(int i=0;i<inventory.getSize();i++) {
+		for(int i=0;i<Math.min(inventory.getSize(),36);i++){
 			ItemStack it = inventory.getItem(i);
 			if(inventory.getItem(i)!=null && inventory.getItem(i).getType()!=Material.AIR)
 			{

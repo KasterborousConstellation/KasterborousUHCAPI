@@ -2,6 +2,7 @@ package fr.supercomete.head.API;
 import fr.supercomete.enums.Gstate;
 import fr.supercomete.head.Exception.AlreadyRegisterdScenario;
 import fr.supercomete.head.Exception.AlreadyRegisteredConfigurable;
+import fr.supercomete.head.Exception.InvalidCommandException;
 import fr.supercomete.head.Exception.UnregisteredModeException;
 import fr.supercomete.head.GameUtils.Fights.Fight;
 import fr.supercomete.head.GameUtils.Fights.FightHandler;
@@ -270,11 +271,19 @@ public class KtbsProvider implements
     @Override
     public void registerMode(Mode mode) {
         update();
-        registeredModes.add(mode);
         if (mode instanceof Command) {
             final Command command = (Command) mode;
+            if(command.getCommand()==null){
+                try {
+                    throw new InvalidCommandException("An error occured while registering the Mode: "+mode.getName()+" Maybe you forgot to specify a KasterborousCommand ?");
+                } catch (InvalidCommandException e) {
+                    e.printStackTrace();
+                    return;
+                }
+            }
             ((CraftServer) Main.INSTANCE.getServer()).getCommandMap().register(command.getCommand().getName(), command.getCommand());
         }
+        registeredModes.add(mode);
     }
 
     @Override
