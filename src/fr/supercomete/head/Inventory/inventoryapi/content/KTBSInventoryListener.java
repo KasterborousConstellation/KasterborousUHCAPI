@@ -18,6 +18,9 @@ public class KTBSInventoryListener implements Listener {
     @EventHandler
     public void onClickEvent(InventoryClickEvent e){
         final Player clicker = (Player) e.getWhoClicked();
+        if(e.getClickedInventory().equals(clicker.getInventory())){
+            return;
+        }
         final int slot = e.getSlot();
         final ClickType type = e.getClick();
         final InventoryAction action= e.getAction();

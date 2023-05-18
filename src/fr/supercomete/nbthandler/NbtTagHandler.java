@@ -30,28 +30,4 @@ public final class NbtTagHandler {
 			return ItemMetadata.getMetadataByBukkit(item, tag);
 		}else return 0;
 	}
-/*	
-	Table of UUID value
-
-	1| Vastra speed boost
-	2| River Vortex
-	3| Infection Tool 
-	4| Supreme Exchange Tool
- 	5| Cyber-Brouilleur
-	6| DalekCaan Temporal Rift
-	7| Captain Trap
-	8| Cyberium Tracer
-	9| GreatIntelligence Freeze
-   10| Bill Potts Potion
-   11| Confusion Karvanista
-   12| Stasis Karvanista
-   13| Cage Karvanista
-   14| Flux item Tecteun
-   15| Temporal FlashBack WeapingAngel
-
-   101 Joke Flavio
-   102 Mango Flavio
-   103 Mein kampf Lucien
-   104 Nicloas Compas
-*/	
 }

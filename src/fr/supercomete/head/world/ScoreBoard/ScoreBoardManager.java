@@ -58,7 +58,7 @@ public class ScoreBoardManager {
 		list.add("§c" + p + "Mode " + t + "» " + s+ Main.currentGame.getMode().getName());
 		list.add("§c" + p + "Kills " + t + "» " + s + ((Main.currentGame.getKillList().get(player.getUniqueId())==null)?"Aucun":Main.currentGame.getKillList().get(player.getUniqueId())));
 		if(Main.currentGame.getMode()instanceof Groupable){
-            list.add("§c» " + p + "Groupe " + t + "» " + s + Main.currentGame.getGroupe());
+            list.add("§c" + p + "Groupe " + t + "» " + s + Main.currentGame.getGroupe());
         }else{
             list.add("§C§C§C§C§C§C");
         }

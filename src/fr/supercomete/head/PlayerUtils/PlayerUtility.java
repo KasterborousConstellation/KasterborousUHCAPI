@@ -8,6 +8,7 @@ import net.md_5.bungee.api.ChatColor;
 import net.minecraft.server.v1_8_R3.IChatBaseComponent;
 import net.minecraft.server.v1_8_R3.PacketPlayOutChat;
 import org.bukkit.Bukkit;
+import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
@@ -24,25 +25,18 @@ import org.bukkit.util.BlockIterator;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
-import java.util.logging.Level;
-
 public class PlayerUtility{
-	private static Main main;
-	public PlayerUtility(Main main) {
-		PlayerUtility.main = main;
-	}
-	public static void giveStuff(ArrayList<UUID> playerlist){
+	public static void giveStuff(){
         final Inventory inv=getInventory();
-        final ItemStack[]it=inv.getContents();
-        for(final UUID uu: playerlist){
-            final Player pl = Bukkit.getPlayer(uu);
-            for(int i=0;i<Math.min(it.length,36);i++){
-                try{
-                    pl.getInventory().setItem(i, it[i]);
-                }catch (ArrayIndexOutOfBoundsException e){
-                    Bukkit.getLogger().log(Level.WARNING,i+" AAAAAAA");
-                }
+        ItemStack[] it = new ItemStack[Math.min(inv.getSize(),36)];
+        for(int i =0;i<it.length;i++){
+            it[i]=inv.getContents()[i];
+        }
+        for(final Player pl: Bukkit.getOnlinePlayers()){
+            if(pl.getGameMode().equals(GameMode.SPECTATOR)){
+                continue;
             }
+            pl.getInventory().setContents(it.clone());
             new BukkitRunnable(){
                 @Override
                 public void run() {

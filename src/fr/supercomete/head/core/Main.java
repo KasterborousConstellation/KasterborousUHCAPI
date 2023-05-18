@@ -157,7 +157,6 @@ public class Main extends JavaPlugin {
 		generator = new BiomeGenerator();
 		structurehandler= new StructureHandler(this);
 		new ScoreBoardManager(this);
-		new PlayerUtility(this);
 		host = null;
 		Date Compiledate = null;
 		Compiledate = getClassBuildTime();
@@ -241,23 +240,35 @@ public class Main extends JavaPlugin {
             @Override
             public void run() {
                 //Indique le lancement de l'api
-                for(final KasterborousRunnable run: api.getKTBSRunnableProvider().getRunnables()){
+                for (final KasterborousRunnable run : api.getKTBSRunnableProvider().getRunnables()) {
                     run.onAPILaunch(api);
                 }
-                for(KasterborousScenario scenario : api.getScenariosProvider().getRegisteredScenarios()){
-                    if(api.getScenariosProvider().IsScenarioActivated(scenario.getName())){
-                        if(scenario.getAttachedRunnable()!=null){
-                            for(KasterborousRunnable runnable: scenario.getAttachedRunnable()){
+                for (KasterborousScenario scenario : api.getScenariosProvider().getRegisteredScenarios()) {
+                    if (api.getScenariosProvider().IsScenarioActivated(scenario.getName())) {
+                        if (scenario.getAttachedRunnable() != null) {
+                            for (KasterborousRunnable runnable : scenario.getAttachedRunnable()) {
                                 runnable.onAPILaunch(api);
                             }
                         }
 
                     }
                 }
+                //Choisi un host parmi les joueurs op
+                if(host==null){
+                    for(Player player : Bukkit.getOnlinePlayers()){
+                        if(player.isOp()){
+                            setHost(player);
+                            break;
+                        }
+                    }
+                }
             }
         }.runTaskLater(this,30L);
 	}
-
+    public static void setHost(Player player){
+        Main.host = player.getUniqueId();
+        PermissionManager.getPerms().put(Main.host,PermissionManager.host_perms);
+    }
     private static Date getClassBuildTime() {
         Date d = null;
         Class<?> currentClass = new Object() {}.getClass().getEnclosingClass();

@@ -140,8 +140,7 @@ public class HostCommand implements CommandExecutor {
 							target.setOp(true);
 							Main.cohost.remove(target.getUniqueId());
                             PermissionManager.getPerms().remove(target.getUniqueId());
-							Main.host = target.getUniqueId();
-                            PermissionManager.getPerms().put(Main.host,PermissionManager.host_perms);
+							Main.setHost(target);
 						    Main.updateBypass();
 						}else {
 							player.sendMessage(Main.UHCTypo+"§cUsage: /h sethost <Joueur>");

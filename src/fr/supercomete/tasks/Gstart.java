@@ -78,7 +78,7 @@ public class Gstart extends BukkitRunnable{
             new BukkitRunnable(){
                 @Override
                 public void run() {
-                    PlayerUtility.giveStuff(Main.getPlayerlist());
+                    PlayerUtility.giveStuff();
                 }
             }.runTaskLater(Main.INSTANCE,2L);
 			cancel();
