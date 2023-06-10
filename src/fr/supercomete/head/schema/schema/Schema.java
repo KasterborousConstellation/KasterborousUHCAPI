@@ -1,7 +1,7 @@
 package fr.supercomete.head.schema.schema;
 
-import fr.supercomete.head.schema.exception.BadExtensionException;
-import fr.supercomete.head.schema.exception.MalformedSchemaException;
+import fr.supercomete.head.Exception.BadExtensionException;
+import fr.supercomete.head.Exception.MalformedSchemaException;
 import fr.supercomete.head.schema.utility.FileUtility;
 import org.bukkit.entity.Player;
 

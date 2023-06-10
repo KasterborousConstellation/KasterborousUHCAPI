@@ -1,14 +1,12 @@
 package fr.supercomete.head.schema;
 
-import fr.supercomete.enums.Gstate;
-import fr.supercomete.head.GameUtils.Game;
 import fr.supercomete.head.GameUtils.GameMode.ModeHandler.KtbsAPI;
 import fr.supercomete.head.GameUtils.GameMode.ModeModifier.Groupable;
 import fr.supercomete.head.GameUtils.Lag;
 import fr.supercomete.head.core.KasterborousRunnable;
 import fr.supercomete.head.core.Main;
-import fr.supercomete.head.schema.exception.BadExtensionException;
-import fr.supercomete.head.schema.exception.MalformedSchemaException;
+import fr.supercomete.head.Exception.BadExtensionException;
+import fr.supercomete.head.Exception.MalformedSchemaException;
 import fr.supercomete.head.schema.schema.Schema;
 import fr.supercomete.head.schema.utility.FileUtility;
 import fr.supercomete.head.schema.utility.SchemaCondition;
@@ -26,7 +24,6 @@ import java.lang.reflect.Field;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.util.*;
-import java.util.logging.Level;
 
 
 public class ScoreBoardSchemaHandler {

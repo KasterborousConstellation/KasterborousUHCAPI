@@ -1,7 +1,6 @@
 package fr.supercomete.head.schema.schema;
 
-import com.sun.media.sound.InvalidFormatException;
-import fr.supercomete.head.schema.exception.MalformedSchemaException;
+import fr.supercomete.head.Exception.MalformedSchemaException;
 import fr.supercomete.head.schema.utility.SchemaEnvironnement;
 import org.bukkit.entity.Player;
 
