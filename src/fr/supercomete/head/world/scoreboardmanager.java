@@ -5,7 +5,9 @@ import fr.supercomete.head.GameUtils.Fights.Fight;
 import fr.supercomete.head.GameUtils.Fights.FightHandler;
 import fr.supercomete.head.GameUtils.GameMode.ModeHandler.MapHandler;
 import fr.supercomete.head.PlayerUtils.BonusHandler;
+import fr.supercomete.head.core.KasterborousRunnable;
 import fr.supercomete.head.role.Triggers.Trigger_OnScoreBoardUpdate;
+import fr.supercomete.head.schema.ScoreBoardSchemaHandler;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
@@ -19,8 +21,6 @@ import org.bukkit.potion.PotionEffectType;
 import org.bukkit.scoreboard.*;
 import fr.supercomete.enums.Gstate;
 import fr.supercomete.head.GameUtils.Scenarios.Scenarios;
-import fr.supercomete.head.GameUtils.schemes.ColorScheme;
-import fr.supercomete.head.GameUtils.Lag;
 import fr.supercomete.head.GameUtils.TeamManager;
 import fr.supercomete.head.GameUtils.GameMode.ModeHandler.KtbsAPI;
 import fr.supercomete.head.GameUtils.GameMode.ModeModifier.CampMode;
@@ -30,11 +30,9 @@ import fr.supercomete.head.role.Role;
 import fr.supercomete.head.role.RoleHandler;
 import fr.supercomete.head.role.Bonus.BonusType;
 import fr.supercomete.head.role.RoleModifier.BonusHeart;
-import fr.supercomete.head.world.ScoreBoard.ScoreBoardManager;
 import fr.supercomete.head.world.ScoreBoard.SimpleScoreboard;
 import net.minecraft.server.v1_8_R3.IChatBaseComponent;
 import net.minecraft.server.v1_8_R3.IChatBaseComponent.ChatSerializer;
-import net.minecraft.server.v1_8_R3.PacketPlayOutPlayerListHeaderFooter;
 import net.minecraft.server.v1_8_R3.PacketPlayOutTitle;
 import net.minecraft.server.v1_8_R3.PacketPlayOutTitle.EnumTitleAction;
 public class scoreboardmanager {
@@ -43,27 +41,24 @@ public class scoreboardmanager {
 	public scoreboardmanager(Main main) {
 		scoreboardmanager.main = main;
 	}
-
+    private static KtbsAPI api = Bukkit.getServicesManager().load(KtbsAPI.class);
 	public void ChangeScoreboard() {
-		ColorScheme scheme = Main.currentGame.getColorScheme();
-		ChatColor p = scheme.getPrimary();
-		ChatColor s = scheme.getSecondary();
-		ChatColor t = scheme.getTertiary();
-		Bukkit.getServer().getScheduler().runTaskTimer(main, new Runnable() {
-			@Override
-			public void run() {
+		Bukkit.getServer().getScheduler().runTaskTimer(main, ()->{
 				timer++;
 				timer=(byte)(timer%4);
+
+                for(final KasterborousRunnable runnables : api.getKTBSRunnableProvider().getRunnables()){
+                    runnables.onScoreBoardUpdate(api);
+                }
+
 				for (final Player player : Bukkit.getServer().getOnlinePlayers()) {
 					//Fix bug that kill people if they go under -64 y
-					//Players cannot go under -5 if they are into uhc playworld 
+					//Players cannot go under -5 if they are into uhc playworld
 					if(MapHandler.getMap()!=null&&player.getWorld().equals(MapHandler.getMap().getPlayWorld())) {
 						if(player.getLocation().getY()<-5) {
 							player.teleport(new Location(player.getWorld(), player.getLocation().getX(), 150, player.getLocation().getZ()));
 						}
 					}
-
-					ScoreBoardManager.update(player);
 					SetallScoreboard(player);
                     int count =20;
 					if(Main.currentGame.getMode()instanceof CampMode) {
@@ -84,15 +79,6 @@ public class scoreboardmanager {
 					for(final Fight fight: FightHandler.currentFight){
 					    FightHandler.update(fight,FightHandler.currentFight);
                     }
-					double tps = Lag.getTPS() * 100;
-					tps = Math.round(tps);
-					tps = tps / 100;
-					sendHeadAndFooter(player,
-							s + "» " + p + Main.currentGame.getMode().getName() + s
-									+ " «" + "\n" + t + "Ping: §a" + getPing(player) + "ms " + t + "TPS: §a" + tps
-									+ "\n",
-							"\n" + t + "https://discord.gg/" + main.getDiscordLink() + "\n" + s + "»" + p
-									+ main.getServerId() + s + "«\n" + "\n" + p + "Plugin par " + s + "Supercomete");
 					if (Main.currentGame.getScenarios().contains(Scenarios.CatEyes)) {
 						player.removePotionEffect(PotionEffectType.NIGHT_VISION);
 						player.addPotionEffect(new PotionEffect(PotionEffectType.NIGHT_VISION, 251, 0));
@@ -118,12 +104,12 @@ public class scoreboardmanager {
 						}
 					}
 				}
-			}
+
 		}, 0L, 5L);
 	}
 	public static void SetallScoreboard(Player player) {
 		if(timer==0) {
-			SimpleScoreboard ss = ScoreBoardManager.boards.get(player.getUniqueId());
+			final SimpleScoreboard ss = ScoreBoardSchemaHandler.get(player);
 			Scoreboard sc = ss.getScoreboard();
             float addpercent=0;
 			if (RoleHandler.IsRoleGenerated()) {
@@ -142,7 +128,7 @@ public class scoreboardmanager {
             float addbonus = BonusHandler.getTotalOfBonus(player,BonusType.Speed);
             player.setWalkSpeed(0.2F * ((100.0F+addpercent+addbonus)/100.0F));
 			if(Main.currentGame.getMode()instanceof TeamMode) {
-                for (fr.supercomete.head.GameUtils.Team t : Bukkit.getServicesManager().load(KtbsAPI.class).getTeamProvider().getTeams()) {
+                for (fr.supercomete.head.GameUtils.Team t : api.getTeamProvider().getTeams()) {
                     ChatColor col = TeamManager.getColorOfShortColor(t.getColor());
                     String prefix = col.toString() + t.getChar() + " ";
                     if (sc.getTeam(t.getTeamName()) != null)
@@ -198,25 +184,6 @@ public class scoreboardmanager {
 				}
 			}
 		}
-	}
-
-	public static void sendHeadAndFooter(Player player, String head, String foot) {
-		PacketPlayOutPlayerListHeaderFooter packet = new PacketPlayOutPlayerListHeaderFooter();
-		try {
-			Field header = packet.getClass().getDeclaredField("a");
-			Field footer = packet.getClass().getDeclaredField("b");
-			header.setAccessible(true);footer.setAccessible(true);
-			header.set(packet, ChatSerializer.a("\"" + head + "\""));
-			footer.set(packet, ChatSerializer.a("\"" + foot + "\""));
-		} catch (Exception ex) {
-			ex.printStackTrace();
-			return;
-		}
-		((CraftPlayer) player).getHandle().playerConnection.sendPacket(packet);
-	}
-
-	public static int getPing(Player player) {
-		return ((CraftPlayer) player).getHandle().ping;
 	}
 
 	public static void titlemessage(String str) {

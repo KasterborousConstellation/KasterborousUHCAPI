@@ -1,7 +1,13 @@
 package fr.supercomete.datamanager.FileManager;
 
+import org.apache.commons.io.FileUtils;
+
 import java.io.*;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.List;
 import java.util.stream.Collectors;
 import java.util.zip.GZIPInputStream;
 
@@ -23,6 +29,14 @@ public class Fileutils {
 			e.printStackTrace();
 		}
 	}
+    public static void writeUTF8(File file, String content) {
+        try {
+            FileUtils.write(file,content,StandardCharsets.UTF_8);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+
+    }
     public static String readFileFromResources(Class<?> claz, String fileName) throws IOException {
         ClassLoader classLoader = claz.getClassLoader();
         try (InputStream inputStream = classLoader.getResourceAsStream(fileName)) {

@@ -11,6 +11,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.logging.Level;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -63,7 +64,6 @@ public class SimpleScoreboard {
 
     public boolean remove(Integer score, String n, boolean b) {
         String toRemove = get(score, n);
-
         if (toRemove == null)
             return false;
 
@@ -74,13 +74,15 @@ public class SimpleScoreboard {
 
         return true;
     }
+    public void fix(Integer integer){
+        removed.add(integer);
+    }
 
     public String get(int score, String n) {
         String str = null;
 
         for (Map.Entry<String, Integer> entry : scores.entrySet()) {
-            if (entry.getValue().equals(score) &&
-                    !entry.getKey().equals(n)) {
+            if (entry.getValue().equals(score) && !entry.getKey().equals(n)) {
                 str = entry.getKey();
             }
         }

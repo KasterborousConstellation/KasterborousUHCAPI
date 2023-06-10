@@ -5,7 +5,6 @@ public class ListenersRegisterer {
 	public static boolean Register(PluginManager pm,Main main) {
 		try {
 			//Listeners
-            pm.registerEvents(new WorldLoadEvents(),main);
 			pm.registerEvents(new FurnaceBurnListener(main), main);
 			pm.registerEvents(new EntityDeathListener(), main);
 			pm.registerEvents(new ChatListeners(), main);

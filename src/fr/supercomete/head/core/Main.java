@@ -29,6 +29,9 @@ import fr.supercomete.head.PlayerUtils.EffectHandler;
 import fr.supercomete.head.permissions.MalformedPermissionException;
 import fr.supercomete.head.permissions.PermissionManager;
 import fr.supercomete.head.permissions.Permissions;
+import fr.supercomete.head.schema.ScoreBoardSchemaHandler;
+import fr.supercomete.head.schema.exception.BadExtensionException;
+import fr.supercomete.head.schema.exception.MalformedSchemaException;
 import fr.supercomete.head.world.worldgenerator;
 import fr.supercomete.tasks.Cycle;
 import org.bukkit.*;
@@ -60,14 +63,12 @@ import fr.supercomete.head.structure.StructureHandler;
 import fr.supercomete.head.world.BiomeGenerator;
 import fr.supercomete.head.world.WorldGarbageCollector;
 import fr.supercomete.head.world.scoreboardmanager;
-import fr.supercomete.head.world.ScoreBoard.ScoreBoardManager;
 import fr.supercomete.tasks.GAutostart;
 
 public class Main extends JavaPlugin {
 	public final static String UHCTypo = "§a[§6UHC§a]"+"§7 » ";
-	public final static String ScoreBoardUHCTypo = ChatColor.GREEN+"§a[§6UHC§a] ";
-	private final String ServerId = getConfig().getString("serverapi.serverconfig.ServerId");
-	private final String DiscordLink = getConfig().getString("serverapi.serverconfig.DiscordLink");
+	public final String ServerId = getConfig().getString("serverapi.serverconfig.ServerId");
+	public final String DiscordLink = getConfig().getString("serverapi.serverconfig.DiscordLink");
 	private static boolean forcedpvp = false;
 	private static boolean forcebordure = false;
 	private static boolean forcerole = false;
@@ -150,13 +151,16 @@ public class Main extends JavaPlugin {
          */
         Bukkit.getServicesManager().register(KtbsAPI.class,new KtbsAPI(),this, ServicePriority.Lowest);
         api = Bukkit.getServicesManager().load(KtbsAPI.class);
+        /*
+        Schemas init
+         */
+
 
         /*
         BiomeGenerator && strutureHandler
          */
 		generator = new BiomeGenerator();
 		structurehandler= new StructureHandler(this);
-		new ScoreBoardManager(this);
 		host = null;
 		Date Compiledate = null;
 		Compiledate = getClassBuildTime();
@@ -171,9 +175,15 @@ public class Main extends JavaPlugin {
 		api.getModeProvider().registerMode(new Null_Mode());
 		UHCClassic uhcclassic = new UHCClassic();	
 		api.getModeProvider().registerMode(uhcclassic);
-		Bukkit.broadcastMessage("§dVersion: 1.3 Build("+Compiledate.getDate()+"/"+(Compiledate.getMonth()+1)+") §cSNAPSHOT");
+		Bukkit.broadcastMessage("§dVersion: 1.5.0 Build("+Compiledate.getDate()+"/"+(Compiledate.getMonth()+1)+") §cSNAPSHOT");
 		currentGame=new Game((new Null_Mode()).getName(),this);
-		Bukkit.getServer().getScheduler().scheduleSyncRepeatingTask(this, new Lag(), 200L, 1L);// LagO'meter
+        try {
+            ScoreBoardSchemaHandler.init();
+        }catch (IOException | BadExtensionException | MalformedSchemaException e) {
+            Bukkit.getLogger().log(Level.SEVERE,"KTBS-SEVERE-FAULT: AN ERROR WAS THROWN DURING THE SCHEMA INITIALIZATION.");
+            throw new RuntimeException(e);
+        }
+        Bukkit.getServer().getScheduler().scheduleSyncRepeatingTask(this, new Lag(), 200L, 1L);// LagO'meter
 		spawn = new Location(Bukkit.getWorld("world"), getConfig().getInt("serverapi.spawn.x"),
 				getConfig().getInt("serverapi.spawn.y"), getConfig().getInt("serverapi.spawn.z"));
 		loadconfig();
@@ -370,7 +380,6 @@ public class Main extends JavaPlugin {
 					player.sendMessage(UHCTypo + "§cErreur, le scénario +" + sc.getName() + "est incompatible");
 				}
 			}
-            ScoreBoardManager.reset();
 			allplayereffectclear();
 			Main.currentGame.setGamestate(Gstate.Starting);
 			Main.currentGame.setFirstBorder(Main.currentGame.getCurrentBorder());
@@ -408,7 +417,6 @@ public class Main extends JavaPlugin {
 				return;
 			}
 		}
-        ScoreBoardManager.reset();
 		Main.currentGame.getFullinv().clear();
 		RoleHandler.setHistoric(null);
 		Main.currentGame.setGamestate(Gstate.Waiting);
@@ -548,12 +556,6 @@ public class Main extends JavaPlugin {
 
 	public static String TranslateBoolean(boolean b) {
 		return (b) ? "§aOn" : "§cOff";
-	}
-	public String getServerId() {
-		return ServerId;
-	}
-	public String getDiscordLink() {
-		return DiscordLink;
 	}
 	public boolean isForcedpvp() {
 		return forcedpvp;

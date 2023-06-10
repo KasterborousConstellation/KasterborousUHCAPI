@@ -4,10 +4,28 @@ import fr.supercomete.head.GameUtils.GameMode.ModeHandler.KtbsAPI;
 import fr.supercomete.head.GameUtils.Time.Timer;
 public interface KasterborousRunnable {
     String name();
-    void onAPILaunch(KtbsAPI api);
-    void onAPIStop(KtbsAPI api);
-    void onGameLaunch(KtbsAPI api);
-    void onGameEnd(KtbsAPI api);
-    void onTick(Gstate gstate, KtbsAPI api);
-    void onTimer(Timer timer);
+    default void onAPILaunch(KtbsAPI api){
+
+    }
+    default void onAPIStop(KtbsAPI api){
+
+    }
+    default void onGameLaunch(KtbsAPI api){
+
+    }
+    default void onGameEnd(KtbsAPI api){
+
+    }
+    default void onTick(Gstate gstate, KtbsAPI api){
+
+    }
+    default void onTimer(Timer timer){
+
+    }
+    default void onSecond(KtbsAPI api){
+
+    }
+    default void onScoreBoardUpdate(KtbsAPI api){
+
+    }
 }

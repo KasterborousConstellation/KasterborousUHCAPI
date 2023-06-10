@@ -5,9 +5,9 @@ import java.util.concurrent.CopyOnWriteArrayList;
 
 import javax.annotation.Nullable;
 
-import fr.supercomete.head.GameUtils.schemes.ColorScheme;
+
 import fr.supercomete.head.GameUtils.GameMode.ModeModifier.CampMode;
-import fr.supercomete.head.GameUtils.schemes.SchemeLib;
+
 import fr.supercomete.head.role.RoleHandler;
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
@@ -36,9 +36,6 @@ public abstract class Mode {
         Mode.KillSwitchImplement(player, damager);
         player.setGameMode(GameMode.SPECTATOR);
         ModeDefaultOnDeath(new Offline_Player(player),deathLocation);
-    }
-    public ColorScheme getScheme(){
-        return SchemeLib.default_scheme;
     }
 	private String name;
 	private Material material;

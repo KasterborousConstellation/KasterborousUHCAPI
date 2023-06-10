@@ -8,7 +8,7 @@ import fr.supercomete.head.GameUtils.Events.GameEvents.Event;
 import fr.supercomete.head.GameUtils.Events.PlayerEvents.PlayerEvent;
 import fr.supercomete.head.GameUtils.GameConfigurable.KasterBorousConfigurable;
 import fr.supercomete.head.GameUtils.Scenarios.KasterborousScenario;
-import fr.supercomete.head.GameUtils.schemes.ColorScheme;
+
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.enchantments.Enchantment;
@@ -342,9 +342,6 @@ public class Game {
 		this.nodamagePlayerList = nodamagePlayerList;
 	}
 
-	public ColorScheme getColorScheme() {
-		return getMode().getScheme();
-	}
 
 	public ArrayList<Offline_Player> getOfflinelist() {
 		return offlinelist;
