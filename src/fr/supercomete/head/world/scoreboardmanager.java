@@ -1,9 +1,9 @@
 package fr.supercomete.head.world;
-import java.lang.reflect.Field;
 import java.util.UUID;
 import fr.supercomete.head.GameUtils.Fights.Fight;
 import fr.supercomete.head.GameUtils.Fights.FightHandler;
 import fr.supercomete.head.GameUtils.GameMode.ModeHandler.MapHandler;
+import fr.supercomete.head.GameUtils.KTBS_Team;
 import fr.supercomete.head.PlayerUtils.BonusHandler;
 import fr.supercomete.head.core.KasterborousRunnable;
 import fr.supercomete.head.role.Triggers.Trigger_OnScoreBoardUpdate;
@@ -128,7 +128,7 @@ public class scoreboardmanager {
             float addbonus = BonusHandler.getTotalOfBonus(player,BonusType.Speed);
             player.setWalkSpeed(0.2F * ((100.0F+addpercent+addbonus)/100.0F));
 			if(Main.currentGame.getMode()instanceof TeamMode) {
-                for (fr.supercomete.head.GameUtils.Team t : api.getTeamProvider().getTeams()) {
+                for (KTBS_Team t : api.getTeamProvider().getTeams()) {
                     ChatColor col = TeamManager.getColorOfShortColor(t.getColor());
                     String prefix = col.toString() + t.getChar() + " ";
                     if (sc.getTeam(t.getTeamName()) != null)

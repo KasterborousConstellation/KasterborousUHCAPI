@@ -1,4 +1,5 @@
 package fr.supercomete.head.permissions;
+import fr.supercomete.head.Exception.MalformedPermissionException;
 import fr.supercomete.head.core.Main;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;

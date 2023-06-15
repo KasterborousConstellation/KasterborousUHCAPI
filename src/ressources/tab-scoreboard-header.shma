@@ -1,7 +1,7 @@
 #===========================================
 #           HEADER TAB-SCOREBOARD
 #===========================================
-#EN:
+#FR:
 #Utilisez '#' pour commenter une ligne
 #Le schéma est limité à 15 lignes de tableau des scores. Si vous en avez plus de 15, elles ne seront pas affichées.
 #Les couleurs peuvent être ajoutées en utilisant '&' ou '§'. Si vous souhaitez ajouter le caractère '&', remplacez-le par '\&'.
@@ -9,7 +9,7 @@
 #   La ligne ne s'affichera que si 'condition' est vraie.
 #Pour insérer une variable dans votre ligne, ajoutez {variable}
 #Si vous souhaitez ajouter le caractère '{' ou '}', spécifiez-les avec '\{' ou '\}'.
-#FR:
+#EN:
 #Use '#' to comment a line
 #The schema is limited to 15 lines of scoreboard. If their is more than 15 lines, they won't be shown.
 #Colors can be made by using & or §. if you wish to add '&' character replace it by '\&'

@@ -2,13 +2,12 @@ package fr.supercomete.head.Listeners;
 
 import java.util.List;
 import java.util.Random;
-import java.util.logging.Level;
 
 import fr.supercomete.enums.Gstate;
 import fr.supercomete.head.GameUtils.GameMode.ModeHandler.KtbsAPI;
 import fr.supercomete.head.GameUtils.Scenarios.MonsterHunter;
 import fr.supercomete.head.GameUtils.Scenarios.Objective;
-import fr.supercomete.head.GameUtils.Team;
+import fr.supercomete.head.GameUtils.KTBS_Team;
 import fr.supercomete.head.GameUtils.TeamManager;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
@@ -69,7 +68,7 @@ final class EntityDeathListener implements Listener{
         if(e.getEntity().getKiller()!=null&&!Main.currentGame.isGameState(Gstate.Waiting)&&Bukkit.getServicesManager().load(KtbsAPI.class).getScenariosProvider().IsScenarioActivated("Monster-Hunter")){
             Player player = e.getEntity().getKiller();
             MonsterHunter hunter = (MonsterHunter) Bukkit.getServicesManager().load(KtbsAPI.class).getScenariosProvider().getActivatedScenario("Monster-Hunter");
-            Team team = TeamManager.getTeamOfUUID(player.getUniqueId());
+            KTBS_Team team = TeamManager.getTeamOfUUID(player.getUniqueId());
             Objective obj=hunter.objectives.get(team.getTeam_id());
             obj.kill(e.getEntityType());
         }

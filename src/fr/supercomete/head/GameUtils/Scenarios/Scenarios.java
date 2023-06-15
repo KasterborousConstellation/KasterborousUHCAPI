@@ -6,7 +6,7 @@ import fr.supercomete.enums.Gstate;
 
 import fr.supercomete.head.GameUtils.GameMode.ModeHandler.KtbsAPI;
 import fr.supercomete.head.GameUtils.GameMode.ModeModifier.TeamMode;
-import fr.supercomete.head.GameUtils.Team;
+import fr.supercomete.head.GameUtils.KTBS_Team;
 import fr.supercomete.head.GameUtils.TeamManager;
 import fr.supercomete.head.GameUtils.Time.Timer;
 import fr.supercomete.head.core.KasterborousRunnable;
@@ -60,7 +60,7 @@ public enum Scenarios implements KasterborousScenario {
                 return;
             }
             fr.supercomete.commands.TeamInventory.inventoryHashMap.clear();
-            for(Team team : api.getTeamProvider().getTeams()){
+            for(KTBS_Team team : api.getTeamProvider().getTeams()){
                 fr.supercomete.commands.TeamInventory.inventoryHashMap.put(
                         team,
                         Bukkit.createInventory(null,54,""+TeamManager.getColorOfShortColor(team.getColor())+"Inventaire de l'équipe "+team.getTeamName())

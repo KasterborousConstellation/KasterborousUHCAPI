@@ -1,14 +1,12 @@
 package fr.supercomete.head.GameUtils;
 import java.util.*;
 import java.util.Map.Entry;
-
 import fr.supercomete.head.GameUtils.Enchants.EnchantLimit;
 import fr.supercomete.head.GameUtils.Enchants.EnchantType;
 import fr.supercomete.head.GameUtils.Events.GameEvents.Event;
 import fr.supercomete.head.GameUtils.Events.PlayerEvents.PlayerEvent;
 import fr.supercomete.head.GameUtils.GameConfigurable.KasterBorousConfigurable;
 import fr.supercomete.head.GameUtils.Scenarios.KasterborousScenario;
-
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.enchantments.Enchantment;
@@ -184,13 +182,14 @@ public class Game {
 
 	public HashMap<Class<?>, Integer> getRoleCompoMap() {
 		HashMap<Class<?>, Integer> hash = new HashMap<>();
+        final KtbsAPI api = Bukkit.getServicesManager().load(KtbsAPI.class);
 		for (Entry<String, Integer> entry : roleCompoMap.entrySet()) {
-			hash.put(Bukkit.getServicesManager().load(KtbsAPI.class).getRoleProvider().getRoleClassByName(entry.getKey()), entry.getValue());
+			hash.put(api.getRoleProvider().getRoleClassByName(entry.getKey()), entry.getValue());
 		}
 		return hash;
 	}
 	public void setRoleCompoMap(HashMap<Class<?>, Integer> roleCompoMap) {
-        HashMap<String, Integer> ret = new HashMap<String, Integer>();
+        HashMap<String, Integer> ret = new HashMap<>();
 		for (Entry<Class<?>, Integer> src : roleCompoMap.entrySet()) {
 			ret.put(Objects.requireNonNull(Bukkit.getServicesManager().load(KtbsAPI.class).getRoleProvider().getRoleByClass(src.getKey())).getName(), src.getValue());
 		}
@@ -213,8 +212,6 @@ public class Game {
 	public void setEpisode(int episode) {
 		Episode = episode;
 	}
-
-
 
 	public int getDiamondlimit() {
 		return getDataFrom(Configurable.LIST.DiamondLimit);

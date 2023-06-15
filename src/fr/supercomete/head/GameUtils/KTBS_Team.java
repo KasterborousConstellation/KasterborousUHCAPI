@@ -1,9 +1,8 @@
 package fr.supercomete.head.GameUtils;
-
 import java.util.ArrayList;
 import java.util.UUID;
 import org.bukkit.Bukkit;
-public class Team {
+public class KTBS_Team {
     private UUID team_id;
 	private ArrayList<UUID> members;
 	private String Prefix,Suffix,TeamName;
@@ -11,7 +10,7 @@ public class Team {
 	private char Char;
 	private int MaxPlayerAmount;
 	private boolean anonymousteam;
-	public Team(String TeamName,ArrayList<UUID> members,String Prefix,String Suffix,short color,char c,int MaxPlayerAmount,boolean anonymousteam) {
+	public KTBS_Team(String TeamName, ArrayList<UUID> members, String Prefix, String Suffix, short color, char c, int MaxPlayerAmount, boolean anonymousteam) {
 		this.TeamName=TeamName;
 		this.members=members;
 		this.Prefix=Prefix;
@@ -35,7 +34,7 @@ public class Team {
 		this.members = members;
 	}
 	public void addMembers(UUID member) {
-        for (Team t : TeamManager.teamlist)
+        for (KTBS_Team t : TeamManager.teamlist)
             if (t.isMemberInTeam(member))
                 t.removeMember(member);// Remove The player if the player have join another
 		if(this.members.contains(member)) {
@@ -87,7 +86,7 @@ public class Team {
 		MaxPlayerAmount = maxPlayerAmount;
 	}
 	public ArrayList<String> getTeamItemLore(){
-		ArrayList<String> lore=new ArrayList<String>();
+		ArrayList<String> lore=new ArrayList<>();
 		for(UUID uu:this.getMembers()) {
 			String name =Bukkit.getPlayer(uu).getName();
 			lore.add(TeamManager.getColorOfShortColor(getColor())+""+getChar()+name);

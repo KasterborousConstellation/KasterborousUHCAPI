@@ -8,16 +8,21 @@ import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 
-import fr.supercomete.head.world.worldgenerator;
 public class Structure {
 	private final String structurename;
 	private int x,y,z = 0;
 	private final CustomBlock[][][] tridimentionalarray;
 	private int XoffSet,YoffSet,ZoffSet=0;
+    private String worldname;
 	public Structure(String name, CustomBlock[][][] tridimentionalarray) {
 		this.structurename=name;
 		this.tridimentionalarray=tridimentionalarray;
 	}
+    public Structure(String name, String WorldName, CustomBlock[][][] tridimentionalarray) {
+        this.structurename=name;
+        this.tridimentionalarray=tridimentionalarray;
+        this.worldname=WorldName;
+    }
 	@SuppressWarnings("deprecation")
 	public void generateStructure(Location location) {
 		final World world = location.getWorld();
@@ -35,6 +40,9 @@ public class Structure {
 			}
 		}
 	}
+    public CustomBlock[][][] getData(){
+        return tridimentionalarray;
+    }
 	public Location getPositionRelativeToLocation(int[] place) {
 		final Location loc = this.getLocation();
 		loc.add(((double)place[0])+0.5,(place[1]),((double) place[2])+0.5);
@@ -47,7 +55,15 @@ public class Structure {
         if(MapHandler.getMap()==null){
             return new Location(Bukkit.getWorlds().get(0),0,0,0);
         }
-		return new Location(MapHandler.getMap().getStructureWorld(), x, y, z);
+        World world;
+        if(worldname==null|| worldname.equals("StructureWorld")){
+            world = MapHandler.getMap().getStructureWorld();
+        }else if(worldname.equals("PlayWorld")) {
+            world =MapHandler.getMap().getPlayWorld();
+        }else{
+            world = Bukkit.getWorld(worldname);
+        }
+		return new Location(world, x, y, z);
 	}
 	public void setLocation(Location location) {
 		x=(int)location.getX();
@@ -59,7 +75,10 @@ public class Structure {
 		YoffSet=y;
 		ZoffSet=z;
 	}
-	public void teleport(Player player) {
+    public String getWorldName(){
+        return worldname;
+    }
+    public void teleport(Player player) {
 		Location location = getLocation();
 		location.setX(location.getX()+XoffSet);
 		location.setY(location.getY()+YoffSet);

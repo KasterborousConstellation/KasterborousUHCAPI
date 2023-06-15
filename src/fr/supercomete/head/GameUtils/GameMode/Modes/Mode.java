@@ -99,15 +99,8 @@ public abstract class Mode {
 	public void setStructure(ArrayList<Structure> structure) {
 		this.structure = structure;
 	}
-	public void setStructureLocation(Location location,String structurename) {
-		for(final Structure structure: this.structure) {
-			if(structure.getStructurename().equalsIgnoreCase(structurename)) {
-				structure.setLocation(location);
-				return;
-			}
-		}
-	}
-	public final static void GoldenHeadImplement(Player player, Player damager) {
+
+	public static void GoldenHeadImplement(Player player, Player damager) {
 		if (Main.currentGame.getScenarios().contains(Scenarios.GoldenHead)) {
 			if (damager != null) {
 				ItemStack item_ = InventoryUtils.createColorItem(Material.SKULL_ITEM, null, 1, (short) 3);
@@ -119,7 +112,7 @@ public abstract class Mode {
 		}
 	}
 
-	public final static void KillSwitchImplement(Player player, Player damager) {
+	public static void KillSwitchImplement(Player player, Player damager) {
 		if (Main.currentGame.getScenarios().contains(Scenarios.KillSwitch)) {
 			if (damager != null) {
 				damager.teleport(player.getLocation());

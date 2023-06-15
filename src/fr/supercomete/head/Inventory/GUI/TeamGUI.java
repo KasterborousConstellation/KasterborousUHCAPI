@@ -1,8 +1,7 @@
 package fr.supercomete.head.Inventory.GUI;
 
-import fr.supercomete.enums.Gstate;
 import fr.supercomete.head.GameUtils.GameMode.ModeHandler.KtbsAPI;
-import fr.supercomete.head.GameUtils.Team;
+import fr.supercomete.head.GameUtils.KTBS_Team;
 import fr.supercomete.head.GameUtils.TeamManager;
 import fr.supercomete.head.Inventory.InventoryUtils;
 import fr.supercomete.head.Inventory.inventoryapi.content.KTBSAction;
@@ -39,7 +38,7 @@ public class TeamGUI extends KTBSInventory {
         inv.setItem(0,InventoryUtils.createSkullItem("eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvOGUwZThhY2FiYWQyN2Q0NjE2ZmFlOWU0NzJjMGRlNjA4NTNkMjAzYzFjNmYzMTM2N2M5MzliNjE5ZjNlMzgzMSJ9fX0=","§fAucun", Arrays.asList("§7Vous retire de votre équipe.")));
         for (int r = 9; r < 9 + api.getTeamProvider().getTeams().size(); r++) {
             int index = r - 9;
-            Team t = api.getTeamProvider().getTeams().get(index);
+            KTBS_Team t = api.getTeamProvider().getTeams().get(index);
             ItemStack TeamStack = InventoryUtils.createColorItem(Material.BANNER, TeamManager.getColorOfShortColor(t.getColor()).toString() + t.getChar() + " " + TeamManager.getNameOfShortColor(t.getColor()), 1, t.getColor());
             ItemMeta itm = TeamStack.getItemMeta();
             itm.setLore(t.getTeamItemLore());
@@ -53,14 +52,14 @@ public class TeamGUI extends KTBSInventory {
     protected boolean onClick(Player player, int currentSlot, KTBSAction action) {
         switch (currentSlot) {
             case 0:
-                Team te = api.getTeamProvider().getTeamOf(player);
+                KTBS_Team te = api.getTeamProvider().getTeamOf(player);
                 if(te != null) {
                     te.removeMember(player.getUniqueId());
                 }
                 break;
             case 4:
-                ArrayList<Team> teams = new ArrayList<>();
-                for(Team tea : api.getTeamProvider().getTeams()){
+                ArrayList<KTBS_Team> teams = new ArrayList<>();
+                for(KTBS_Team tea : api.getTeamProvider().getTeams()){
                     if(tea.getMembers().size()<tea.getMaxPlayerAmount()){
                         teams.add(tea);
                     }
@@ -70,13 +69,13 @@ public class TeamGUI extends KTBSInventory {
                     break;
                 }
                 int i = r.nextInt(teams.size());
-                Team tea = teams.get(i);
+                KTBS_Team tea = teams.get(i);
                 tea.addMembers(player.getUniqueId());
                 Bukkit.broadcastMessage(Main.UHCTypo + player.getName() + " a rejoint l'équipe " + TeamManager.getColorOfShortColor(tea.getColor()) + tea.getTeamName());
                 break;
             default:
                 if (currentSlot > 8 && currentSlot < 9 + TeamManager.teamlist.size()) {
-                    Team team = TeamManager.teamlist.get(currentSlot - 9);
+                    KTBS_Team team = TeamManager.teamlist.get(currentSlot - 9);
                     Bukkit.broadcastMessage(Main.UHCTypo + player.getName() + " a rejoint l'équipe " + TeamManager.getColorOfShortColor(team.getColor()) + team.getTeamName());
                     team.addMembers(player.getUniqueId());
                     player.closeInventory();

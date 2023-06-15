@@ -19,19 +19,20 @@ import fr.supercomete.head.GameUtils.GameMode.ModeHandler.MapHandler;
 import fr.supercomete.head.GameUtils.GameMode.ModeModifier.TeamMode;
 import fr.supercomete.head.GameUtils.GameMode.Modes.*;
 import fr.supercomete.head.GameUtils.Scenarios.*;
-import fr.supercomete.head.GameUtils.Team;
+import fr.supercomete.head.GameUtils.KTBS_Team;
 import fr.supercomete.head.GameUtils.Time.TimeUtility;
 import fr.supercomete.head.GameUtils.Time.TimerType;
 import fr.supercomete.head.Inventory.InventoryManager;
 import fr.supercomete.head.Inventory.inventoryapi.Inventoryapi;
 import fr.supercomete.head.PlayerUtils.BonusHandler;
 import fr.supercomete.head.PlayerUtils.EffectHandler;
-import fr.supercomete.head.permissions.MalformedPermissionException;
+import fr.supercomete.head.Exception.MalformedPermissionException;
 import fr.supercomete.head.permissions.PermissionManager;
 import fr.supercomete.head.permissions.Permissions;
 import fr.supercomete.head.schema.ScoreBoardSchemaHandler;
 import fr.supercomete.head.Exception.BadExtensionException;
 import fr.supercomete.head.Exception.MalformedSchemaException;
+import fr.supercomete.head.schema.utility.SchemaEnvironment;
 import fr.supercomete.head.world.worldgenerator;
 import fr.supercomete.tasks.Cycle;
 import org.bukkit.*;
@@ -87,9 +88,9 @@ public class Main extends JavaPlugin {
     public static Location spawn;
     public static ArrayList<String> messages = new ArrayList<>();
     private static  KtbsAPI api;
+    public static SchemaEnvironment scoreboardEnvironment;
     @Override
     public void onDisable(){
-
         for(final KasterborousRunnable run: api.getKTBSRunnableProvider().getRunnables()){
             run.onAPIStop(Bukkit.getServicesManager().load(KtbsAPI.class));
         }
@@ -100,7 +101,6 @@ public class Main extends JavaPlugin {
                         runnable.onAPIStop(api);
                     }
                 }
-
             }
         }
 
@@ -178,6 +178,7 @@ public class Main extends JavaPlugin {
 		Bukkit.broadcastMessage("§dVersion: 1.5.0 Build("+Compiledate.getDate()+"/"+(Compiledate.getMonth()+1)+") §cSNAPSHOT");
 		currentGame=new Game((new Null_Mode()).getName(),this);
         try {
+            scoreboardEnvironment = new SchemaEnvironment();
             ScoreBoardSchemaHandler.init();
         }catch (IOException | BadExtensionException | MalformedSchemaException e) {
             Bukkit.getLogger().log(Level.SEVERE,"KTBS-SEVERE-FAULT: AN ERROR WAS THROWN DURING THE SCHEMA INITIALIZATION.");
@@ -196,15 +197,14 @@ public class Main extends JavaPlugin {
 		getCommand("inv").setExecutor(new InvCommand());
 		getCommand("h").setExecutor(new HostCommand(this));
 		getCommand("role").setExecutor(new RoleCommand(this));
-		getCommand("roles").setExecutor(new RolesCommand(this));
-		getCommand("compo").setExecutor(new RolesCommand(this));
+		getCommand("roles").setExecutor(new RolesCommand());
+		getCommand("compo").setExecutor(new RolesCommand());
 		getCommand("doc").setExecutor(new docCommand(this));
 		getCommand("docs").setExecutor(new docCommand(this));
 		getCommand("liens").setExecutor(new docCommand(this));
 		getCommand("blseed").setExecutor(new BlackSeedCommand(this));
 		getCommand("blacklistseed").setExecutor(new BlackSeedCommand(this));
 		getCommand("Rolelist").setExecutor(new RolelistCommand(this));
-		getCommand("createstructure").setExecutor(new createStructureCommand(this));
 		getCommand("fullinv").setExecutor(new FullInvCommand(this));
 		getCommand("helpop").setExecutor(new HelpopCommand(this));
 		getCommand("disperse").setExecutor(new DisperseCommand(this));
@@ -217,7 +217,6 @@ public class Main extends JavaPlugin {
         scoreboardmanager score = new scoreboardmanager(this);
 		score.ChangeScoreboard();
 		RoleHandler.IsHiddenRoleNCompo = false;
-		new TeamManager();
 		WorldGarbageCollector.init(this);
 		final PluginManager pm = getServer().getPluginManager();
 		if(!ListenersRegisterer.Register(pm,this))Bukkit.broadcastMessage("§4Une erreur fatale est apparue pendant la phase d'initialisation d'écoute de Spigot");
@@ -353,7 +352,7 @@ public class Main extends JavaPlugin {
         if(currentGame.getMode()instanceof TeamMode){
             final int i =countnumberofplayer();
             int e = 0;
-            for(Team team : TeamManager.teamlist){
+            for(KTBS_Team team : TeamManager.teamlist){
                 e+= team.getMaxPlayerAmount();
             }
             if(e<i){
@@ -422,7 +421,7 @@ public class Main extends JavaPlugin {
 		Main.currentGame.setGamestate(Gstate.Waiting);
 		Main.currentGame.setGenmode(GenerationMode.None);
 		RoleHandler.setIsRoleGenerated(false);
-		RoleHandler.setRoleList(new HashMap<UUID, Role>());
+		RoleHandler.setRoleList(new HashMap<>());
         forcebordure = false;
         forcedpvp = false;
         forcerole = false;

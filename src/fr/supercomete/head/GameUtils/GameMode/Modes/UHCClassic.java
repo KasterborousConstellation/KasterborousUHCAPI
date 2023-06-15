@@ -10,7 +10,7 @@ import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 
-import fr.supercomete.head.GameUtils.Team;
+import fr.supercomete.head.GameUtils.KTBS_Team;
 import fr.supercomete.head.GameUtils.TeamManager;
 import fr.supercomete.head.GameUtils.GameMode.ModeModifier.TeamMode;
 import fr.supercomete.head.PlayerUtils.Offline_Player;
@@ -56,7 +56,7 @@ public class UHCClassic extends Mode implements TeamMode{
 		String Team = "";
 		if (TeamManager.getTeamOfUUID(player.getPlayer()) != null) {
 			if (!TeamManager.getTeamOfUUID(player.getPlayer()).isAnonymousteam()) {
-				Team t = TeamManager.getTeamOfUUID(player.getPlayer());
+				KTBS_Team t = TeamManager.getTeamOfUUID(player.getPlayer());
 				Team = TeamManager.getColorOfShortColor(t.getColor()).toString() + t.getChar() + " ";
 			}
 		}
@@ -68,7 +68,7 @@ public class UHCClassic extends Mode implements TeamMode{
 		String Team = "";
 		if (TeamManager.getTeamOfUUID(player.getUniqueId()) != null) {
 			if (!TeamManager.getTeamOfUUID(player.getUniqueId()).isAnonymousteam()) {
-				Team t = TeamManager.getTeamOfUUID(player.getUniqueId());
+				KTBS_Team t = TeamManager.getTeamOfUUID(player.getUniqueId());
 				Team = TeamManager.getColorOfShortColor(t.getColor()).toString() + t.getChar() + " ";
 			}
 		}
@@ -78,7 +78,7 @@ public class UHCClassic extends Mode implements TeamMode{
 			String DamagerTeam = "";
 			if (TeamManager.getTeamOfUUID(damager.getUniqueId()) != null) {
 				if (!TeamManager.getTeamOfUUID(damager.getUniqueId()).isAnonymousteam()) {
-					Team t = TeamManager.getTeamOfUUID(damager.getUniqueId());
+					KTBS_Team t = TeamManager.getTeamOfUUID(damager.getUniqueId());
 					DamagerTeam = TeamManager.getColorOfShortColor(t.getColor()).toString() + t.getChar()
 							+ " ";
 				}
@@ -120,7 +120,7 @@ public class UHCClassic extends Mode implements TeamMode{
 	@Override
 	public boolean WinCondition() {
         if(TeamManager.getNumberOfAliveTeam()==1) {
-            Team winner= TeamManager.getTeamOfUUID(Main.getPlayerlist().get(0));
+            KTBS_Team winner= TeamManager.getTeamOfUUID(Main.getPlayerlist().get(0));
             scoreboardmanager.titlemessage("Victoire de l'équipe "+TeamManager.getColorOfShortColor(winner.getColor())+winner.getChar()+TeamManager.getNameOfShortColor(winner.getColor()));
 				return true;
         }

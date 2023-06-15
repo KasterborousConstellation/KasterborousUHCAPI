@@ -6,6 +6,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
+import java.util.Objects;
 import java.util.Random;
 import java.util.UUID;
 import java.util.logging.Level;
@@ -108,10 +109,12 @@ public class worldgenerator {
 		        	Bukkit.broadcastMessage("§b[Génération des structures]");
 		        	int i =0;
 		        	for(Structure structure : Main.currentGame.getMode().getStructure()) {
-		        		final Location location = new Location(MapHandler.getMap().getStructureWorld(),i*1000 +10000, 10, i*1000 +10000);
+                        if(structure.getWorldName()==null|| Objects.equals(structure.getWorldName(), "StructureWorld")){
+                            final Location location= new Location(MapHandler.getMap().getStructureWorld(),i*1000 +10000, 10, i*1000 +10000);
+                            structure.setLocation(location);
+                        }
 		        		Bukkit.broadcastMessage("   §bGénération: "+structure.getStructurename());
-		        		structure.generateStructure(location);
-		        		Main.currentGame.getMode().setStructureLocation(location, structure.getStructurename());
+		        		structure.generateStructure(structure.getLocation());
 		        		i++;
 		        	}
 		        }
@@ -125,7 +128,6 @@ public class worldgenerator {
 				final WorldCreator creaWorld = new WorldCreator("/" + worlduuid + "/").seed(getRandomSeed(biomegen.getBiome()));
 				creaWorld.type(WorldType.CUSTOMIZED);
 				creaWorld.generatorSettings(biomegen.generateWorldSetting());
-				
 				MapHandler.getMap().setCurrentWorld(Bukkit.createWorld(creaWorld));
 				worldgenerator.setWorldBorder(Main.currentGame.getFirstBorder(), 0, 0, MapHandler.getMap().getPlayWorld());
 				Main.currentGame.setGenmode(GenerationMode.WorldCreatedOnly);

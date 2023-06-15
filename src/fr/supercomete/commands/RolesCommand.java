@@ -1,35 +1,15 @@
 package fr.supercomete.commands;
-
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map.Entry;
-import java.util.Objects;
-import java.util.UUID;
-import java.util.concurrent.CopyOnWriteArrayList;
-
-import fr.supercomete.head.role.KasterBorousCamp;
-import org.bukkit.Bukkit;
+import java.util.*;
+import fr.supercomete.head.GameUtils.GameMode.ModeModifier.NRGMode;
+import fr.supercomete.head.role.Role;
+import fr.supercomete.head.role.RoleBuilder;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
-
-
-import fr.supercomete.head.GameUtils.GameMode.ModeHandler.KtbsAPI;
-import fr.supercomete.head.GameUtils.GameMode.ModeModifier.CampMode;
 import fr.supercomete.head.core.Main;
-import fr.supercomete.head.role.Role;
 import fr.supercomete.head.role.RoleHandler;
-
 public class RolesCommand implements CommandExecutor {
-	@SuppressWarnings("unused")
-	private final Main main;
-    private static KtbsAPI api = Bukkit.getServicesManager().load(KtbsAPI.class);
-	public RolesCommand(Main main) {
-		this.main = main;
-	}
 	@Override
 	public boolean onCommand(CommandSender sender, Command cmd, String arg2, String[] args) {
 		if (sender instanceof Player) {
@@ -41,36 +21,27 @@ public class RolesCommand implements CommandExecutor {
 		return false;
 	}
 
-	public static void display(HashMap<Class<?>, Integer> map, Player player) {
-		player.sendMessage(Main.UHCTypo + "§6Composition §r(§a"+Main.CountIntegerValue(map)+"§r)");
-        CampMode mode = (CampMode) Main.currentGame.getMode();
-        CopyOnWriteArrayList<Class<?>> preformated = Bukkit.getServicesManager().load(KtbsAPI.class).getModeProvider().getMode(Main.currentGame.getMode().getClass()).getRegisteredrole();
-        ArrayList<KasterBorousCamp> primitives = new ArrayList<>();
-        for(Class<?> claz : preformated){
-            try{
-                Method method = claz.getMethod("getCamp",null);
-                Role role = (Role) claz.getConstructors()[0].newInstance(UUID.randomUUID());
-                KasterBorousCamp camp =(KasterBorousCamp) method.invoke(role);
-                if(!primitives.contains(camp)){
-                    primitives.add(camp);
+	public static void display(Player player) {
+        final NRGMode mode = (NRGMode) Main.currentGame.getMode();
+        final ArrayList<String> array;
+        if(RoleHandler.IsHiddenRoleNCompo){
+            array = new ArrayList<>(Collections.singletonList(Main.UHCTypo + "§4Impossible la composition est cachée"));
+        }else{
+            if(RoleHandler.IsRoleGenerated()){
+                array=mode.getRoleGenerator().displayCompo(new ArrayList<>(RoleHandler.getRoleList().values()));
+            }else{
+                final ArrayList<Role> roles=new ArrayList<>();
+                final HashMap<Class<?>,Integer>map=Main.currentGame.getRoleCompoMap();
+                for(final Map.Entry<Class<?>,Integer>entry: map.entrySet()){
+                    for(int i =0;i<entry.getValue();i++){
+                        roles.add(RoleBuilder.Build(entry.getKey(), UUID.randomUUID()));
+                    }
                 }
-            }catch (NoSuchMethodException | InvocationTargetException | IllegalAccessException | InstantiationException e) {
-                e.printStackTrace();
+                array=mode.getRoleGenerator().displayCompo(roles);
             }
         }
-		for (KasterBorousCamp camp : primitives) {
-			HashMap<Class<?>, Integer> campsMap = new HashMap<Class<?>, Integer>();
-			for (Entry<Class<?>, Integer> entry : map.entrySet()) {
-				if (Objects.requireNonNull(api.getRoleProvider().getRoleByClass(entry.getKey())).getDefaultCamp() == camp)
-					campsMap.put(entry.getKey(), entry.getValue());
-			}
-			if (campsMap.size() != 0) {
-				player.sendMessage(camp.getColor() + " ➤" + camp.getName()+"§r ("+camp.getColor()+Main.CountIntegerValue(campsMap)+"§r)");
-				for (Entry<Class<?>, Integer> e1 : campsMap.entrySet()) {
-					player.sendMessage("  -" + camp.getColor() + Objects.requireNonNull(api.getRoleProvider().getRoleByClass(e1.getKey())).getName()+ " §rx" + e1.getValue());
-				}
-			}
-		}
+        for(final String str:array){
+            player.sendMessage(str);
+        }
 	}
-	
 }

@@ -8,12 +8,11 @@ import org.bukkit.entity.Player;
 import fr.supercomete.head.role.RoleHandler;
 public class Historic {
 	private final HashMap<UUID, HistoricData> rolelist = new HashMap<>();
-	
 	public Historic() {
 		for(UUID uu : RoleHandler.getRoleList().keySet()) {
 			rolelist.put(uu, new HistoricData(RoleHandler.getRoleList().get(uu),Bukkit.getPlayer(uu)));
 		}
-	} 
+	}
 	public HistoricData getEntry(UUID player){
 		return rolelist.get(player);
 	}

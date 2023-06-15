@@ -14,9 +14,8 @@ import fr.supercomete.head.GameUtils.GameMode.ModeModifier.Command;
 import fr.supercomete.head.GameUtils.GameMode.ModeModifier.TeamMode;
 import fr.supercomete.head.GameUtils.GameMode.Modes.Mode;
 import fr.supercomete.head.GameUtils.Scenarios.KasterborousScenario;
-import fr.supercomete.head.GameUtils.Team;
+import fr.supercomete.head.GameUtils.KTBS_Team;
 import fr.supercomete.head.GameUtils.TeamManager;
-import fr.supercomete.head.Inventory.InventoryManager;
 import fr.supercomete.head.PlayerUtils.*;
 import fr.supercomete.head.core.KasterborousRunnable;
 import fr.supercomete.head.core.Main;
@@ -27,6 +26,8 @@ import fr.supercomete.head.role.Bonus.BonusType;
 import fr.supercomete.head.role.KasterBorousCamp;
 import fr.supercomete.head.role.Role;
 import fr.supercomete.head.role.RoleHandler;
+import fr.supercomete.head.schema.utility.SchemaCondition;
+import fr.supercomete.head.schema.utility.SchemaVariable;
 import fr.supercomete.head.structure.StructureHandler;
 import fr.supercomete.head.world.BiomeGenerator;
 import org.bukkit.Bukkit;
@@ -36,7 +37,6 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.potion.PotionEffect;
 import javax.annotation.Nullable;
-import java.io.CharArrayReader;
 import java.lang.reflect.InvocationTargetException;
 import java.util.*;
 import java.util.concurrent.CopyOnWriteArrayList;
@@ -44,7 +44,8 @@ public class KtbsProvider implements
         PlayerProvider,TeamProvider,PotionEffectProvider,
         FightProvider,HostProvider,GameProvider,MapProvider,
         RoleProvider,ModeProvider,ConfigurableProvider,
-        KTBSRunnableProvider,ScenariosProvider,PermissionProvider
+        KTBSRunnableProvider,ScenariosProvider,PermissionProvider,
+        SchemaProvider
 {
     private int call = 0;
     private void update(){
@@ -133,6 +134,11 @@ public class KtbsProvider implements
         return Main.structurehandler;
     }
 
+    @Override
+    public void finalHeal() {
+        update();
+        Main.finalheal();
+    }
 
 
     @Override
@@ -569,7 +575,7 @@ public class KtbsProvider implements
     }
 
     @Override
-    public Team getTeamOf(Player player) {
+    public KTBS_Team getTeamOf(Player player) {
         if(!(getCurrentGame().getMode()instanceof TeamMode))
         {
             return null;
@@ -579,7 +585,7 @@ public class KtbsProvider implements
     }
 
     @Override
-    public Team getTeamOf(UUID uuid) {
+    public KTBS_Team getTeamOf(UUID uuid) {
         if(!(getCurrentGame().getMode()instanceof TeamMode))
         {
             return null;
@@ -599,7 +605,7 @@ public class KtbsProvider implements
     }
 
     @Override
-    public ArrayList<Team> getTeams(){
+    public ArrayList<KTBS_Team> getTeams(){
         if(!(getCurrentGame().getMode()instanceof TeamMode))
         {
             return null;
@@ -791,5 +797,17 @@ public class KtbsProvider implements
     public ArrayList<Permissions> getCoHostPermissions() {
         update();
         return PermissionManager.cohost_perms;
+    }
+
+    @Override
+    public void register(String name, SchemaVariable variable) {
+        update();
+        Main.scoreboardEnvironment.register(name,variable);
+    }
+
+    @Override
+    public void register(String name, SchemaCondition line_condition) {
+        update();
+        Main.scoreboardEnvironment.register(name,line_condition);
     }
 }

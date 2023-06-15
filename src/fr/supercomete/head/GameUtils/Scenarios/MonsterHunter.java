@@ -2,7 +2,7 @@ package fr.supercomete.head.GameUtils.Scenarios;
 import fr.supercomete.enums.Gstate;
 import fr.supercomete.head.GameUtils.GameMode.ModeHandler.KtbsAPI;
 import fr.supercomete.head.GameUtils.GameMode.ModeModifier.TeamMode;
-import fr.supercomete.head.GameUtils.Team;
+import fr.supercomete.head.GameUtils.KTBS_Team;
 import fr.supercomete.head.GameUtils.TeamManager;
 import fr.supercomete.head.GameUtils.Time.Timer;
 import fr.supercomete.head.PlayerUtils.BonusHandler;
@@ -58,7 +58,7 @@ public class MonsterHunter implements KasterborousScenario {
                     return;
                 }
                 objectives.clear();
-                for(Team team : Bukkit.getServicesManager().load(KtbsAPI.class).getTeamProvider().getTeams()){
+                for(KTBS_Team team : Bukkit.getServicesManager().load(KtbsAPI.class).getTeamProvider().getTeams()){
                     objectives.put(team.getTeam_id(), new Objective(team.getMaxPlayerAmount()));
                 }
             }
@@ -78,7 +78,7 @@ public class MonsterHunter implements KasterborousScenario {
                 }
                 tick=(tick+1)%20;
                 if(tick==0){
-                    for(final Team team : Bukkit.getServicesManager().load(KtbsAPI.class).getTeamProvider().getTeams()){
+                    for(final KTBS_Team team : Bukkit.getServicesManager().load(KtbsAPI.class).getTeamProvider().getTeams()){
                         final Objective objective = objectives.get(team.getTeam_id());
                         if(objective.isCompleted()){
                             if(!objective.IsRewarded()){

@@ -1,13 +1,11 @@
 package fr.supercomete.head.role;
 import java.lang.reflect.InvocationTargetException;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Random;
-import java.util.UUID;
+import java.util.*;
+
 import fr.supercomete.commands.RolesCommand;
 import fr.supercomete.head.GameUtils.GameMode.ModeHandler.KtbsAPI;
 import fr.supercomete.head.GameUtils.GameMode.ModeModifier.CampMode;
+import fr.supercomete.head.GameUtils.GameMode.ModeModifier.NRGMode;
 import fr.supercomete.head.GameUtils.Time.TimeUtility;
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
@@ -26,35 +24,36 @@ import fr.supercomete.head.role.RoleState.RoleState;
 public class RoleHandler {
 	public static boolean IsHiddenRoleNCompo;
 	private static boolean IsRoleGenerated;
-	private static HashMap<UUID, Role> RoleList=new HashMap<UUID, Role>();
+	private static HashMap<UUID, Role> RoleList=new HashMap<>();
 	private static Historic historic;
     private static final Random r = new Random();
+    private static boolean isValid(UUID uuid){
+        return Bukkit.getPlayer(uuid)==null || !(Bukkit.getPlayer(uuid).isOnline()) || Bukkit.getPlayer(uuid).getGameMode()== GameMode.SPECTATOR || Main.bypass.contains(uuid);
+    }
 	public static void GiveRole(){
         r.setSeed(System.currentTimeMillis());
-		ArrayList<UUID> uu=new ArrayList<UUID>();
+		ArrayList<UUID> uu=new ArrayList<>();
 		HashMap<Class<?>,Integer> rolelist=Main.currentGame.getRoleCompoMap();
-		for(UUID uud:Main.getPlayerlist()) {
-			if(Bukkit.getPlayer(uud)==null || !(Bukkit.getPlayer(uud).isOnline()) || Bukkit.getPlayer(uud).getGameMode()==GameMode.SPECTATOR ||Main.bypass.contains(uud)) {
+		//Validate
+        for(UUID uud:Main.getPlayerlist()) {
+			if(isValid(uud)) {
 				Main.playerlist.remove(uud);
 			}else
                 uu.add(uud);
 		}
 		RoleList.clear();
 		Collections.shuffle(uu);
-        for (UUID uuid : uu) {
-            int random = (rolelist.size() <= 1) ? 0 : r.nextInt(rolelist.size());
-            Class<?> rt = (Class<?>) rolelist.keySet().toArray()[random];
-            RoleList.put(uuid, RoleBuilder.Build(rt, uuid));
-            if (rolelist.get(rt) <= 1) {
-                rolelist.remove(rt);
-            } else {
-                int amount = rolelist.get(rt);
-                rolelist.put(rt, (amount - 1));
-            }
-            for (ItemStack item : getRoleOf(uuid).getItemStackGiven()) {
-                InventoryUtils.addsafelyitem(Bukkit.getPlayer(uuid), item);
+        Main.INSTANCE.setPlayerlist(uu);
+        final NRGMode mode =(NRGMode) Main.currentGame.getMode();
+        final HashMap<UUID,Class<?>>mapped_role=mode.getRoleGenerator().map(rolelist,new LinkedList<>(uu));
+        final HashMap<UUID,Role> finally_role = new HashMap<>();
+        for(final Map.Entry<UUID,Class<?>>entry:mapped_role.entrySet()){
+            finally_role.put(entry.getKey(),RoleBuilder.Build(entry.getValue(), entry.getKey()));
+            for (ItemStack item : getRoleOf(entry.getKey()).getItemStackGiven()) {
+                InventoryUtils.addsafelyitem(Bukkit.getPlayer(entry.getKey()), item);
             }
         }
+        RoleList=finally_role;
 		setHistoric(new Historic());
 		setIsRoleGenerated(true);
 		for(Role role : RoleList.values()) {
@@ -62,8 +61,7 @@ public class RoleHandler {
 				((PreAnnouncementExecute)role).PreAnnouncement();
 			}
 		}
-		
-		for(UUID unique :RoleList.keySet()) {
+		for(final UUID unique :RoleList.keySet()) {
 			DisplayRole(Bukkit.getPlayer(unique));
 		}
 	}
@@ -81,7 +79,7 @@ public class RoleHandler {
 	}
 
 	public static UUID getWhoHaveRole(Class<?> rt){
-		Role r=null;
+		Role r;
 		try {
 			r = (Role) (rt.getConstructors()[0].newInstance(UUID.randomUUID()));
 		} catch (InstantiationException|IllegalAccessException|IllegalArgumentException|InvocationTargetException|SecurityException e) {
@@ -89,7 +87,6 @@ public class RoleHandler {
             return null;
 		}
         if(!r.AskIfUnique())return null;
-		
 		for(Role rl:RoleList.values()) {
 			if(rl.getClass().equals(rt))return rl.getOwner();
 		}
@@ -108,20 +105,29 @@ public class RoleHandler {
 				addDisplay.append(((Displayed_RoleState) state).getDisplay());
 			}
 		}
-		player.sendMessage("---------------------------------------------");
-		player.sendMessage("§lVotre rôle est "+role.getCamp().getColor()+role.getName()+" "+addDisplay);
-		player.sendMessage("  §lCamp: "+role.getCamp().getColor()+role.getCamp().getName());
+        if(!(role instanceof SchemaRole)){
+            player.sendMessage("---------------------------------------------");
+            player.sendMessage("§lVotre rôle est "+role.getCamp().getColor()+role.getName()+" "+addDisplay);
+            player.sendMessage("  §lCamp: "+role.getCamp().getColor()+role.getCamp().getName());
+        }
+
         if(role.getAddon()!=null){
             role.getAddon().DisplayHead(player);
         }
 
+        if(!role.getRoleinfo().isEmpty()){
+            if(!(role instanceof SchemaRole)) {
+                player.sendMessage("Description:");
+                for(String str:role.getRoleinfo()) {
+                    player.sendMessage("  "+str);
+                }
+            }else{
+                for(final String string :role.getRoleinfo()){
+                    player.sendMessage(string);
+                }
+            }
+        }
 
-		if(!role.getRoleinfo().isEmpty()) { 
-			player.sendMessage("Description:");
-			for(String str:role.getRoleinfo()) {
-				player.sendMessage("  "+str);
-			}
-		}
 		
 		if(role instanceof HasAdditionalInfo) {
 		    HasAdditionalInfo rrole=(HasAdditionalInfo) role;
@@ -129,7 +135,9 @@ public class RoleHandler {
 				player.sendMessage(str);
 			}
 		}
-		player.sendMessage("---------------------------------------------");
+        if(!(role instanceof SchemaRole)){
+            player.sendMessage("---------------------------------------------");
+        }
         if(role.getAddon()!=null){
             role.getAddon().DisplayBottom(player);
         }
@@ -187,20 +195,8 @@ public class RoleHandler {
 		return"§6"+((RoleHandler.getWhoHaveRole(rt)==null)?"Aucun":Bukkit.getPlayer(RoleHandler.getWhoHaveRole(rt)).getName());
 	}
     public static void showcompo(final Player player){
-        if (Main.currentGame.getMode() instanceof CampMode) {
-            if (RoleHandler.IsRoleGenerated()) {
-                HashMap<Class<?>, Integer> map = new HashMap<>();
-                for (Role r : RoleHandler.getRoleList().values()) {
-                    int amount = (map.containsKey(r.getClass())) ? map.get(r.getClass()) + 1 : 1;
-                    map.put(r.getClass(), amount);
-                }
-                if (!RoleHandler.IsHiddenRoleNCompo)
-                    RolesCommand.display(map, player);
-                else
-                    player.sendMessage(Main.UHCTypo+"§4Impossible la composition est cachée");
-            } else {
-                RolesCommand.display(Main.currentGame.getRoleCompoMap(), player);
-            }
+        if (Main.currentGame.getMode() instanceof NRGMode) {
+            RolesCommand.display(player);
         }
     }
 

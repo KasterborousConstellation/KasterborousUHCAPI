@@ -1,5 +1,4 @@
 package fr.supercomete.head.schema;
-
 import fr.supercomete.head.GameUtils.GameMode.ModeHandler.KtbsAPI;
 import fr.supercomete.head.GameUtils.GameMode.ModeModifier.Groupable;
 import fr.supercomete.head.GameUtils.Lag;
@@ -8,24 +7,18 @@ import fr.supercomete.head.core.Main;
 import fr.supercomete.head.Exception.BadExtensionException;
 import fr.supercomete.head.Exception.MalformedSchemaException;
 import fr.supercomete.head.schema.schema.Schema;
-import fr.supercomete.head.schema.utility.FileUtility;
-import fr.supercomete.head.schema.utility.SchemaCondition;
-import fr.supercomete.head.schema.utility.SchemaEnvironnement;
-import fr.supercomete.head.schema.utility.SchemaVariable;
+import fr.supercomete.head.schema.utility.*;
 import fr.supercomete.head.world.ScoreBoard.SimpleScoreboard;
 import net.minecraft.server.v1_8_R3.IChatBaseComponent;
 import net.minecraft.server.v1_8_R3.PacketPlayOutPlayerListHeaderFooter;
 import org.bukkit.Bukkit;
 import org.bukkit.craftbukkit.v1_8_R3.entity.CraftPlayer;
 import org.bukkit.entity.Player;
-
 import java.io.*;
 import java.lang.reflect.Field;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.util.*;
-
-
 public class ScoreBoardSchemaHandler {
     private static HashMap<UUID, SimpleScoreboard> boards = new HashMap<>();
     public static SimpleScoreboard get(Player player){
@@ -75,11 +68,12 @@ public class ScoreBoardSchemaHandler {
             FileUtility.createFile(file);
             FileUtility.write(file,content.toString());
         }
-        return new Schema(file);
+        return new Schema(file,Main.scoreboardEnvironment);
     }
     private static File schemafolder;
     public static void init() throws IOException, BadExtensionException, MalformedSchemaException {
         final File datafolder = Main.INSTANCE.getDataFolder();
+        final SchemaEnvironment env = Main.scoreboardEnvironment;
         schemafolder = new File(datafolder,"schemas");
         if(!schemafolder.exists()){
             Files.createDirectory(schemafolder.toPath());
@@ -87,64 +81,64 @@ public class ScoreBoardSchemaHandler {
         //Load every condition and variables
 
         //VARIABLES
-        SchemaEnvironnement.register(
+        env.register(
                 "tps",
                 (SchemaVariable) player -> getTPS()+""
         );
-        SchemaEnvironnement.register(
+        env.register(
                 "gamemode",
                 (SchemaVariable) player -> Main.currentGame.getMode().getName()
         );
-        SchemaEnvironnement.register(
+        env.register(
                 "gamename",
                 (SchemaVariable) player -> Main.currentGame.getGameName()
         );
-        SchemaEnvironnement.register(
+        env.register(
                 "ping",
                 (SchemaVariable) player -> getPing(player)+""
         );
-        SchemaEnvironnement.register(
+        env.register(
                 "host",
                 (SchemaVariable) player -> getHost()+""
         );
-        SchemaEnvironnement.register(
+        env.register(
                 "serverid",
                 (SchemaVariable) player -> getServerId()+""
         );
-        SchemaEnvironnement.register(
+        env.register(
                 "discordlink",
                 (SchemaVariable) player -> getDiscordLink()+""
         );
-        SchemaEnvironnement.register(
+        env.register(
                 "playercount",
                 (SchemaVariable) player -> Main.countnumberofplayer()+""
         );
-        SchemaEnvironnement.register(
+        env.register(
                 "slots",
                 (SchemaVariable) player -> Main.currentGame.getMaxNumberOfplayer()+""
         );
-        SchemaEnvironnement.register(
+        env.register(
                 "kills",
                 (SchemaVariable) player -> (Main.currentGame.getKillList().get(player.getUniqueId())==null)?"Aucun":Main.currentGame.getKillList().get(player.getUniqueId())+""
         );
-        SchemaEnvironnement.register(
+        env.register(
                 "groupsize",
-                (SchemaVariable) player -> Main.currentGame.getGroupe()+""
+                (SchemaVariable) player -> (Main.currentGame.getMode()instanceof Groupable)?Main.currentGame.getGroupe()+"":"0"
         );
-        SchemaEnvironnement.register(
+        env.register(
                 "time",
                 (SchemaVariable) player -> Main.transformScoreBoardType(Main.currentGame.getTime(),"","")+""
         );
-        SchemaEnvironnement.register(
+        env.register(
                 "bordersize",
                 (SchemaVariable) player -> ((int) (Main.currentGame.getFirstBorder()/2))+""
         );
-        SchemaEnvironnement.register(
+        env.register(
                 "servername",
                 (SchemaVariable) player -> Main.INSTANCE.getConfig().getString("serverapi.serverconfig.servername")
         );
         //CONDITIONS
-        SchemaEnvironnement.register(
+        env.register(
                 "hasgroups",
                 (SchemaCondition) player -> Main.currentGame.getMode()instanceof Groupable
         );

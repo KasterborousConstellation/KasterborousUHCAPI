@@ -2,7 +2,7 @@ package fr.supercomete.head.schema.schema;
 
 
 
-import fr.supercomete.head.schema.utility.SchemaEnvironnement;
+import fr.supercomete.head.schema.utility.SchemaEnvironment;
 import org.bukkit.entity.Player;
 
 import java.util.Objects;
@@ -41,11 +41,11 @@ public final class LineCondition {
     public boolean isdefault(){
         return Objects.equals(condition, "true");
     }
-    public boolean evaluate(Player player){
+    public boolean evaluate(Player player, SchemaEnvironment environnement){
         if(!inverted){
-            return SchemaEnvironnement.get_condition(condition,player);
+            return environnement.get_condition(condition,player);
         }else{
-            return !SchemaEnvironnement.get_condition(condition,player);
+            return !environnement.get_condition(condition,player);
         }
     }
     public LineCondition(String condition,boolean inverted){

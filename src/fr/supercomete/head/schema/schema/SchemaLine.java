@@ -1,7 +1,7 @@
 package fr.supercomete.head.schema.schema;
 
 import fr.supercomete.head.Exception.MalformedSchemaException;
-import fr.supercomete.head.schema.utility.SchemaEnvironnement;
+import fr.supercomete.head.schema.utility.SchemaEnvironment;
 import org.bukkit.entity.Player;
 
 import java.util.ArrayList;
@@ -46,6 +46,9 @@ public class SchemaLine {
                 parse_position++;
             }
         }
+        if(inspecialtoken){
+            throw new MalformedSchemaException("Malformed SHMA: The last token hasn't been closed. Consider closing it by adding a '}', or if you meant to add a '{', use '\\{' instead.");
+        }
         reset(tokens_current,evaluating);
         final String[]parser_result = new String[tokens_current.size()];
         for(int i = 0;i<tokens_current.size();i++){
@@ -68,10 +71,10 @@ public class SchemaLine {
             replacement.put(0,"");
         }
     }
-    public String evaluate(Player player){
+    public String evaluate(Player player, SchemaEnvironment environment){
         final String[] to_eval = tokens.clone();
         for(Map.Entry<Integer,String>entry : replacement.entrySet()){
-            String eval= SchemaEnvironnement.get_variable(entry.getValue(),player);
+            String eval= environment.get_variable(entry.getValue(),player);
             if(eval !=null){
                 to_eval[entry.getKey()] = eval;
             }else{
@@ -90,9 +93,9 @@ public class SchemaLine {
             return "";
         }
         if(b.charAt(0)=='{'){
-            return b.substring(1,b.length()-1).replace("\\{","{").replace("\\}","}");
+            return b.substring(1,b.length()-1).replace("\\{","{").replace("\\}","}").replaceAll("(?<!"+"('\\\\')"+")&","§");
         }else{
-            return b.toString().replace("\\{","{").replace("\\}","}");
+            return b.toString().replace("\\{","{").replace("\\}","}").replaceAll("(?<!"+"('\\\\')"+")&","§");
         }
     }
     private static void reset(ArrayList<String>strl,StringBuilder builder){

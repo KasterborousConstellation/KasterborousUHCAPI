@@ -41,13 +41,15 @@ public class TeamConfig extends KTBSInventory {
         switch (currentSlot) {
             case 11:
                 TeamMode teammode =(TeamMode) Main.currentGame.getMode();
-                if (currentClick.isRightClick()) {
-                    if (TeamManager.NumberOfPlayerPerTeam < teammode.TeamSizeBound().getMax()) {
-                        TeamManager.NumberOfPlayerPerTeam=(TeamManager.NumberOfPlayerPerTeam + 1);
-                    }
-                } else {
-                    if (TeamManager.NumberOfPlayerPerTeam > teammode.TeamSizeBound().getMin()) {
-                        TeamManager.NumberOfPlayerPerTeam=(TeamManager.NumberOfPlayerPerTeam - 1);
+                if(teammode.canBeChanged()){
+                    if (currentClick.isRightClick()) {
+                        if (TeamManager.NumberOfPlayerPerTeam < teammode.TeamSizeBound().getMax()) {
+                            TeamManager.NumberOfPlayerPerTeam=(TeamManager.NumberOfPlayerPerTeam + 1);
+                        }
+                    } else {
+                        if (TeamManager.NumberOfPlayerPerTeam > teammode.TeamSizeBound().getMin()) {
+                            TeamManager.NumberOfPlayerPerTeam=(TeamManager.NumberOfPlayerPerTeam - 1);
+                        }
                     }
                 }
                 refresh();

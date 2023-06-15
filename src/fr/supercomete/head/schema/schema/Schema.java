@@ -3,6 +3,7 @@ package fr.supercomete.head.schema.schema;
 import fr.supercomete.head.Exception.BadExtensionException;
 import fr.supercomete.head.Exception.MalformedSchemaException;
 import fr.supercomete.head.schema.utility.FileUtility;
+import fr.supercomete.head.schema.utility.SchemaEnvironment;
 import org.bukkit.entity.Player;
 
 
@@ -14,15 +15,17 @@ import java.util.Random;
 
 public class Schema {
     final SchemaLine[] lines;
+    final SchemaEnvironment environnement;
     String[] identifiers= new String[]{"§1","§2","§3","§4","§5","§6","§7","§8","§9","§a","§b","§c","§d","§r"};
     boolean uniquelines=false;
     public void setUniqueLinesBehavior(boolean condition){
         uniquelines=condition;
     }
-    public Schema(final File file) throws IOException, BadExtensionException, MalformedSchemaException {
+    public Schema(final File file, SchemaEnvironment environnement) throws IOException, BadExtensionException, MalformedSchemaException {
+        this.environnement=environnement;
         if(file.exists()){
             if(!FileUtility.is_extension(file,"shma")){
-                throw new BadExtensionException("The file extension sould be '.shma'. Maybe it's the wrong file or the wrong extension ?");
+                throw new BadExtensionException(file.getPath()+": The file extension sould be '.shma'. Maybe it's the wrong file or the wrong extension ?");
             }
             final String content = FileUtility.load(file);
             final String[] lines = content.split("\n");
@@ -54,9 +57,9 @@ public class Schema {
         }
         final ArrayList<String> rtn_strl = new ArrayList<>();
         for (SchemaLine line : lines) {
-            final String evaluated = line.evaluate(player);
+            final String evaluated = line.evaluate(player,environnement);
             final LineCondition condition = line.getCondition();
-            if (condition.evaluate(player)) {
+            if (condition.evaluate(player, environnement)) {
                 String to_build =evaluated.substring(0, Math.min(line_length + 1, evaluated.length()));
                 int e = 0;
                 String tmp = to_build;
