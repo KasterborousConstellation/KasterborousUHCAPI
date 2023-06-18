@@ -57,16 +57,6 @@ public abstract class Role{
 		if(askItemStackgiven()==null)return new ArrayList<ItemStack>();
 		return  new ArrayList<ItemStack>(Arrays.asList(this.askItemStackgiven()));
 	}
-	public ArrayList<String> getRoleinfo() {
-		ArrayList<String>arr=new ArrayList<>();
-		for(String str : askRoleInfo()) {
-			ArrayList<String> sm = Main.SplitCorrectlyString(str, 50, "§7");
-			sm.set(0, ">"+sm.get(0));
-            arr.addAll(sm);
-            arr.add("");
-		}
-		return arr;
-	}
 	public String[] getMoreInfo(){
 	    return AskMoreInfo();
     }

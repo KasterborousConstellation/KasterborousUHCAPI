@@ -12,10 +12,10 @@ public enum BonusType {
 		this.color=color;
         this.name=name;
 	}
-	public String getName() {
+	public final String getName() {
 		return name;
 	}
-    public String getColor(){
+    public final String getColor(){
         return color;
     }
 }

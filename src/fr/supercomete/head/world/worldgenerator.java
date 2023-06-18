@@ -109,11 +109,11 @@ public class worldgenerator {
 		        	Bukkit.broadcastMessage("§b[Génération des structures]");
 		        	int i =0;
 		        	for(Structure structure : Main.currentGame.getMode().getStructure()) {
-                        if(structure.getWorldName()==null|| Objects.equals(structure.getWorldName(), "StructureWorld")){
+                        if(structure!=null && (structure.getWorldName()==null|| Objects.equals(structure.getWorldName(), "StructureWorld"))){
                             final Location location= new Location(MapHandler.getMap().getStructureWorld(),i*1000 +10000, 10, i*1000 +10000);
                             structure.setLocation(location);
                         }
-		        		Bukkit.broadcastMessage("   §bGénération: "+structure.getStructurename());
+                        Bukkit.broadcastMessage("   §bGénération: "+ Objects.requireNonNull(structure).getStructurename());
 		        		structure.generateStructure(structure.getLocation());
 		        		i++;
 		        	}

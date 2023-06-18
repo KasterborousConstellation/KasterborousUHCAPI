@@ -13,7 +13,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Random;
 
-public class Schema {
+public final class Schema {
     final SchemaLine[] lines;
     final SchemaEnvironment environnement;
     String[] identifiers= new String[]{"§1","§2","§3","§4","§5","§6","§7","§8","§9","§a","§b","§c","§d","§r"};

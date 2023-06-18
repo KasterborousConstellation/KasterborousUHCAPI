@@ -8,7 +8,7 @@ import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 
-public class Structure {
+public final class Structure {
 	private final String structurename;
 	private int x,y,z = 0;
 	private final CustomBlock[][][] tridimentionalarray;

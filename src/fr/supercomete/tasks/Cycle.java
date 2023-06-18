@@ -1,7 +1,6 @@
 package fr.supercomete.tasks;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Objects;
 import java.util.UUID;
 
 import fr.supercomete.head.GameUtils.Events.GameEvents.Event;
@@ -9,7 +8,6 @@ import fr.supercomete.head.GameUtils.Game;
 import fr.supercomete.head.GameUtils.GameConfigurable.Configurable;
 import fr.supercomete.head.GameUtils.GameMode.ModeHandler.KtbsAPI;
 import fr.supercomete.head.GameUtils.GameMode.ModeHandler.MapHandler;
-import fr.supercomete.head.GameUtils.GameMode.ModeModifier.TeamMode;
 import fr.supercomete.head.GameUtils.GameMode.Modes.Mode;
 import fr.supercomete.head.GameUtils.Scenarios.KasterborousScenario;
 import fr.supercomete.head.GameUtils.Time.TimeUtility;
@@ -254,10 +252,10 @@ public class Cycle extends BukkitRunnable{
                 if (mode instanceof CampMode) {
                     RoleHandler.GiveRole();
                 }
-                for(KasterborousRunnable runnable : api.getKTBSRunnableProvider().getRunnables()){
+                for(final KasterborousRunnable runnable : api.getKTBSRunnableProvider().getRunnables()){
                     runnable.onTimer(Timer.RoleTime);
                 }
-                for(KasterborousScenario scenario : api.getScenariosProvider().getRegisteredScenarios()){
+                for(final KasterborousScenario scenario : api.getScenariosProvider().getRegisteredScenarios()){
                     if(api.getScenariosProvider().IsScenarioActivated(scenario.getName())){
                         if(scenario.getAttachedRunnable()!=null){
                             for(KasterborousRunnable runnable: scenario.getAttachedRunnable()){
@@ -267,7 +265,7 @@ public class Cycle extends BukkitRunnable{
 
                     }
                 }
-                for (Player player : Bukkit.getOnlinePlayers()) {
+                for (final Player player : Bukkit.getOnlinePlayers()) {
                     mode.onRoleTime(player);
                     if (!(RoleHandler.getRoleOf(player) == null)) {
                         Role role = RoleHandler.getRoleOf(player);
@@ -302,7 +300,7 @@ public class Cycle extends BukkitRunnable{
                         uuid.add(player.getUniqueId());
                     }
                     if (!uuid.contains(offplayer.getPlayer())) {
-                        if (offplayer.getTimeElapsedSinceDeconnexion() > game.getDataFrom(Configurable.LIST.DecTime)) {
+                        if (offplayer.getTimeElapsedSinceLastConnexion() > game.getDataFrom(Configurable.LIST.DecTime)) {
                             if (Main.getPlayerlist().contains(offplayer.getPlayer())) {
                                 mode.DecoKillMethod(offplayer);
                                 mode.ModeDefaultOnDeath(offplayer,offplayer.getLocation());
@@ -311,7 +309,6 @@ public class Cycle extends BukkitRunnable{
                     }
                 }
             }
-
             timer++;
             time++;
         }

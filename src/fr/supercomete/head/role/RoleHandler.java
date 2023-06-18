@@ -26,16 +26,15 @@ public class RoleHandler {
 	private static boolean IsRoleGenerated;
 	private static HashMap<UUID, Role> RoleList=new HashMap<>();
 	private static Historic historic;
-    private static final Random r = new Random();
+
     private static boolean isValid(UUID uuid){
         return Bukkit.getPlayer(uuid)==null || !(Bukkit.getPlayer(uuid).isOnline()) || Bukkit.getPlayer(uuid).getGameMode()== GameMode.SPECTATOR || Main.bypass.contains(uuid);
     }
 	public static void GiveRole(){
-        r.setSeed(System.currentTimeMillis());
 		ArrayList<UUID> uu=new ArrayList<>();
 		HashMap<Class<?>,Integer> rolelist=Main.currentGame.getRoleCompoMap();
 		//Validate
-        for(UUID uud:Main.getPlayerlist()) {
+        for(final UUID uud:Main.getPlayerlist()) {
 			if(isValid(uud)) {
 				Main.playerlist.remove(uud);
 			}else
@@ -47,16 +46,16 @@ public class RoleHandler {
         final NRGMode mode =(NRGMode) Main.currentGame.getMode();
         final HashMap<UUID,Class<?>>mapped_role=mode.getRoleGenerator().map(rolelist,new LinkedList<>(uu));
         final HashMap<UUID,Role> finally_role = new HashMap<>();
+        RoleList=finally_role;
         for(final Map.Entry<UUID,Class<?>>entry:mapped_role.entrySet()){
-            finally_role.put(entry.getKey(),RoleBuilder.Build(entry.getValue(), entry.getKey()));
+            finally_role.put(entry.getKey(),Build(entry.getValue(), entry.getKey()));
             for (ItemStack item : getRoleOf(entry.getKey()).getItemStackGiven()) {
                 InventoryUtils.addsafelyitem(Bukkit.getPlayer(entry.getKey()), item);
             }
         }
-        RoleList=finally_role;
 		setHistoric(new Historic());
 		setIsRoleGenerated(true);
-		for(Role role : RoleList.values()) {
+		for(final Role role : RoleList.values()) {
 			if(role instanceof PreAnnouncementExecute) {
 				((PreAnnouncementExecute)role).PreAnnouncement();
 			}
@@ -68,13 +67,21 @@ public class RoleHandler {
 	public static void removePlayer(UUID player) {
         RoleList.remove(player);
 	}
-	
+    public static Role Build(Class<?> claz,UUID owner) {
+        try {
+            return (Role) claz.getConstructors()[0].newInstance(owner);
+        } catch (InstantiationException | IllegalAccessException | IllegalArgumentException | InvocationTargetException
+                 | SecurityException e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
 	public static Role getRoleOf(Player player) {
 		if(player==null)return null;
 		if(!RoleList.containsKey(player.getUniqueId()))return null;
 		return RoleList.get(player.getUniqueId());
 	}
-	public static Role getRoleOf(UUID uuid) {
+	public static Role getRoleOf(final UUID uuid) {
 		return RoleList.get(uuid);
 	}
 
@@ -115,14 +122,14 @@ public class RoleHandler {
             role.getAddon().DisplayHead(player);
         }
 
-        if(!role.getRoleinfo().isEmpty()){
+        if(!role.askRoleInfo().isEmpty()){
             if(!(role instanceof SchemaRole)) {
                 player.sendMessage("Description:");
-                for(String str:role.getRoleinfo()) {
+                for(String str:role.askRoleInfo()) {
                     player.sendMessage("  "+str);
                 }
             }else{
-                for(final String string :role.getRoleinfo()){
+                for(final String string :role.askRoleInfo()){
                     player.sendMessage(string);
                 }
             }

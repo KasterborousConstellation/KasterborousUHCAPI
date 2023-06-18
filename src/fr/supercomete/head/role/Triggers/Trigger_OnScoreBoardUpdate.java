@@ -1,6 +1,6 @@
 package fr.supercomete.head.role.Triggers;
 
-import fr.supercomete.head.world.ScoreBoard.SimpleScoreboard;
+import fr.supercomete.head.world.Scoreboard.SimpleScoreboard;
 import org.bukkit.entity.Player;
 import org.bukkit.scoreboard.Scoreboard;
 

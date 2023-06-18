@@ -9,7 +9,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
-public class SchemaLine {
+public final class SchemaLine {
     final LineCondition linecondition;
     String[] tokens;
     final HashMap<Integer,String> replacement;
@@ -93,9 +93,9 @@ public class SchemaLine {
             return "";
         }
         if(b.charAt(0)=='{'){
-            return b.substring(1,b.length()-1).replace("\\{","{").replace("\\}","}").replaceAll("(?<!"+"('\\\\')"+")&","§");
+            return b.substring(1,b.length()-1).replace("\\{","{").replace("\\}","}");
         }else{
-            return b.toString().replace("\\{","{").replace("\\}","}").replaceAll("(?<!"+"('\\\\')"+")&","§");
+            return b.toString().replace("\\{","{").replace("\\}","}");
         }
     }
     private static void reset(ArrayList<String>strl,StringBuilder builder){

@@ -26,7 +26,7 @@ public class WorldGarbageCollector {
 		}.runTaskTimer(main, 0L, 200L);
 	}
 	public static void unloadWorld(World world) {
-	    if(!world.equals(null)) {
+	    if(world != null) {
 	        Bukkit.getServer().unloadWorld(world, true);
 	    }
 	}

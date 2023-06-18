@@ -2,7 +2,6 @@ package fr.supercomete.commands;
 import java.util.*;
 import fr.supercomete.head.GameUtils.GameMode.ModeModifier.NRGMode;
 import fr.supercomete.head.role.Role;
-import fr.supercomete.head.role.RoleBuilder;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -34,7 +33,7 @@ public class RolesCommand implements CommandExecutor {
                 final HashMap<Class<?>,Integer>map=Main.currentGame.getRoleCompoMap();
                 for(final Map.Entry<Class<?>,Integer>entry: map.entrySet()){
                     for(int i =0;i<entry.getValue();i++){
-                        roles.add(RoleBuilder.Build(entry.getKey(), UUID.randomUUID()));
+                        roles.add(RoleHandler.Build(entry.getKey(), UUID.randomUUID()));
                     }
                 }
                 array=mode.getRoleGenerator().displayCompo(roles);

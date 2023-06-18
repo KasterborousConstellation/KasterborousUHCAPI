@@ -1,9 +1,13 @@
 package fr.supercomete.head.structure;
 import java.io.*;
+import java.net.URISyntaxException;
+import java.net.URL;
+import java.net.URLConnection;
+import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Objects;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.util.*;
 import java.util.logging.Level;
 import java.util.stream.Collectors;
 
@@ -16,7 +20,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 
-public class StructureHandler {
+public final class StructureHandler {
 	public static File structurefile;
 	public StructureHandler(Main main) {
 		structurefile = new File(main.getDataFolder(),"struture");
@@ -126,9 +130,22 @@ public class StructureHandler {
         return loadKTBSStructureFile(pluginClass,name,true);
     }
 
-    public Structure load_legacy(Class<?>pluginClass,String name) throws IOException {
-        Bukkit.getLogger().log(Level.FINE,"Loading: "+name+".struct -> Loading legacy format");
-        String json = Fileutils.readFileFromResources(pluginClass,name+".struct");
+    public Structure load_legacy(Class<?>pluginClass,String name) throws IOException, URISyntaxException {
+
+        URL url = pluginClass.getClassLoader().getResource(name+".struct");
+        System.out.println(url);
+        if (url == null) {
+            return null;
+        }
+        URLConnection connection = url.openConnection();
+        connection.setUseCaches(false);
+        final Iterator<String> ip = new BufferedReader(new InputStreamReader(connection.getInputStream(), StandardCharsets.UTF_8)).lines().iterator();
+
+        StringBuilder content = new StringBuilder();
+        while(ip.hasNext()){
+            content.append(ip.next()).append("\n");
+        }
+        String json = content.toString();
         json =json.replace("#","null");
         json =json.replace("!","material");
         json =json.replace("?","data");
@@ -139,8 +156,9 @@ public class StructureHandler {
             return loadKTBSStructureFile(pluginClass,name);
         }catch (IOException|NullPointerException e) {
             try{
+                Bukkit.getLogger().log(Level.WARNING,"Loading: "+name+".struct -> Loading legacy format");
                 return load_legacy(pluginClass,name);
-            }catch (IOException|NullPointerException e2){
+            }catch (IOException | NullPointerException | URISyntaxException e2){
                 e2.printStackTrace();
                 return null;
             }

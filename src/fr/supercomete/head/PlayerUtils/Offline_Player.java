@@ -11,12 +11,16 @@ public class Offline_Player {
 	private Location location;
 	private long lastdeconnexion;
 	private String username;
+    private final double life;
+    private final double maxlife;
 	public Offline_Player(Player player) {
 		this.player = player.getUniqueId();
 		setInventory(player.getInventory());
 		this.location = player.getLocation();
 		this.username=player.getName();
 		this.lastdeconnexion = Main.currentGame.getTime();
+        life=player.getHealth();
+        maxlife=player.getMaxHealth();
 	}
 	public UUID getPlayer() {
 		return player;
@@ -50,11 +54,18 @@ public class Offline_Player {
 	public String getUsername() {
 		return username;
 	}
-	public long getTimeElapsedSinceDeconnexion() {
+	public long getTimeElapsedSinceLastConnexion() {
 		return Main.currentGame.getTime() - lastdeconnexion;
 	}
 	public void setUsername(String username) {
 		this.username = username;
 	}
 
+    public double getMaxLife() {
+        return maxlife;
+    }
+
+    public double getLife() {
+        return life;
+    }
 }

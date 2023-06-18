@@ -8,7 +8,6 @@ import java.util.*;
 import java.util.jar.JarFile;
 import java.util.logging.Level;
 import java.util.zip.ZipEntry;
-
 import fr.supercomete.autoupdater.UpdateChecker;
 import fr.supercomete.commands.*;
 import fr.supercomete.head.GameUtils.Events.GameEvents.EventsHandler;
@@ -46,7 +45,6 @@ import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import org.bukkit.scheduler.BukkitRunnable;
-
 import fr.supercomete.datamanager.FileManager.ProfileSerializationManager;
 import fr.supercomete.enums.GenerationMode;
 import fr.supercomete.enums.Gstate;
@@ -58,7 +56,6 @@ import fr.supercomete.head.GameUtils.GameMode.ModeModifier.CampMode;
 import fr.supercomete.head.GameUtils.Time.Timer;
 import fr.supercomete.head.Listeners.ListenersRegisterer;
 import fr.supercomete.head.PlayerUtils.PlayerUtility;
-import fr.supercomete.head.role.Role;
 import fr.supercomete.head.role.RoleHandler;
 import fr.supercomete.head.structure.StructureHandler;
 import fr.supercomete.head.world.BiomeGenerator;
@@ -66,7 +63,7 @@ import fr.supercomete.head.world.WorldGarbageCollector;
 import fr.supercomete.head.world.scoreboardmanager;
 import fr.supercomete.tasks.GAutostart;
 
-public class Main extends JavaPlugin {
+public final class Main extends JavaPlugin {
 	public final static String UHCTypo = "§a[§6UHC§a]"+"§7 » ";
 	public final String ServerId = getConfig().getString("serverapi.serverconfig.ServerId");
 	public final String DiscordLink = getConfig().getString("serverapi.serverconfig.DiscordLink");
@@ -153,8 +150,7 @@ public class Main extends JavaPlugin {
         api = Bukkit.getServicesManager().load(KtbsAPI.class);
         /*
         Schemas init
-         */
-
+        */
 
         /*
         BiomeGenerator && strutureHandler
@@ -175,7 +171,7 @@ public class Main extends JavaPlugin {
 		api.getModeProvider().registerMode(new Null_Mode());
 		UHCClassic uhcclassic = new UHCClassic();	
 		api.getModeProvider().registerMode(uhcclassic);
-		Bukkit.broadcastMessage("§dVersion: 1.5.0 Build("+Compiledate.getDate()+"/"+(Compiledate.getMonth()+1)+") §cSNAPSHOT");
+		Bukkit.broadcastMessage("§dVersion: 1.5.1 Build("+Compiledate.getDate()+"/"+(Compiledate.getMonth()+1)+") §cSNAPSHOT");
 		currentGame=new Game((new Null_Mode()).getName(),this);
         try {
             scoreboardEnvironment = new SchemaEnvironment();
@@ -202,8 +198,8 @@ public class Main extends JavaPlugin {
 		getCommand("doc").setExecutor(new docCommand(this));
 		getCommand("docs").setExecutor(new docCommand(this));
 		getCommand("liens").setExecutor(new docCommand(this));
-		getCommand("blseed").setExecutor(new BlackSeedCommand(this));
-		getCommand("blacklistseed").setExecutor(new BlackSeedCommand(this));
+		getCommand("blseed").setExecutor(new BlackSeedCommand());
+		getCommand("blacklistseed").setExecutor(new BlackSeedCommand());
 		getCommand("Rolelist").setExecutor(new RolelistCommand(this));
 		getCommand("fullinv").setExecutor(new FullInvCommand(this));
 		getCommand("helpop").setExecutor(new HelpopCommand(this));
@@ -259,7 +255,6 @@ public class Main extends JavaPlugin {
                                 runnable.onAPILaunch(api);
                             }
                         }
-
                     }
                 }
                 //Choisi un host parmi les joueurs op
@@ -440,8 +435,9 @@ public class Main extends JavaPlugin {
                     pl.getInventory().setLeggings(null);
                     pl.getInventory().setBoots(null);
                     pl.setMaxHealth(20);
-                    if(Main.currentGame.isGameState(Gstate.Waiting))
+                    if(Main.currentGame.isGameState(Gstate.Waiting)) {
                         pl.addPotionEffect(new PotionEffect(PotionEffectType.SATURATION, 999999, 0));
+                    }
                 }
                 MapHandler.setMapToNull();
             }

@@ -1,6 +1,6 @@
 package fr.supercomete.head.structure;
 import org.bukkit.Material;
-public class CustomBlock {
+public final class CustomBlock {
 	private final Material material;
 	private final byte data;
 	public CustomBlock(Material material,byte data) {

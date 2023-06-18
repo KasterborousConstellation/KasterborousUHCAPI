@@ -2,7 +2,6 @@ package fr.supercomete.head.Listeners;
 
 import fr.supercomete.head.GameUtils.GameMode.ModeHandler.MapHandler;
 import fr.supercomete.head.permissions.PermissionManager;
-import net.minecraft.server.v1_8_R3.Entity;
 import net.minecraft.server.v1_8_R3.PacketPlayOutEntityTeleport;
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
@@ -21,11 +20,9 @@ import fr.supercomete.enums.Gstate;
 import fr.supercomete.head.PlayerUtils.Offline_Player;
 import fr.supercomete.head.PlayerUtils.PlayerUtility;
 import fr.supercomete.head.core.Main;
-import fr.supercomete.head.world.worldgenerator;
 import org.bukkit.scheduler.BukkitRunnable;
 
 final class JoinListener implements Listener {
-
     @EventHandler
     public void onJoin(PlayerJoinEvent e) {
         Player player = e.getPlayer();
@@ -77,7 +74,7 @@ final class JoinListener implements Listener {
                 }
             } else if (Main.currentGame.hasOfflinePlayer(player)) {
                 Offline_Player offPlayer = Main.currentGame.getOffline_Player(player);
-                Bukkit.broadcastMessage("§7Le joueur " + offPlayer.getUsername() + " se reconnecte après §a" + offPlayer.getTimeElapsedSinceDeconnexion() + "s");
+                Bukkit.broadcastMessage("§7Le joueur " + offPlayer.getUsername() + " se reconnecte après §a" + offPlayer.getTimeElapsedSinceLastConnexion() + "s");
             } else {
                 player.getInventory().clear();
                 player.teleport(MapHandler.getMap().getPlayWorld().getSpawnLocation());

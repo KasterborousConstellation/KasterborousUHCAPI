@@ -1,4 +1,4 @@
-package fr.supercomete.head.world.ScoreBoard;
+package fr.supercomete.head.world.Scoreboard;
 
 import java.lang.reflect.Constructor;
 import java.util.AbstractMap;
@@ -27,7 +27,7 @@ import com.google.common.base.Charsets;
 import com.google.common.base.Splitter;
 import com.google.common.collect.Lists;
 
-public class SimpleScoreboard {
+public final class SimpleScoreboard {
 
     private static final Map<String, OfflinePlayer> cache = new HashMap<>();
 

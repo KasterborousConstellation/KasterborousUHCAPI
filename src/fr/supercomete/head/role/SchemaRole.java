@@ -22,6 +22,7 @@ public abstract class SchemaRole extends Role  {
     protected void register(String text, SchemaCondition condition){
         environnement.register(text,condition);
     }
+    @Override
     public final List<String> askRoleInfo(){
         if(schema==null){
             try {

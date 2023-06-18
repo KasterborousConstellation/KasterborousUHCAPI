@@ -4,7 +4,7 @@
 #FR:
 #Utilisez '#' pour commenter une ligne
 #Le schéma est limité à 15 lignes de tableau des scores. Si vous en avez plus de 15, elles ne seront pas affichées.
-#Les couleurs peuvent être ajoutées en utilisant '&' ou '§'. Si vous souhaitez ajouter le caractère '&', remplacez-le par '\&'.
+#Les couleurs peuvent être ajoutées en utilisant '§'.
 #Pour ajouter une ligne uniquement dans une certaine condition, commencez cette ligne par {?condition?}
 #   La ligne ne s'affichera que si 'condition' est vraie.
 #Pour insérer une variable dans votre ligne, ajoutez {variable}
@@ -12,11 +12,10 @@
 #EN:
 #Use '#' to comment a line
 #The schema is limited to 15 lines of scoreboard. If their is more than 15 lines, they won't be shown.
-#Colors can be made by using & or §. if you wish to add '&' character replace it by '\&'
+#Colors can be made by using '§'.
 #To add a line only to a certain condition begin that line with {?condition?}
 #   The line will only show if 'condition' is true.
 #To put a variable in your line add {variable}
 #If you wish to add the character '{' or '}' specify them with '\{' or '\}'
 §7https://discord.gg/{discordlink}
 »{serverid}«
-§a\& &

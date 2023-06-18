@@ -8,4 +8,9 @@ public interface CampMode extends NRGMode{
     default RoleGenerator getRoleGenerator(){
         return RoleGeneratorHandler.StandardGenerator();
     }
+
+    @Override
+    default boolean showCompo() {
+        return true;
+    }
 }

@@ -27,6 +27,7 @@ public class FileUtility {
         return found&&read.reverse().toString().equals(extension);
     }
     public static void createFile(File file) throws IOException {
+        file.getParentFile().mkdirs();
         file.createNewFile();
     }
     public static void write(File file, String content) throws IOException {

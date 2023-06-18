@@ -9,7 +9,7 @@ import java.net.URL;
 import java.util.Scanner;
 import java.util.function.Consumer;
 
-public class UpdateChecker {
+public final class UpdateChecker {
     public static final String PLUGIN_URL = "https://spigotmc.org/resources/108015";
     private static final int ressourceid=108015;
     public static void getLasterVersion(Consumer<String> consumer){

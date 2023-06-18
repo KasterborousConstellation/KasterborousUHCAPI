@@ -9,11 +9,7 @@ import fr.supercomete.datamanager.FileManager.Fileutils;
 import fr.supercomete.head.core.Main;
 import java.io.File;
 public class BlackSeedCommand implements CommandExecutor {
-	@SuppressWarnings("unused")
-	private final Main main;
-	public BlackSeedCommand(Main main) {
-		this.main=main;
-	}
+
 	@Override
 	public boolean onCommand(CommandSender sender, Command cmd, String msg, String[] arg3) {
 		if(sender instanceof Player){

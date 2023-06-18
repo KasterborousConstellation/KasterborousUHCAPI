@@ -8,7 +8,7 @@ import fr.supercomete.head.Exception.BadExtensionException;
 import fr.supercomete.head.Exception.MalformedSchemaException;
 import fr.supercomete.head.schema.schema.Schema;
 import fr.supercomete.head.schema.utility.*;
-import fr.supercomete.head.world.ScoreBoard.SimpleScoreboard;
+import fr.supercomete.head.world.Scoreboard.SimpleScoreboard;
 import net.minecraft.server.v1_8_R3.IChatBaseComponent;
 import net.minecraft.server.v1_8_R3.PacketPlayOutPlayerListHeaderFooter;
 import org.bukkit.Bukkit;
@@ -16,10 +16,8 @@ import org.bukkit.craftbukkit.v1_8_R3.entity.CraftPlayer;
 import org.bukkit.entity.Player;
 import java.io.*;
 import java.lang.reflect.Field;
-import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
 import java.util.*;
-public class ScoreBoardSchemaHandler {
+public final class ScoreBoardSchemaHandler {
     private static HashMap<UUID, SimpleScoreboard> boards = new HashMap<>();
     public static SimpleScoreboard get(Player player){
         check_valid(player);
@@ -57,27 +55,11 @@ public class ScoreBoardSchemaHandler {
         builder_footer.deleteCharAt(builder_footer.length()-1);
         sendHeadAndFooter(player,builder_header.toString(),builder_footer.toString());
     }
-    public static Schema load(String name) throws IOException, MalformedSchemaException, BadExtensionException {
-        final File file = new File(schemafolder,name);
-        if(!file.exists()){
-            final Iterator<String> ip = new BufferedReader(new InputStreamReader(Main.INSTANCE.getResource(name), StandardCharsets.UTF_8)).lines().iterator();
-            StringBuilder content = new StringBuilder();
-            while(ip.hasNext()){
-                content.append(ip.next()).append("\n");
-            }
-            FileUtility.createFile(file);
-            FileUtility.write(file,content.toString());
-        }
-        return new Schema(file,Main.scoreboardEnvironment);
-    }
-    private static File schemafolder;
+
+
     public static void init() throws IOException, BadExtensionException, MalformedSchemaException {
-        final File datafolder = Main.INSTANCE.getDataFolder();
         final SchemaEnvironment env = Main.scoreboardEnvironment;
-        schemafolder = new File(datafolder,"schemas");
-        if(!schemafolder.exists()){
-            Files.createDirectory(schemafolder.toPath());
-        }
+
         //Load every condition and variables
 
         //VARIABLES
@@ -144,9 +126,9 @@ public class ScoreBoardSchemaHandler {
         );
 
         //Load if possible
-        final Schema tab_header_schema = load("tab-scoreboard-header.shma");
-        final Schema tab_footer_schema = load("tab-scoreboard-footer.shma");
-        final Schema main_scoreboard = load("main-scoreboard.shma");
+        final Schema tab_header_schema = SchemaFileHandler.load("tab-scoreboard-header.shma");
+        final Schema tab_footer_schema = SchemaFileHandler.load("tab-scoreboard-footer.shma");
+        final Schema main_scoreboard = SchemaFileHandler.load("main-scoreboard.shma");
         final KasterborousRunnable Scoreboardtask = new KasterborousRunnable(){
             @Override
             public String name() {
