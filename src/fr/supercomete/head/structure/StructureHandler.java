@@ -77,11 +77,16 @@ public final class StructureHandler {
     public Structure loadKTBSStructureFile(Class<?>pluginClass,String name,boolean from_source) throws IOException {
         String content;
         if(from_source){
-            content =Fileutils.readFileFromResources(pluginClass,name+".kstruct");
+            URL url = pluginClass.getClassLoader().getResource(name+".kstruct");
+            if (url == null) {
+                return null;
+            }
+            URLConnection connection = url.openConnection();
+            connection.setUseCaches(false);
+            content = new BufferedReader(new InputStreamReader(connection.getInputStream(), StandardCharsets.UTF_8)).lines().collect(Collectors.joining("\n"));
         }else{
             content = Fileutils.loadContent(new File(structurefile,name+".kstruct"));
         }
-
         int pointer = 0;
         char pointer_char=' ';
         ArrayList<String> extract = new ArrayList<>();
@@ -102,6 +107,9 @@ public final class StructureHandler {
         int x_size = Integer.parseInt(extract.get(2));
         int y_size = Integer.parseInt(extract.get(3));
         int z_size = Integer.parseInt(extract.get(4));
+        int x_off = Integer.parseInt(extract.get(5));
+        int y_off = Integer.parseInt(extract.get(6));
+        int z_off = Integer.parseInt(extract.get(7));
         final int pointer_parity = pointer%heap;
         int x=0,y=0,z=0;
         CustomBlock[][][] tri_dimensional_array = new CustomBlock[x_size][y_size][z_size];
@@ -124,7 +132,9 @@ public final class StructureHandler {
             }
             pointer++;
         }
-        return new Structure(name,extract.get(0),tri_dimensional_array);
+        Structure structure = new Structure(name,extract.get(0),tri_dimensional_array);
+        structure.setSpawnLocation(x_off,y_off,z_off);
+        return structure;
     }
     public Structure loadKTBSStructureFile(Class<?>pluginClass,String name) throws IOException {
         return loadKTBSStructureFile(pluginClass,name,true);
@@ -133,7 +143,6 @@ public final class StructureHandler {
     public Structure load_legacy(Class<?>pluginClass,String name) throws IOException, URISyntaxException {
 
         URL url = pluginClass.getClassLoader().getResource(name+".struct");
-        System.out.println(url);
         if (url == null) {
             return null;
         }

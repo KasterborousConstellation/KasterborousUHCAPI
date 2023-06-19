@@ -26,6 +26,7 @@ import fr.supercomete.head.role.Bonus.BonusType;
 import fr.supercomete.head.role.KasterBorousCamp;
 import fr.supercomete.head.role.Role;
 import fr.supercomete.head.role.RoleHandler;
+import fr.supercomete.head.schema.SchemaFileHandler;
 import fr.supercomete.head.schema.utility.SchemaCondition;
 import fr.supercomete.head.schema.utility.SchemaVariable;
 import fr.supercomete.head.structure.StructureHandler;
@@ -35,8 +36,10 @@ import org.bukkit.ChatColor;
 import org.bukkit.craftbukkit.v1_8_R3.CraftServer;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
+import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.potion.PotionEffect;
 import javax.annotation.Nullable;
+import java.io.File;
 import java.lang.reflect.InvocationTargetException;
 import java.util.*;
 import java.util.concurrent.CopyOnWriteArrayList;
@@ -809,5 +812,11 @@ public class KtbsProvider implements
     public void register(String name, SchemaCondition line_condition) {
         update();
         Main.scoreboardEnvironment.register(name,line_condition);
+    }
+
+    @Override
+    public File loadFromRessources(String name, JavaPlugin loaded_from) {
+        update();
+        return SchemaFileHandler.getFile(name,loaded_from);
     }
 }
