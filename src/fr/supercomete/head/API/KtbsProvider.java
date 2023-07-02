@@ -13,6 +13,7 @@ import fr.supercomete.head.GameUtils.GameMode.ModeHandler.MapHandler;
 import fr.supercomete.head.GameUtils.GameMode.ModeModifier.Command;
 import fr.supercomete.head.GameUtils.GameMode.ModeModifier.TeamMode;
 import fr.supercomete.head.GameUtils.GameMode.Modes.Mode;
+import fr.supercomete.head.GameUtils.ReviveDefaultBehavior;
 import fr.supercomete.head.GameUtils.Scenarios.KasterborousScenario;
 import fr.supercomete.head.GameUtils.KTBS_Team;
 import fr.supercomete.head.GameUtils.TeamManager;
@@ -230,11 +231,13 @@ public class KtbsProvider implements
         update();
         RoleHandler.IsHiddenRoleNCompo=hide;
     }
-
-    @Override
-    public UUID getWhoHaveRole(Class<?> clz) {
+    public ArrayList<UUID> getAllRoleOwner(Class<?> clz){
         update();
         return RoleHandler.getWhoHaveRole(clz);
+    }
+    @Override
+    public UUID getWhoHaveRole(Class<?> clz) {
+        return getAllRoleOwner(clz).get(0);
     }
 
     @Override
@@ -253,6 +256,11 @@ public class KtbsProvider implements
     public HashMap<UUID, Role> getRoleMap() {
         update();
         return (HashMap<UUID, Role>) RoleHandler.getRoleList().clone();
+    }
+
+    @Override
+    public void setDefaultBehaviorOnRevive(ReviveDefaultBehavior defaultBehavior) {
+
     }
 
     @Override
@@ -630,45 +638,6 @@ public class KtbsProvider implements
         TeamManager.setupTeams();
     }
 
-    @Override
-    public void setNumberOfMemberPerTeam(int number) {
-        if(!(getCurrentGame().getMode()instanceof TeamMode))
-        {
-            return;
-        }
-        update();
-        TeamManager.NumberOfPlayerPerTeam=number;
-    }
-
-    @Override
-    public void setTeamNumber(int number) {
-        if(!(getCurrentGame().getMode()instanceof TeamMode))
-        {
-            return;
-        }
-        update();
-        TeamManager.TeamNumber=number;
-    }
-
-    @Override
-    public int getTeamNumber() {
-        if(!(getCurrentGame().getMode()instanceof TeamMode))
-        {
-            return-1;
-        }
-        update();
-        return TeamManager.TeamNumber;
-    }
-
-    @Override
-    public int getNumberOfMemberPerTeam() {
-        if(!(getCurrentGame().getMode()instanceof TeamMode))
-        {
-            return -1;
-        }
-        update();
-        return TeamManager.NumberOfPlayerPerTeam;
-    }
     @Override
     public Inventory getStartInventory() {
         return PlayerUtility.getInventory();

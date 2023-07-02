@@ -171,7 +171,8 @@ public final class Main extends JavaPlugin {
 		api.getModeProvider().registerMode(new Null_Mode());
 		UHCClassic uhcclassic = new UHCClassic();	
 		api.getModeProvider().registerMode(uhcclassic);
-		Bukkit.broadcastMessage("§dVersion: 1.5.1 Build("+Compiledate.getDate()+"/"+(Compiledate.getMonth()+1)+") §cSNAPSHOT");
+		Bukkit.broadcastMessage("§dVersion: 1.5.3" +
+                " Build("+Compiledate.getDate()+"/"+(Compiledate.getMonth()+1)+") §cSNAPSHOT");
 		currentGame=new Game((new Null_Mode()).getName(),this);
         try {
             scoreboardEnvironment = new SchemaEnvironment();

@@ -15,18 +15,6 @@ final class PlayerItemConsumeListener implements Listener {
 	public void OnConsume(PlayerItemConsumeEvent e) {
 		ItemStack item = e.getItem();
 		Player player = e.getPlayer();
-		if (item != null) {
-			if (item.getType() == Material.GOLDEN_APPLE) {
-				if (item.getItemMeta().hasLore()) {
-					e.setCancelled(true);
-					item.setAmount(item.getAmount() - 1);
-					e.getPlayer().setItemInHand(item);
-					player.addPotionEffect(new PotionEffect(PotionEffectType.REGENERATION, 200, 1));
-					player.addPotionEffect(new PotionEffect(PotionEffectType.ABSORPTION, 2 * 60, 0));
-					player.setFoodLevel(player.getFoodLevel() + 4);
-				}
-			}
-		}
         if(RoleHandler.IsRoleGenerated()){
             final Role role = RoleHandler.getRoleOf(player);
             if(role instanceof Trigger_OnConsume){

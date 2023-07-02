@@ -56,6 +56,7 @@ public class TeamGUI extends KTBSInventory {
                 if(te != null) {
                     te.removeMember(player.getUniqueId());
                 }
+                refresh();
                 break;
             case 4:
                 ArrayList<KTBS_Team> teams = new ArrayList<>();

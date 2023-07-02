@@ -4,6 +4,7 @@ package fr.supercomete.head.GameUtils.GameMode.Modes;
 import java.util.Arrays;
 
 import fr.supercomete.head.GameUtils.GameConfigurable.Bound;
+import fr.supercomete.head.GameUtils.GameMode.ModeModifier.SimpleTeamMode;
 import fr.supercomete.head.Inventory.InventoryUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
@@ -12,12 +13,11 @@ import org.bukkit.entity.Player;
 
 import fr.supercomete.head.GameUtils.KTBS_Team;
 import fr.supercomete.head.GameUtils.TeamManager;
-import fr.supercomete.head.GameUtils.GameMode.ModeModifier.TeamMode;
 import fr.supercomete.head.PlayerUtils.Offline_Player;
 import fr.supercomete.head.core.Main;
 import fr.supercomete.head.world.scoreboardmanager;
 
-public class UHCClassic extends Mode implements TeamMode{
+public class UHCClassic extends Mode implements SimpleTeamMode {
 
 	private int TeamSize=3;
 	private int NumberOfTeam=4;
@@ -36,8 +36,9 @@ public class UHCClassic extends Mode implements TeamMode{
 	public void setNumberofTeam(int number) {
 		NumberOfTeam=number;
 	}
-	@Override
-	public int getNumberofTeam() {
+
+    @Override
+	public int getNumberOfTeam() {
 		return NumberOfTeam;
 	}
 

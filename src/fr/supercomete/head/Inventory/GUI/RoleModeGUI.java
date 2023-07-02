@@ -4,21 +4,15 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.*;
 import java.util.concurrent.CopyOnWriteArrayList;
-
-import fr.supercomete.head.Inventory.GUI.ModeGUI;
 import fr.supercomete.head.Inventory.inventoryapi.content.KTBSAction;
 import fr.supercomete.head.Inventory.inventoryapi.content.KTBSInventory;
 import fr.supercomete.head.role.KasterBorousCamp;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
-import org.bukkit.event.EventHandler;
 import org.bukkit.event.inventory.ClickType;
-import org.bukkit.event.inventory.InventoryClickEvent;
-import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
-
 import fr.supercomete.head.Exception.InvalidModeException;
 import fr.supercomete.head.GameUtils.TeamManager;
 import fr.supercomete.head.GameUtils.GameMode.ModeHandler.KtbsAPI;
@@ -35,14 +29,15 @@ public class RoleModeGUI extends KTBSInventory {
     private CopyOnWriteArrayList<Class<?>> preformated;
     private ArrayList<KasterBorousCamp>primitives;
 	public RoleModeGUI(Mode mode, Player player) {
-        super("§b"+((Mode)mode).getName() + " Role",54,player);
+        super("§b"+(mode).getName() + " Role",54,player);
 		if (mode instanceof CampMode) {
 			this.m = (CampMode) mode;
             CopyOnWriteArrayList<Class<?>> preformated = api.getModeProvider().getMode(m.getClass()).getRegisteredrole();
             ArrayList<KasterBorousCamp>primitives = new ArrayList<>();
             for(Class<?> claz : preformated){
                 try{
-                    Method method = claz.getMethod("getCamp",null);
+                    System.out.println(claz);
+                    Method method = claz.getMethod("getCamp");
                     Role role = (Role) claz.getConstructors()[0].newInstance(UUID.randomUUID());
                     KasterBorousCamp camp =(KasterBorousCamp) method.invoke(role);
                     if(!primitives.contains(camp)){
@@ -86,7 +81,6 @@ public class RoleModeGUI extends KTBSInventory {
 					TeamManager.getShortOfChatColor(camp.getColor())));
 			i++;
 		}
-//		 Main.getRoleTypeList(primitives.get(index));
 
 		CopyOnWriteArrayList<Class<?>> formated = new CopyOnWriteArrayList<Class<?>>();
 		
@@ -165,6 +159,4 @@ public class RoleModeGUI extends KTBSInventory {
     protected boolean onClose(Player holder) {
         return false;
     }
-
-
 }

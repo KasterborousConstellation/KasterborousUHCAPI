@@ -1,6 +1,8 @@
 package fr.supercomete.head.Inventory.GUI;
 
 import java.util.Collections;
+
+import fr.supercomete.head.GameUtils.GameMode.ModeModifier.SpecialTab;
 import fr.supercomete.head.GameUtils.TeamManager;
 import fr.supercomete.head.Inventory.inventoryapi.content.KTBSAction;
 import fr.supercomete.head.Inventory.inventoryapi.content.KTBSInventory;
@@ -80,16 +82,10 @@ public class ModeGUI extends KTBSInventory {
 			im.setLore(Collections.singletonList("§cLa génération n'est pas sauvegardée dans les configurations"));
 			tmp.setItem(3,  i);
 			tmp.setItem(50, InventoryUtils.createColorItem(Material.STAINED_CLAY, "§rStop", 1, (short)14));
-			if(m instanceof CampMode) {
-				tmp.setItem(35, InventoryUtils.createColorItem(Material.STAINED_CLAY, "§rRôles", 1, (short)6));
-			}else if(m instanceof TeamMode) {
-				ItemStack titem =InventoryUtils.createColorItem(Material.BANNER, "§rTeams", 1, (short)0);
-				if(!Main.currentGame.isGameState(Gstate.Waiting)) {
-					ItemMeta itmTeam=titem.getItemMeta();
-					itmTeam.setLore(Collections.singletonList("§cImpossible quand la partie a déjà commencer"));
-				}
-				tmp.setItem(35, titem);
-			}
+            if(m instanceof SpecialTab){
+                final SpecialTab tab = (SpecialTab) m;
+                tmp.setItem(35,tab.getLinkedItem());
+            }
 			tmp.setItem(45, InventoryUtils.getItem(Material.BARRIER, "§7Retour", Collections.singletonList("§rRetour au choix du mode de jeu")));
 		}
 		return tmp;
@@ -161,12 +157,8 @@ public class ModeGUI extends KTBSInventory {
                     new ConfigurableGUI(holder,"Principale").open();
                     break;
                 case 35:
-                    if(m instanceof CampMode) {
-                        new RoleModeGUI(api.getGameProvider().getCurrentGame().getMode(),holder).open();
-                    }else if(m instanceof TeamMode) {
-                        if(Main.currentGame.getGamestate()==Gstate.Waiting){
-                            new TeamConfig(holder).open();
-                        }else holder.sendMessage(Main.UHCTypo+"§cLes équipes ne peuvent pas être modifiés pendant la partie.");
+                    if(m instanceof SpecialTab){
+                        ((SpecialTab) m).getLinkedTab(holder).open();
                     }
                     break;
                 default:

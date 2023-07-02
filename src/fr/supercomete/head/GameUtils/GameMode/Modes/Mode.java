@@ -8,6 +8,7 @@ import javax.annotation.Nullable;
 
 import fr.supercomete.head.GameUtils.GameMode.ModeModifier.CampMode;
 
+import fr.supercomete.head.GameUtils.GameMode.ModeModifier.NRGMode;
 import fr.supercomete.head.role.RoleHandler;
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
@@ -26,7 +27,7 @@ public abstract class Mode {
     public final void ModeDefaultOnDeath(final Offline_Player player,Location deathLocation){
         InventoryUtils.dropInventory(player.getInventory(),deathLocation,deathLocation.getWorld());
         Main.playerlist.remove(player.getPlayer());
-        if(Main.currentGame.getMode()instanceof CampMode){
+        if(Main.currentGame.getMode()instanceof NRGMode){
             RoleHandler.DisplayDeath(player);
             RoleHandler.removePlayer(player.getPlayer());
         }

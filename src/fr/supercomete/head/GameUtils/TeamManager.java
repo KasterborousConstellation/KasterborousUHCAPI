@@ -1,40 +1,31 @@
 package fr.supercomete.head.GameUtils;
 import java.util.ArrayList;
 import java.util.UUID;
+
+import fr.supercomete.head.GameUtils.GameMode.ModeHandler.KtbsAPI;
+import fr.supercomete.head.GameUtils.GameMode.ModeModifier.TeamMode;
+import fr.supercomete.head.GameUtils.GameMode.Modes.Mode;
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import fr.supercomete.head.core.Main;
+import org.bukkit.scoreboard.Team;
 
 public final class TeamManager {
 	@SuppressWarnings("unused")
-    public static int NumberOfPlayerPerTeam = 2;
-    public static int TeamNumber = 4;
-    public static ArrayList<KTBS_Team> teamlist = new ArrayList<>();
-	static char[] ListOfChar= {'❤','♦','♠','♣'};
-	public static void createTeams(int numberofteam) {
-		teamlist.clear();
-		int total=numberofteam;
-		for(int r=0;r<numberofteam/9+1;r++){
-			int n=total;
-			if(n>=0)n++;
-			if(n>=3)n++;
-			if(n>=6)n++;
-			if(n>=7)n++;
-			if(n>=8)n++;
-			if(n>=13)n++;
-			if(n>=15)n++;
-			if(n>16)n=16;
-		for(int i=0;i<n;i++) {
-			if(i==6||i==8||i==15||i==0||i==3||i==13||i==7)continue;
-			KTBS_Team t= new KTBS_Team(ListOfChar[r]+getNameOfShortColor((short)i), new ArrayList<>(), "", "", (short)i, ListOfChar[r], NumberOfPlayerPerTeam,false);
-			teamlist.add(t);
-		}
-		total-= Math.min(n, 9);
-		}
-	}
-	public static void setupTeams(){
-        createTeams(TeamNumber);
-        Main.currentGame.setMaxNumberOfplayer(TeamNumber*NumberOfPlayerPerTeam);
 
+    public static ArrayList<KTBS_Team> teamlist = new ArrayList<>();
+
+
+	public static void setupTeams(){
+        teamlist.clear();
+        KtbsAPI api = Bukkit.getServicesManager().load(KtbsAPI.class);
+        Mode mode = api.getGameProvider().getCurrentGame().getMode();
+        if(mode instanceof TeamMode){
+            TeamMode teamMode = (TeamMode) mode;
+            for(int i =0;i<teamMode.getNumberOfTeam();i++){
+                teamlist.add(teamMode.createTeam(i));
+            }
+        }
 	}
 	public static ChatColor getColorOfShortColor(short sh) {
 		switch (15-sh) {
@@ -50,7 +41,8 @@ public final class TeamManager {
 		case 5:
 			return ChatColor.GREEN;
             case 7:
-			return ChatColor.DARK_GRAY;
+            case 12:
+                return ChatColor.DARK_GRAY;
 		case 8:
 			return ChatColor.GRAY;
 		case 9:
@@ -63,6 +55,8 @@ public final class TeamManager {
 			return ChatColor.DARK_GREEN;
 		case 14:
 			return ChatColor.RED ;
+        case 15:
+            return ChatColor.BLACK;
             default:
 			return ChatColor.WHITE;
 		}
@@ -71,8 +65,6 @@ public final class TeamManager {
 	}
 	public static short getShortOfChatColor(ChatColor c) {
 		switch (c) {
-		case WHITE:
-			return 0;
 		case GOLD:
 			return 1;
 		case LIGHT_PURPLE:
@@ -108,9 +100,11 @@ public final class TeamManager {
 		case 1:
 			return"Orange";
 		case 2:
-            case 15:
-            case 12:
-                return"Error";
+            return "Magenta";
+        case 15:
+            return "Noire";
+        case 12:
+            return"Marron";
 		case 3:
 			return"Bleue claire";
 		case 4:
@@ -129,12 +123,12 @@ public final class TeamManager {
 			return"Violette";
 		case 11:
 			return"Bleue";
-            case 13:
+        case 13:
 			return"Verte";
 		case 14:
 			return"Rouge";
-            default:
-			return"Out of bound";
+        default:
+            return"Out of bound";
 		}
 	}
 	public static KTBS_Team getTeamOfUUID(UUID player) {

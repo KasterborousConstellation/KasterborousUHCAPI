@@ -8,6 +8,7 @@ import fr.supercomete.head.GameUtils.Events.PlayerEvents.PlayerEvents;
 import fr.supercomete.head.GameUtils.Fights.Fight;
 import fr.supercomete.head.GameUtils.Fights.FightHandler;
 import fr.supercomete.head.GameUtils.GameMode.ModeHandler.MapHandler;
+import fr.supercomete.head.GameUtils.ReviveDefaultBehavior;
 import fr.supercomete.head.PlayerUtils.BonusHandler;
 import fr.supercomete.head.PlayerUtils.KTBSEffect;
 import fr.supercomete.head.role.Triggers.*;
@@ -58,6 +59,7 @@ class EntityDamageListeners implements Listener {
     EntityDamageListeners(Main main){
         this.main=main;
     }
+    public static ReviveDefaultBehavior behavior=ReviveDefaultBehavior.RandomTp;
     @EventHandler(priority = EventPriority.HIGHEST)
     public void PlayerDeathEvent(EntityDamageEvent e) {
         if (e.getEntity() instanceof Player) {
@@ -286,7 +288,9 @@ class EntityDamageListeners implements Listener {
                     if (revive) {
                         player.setHealth(player.getMaxHealth());
                         assert MapHandler.getMap() != null;
-                        MapHandler.getMap().PlayerRandomTPMap(player,12);
+                        if(behavior==ReviveDefaultBehavior.RandomTp){
+                            MapHandler.getMap().PlayerRandomTPMap(player,12);
+                        }
                         return;
                     }
                     if (damager != null) {

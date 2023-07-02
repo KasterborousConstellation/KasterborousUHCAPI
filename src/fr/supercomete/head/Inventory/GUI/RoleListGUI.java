@@ -62,7 +62,6 @@ public class RoleListGUI extends KTBSInventory {
 
     @Override
 	protected Inventory generateinventory(Inventory tmp) {
-
 		for(int i = 0 ; i < 9 ; i++) {
 			tmp.setItem(i, InventoryUtils.createColorItem(Material.STAINED_GLASS_PANE, " ", 1, (short)0));
 		}
@@ -83,10 +82,7 @@ public class RoleListGUI extends KTBSInventory {
 				final SkullMeta meta = (SkullMeta) stack.getItemMeta();
 				meta.setDisplayName(ChatColor.WHITE+entry.getValue().getPlayer().getUsername());
 				meta.setOwner(entry.getValue().getPlayer().getUsername());
-				
 				meta.setLore(RoleHandler.getRoleDescription(entry.getValue()));
-				
-				
 				stack.setItemMeta(meta);
 				tmp.setItem(9+e, stack);
 				e++;

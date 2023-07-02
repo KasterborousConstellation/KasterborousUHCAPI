@@ -27,6 +27,7 @@ public abstract class SchemaRole extends Role  {
         if(schema==null){
             try {
                 schema = new Schema(askSchemaFile(),environnement);
+                schema.setUniqueLinesBehavior(false);
             } catch (IOException | BadExtensionException | MalformedSchemaException e) {
                 e.printStackTrace();
                 return new LinkedList<>();

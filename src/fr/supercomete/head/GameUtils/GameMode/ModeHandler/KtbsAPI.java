@@ -49,4 +49,5 @@ public class KtbsAPI {
     public CoordinateHelper getCoordinateHelper(){
         return helper;
     }
+    public SchemaProvider getSchemaProvider(){return provider;}
 }

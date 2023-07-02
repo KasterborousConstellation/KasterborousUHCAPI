@@ -14,8 +14,4 @@ public interface TeamProvider {
     ChatColor convertShortToColor(short color);
     ArrayList<KTBS_Team>getTeams();
     void resetTeams(); //Impossible en partie
-    void setNumberOfMemberPerTeam(int number);
-    void setTeamNumber(int number);
-    int getTeamNumber();
-    int getNumberOfMemberPerTeam();
 }

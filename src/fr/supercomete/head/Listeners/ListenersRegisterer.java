@@ -19,7 +19,7 @@ public class ListenersRegisterer {
 			pm.registerEvents(new PlayerInteractEntityListener(), main);
 			pm.registerEvents(new EnchantItemListener(), main);
             pm.registerEvents(new AdvancementListener(),main);
-
+            pm.registerEvents(new PlayerItemConsumeListener(),main);
 			return true;
 		} catch (Exception e) {
 			e.printStackTrace();

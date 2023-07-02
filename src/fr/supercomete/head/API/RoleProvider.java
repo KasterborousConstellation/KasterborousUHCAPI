@@ -1,6 +1,7 @@
 package fr.supercomete.head.API;
 
 import fr.supercomete.head.GameUtils.GameMode.Modes.Mode;
+import fr.supercomete.head.GameUtils.ReviveDefaultBehavior;
 import fr.supercomete.head.role.KasterBorousCamp;
 import fr.supercomete.head.role.Role;
 import org.bukkit.entity.Player;
@@ -23,4 +24,5 @@ public interface RoleProvider {
     String FormalizedWhoHaveRole(Class<?> clz);
     boolean isRoleGenerated();
     HashMap<UUID,Role> getRoleMap();
+    void setDefaultBehaviorOnRevive(ReviveDefaultBehavior defaultBehavior);
 }

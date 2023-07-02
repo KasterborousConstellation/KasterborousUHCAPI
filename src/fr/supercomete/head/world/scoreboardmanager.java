@@ -127,6 +127,7 @@ public class scoreboardmanager {
 			}
             float addbonus = BonusHandler.getTotalOfBonus(player,BonusType.Speed);
             player.setWalkSpeed(0.2F * ((100.0F+addpercent+addbonus)/100.0F));
+
 			if(Main.currentGame.getMode()instanceof TeamMode) {
                 for (KTBS_Team t : api.getTeamProvider().getTeams()) {
                     ChatColor col = TeamManager.getColorOfShortColor(t.getColor());

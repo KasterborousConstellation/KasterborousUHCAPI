@@ -38,7 +38,7 @@ public class Game {
 	private int Groupe = 5;
 	private ArrayList<WatchTime> timelist = new ArrayList<>();
 	private ArrayList<KasterborousScenario> scenarios = new ArrayList<>();
-	private HashMap<String, Integer> roleCompoMap = new HashMap<>();
+	private HashMap<Class<?>, Integer> roleCompoMap = new HashMap<>();
 	private ArrayList<Configurable> configList = new ArrayList<>();
 	private HashMap<UUID, Integer> KillList = new HashMap<>();
 	private ArrayList<UUID> nodamagePlayerList = new ArrayList<>();
@@ -181,24 +181,14 @@ public class Game {
 	}
 
 	public HashMap<Class<?>, Integer> getRoleCompoMap() {
-		HashMap<Class<?>, Integer> hash = new HashMap<>();
-        final KtbsAPI api = Bukkit.getServicesManager().load(KtbsAPI.class);
-		for (Entry<String, Integer> entry : roleCompoMap.entrySet()) {
-			hash.put(api.getRoleProvider().getRoleClassByName(entry.getKey()), entry.getValue());
-		}
-		return hash;
+		return roleCompoMap;
 	}
 	public void setRoleCompoMap(HashMap<Class<?>, Integer> roleCompoMap) {
-        HashMap<String, Integer> ret = new HashMap<>();
-		for (Entry<Class<?>, Integer> src : roleCompoMap.entrySet()) {
-			ret.put(Objects.requireNonNull(Bukkit.getServicesManager().load(KtbsAPI.class).getRoleProvider().getRoleByClass(src.getKey())).getName(), src.getValue());
-		}
-		this.roleCompoMap = ret;
+		this.roleCompoMap = roleCompoMap;
 	}
 
 	public boolean hasClassInRoleCompoMap(Class<?> claz) {
-		for (String c : roleCompoMap.keySet()) {
-			Class<?> cl = Bukkit.getServicesManager().load(KtbsAPI.class).getRoleProvider().getRoleClassByName(c);
+		for (Class<?> cl : roleCompoMap.keySet()) {
             if (cl!=null&&cl.equals(claz))
 				return true;
 		}

@@ -21,7 +21,7 @@ public abstract class KTBSInventory{
     }
     public void refresh(){
         if(holder.isOnline()){
-            Inventory e = generateinventory(getTMP());
+            final Inventory e = generateinventory(getTMP());
             for(int i = 0;i<e.getSize();i++){
                 holder.getOpenInventory().setItem(i,e.getItem(i));
             }
@@ -45,13 +45,21 @@ public abstract class KTBSInventory{
     public void open(){
         Inventory tmp = getTMP();
         new BukkitRunnable(){
+            int attempts = 0;
             @Override
             public void run() {
+                attempts++;
                 try{
                     holder.openInventory(generateinventory(tmp));
                     cancel();
                 }catch (Exception e){
-                    Bukkit.getLogger().log(Level.INFO,"Holder: "+holder.getName()+" is unable to open the inventory. Delayed to 3Tick ahead");
+                    if(attempts<100){
+                        Bukkit.getLogger().log(Level.INFO,"Holder: "+holder.getName()+" is unable to open the inventory. Delayed to 3Tick ahead");
+                    }else{
+                        e.printStackTrace();
+                        Bukkit.getLogger().log(Level.INFO,"Holder: "+holder.getName()+" was unable to open the inventory for 15s, the opening attempt stops here.");
+                        cancel();
+                    }
                 }
             }
         }.runTaskTimer(Inventoryapi.INSTANCE,0,3L);

@@ -8,6 +8,7 @@ import fr.supercomete.head.GameUtils.Game;
 import fr.supercomete.head.GameUtils.GameConfigurable.Configurable;
 import fr.supercomete.head.GameUtils.GameMode.ModeHandler.KtbsAPI;
 import fr.supercomete.head.GameUtils.GameMode.ModeHandler.MapHandler;
+import fr.supercomete.head.GameUtils.GameMode.ModeModifier.NRGMode;
 import fr.supercomete.head.GameUtils.GameMode.Modes.Mode;
 import fr.supercomete.head.GameUtils.Scenarios.KasterborousScenario;
 import fr.supercomete.head.GameUtils.Time.TimeUtility;
@@ -247,9 +248,9 @@ public class Cycle extends BukkitRunnable{
             /*
             Implementation of Role Time && forcing role
              */
-            if (mode instanceof CampMode && (time == game.getTimer(Timer.RoleTime).getData() || Main.INSTANCE.isForceRole()) && !hasForceRole) {
+            if (mode instanceof NRGMode && (time == game.getTimer(Timer.RoleTime).getData() || Main.INSTANCE.isForceRole()) && !hasForceRole) {
                 hasForceRole = true;
-                if (mode instanceof CampMode) {
+                if (mode instanceof NRGMode) {
                     RoleHandler.GiveRole();
                 }
                 for(final KasterborousRunnable runnable : api.getKTBSRunnableProvider().getRunnables()){

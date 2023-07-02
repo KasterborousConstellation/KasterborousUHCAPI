@@ -1,12 +1,8 @@
 package fr.supercomete.head.GameUtils.GameMode.ModeModifier;
 
-import fr.supercomete.head.GameUtils.GameConfigurable.Bound;
+import fr.supercomete.head.GameUtils.KTBS_Team;
 
 public interface TeamMode extends GameModeModifier{
-	int getTeamSize();
-	void setTeamSize(int size);
-	void setNumberofTeam(int number);
-	int getNumberofTeam();
-    boolean canBeChanged();
-    Bound TeamSizeBound();
+    int getNumberOfTeam();
+    KTBS_Team createTeam(int team_id);
 }

@@ -1,23 +1,17 @@
 package fr.supercomete.head.Inventory.GUI;
-
-import fr.supercomete.head.GameUtils.GameMode.ModeHandler.KtbsAPI;
-import fr.supercomete.head.GameUtils.GameMode.ModeModifier.TeamMode;
+import fr.supercomete.head.GameUtils.GameMode.ModeModifier.SimpleTeamMode;
 import fr.supercomete.head.GameUtils.TeamManager;
 import fr.supercomete.head.Inventory.InventoryUtils;
 import fr.supercomete.head.Inventory.inventoryapi.content.KTBSAction;
 import fr.supercomete.head.Inventory.inventoryapi.content.KTBSInventory;
 import fr.supercomete.head.core.Main;
-import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.ClickType;
 import org.bukkit.inventory.Inventory;
-
 import java.util.Arrays;
 import java.util.Collections;
-
 public class TeamConfig extends KTBSInventory {
-    private final KtbsAPI api = Bukkit.getServicesManager().load(KtbsAPI.class);
     public TeamConfig(Player player) {
         super("§dTeam Configuration",27 , player);
     }
@@ -29,26 +23,27 @@ public class TeamConfig extends KTBSInventory {
 
     @Override
     protected Inventory generateinventory(Inventory inv) {
-        inv.setItem(11, InventoryUtils.getItem(Material.WOOL, "§bNombre de joueur par équipe: §4" + api.getTeamProvider().getNumberOfMemberPerTeam(), Arrays.asList(InventoryUtils.ClickTypoAdd + "1", InventoryUtils.ClickTypoRemove + "1")));
-        inv.setItem(15, InventoryUtils.getItem(Material.PAPER, "§bNombre d'équipes: §a" + api.getTeamProvider().getTeamNumber(), Arrays.asList(InventoryUtils.ClickTypoAdd + "1", InventoryUtils.ClickTypoRemove + "1")));
+        SimpleTeamMode teammode =(SimpleTeamMode) Main.currentGame.getMode();
+        inv.setItem(11, InventoryUtils.getItem(Material.WOOL, "§bNombre de joueur par équipe: §4" + teammode.getTeamSize(), Arrays.asList(InventoryUtils.ClickTypoAdd + "1", InventoryUtils.ClickTypoRemove + "1")));
+        inv.setItem(15, InventoryUtils.getItem(Material.PAPER, "§bNombre d'équipes: §a" + teammode.getNumberOfTeam(), Arrays.asList(InventoryUtils.ClickTypoAdd + "1", InventoryUtils.ClickTypoRemove + "1")));
         inv.setItem(22, InventoryUtils.getItem(Material.ARROW, "§7Retour", Collections.singletonList("§rRetour au menu de configuration")));
         return inv;
     }
 
     @Override
     protected boolean onClick(Player player, int currentSlot, KTBSAction action) {
+        SimpleTeamMode teammode =(SimpleTeamMode) Main.currentGame.getMode();
         ClickType currentClick = action.getClick();
         switch (currentSlot) {
             case 11:
-                TeamMode teammode =(TeamMode) Main.currentGame.getMode();
                 if(teammode.canBeChanged()){
                     if (currentClick.isRightClick()) {
-                        if (TeamManager.NumberOfPlayerPerTeam < teammode.TeamSizeBound().getMax()) {
-                            TeamManager.NumberOfPlayerPerTeam=(TeamManager.NumberOfPlayerPerTeam + 1);
+                        if (teammode.getTeamSize() < teammode.TeamSizeBound().getMax()) {
+                            teammode.setTeamSize(teammode.getTeamSize() + 1);
                         }
                     } else {
-                        if (TeamManager.NumberOfPlayerPerTeam > teammode.TeamSizeBound().getMin()) {
-                            TeamManager.NumberOfPlayerPerTeam=(TeamManager.NumberOfPlayerPerTeam - 1);
+                        if (teammode.getTeamSize() > teammode.TeamSizeBound().getMin()) {
+                            teammode.setTeamSize(teammode.getTeamSize() - 1);
                         }
                     }
                 }
@@ -56,10 +51,10 @@ public class TeamConfig extends KTBSInventory {
                 TeamManager.setupTeams();
                 break;
             case 15:
-                if (currentClick.isRightClick() && TeamManager.TeamNumber + 1 < 37)
-                    TeamManager.TeamNumber=(TeamManager.TeamNumber + 1);
-                if (currentClick.isLeftClick() && TeamManager.TeamNumber - 1 >= 2)
-                    TeamManager.TeamNumber=(TeamManager.TeamNumber - 1);
+                if (currentClick.isRightClick() && teammode.getNumberOfTeam() + 1 < 37)
+                    teammode.setNumberofTeam(teammode.getNumberOfTeam() + 1);
+                if (currentClick.isLeftClick() && teammode.getNumberOfTeam() - 1 >= 2)
+                    teammode.setNumberofTeam(teammode.getNumberOfTeam() - 1);
                 refresh();
                 TeamManager.setupTeams();
                 break;
